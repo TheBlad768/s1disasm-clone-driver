@@ -2,9 +2,9 @@
 ; Object 59 - platforms	that move when you stand on them (SLZ)
 ; ---------------------------------------------------------------------------
 
-elev_origX = $32		; original x-axis position
-elev_origY = $30		; original y-axis position
-elev_dist = $3C		; distance to move (2 bytes)
+elev_origX = objoff_32		; original x-axis position
+elev_origY = objoff_30		; original y-axis position
+elev_dist = objoff_3C		; distance to move (2 bytes)
 
 Elevator:
 		moveq	#0,d0
@@ -47,7 +47,7 @@ Elev_Main:	; Routine 0
 		andi.w	#$7F,d0
 		mulu.w	#6,d0
 		move.w	d0,elev_dist(a0)
-		move.w	d0,$3E(a0)
+		move.w	d0,objoff_3E(a0)
 		addq.l	#4,sp
 		rts	
 ; ===========================================================================
@@ -68,7 +68,7 @@ Elev_Main:	; Routine 0
 		move.w	d0,elev_dist(a0)	; set distance to move
 		move.b	(a2)+,obSubtype(a0)	; set type
 		move.l	#Map_Elev,obMap(a0)
-		move.w	#$4000,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Level,2,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.w	obX(a0),elev_origX(a0)
@@ -88,11 +88,16 @@ Elev_Action:	; Routine 4
 		move.w	obX(a0),-(sp)
 		bsr.w	Elev_Types
 		move.w	(sp)+,d2
-		_tst.b	0(a0)
+		_tst.b	obID(a0)
 		beq.s	.deleted
 		jmp	(MvSonicOnPtfm2).l
 
 .deleted:
+	if FixBugs
+		; Avoid returning to Elevator to prevent display-and-delete
+		; and double-delete bugs.
+		addq.l	#4,sp
+	endif
 		rts	
 ; ===========================================================================
 
@@ -126,7 +131,7 @@ Elev_Types:
 
 .type02:
 		bsr.w	Elev_Move
-		move.w	$34(a0),d0
+		move.w	objoff_34(a0),d0
 		neg.w	d0
 		add.w	elev_origY(a0),d0
 		move.w	d0,obY(a0)
@@ -135,7 +140,7 @@ Elev_Types:
 
 .type04:
 		bsr.w	Elev_Move
-		move.w	$34(a0),d0
+		move.w	objoff_34(a0),d0
 		add.w	elev_origY(a0),d0
 		move.w	d0,obY(a0)
 		rts	
@@ -143,12 +148,12 @@ Elev_Types:
 
 .type06:
 		bsr.w	Elev_Move
-		move.w	$34(a0),d0
+		move.w	objoff_34(a0),d0
 		asr.w	#1,d0
 		neg.w	d0
 		add.w	elev_origY(a0),d0
 		move.w	d0,obY(a0)
-		move.w	$34(a0),d0
+		move.w	objoff_34(a0),d0
 		add.w	elev_origX(a0),d0
 		move.w	d0,obX(a0)
 		rts	
@@ -156,11 +161,11 @@ Elev_Types:
 
 .type08:
 		bsr.w	Elev_Move
-		move.w	$34(a0),d0
+		move.w	objoff_34(a0),d0
 		asr.w	#1,d0
 		add.w	elev_origY(a0),d0
 		move.w	d0,obY(a0)
-		move.w	$34(a0),d0
+		move.w	objoff_34(a0),d0
 		neg.w	d0
 		add.w	elev_origX(a0),d0
 		move.w	d0,obX(a0)
@@ -169,7 +174,7 @@ Elev_Types:
 
 .type09:
 		bsr.w	Elev_Move
-		move.w	$34(a0),d0
+		move.w	objoff_34(a0),d0
 		neg.w	d0
 		add.w	elev_origY(a0),d0
 		move.w	d0,obY(a0)
@@ -192,11 +197,11 @@ Elev_Types:
 
 
 Elev_Move:
-		move.w	$38(a0),d0
-		tst.b	$3A(a0)
+		move.w	objoff_38(a0),d0
+		tst.b	objoff_3A(a0)
 		bne.s	loc_10CC8
 		cmpi.w	#$800,d0
-		bcc.s	loc_10CD0
+		bhs.s	loc_10CD0
 		addi.w	#$10,d0
 		bra.s	loc_10CD0
 ; ===========================================================================
@@ -207,16 +212,16 @@ loc_10CC8:
 		subi.w	#$10,d0
 
 loc_10CD0:
-		move.w	d0,$38(a0)
+		move.w	d0,objoff_38(a0)
 		ext.l	d0
 		asl.l	#8,d0
-		add.l	$34(a0),d0
-		move.l	d0,$34(a0)
+		add.l	objoff_34(a0),d0
+		move.l	d0,objoff_34(a0)
 		swap	d0
 		move.w	elev_dist(a0),d2
 		cmp.w	d2,d0
 		bls.s	loc_10CF0
-		move.b	#1,$3A(a0)
+		move.b	#1,objoff_3A(a0)
 
 loc_10CF0:
 		add.w	d2,d2
@@ -233,10 +238,10 @@ locret_10CFA:
 Elev_MakeMulti:	; Routine 6
 		subq.w	#1,elev_dist(a0)
 		bne.s	.chkdel
-		move.w	$3E(a0),elev_dist(a0)
+		move.w	objoff_3E(a0),elev_dist(a0)
 		bsr.w	FindFreeObj
 		bne.s	.chkdel
-		_move.b	#id_Elevator,0(a1) ; duplicate the object
+		_move.b	#id_Elevator,obID(a1) ; duplicate the object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	#$E,obSubtype(a1)

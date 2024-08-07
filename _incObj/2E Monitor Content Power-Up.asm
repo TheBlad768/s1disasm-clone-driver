@@ -16,7 +16,7 @@ Pow_Index:	dc.w Pow_Main-Pow_Index
 
 Pow_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.w	#$680,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Monitor,0,0),obGfx(a0)
 		move.b	#$24,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#8,obActWid(a0)
@@ -57,7 +57,7 @@ Pow_ChkSonic:
 ExtraLife:
 		addq.b	#1,(v_lives).w	; add 1 to the number of lives you have
 		addq.b	#1,(f_lifecount).w ; update the lives counter
-		move.w	#bgm_ExtraLife,d0
+		move.w	#mus_ExtraLife,d0
 		jmp	(PlaySound).l	; play extra life music
 ; ===========================================================================
 
@@ -70,7 +70,7 @@ Pow_ChkShoes:
 		move.w	#$C00,(v_sonspeedmax).w ; change Sonic's top speed
 		move.w	#$18,(v_sonspeedacc).w	; change Sonic's acceleration
 		move.w	#$80,(v_sonspeeddec).w	; change Sonic's deceleration
-		move.w	#bgm_Speedup,d0
+		move.w	#mus_Speedup,d0
 		jmp	(PlaySound).l		; Speed	up the music
 ; ===========================================================================
 
@@ -79,7 +79,7 @@ Pow_ChkShield:
 		bne.s	Pow_ChkInvinc
 
 		move.b	#1,(v_shield).w	; give Sonic a shield
-		move.b	#id_ShieldItem,(v_objspace+$180).w ; load shield object ($38)
+		move.b	#id_ShieldItem,(v_shieldobj).w ; load shield object ($38)
 		move.w	#sfx_Shield,d0
 		jmp	(PlaySound).l	; play shield sound
 ; ===========================================================================
@@ -90,21 +90,21 @@ Pow_ChkInvinc:
 
 		move.b	#1,(v_invinc).w	; make Sonic invincible
 		move.w	#$4B0,(v_player+$32).w ; time limit for the power-up
-		move.b	#id_ShieldItem,(v_objspace+$200).w ; load stars object ($3801)
-		move.b	#1,(v_objspace+$200+obAnim).w
-		move.b	#id_ShieldItem,(v_objspace+$240).w ; load stars object ($3802)
-		move.b	#2,(v_objspace+$240+obAnim).w
-		move.b	#id_ShieldItem,(v_objspace+$280).w ; load stars object ($3803)
-		move.b	#3,(v_objspace+$280+obAnim).w
-		move.b	#id_ShieldItem,(v_objspace+$2C0).w ; load stars object ($3804)
-		move.b	#4,(v_objspace+$2C0+obAnim).w
+		move.b	#id_ShieldItem,(v_starsobj1).w ; load stars object ($3801)
+		move.b	#1,(v_starsobj1+obAnim).w
+		move.b	#id_ShieldItem,(v_starsobj2).w ; load stars object ($3802)
+		move.b	#2,(v_starsobj2+obAnim).w
+		move.b	#id_ShieldItem,(v_starsobj3).w ; load stars object ($3803)
+		move.b	#3,(v_starsobj3+obAnim).w
+		move.b	#id_ShieldItem,(v_starsobj4).w ; load stars object ($3804)
+		move.b	#4,(v_starsobj4+obAnim).w
 		tst.b	(f_lockscreen).w ; is boss mode on?
 		bne.s	Pow_NoMusic	; if yes, branch
 		if Revision<>0
 			cmpi.w	#$C,(v_air).w
 			bls.s	Pow_NoMusic
 		endif
-		move.w	#bgm_Invincible,d0
+		move.w	#mus_Invincible,d0
 		jmp	(PlaySound).l ; play invincibility music
 ; ===========================================================================
 
@@ -119,11 +119,11 @@ Pow_ChkRings:
 		addi.w	#10,(v_rings).w	; add 10 rings to the number of rings you have
 		ori.b	#1,(f_ringcount).w ; update the ring counter
 		cmpi.w	#100,(v_rings).w ; check if you have 100 rings
-		bcs.s	Pow_RingSound
+		blo.s	Pow_RingSound
 		bset	#1,(v_lifecount).w
 		beq.w	ExtraLife
 		cmpi.w	#200,(v_rings).w ; check if you have 200 rings
-		bcs.s	Pow_RingSound
+		blo.s	Pow_RingSound
 		bset	#2,(v_lifecount).w
 		beq.w	ExtraLife
 

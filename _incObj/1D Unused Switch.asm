@@ -13,13 +13,13 @@ Swi_Index:	dc.w Swi_Main-Swi_Index
 		dc.w Swi_Action-Swi_Index
 		dc.w Swi_Delete-Swi_Index
 
-swi_origY = $30		; original y-axis position
+swi_origY = objoff_30		; original y-axis position
 ; ===========================================================================
 
 Swi_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Swi,obMap(a0)
-		move.w	#$4000,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Level,2,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.w	obY(a0),swi_origY(a0) ; save position on y-axis
 		move.b	#$10,obActWid(a0)
@@ -60,7 +60,7 @@ Swi_ChkTouch:
 		bmi.s	Swi_NoTouch
 		add.w	d1,d1
 		cmp.w	d1,d0
-		bcc.s	Swi_NoTouch
+		bhs.s	Swi_NoTouch
 		move.w	obY(a1),d2
 		move.b	obHeight(a1),d1
 		ext.w	d1
@@ -70,7 +70,7 @@ Swi_ChkTouch:
 		sub.w	d1,d0
 		bhi.s	Swi_NoTouch
 		cmpi.w	#-$10,d0
-		bcs.s	Swi_NoTouch
+		blo.s	Swi_NoTouch
 		moveq	#-1,d0		; Sonic has touched it
 		rts	
 ; ===========================================================================

@@ -1,3 +1,4 @@
+
 ; ---------------------------------------------------------------------------
 ; Object 32 - buttons (MZ, SYZ, LZ, SBZ)
 ; ---------------------------------------------------------------------------
@@ -15,11 +16,11 @@ But_Index:	dc.w But_Main-But_Index
 But_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_But,obMap(a0)
-		move.w	#$4513,obGfx(a0) ; MZ specific code
+		move.w	#make_art_tile(ArtTile_Button+4,2,0),obGfx(a0) ; MZ specific code
 		cmpi.b	#id_MZ,(v_zone).w ; is level Marble Zone?
 		beq.s	But_IsMZ	; if yes, branch
 
-		move.w	#$513,obGfx(a0)	; SYZ, LZ and SBZ specific code
+		move.w	#make_art_tile(ArtTile_Button+4,0,0),obGfx(a0)	; SYZ, LZ and SBZ specific code
 
 But_IsMZ:
 		move.b	#4,obRender(a0)
@@ -52,7 +53,7 @@ loc_BDB2:
 		bne.s	loc_BDC8
 
 loc_BDBE:
-		tst.b	ob2ndRout(a0)
+		tst.b	obSolid(a0)
 		bne.s	loc_BDC8
 		bclr	d3,(a3)
 		bra.s	loc_BDDE
@@ -77,9 +78,16 @@ loc_BDDE:
 		bchg	#1,obFrame(a0)
 
 But_Display:
+	if FixBugs
+		; Objects shouldn't call DisplaySprite and DeleteObject on
+		; the same frame or else cause a null-pointer dereference.
+		out_of_range.w	But_Delete
+		bra.w	DisplaySprite
+	else
 		bsr.w	DisplaySprite
 		out_of_range.w	But_Delete
 		rts	
+	endif
 ; ===========================================================================
 
 But_Delete:
@@ -98,16 +106,16 @@ But_MZBlock:
 		move.w	#$20,d4
 		move.w	#$10,d5
 		lea	(v_lvlobjspace).w,a1 ; begin checking object RAM
-		move.w	#$5F,d6
+		move.w	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d6
 
 But_MZLoop:
 		tst.b	obRender(a1)
 		bpl.s	loc_BE4E
-		cmpi.b	#id_PushBlock,(a1) ; is the object a green MZ block?
+		cmpi.b	#id_PushBlock,obID(a1) ; is the object a green MZ block?
 		beq.s	loc_BE5E	; if yes, branch
 
 loc_BE4E:
-		lea	$40(a1),a1	; check	next object
+		lea	object_size(a1),a1	; check	next object
 		dbf	d6,But_MZLoop	; repeat $5F times
 
 		move.w	(sp)+,d3

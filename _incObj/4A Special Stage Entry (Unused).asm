@@ -12,7 +12,7 @@ Van_Index:	dc.w Van_Main-Van_Index
 		dc.w Van_RmvSonic-Van_Index
 		dc.w Van_LoadSonic-Van_Index
 
-van_time = $30		; time for Sonic to disappear
+van_time = objoff_30		; time for Sonic to disappear
 ; ===========================================================================
 
 Van_Main:	; Routine 0
@@ -26,7 +26,7 @@ Van_Main:	; Routine 0
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#$38,obActWid(a0)
-		move.w	#$541,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Warp,0,0),obGfx(a0)
 		move.w	#120,van_time(a0) ; set time for Sonic's disappearance to 2 seconds
 
 Van_RmvSonic:	; Routine 2

@@ -12,8 +12,8 @@ MBlock_Index:	dc.w MBlock_Main-MBlock_Index
 		dc.w MBlock_Platform-MBlock_Index
 		dc.w MBlock_StandOn-MBlock_Index
 
-mblock_origX = $30
-mblock_origY = $32
+mblock_origX = objoff_30
+mblock_origY = objoff_32
 
 MBlock_Var:	dc.b $10, 0		; object width,	frame number
 		dc.b $20, 1
@@ -25,20 +25,20 @@ MBlock_Var:	dc.b $10, 0		; object width,	frame number
 MBlock_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_MBlock,obMap(a0)
-		move.w	#$42B8,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_MZ_Block,2,0),obGfx(a0)
 		cmpi.b	#id_LZ,(v_zone).w ; check if level is LZ
 		bne.s	loc_FE44
 		move.l	#Map_MBlockLZ,obMap(a0) ; LZ specific code
-		move.w	#$43BC,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_LZ_Moving_Block,2,0),obGfx(a0)
 		move.b	#7,obHeight(a0)
 
 loc_FE44:
 		cmpi.b	#id_SBZ,(v_zone).w ; check if level is SBZ
 		bne.s	loc_FE60
-		move.w	#$22C0,obGfx(a0) ; SBZ specific code (object 5228)
+		move.w	#make_art_tile(ArtTile_SBZ_Moving_Block_Short,1,0),obGfx(a0) ; SBZ specific code (object 5228)
 		cmpi.b	#$28,obSubtype(a0) ; is object 5228 ?
 		beq.s	loc_FE60	; if yes, branch
-		move.w	#$4460,obGfx(a0) ; SBZ specific code (object 523x)
+		move.w	#make_art_tile(ArtTile_SBZ_Moving_Block_Long,2,0),obGfx(a0) ; SBZ specific code (object 523x)
 
 loc_FE60:
 		move.b	#4,obRender(a0)
@@ -66,9 +66,20 @@ MBlock_StandOn:	; Routine 4
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		jsr	(ExitPlatform).l
+	if FixBugs
+		; MBlock_Move manipulates the stack pointer, potentially
+		; resulting in a crash. To avoid this, don't store data on
+		; the stack. We can use obejct scratch RAM instead.
+		move.w	obX(a0),objoff_38(a0)
+	else
 		move.w	obX(a0),-(sp)
+	endif
 		bsr.w	MBlock_Move
+	if FixBugs
+		move.w	objoff_38(a0),d2
+	else
 		move.w	(sp)+,d2
+	endif
 		jsr	(MvSonicOnPtfm2).l
 
 MBlock_ChkDel:
@@ -172,7 +183,10 @@ MBlock_Type07:
 		subq.b	#3,obSubtype(a0) ; if yes, change object type to 04
 
 MBlock_07_ChkDel:
+		; This line, combined with the coordinate being pushed to
+		; the stack in MBlock_StandOn, can be disasterous.
 		addq.l	#4,sp
+
 		out_of_range.w	DeleteObject,mblock_origX(a0)
 		rts	
 ; ===========================================================================
@@ -203,21 +217,21 @@ MBlock_Type0A:
 		neg.w	d3
 
 loc_10004:
-		tst.w	$36(a0)		; is platform set to move back?
+		tst.w	objoff_36(a0)		; is platform set to move back?
 		bne.s	MBlock_0A_Back	; if yes, branch
 		move.w	obX(a0),d0
 		sub.w	mblock_origX(a0),d0
 		cmp.w	d3,d0
 		beq.s	MBlock_0A_Wait
 		add.w	d1,obX(a0)	; move platform
-		move.w	#300,$34(a0)	; set time delay to 5 seconds
+		move.w	#300,objoff_34(a0)	; set time delay to 5 seconds
 		rts	
 ; ===========================================================================
 
 MBlock_0A_Wait:
-		subq.w	#1,$34(a0)	; subtract 1 from time delay
+		subq.w	#1,objoff_34(a0)	; subtract 1 from time delay
 		bne.s	locret_1002E	; if time remains, branch
-		move.w	#1,$36(a0)	; set platform to move back to its original position
+		move.w	#1,objoff_36(a0)	; set platform to move back to its original position
 
 locret_1002E:
 		rts	
@@ -232,6 +246,6 @@ MBlock_0A_Back:
 ; ===========================================================================
 
 MBlock_0A_Reset:
-		clr.w	$36(a0)
+		clr.w	objoff_36(a0)
 		subq.b	#1,obSubtype(a0)
 		rts	

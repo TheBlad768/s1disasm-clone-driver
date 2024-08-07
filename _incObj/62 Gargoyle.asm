@@ -20,7 +20,7 @@ Gar_SpitRate:	dc.b 30, 60, 90, 120, 150, 180,	210, 240
 Gar_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Gar,obMap(a0)
-		move.w	#$42E9,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_LZ_Gargoyle,2,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$10,obActWid(a0)
@@ -39,7 +39,7 @@ Gar_MakeFire:	; Routine 2
 		bne.s	.nofire
 		bsr.w	FindFreeObj
 		bne.s	.nofire
-		_move.b	#id_Gargoyle,0(a1) ; load fireball object
+		_move.b	#id_Gargoyle,obID(a1) ; load fireball object
 		addq.b	#4,obRoutine(a1) ; use Gar_FireBall routine
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
@@ -55,7 +55,7 @@ Gar_FireBall:	; Routine 4
 		move.b	#8,obHeight(a0)
 		move.b	#8,obWidth(a0)
 		move.l	#Map_Gar,obMap(a0)
-		move.w	#$2E9,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_LZ_Gargoyle,0,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$98,obColType(a0)
@@ -84,12 +84,28 @@ Gar_AniFire:	; Routine 6
 		moveq	#-8,d3
 		bsr.w	ObjHitWallLeft
 		tst.w	d1
+	if FixBugs
+		bmi.s	.delete		; delete if the	fireball hits a	wall
+	else
 		bmi.w	DeleteObject	; delete if the	fireball hits a	wall
+	endif
 		rts	
 
 .isright:
 		moveq	#8,d3
 		bsr.w	ObjHitWallRight
 		tst.w	d1
+	if FixBugs
+		bmi.s	.delete
+	else
 		bmi.w	DeleteObject
+	endif
 		rts	
+
+	if FixBugs
+		; Avoid returning to Gargoyle to prevent display-and-delete
+		; and double-delete bugs.
+.delete:
+		addq.l	#4,sp
+		bra.w	DeleteObject
+	endif

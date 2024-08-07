@@ -22,7 +22,7 @@ Spring_Index:	dc.w Spring_Main-Spring_Index
 		dc.w Spring_AniDwn-Spring_Index
 		dc.w Spring_ResetDwn-Spring_Index
 
-spring_pow = $30			; power of current spring
+spring_pow = objoff_30			; power of current spring
 
 Spring_Powers:	dc.w -$1000		; power	of red spring
 		dc.w -$A00		; power	of yellow spring
@@ -31,7 +31,7 @@ Spring_Powers:	dc.w -$1000		; power	of red spring
 Spring_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Spring,obMap(a0)
-		move.w	#$523,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Spring_Horizontal,0,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$10,obActWid(a0)
 		move.b	#4,obPriority(a0)
@@ -42,7 +42,7 @@ Spring_Main:	; Routine 0
 		move.b	#8,obRoutine(a0) ; use "Spring_LR" routine
 		move.b	#1,obAnim(a0)
 		move.b	#3,obFrame(a0)
-		move.w	#$533,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Spring_Vertical,0,0),obGfx(a0)
 		move.b	#8,obActWid(a0)
 
 Spring_NotLR:
@@ -93,7 +93,7 @@ Spring_AniUp:	; Routine 4
 ; ===========================================================================
 
 Spring_ResetUp:	; Routine 6
-		move.b	#1,obNextAni(a0) ; reset animation
+		move.b	#1,obPrevAni(a0) ; reset animation
 		subq.b	#4,obRoutine(a0) ; goto "Spring_Up" routine
 		rts	
 ; ===========================================================================
@@ -124,7 +124,7 @@ Spring_BounceLR:
 		neg.w	obVelX(a1)	; move Sonic to	the right
 
 Spring_Flipped:
-		move.w	#$F,$3E(a1)
+		move.w	#$F,objoff_3E(a1)
 		move.w	obVelX(a1),obInertia(a1)
 		bchg	#0,obStatus(a1)
 		btst	#2,obStatus(a1)
@@ -143,7 +143,7 @@ Spring_AniLR:	; Routine $A
 ; ===========================================================================
 
 Spring_ResetLR:	; Routine $C
-		move.b	#2,obNextAni(a0) ; reset animation
+		move.b	#2,obPrevAni(a0) ; reset animation
 		subq.b	#4,obRoutine(a0) ; goto "Spring_LR" routine
 		rts	
 ; ===========================================================================
@@ -188,6 +188,6 @@ Spring_AniDwn:	; Routine $10
 
 Spring_ResetDwn:
 		; Routine $12
-		move.b	#1,obNextAni(a0) ; reset animation
+		move.b	#1,obPrevAni(a0) ; reset animation
 		subq.b	#4,obRoutine(a0) ; goto "Spring_Dwn" routine
 		rts	

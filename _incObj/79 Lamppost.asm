@@ -14,15 +14,15 @@ Lamp_Index:	dc.w Lamp_Main-Lamp_Index
 		dc.w Lamp_Finish-Lamp_Index
 		dc.w Lamp_Twirl-Lamp_Index
 
-lamp_origX = $30		; original x-axis position
-lamp_origY = $32		; original y-axis position
-lamp_time = $36		; length of time to twirl the lamp
+lamp_origX = objoff_30		; original x-axis position
+lamp_origY = objoff_32		; original y-axis position
+lamp_time = objoff_36		; length of time to twirl the lamp
 ; ===========================================================================
 
 Lamp_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Lamp,obMap(a0)
-		move.w	#$7A0,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Lamppost,0,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#8,obActWid(a0)
 		move.b	#5,obPriority(a0)
@@ -37,7 +37,7 @@ Lamp_Main:	; Routine 0
 		move.b	obSubtype(a0),d2 ; get lamppost number
 		andi.b	#$7F,d2
 		cmp.b	d2,d1		; is this a "new" lamppost?
-		bcs.s	Lamp_Blue	; if yes, branch
+		blo.s	Lamp_Blue	; if yes, branch
 
 .red:
 		bset	#0,2(a2,d0.w)
@@ -49,14 +49,14 @@ Lamp_Main:	; Routine 0
 Lamp_Blue:	; Routine 2
 		tst.w	(v_debuguse).w	; is debug mode	being used?
 		bne.w	.donothing	; if yes, branch
-		tst.b	(f_lockmulti).w
+		tst.b	(f_playerctrl).w
 		bmi.w	.donothing
 		move.b	(v_lastlamp).w,d1
 		andi.b	#$7F,d1
 		move.b	obSubtype(a0),d2
 		andi.b	#$7F,d2
 		cmp.b	d2,d1		; is this a "new" lamppost?
-		bcs.s	.chkhit		; if yes, branch
+		blo.s	.chkhit		; if yes, branch
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
 		move.b	obRespawnNo(a0),d0
@@ -71,25 +71,25 @@ Lamp_Blue:	; Routine 2
 		sub.w	obX(a0),d0
 		addq.w	#8,d0
 		cmpi.w	#$10,d0
-		bcc.w	.donothing
+		bhs.w	.donothing
 		move.w	(v_player+obY).w,d0
 		sub.w	obY(a0),d0
 		addi.w	#$40,d0
 		cmpi.w	#$68,d0
-		bcc.s	.donothing
+		bhs.s	.donothing
 
 		move.w	#sfx_Lamppost,d0
 		jsr	(PlaySound_Special).l	; play lamppost sound
 		addq.b	#2,obRoutine(a0)
 		jsr	(FindFreeObj).l
 		bne.s	.fail
-		_move.b	#id_Lamppost,0(a1)	; load twirling	lamp object
+		_move.b	#id_Lamppost,obID(a1)	; load twirling	lamp object
 		move.b	#6,obRoutine(a1) ; goto Lamp_Twirl next
 		move.w	obX(a0),lamp_origX(a1)
 		move.w	obY(a0),lamp_origY(a1)
 		subi.w	#$18,lamp_origY(a1)
 		move.l	#Map_Lamp,obMap(a1)
-		move.w	#$7A0,obGfx(a1)
+		move.w	#make_art_tile(ArtTile_Lamppost,0,0),obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#8,obActWid(a1)
 		move.b	#4,obPriority(a1)
@@ -137,26 +137,26 @@ Lamp_Twirl:	; Routine 6
 ; ---------------------------------------------------------------------------
 
 Lamp_StoreInfo:
-		move.b	obSubtype(a0),(v_lastlamp).w 	; lamppost number
-		move.b	(v_lastlamp).w,($FFFFFE31).w
-		move.w	obX(a0),($FFFFFE32).w		; x-position
-		move.w	obY(a0),($FFFFFE34).w		; y-position
-		move.w	(v_rings).w,($FFFFFE36).w 	; rings
-		move.b	(v_lifecount).w,($FFFFFE54).w 	; lives
-		move.l	(v_time).w,($FFFFFE38).w 	; time
-		move.b	(v_dle_routine).w,($FFFFFE3C).w ; routine counter for dynamic level mod
-		move.w	(v_limitbtm2).w,($FFFFFE3E).w 	; lower y-boundary of level
-		move.w	(v_screenposx).w,($FFFFFE40).w 	; screen x-position
-		move.w	(v_screenposy).w,($FFFFFE42).w 	; screen y-position
-		move.w	(v_bgscreenposx).w,($FFFFFE44).w ; bg position
-		move.w	(v_bgscreenposy).w,($FFFFFE46).w 	; bg position
-		move.w	(v_bg2screenposx).w,($FFFFFE48).w 	; bg position
-		move.w	(v_bg2screenposy).w,($FFFFFE4A).w 	; bg position
-		move.w	(v_bg3screenposx).w,($FFFFFE4C).w 	; bg position
-		move.w	(v_bg3screenposy).w,($FFFFFE4E).w 	; bg position
-		move.w	(v_waterpos2).w,($FFFFFE50).w 	; water height
-		move.b	(v_wtr_routine).w,($FFFFFE52).w ; rountine counter for water
-		move.b	(f_wtr_state).w,($FFFFFE53).w 	; water direction
+		move.b	obSubtype(a0),(v_lastlamp).w 		; lamppost number
+		move.b	(v_lastlamp).w,(v_lastlamp+1).w
+		move.w	obX(a0),(v_lamp_xpos).w			; x-position
+		move.w	obY(a0),(v_lamp_ypos).w			; y-position
+		move.w	(v_rings).w,(v_lamp_rings).w 		; rings
+		move.b	(v_lifecount).w,(v_lamp_lives).w 	; lives
+		move.l	(v_time).w,(v_lamp_time).w 		; time
+		move.b	(v_dle_routine).w,(v_lamp_dle).w	; routine counter for dynamic level mod
+		move.w	(v_limitbtm2).w,(v_lamp_limitbtm).w 	; lower y-boundary of level
+		move.w	(v_screenposx).w,(v_lamp_scrx).w 	; screen x-position
+		move.w	(v_screenposy).w,(v_lamp_scry).w 	; screen y-position
+		move.w	(v_bgscreenposx).w,(v_lamp_bgscrx).w	; bg position
+		move.w	(v_bgscreenposy).w,(v_lamp_bgscry).w 	; bg position
+		move.w	(v_bg2screenposx).w,(v_lamp_bg2scrx).w 	; bg position
+		move.w	(v_bg2screenposy).w,(v_lamp_bg2scry).w 	; bg position
+		move.w	(v_bg3screenposx).w,(v_lamp_bg3scrx).w 	; bg position
+		move.w	(v_bg3screenposy).w,(v_lamp_bg3scry).w 	; bg position
+		move.w	(v_waterpos2).w,(v_lamp_wtrpos).w 	; water height
+		move.b	(v_wtr_routine).w,(v_lamp_wtrrout).w	; rountine counter for water
+		move.b	(f_wtr_state).w,(v_lamp_wtrstat).w 	; water direction
 		rts	
 
 ; ---------------------------------------------------------------------------
@@ -167,39 +167,39 @@ Lamp_StoreInfo:
 
 
 Lamp_LoadInfo:
-		move.b	($FFFFFE31).w,(v_lastlamp).w
-		move.w	($FFFFFE32).w,(v_player+obX).w
-		move.w	($FFFFFE34).w,(v_player+obY).w
-		move.w	($FFFFFE36).w,(v_rings).w
-		move.b	($FFFFFE54).w,(v_lifecount).w
+		move.b	(v_lastlamp+1).w,(v_lastlamp).w
+		move.w	(v_lamp_xpos).w,(v_player+obX).w
+		move.w	(v_lamp_ypos).w,(v_player+obY).w
+		move.w	(v_lamp_rings).w,(v_rings).w
+		move.b	(v_lamp_lives).w,(v_lifecount).w
 		clr.w	(v_rings).w
 		clr.b	(v_lifecount).w
-		move.l	($FFFFFE38).w,(v_time).w
+		move.l	(v_lamp_time).w,(v_time).w
 		move.b	#59,(v_timecent).w
 		subq.b	#1,(v_timesec).w
-		move.b	($FFFFFE3C).w,(v_dle_routine).w
-		move.b	($FFFFFE52).w,(v_wtr_routine).w
-		move.w	($FFFFFE3E).w,(v_limitbtm2).w
-		move.w	($FFFFFE3E).w,(v_limitbtm1).w
-		move.w	($FFFFFE40).w,(v_screenposx).w
-		move.w	($FFFFFE42).w,(v_screenposy).w
-		move.w	($FFFFFE44).w,(v_bgscreenposx).w
-		move.w	($FFFFFE46).w,(v_bgscreenposy).w
-		move.w	($FFFFFE48).w,(v_bg2screenposx).w
-		move.w	($FFFFFE4A).w,(v_bg2screenposy).w
-		move.w	($FFFFFE4C).w,(v_bg3screenposx).w
-		move.w	($FFFFFE4E).w,(v_bg3screenposy).w
-		cmpi.b	#1,(v_zone).w	; is this Labyrinth Zone?
+		move.b	(v_lamp_dle).w,(v_dle_routine).w
+		move.b	(v_lamp_wtrrout).w,(v_wtr_routine).w
+		move.w	(v_lamp_limitbtm).w,(v_limitbtm2).w
+		move.w	(v_lamp_limitbtm).w,(v_limitbtm1).w
+		move.w	(v_lamp_scrx).w,(v_screenposx).w
+		move.w	(v_lamp_scry).w,(v_screenposy).w
+		move.w	(v_lamp_bgscrx).w,(v_bgscreenposx).w
+		move.w	(v_lamp_bgscry).w,(v_bgscreenposy).w
+		move.w	(v_lamp_bg2scrx).w,(v_bg2screenposx).w
+		move.w	(v_lamp_bg2scry).w,(v_bg2screenposy).w
+		move.w	(v_lamp_bg3scrx).w,(v_bg3screenposx).w
+		move.w	(v_lamp_bg3scry).w,(v_bg3screenposy).w
+		cmpi.b	#id_LZ,(v_zone).w	; is this Labyrinth Zone?
 		bne.s	.notlabyrinth	; if not, branch
 
-		move.w	($FFFFFE50).w,(v_waterpos2).w
-		move.b	($FFFFFE52).w,(v_wtr_routine).w
-		move.b	($FFFFFE53).w,(f_wtr_state).w
+		move.w	(v_lamp_wtrpos).w,(v_waterpos2).w
+		move.b	(v_lamp_wtrrout).w,(v_wtr_routine).w
+		move.b	(v_lamp_wtrstat).w,(f_wtr_state).w
 
 .notlabyrinth:
 		tst.b	(v_lastlamp).w
 		bpl.s	locret_170F6
-		move.w	($FFFFFE32).w,d0
+		move.w	(v_lamp_xpos).w,d0
 		subi.w	#$A0,d0
 		move.w	d0,(v_limitleft2).w
 

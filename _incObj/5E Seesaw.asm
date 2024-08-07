@@ -2,11 +2,11 @@
 ; Object 5E - seesaws (SLZ)
 ; ---------------------------------------------------------------------------
 
-see_origX = $30		; original x-axis position
-see_origY = $34		; original y-axis position
-see_speed = $38		; speed of collision
-see_frame = $3A		; 
-see_parent = $3C		; RAM address of parent object
+see_origX = objoff_30		; original x-axis position
+see_origY = objoff_34		; original y-axis position
+see_speed = objoff_38		; speed of collision
+see_frame = objoff_3A		; 
+see_parent = objoff_3C		; RAM address of parent object
 
 Seesaw:
 		moveq	#0,d0
@@ -36,7 +36,7 @@ See_Index:	dc.w See_Main-See_Index
 See_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Seesaw,obMap(a0)
-		move.w	#$374,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_SLZ_Seesaw,0,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$30,obActWid(a0)
@@ -46,7 +46,7 @@ See_Main:	; Routine 0
 
 		bsr.w	FindNextFreeObj
 		bne.s	.noball
-		_move.b	#id_Seesaw,0(a1) ; load spikeball object
+		_move.b	#id_Seesaw,obID(a1) ; load spikeball object
 		addq.b	#6,obRoutine(a1) ; use See_Spikeball routine
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
@@ -104,7 +104,7 @@ See_ChkSide:
 
 .leftside:
 		cmpi.w	#8,d0
-		bcc.s	See_ChgFrame
+		bhs.s	See_ChgFrame
 		moveq	#1,d1
 
 See_ChgFrame:
@@ -130,7 +130,7 @@ See_ChgFrame:
 See_Spikeball:	; Routine 6
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_SSawBall,obMap(a0)
-		move.w	#$4F0,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_SLZ_Spikeball,0,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$8B,obColType(a0)
@@ -160,7 +160,7 @@ loc_117FC:
 		beq.s	loc_11822
 		move.w	#-$AF0,d1
 		move.w	#-$CC,d2
-		cmpi.w	#$A00,$38(a1)
+		cmpi.w	#$A00,objoff_38(a1)
 		blt.s	loc_11822
 		move.w	#-$E00,d1
 		move.w	#-$A0,d2
@@ -239,7 +239,7 @@ loc_118BA:
 		moveq	#0,d1
 
 See_Spring:
-		move.b	d1,$3A(a1)
+		move.b	d1,objoff_3A(a1)
 		move.b	d1,see_frame(a0)
 		cmp.b	obFrame(a1),d1
 		beq.s	loc_1192C
@@ -252,7 +252,7 @@ See_Spring:
 		neg.w	obVelY(a2)
 		bset	#1,obStatus(a2)
 		bclr	#3,obStatus(a2)
-		clr.b	$3C(a2)
+		clr.b	objoff_3C(a2)
 		move.b	#id_Spring,obAnim(a2) ; change Sonic's animation to "spring" ($10)
 		move.b	#2,obRoutine(a2)
 		move.w	#sfx_Spring,d0

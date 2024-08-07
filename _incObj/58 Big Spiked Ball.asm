@@ -11,16 +11,16 @@ BigSpikeBall:
 BBall_Index:	dc.w BBall_Main-BBall_Index
 		dc.w BBall_Move-BBall_Index
 
-bball_origX = $3A		; original x-axis position
-bball_origY = $38		; original y-axis position
-bball_radius = $3C		; radius of circle
-bball_speed = $3E		; speed
+bball_origX = objoff_3A		; original x-axis position
+bball_origY = objoff_38		; original y-axis position
+bball_radius = objoff_3C	; radius of circle
+bball_speed = objoff_3E		; speed
 ; ===========================================================================
 
 BBall_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_BBall,obMap(a0)
-		move.w	#$396,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_SYZ_Big_Spikeball,0,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$18,obActWid(a0)

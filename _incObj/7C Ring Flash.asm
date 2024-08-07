@@ -16,7 +16,7 @@ Flash_Index:	dc.w Flash_Main-Flash_Index
 Flash_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Flash,obMap(a0)
-		move.w	#$2462,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Giant_Ring_Flash,1,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#0,obPriority(a0)
 		move.b	#$20,obActWid(a0)
@@ -36,10 +36,10 @@ Flash_Collect:
 		move.b	#1,obTimeFrame(a0)
 		addq.b	#1,obFrame(a0)
 		cmpi.b	#8,obFrame(a0)	; has animation	finished?
-		bcc.s	Flash_End	; if yes, branch
+		bhs.s	Flash_End	; if yes, branch
 		cmpi.b	#3,obFrame(a0)	; is 3rd frame displayed?
 		bne.s	locret_9F76	; if not, branch
-		movea.l	$3C(a0),a1	; get parent object address
+		movea.l	objoff_3C(a0),a1	; get parent object address
 		move.b	#6,obRoutine(a1) ; delete parent object
 		move.b	#id_Null,(v_player+obAnim).w ; make Sonic invisible
 		move.b	#1,(f_bigring).w ; stop	Sonic getting bonuses

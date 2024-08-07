@@ -14,15 +14,15 @@ Msl_Index:	dc.w Msl_Main-Msl_Index
 		dc.w Msl_Delete-Msl_Index
 		dc.w Msl_FromNewt-Msl_Index
 
-msl_parent = $3C
+msl_parent = objoff_3C
 ; ===========================================================================
 
 Msl_Main:	; Routine 0
-		subq.w	#1,$32(a0)
+		subq.w	#1,objoff_32(a0)
 		bpl.s	Msl_ChkCancel
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Missile,obMap(a0)
-		move.w	#$2444,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Buzz_Bomber,1,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#8,obActWid(a0)
@@ -38,6 +38,16 @@ Msl_Main:	; Routine 0
 
 Msl_Animate:	; Routine 2
 		bsr.s	Msl_ChkCancel
+	if FixBugs
+		; Msl_ChkCancel can call DeleteObject, so we shouldn't queue
+		; this object for display or update the animation state.
+		; Failing to account for this results in a null pointer
+		; dereference, which is harmless in Sonic 1 but will crash
+		; Sonic 2. Fun fact: Sonic 2 REV00 has some leftover debug
+		; code in its BuildSprites function for detecting this type
+		; of bug.
+		beq.s	Msl_ChkCancel.return
+	endif
 		lea	(Ani_Missile).l,a1
 		bsr.w	AnimateSprite
 		bra.w	DisplaySprite
@@ -51,8 +61,18 @@ Msl_Animate:	; Routine 2
 
 Msl_ChkCancel:
 		movea.l	msl_parent(a0),a1
-		_cmpi.b	#id_ExplosionItem,0(a1) ; has Buzz Bomber been destroyed?
+		_cmpi.b	#id_ExplosionItem,obID(a1) ; has Buzz Bomber been destroyed?
+	if FixBugs
+		; This adds a return value so that we know if the object has
+		; been freed.
+		bne.s	.return
+		bsr.s	Msl_Delete
+		moveq	#0,d0
+
+.return:
+	else
 		beq.s	Msl_Delete	; if yes, branch
+	endif
 		rts	
 ; End of function Msl_ChkCancel
 
@@ -64,18 +84,31 @@ Msl_FromBuzz:	; Routine 4
 		move.b	#$87,obColType(a0)
 		move.b	#1,obAnim(a0)
 		bsr.w	SpeedToPos
+
+	if ~~FixBugs
+		; Object should not call DisplaySprite and DeleteObject on
+		; the same frame, or else cause a null-pointer dereference.
 		lea	(Ani_Missile).l,a1
 		bsr.w	AnimateSprite
 		bsr.w	DisplaySprite
+	endif
+
 		move.w	(v_limitbtm2).w,d0
 		addi.w	#$E0,d0
 		cmp.w	obY(a0),d0	; has object moved below the level boundary?
-		bcs.s	Msl_Delete	; if yes, branch
+		blo.s	Msl_Delete	; if yes, branch
+
+	if FixBugs
+		lea	(Ani_Missile).l,a1
+		bsr.w	AnimateSprite
+		bra.w	DisplaySprite
+	else
 		rts	
+	endif
 ; ===========================================================================
 
 .explode:
-		_move.b	#id_MissileDissolve,0(a0) ; change object to an explosion (Obj24)
+		_move.b	#id_MissileDissolve,obID(a0) ; change object to an explosion (Obj24)
 		move.b	#0,obRoutine(a0)
 		bra.w	MissileDissolve
 ; ===========================================================================

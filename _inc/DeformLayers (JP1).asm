@@ -19,8 +19,8 @@ DeformLayers:
 		bsr.w	ScrollHoriz
 		bsr.w	ScrollVertical
 		bsr.w	DynamicLevelEvents
-		move.w	(v_screenposy).w,(v_scrposy_dup).w
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_screenposy).w,(v_scrposy_vdp).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
 		add.w	d0,d0
@@ -71,7 +71,7 @@ Deform_GHZ:
 		moveq	#0,d0
 	.limitY:
 		move.w	d0,d4
-		move.w	d0,(v_bgscrposy_dup).w
+		move.w	d0,(v_bgscrposy_vdp).w
 		move.w	(v_screenposx).w,d0
 		cmpi.b	#id_Title,(v_gamemode).w
 		bne.s	.notTitle
@@ -166,7 +166,7 @@ Deform_LZ:
 		asl.l	#7,d5
 		bsr.w	BGScroll_XY
 
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 		lea	(Lz_Scroll_Data).l,a3
 		lea	(Drown_WobbleData).l,a2
 		move.b	(v_lz_deform).w,d2
@@ -274,7 +274,7 @@ Deform_MZ:
 		move.w	d0,(v_bg2screenposy).w
 		move.w	d0,(v_bg3screenposy).w
 		bsr.w	BGScroll_YAbsolute
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 	; do something with redraw flags
 		move.b	(v_bg1_scroll_flags).w,d0
 		or.b	(v_bg2_scroll_flags).w,d0
@@ -331,7 +331,7 @@ Deform_MZ:
 		subi.w	#$200,d0	; subtract 512px (unused 2 chunks)
 		move.w	d0,d2
 		cmpi.w	#$100,d0
-		bcs.s	.limitY
+		blo.s	.limitY
 		move.w	#$100,d0
 	.limitY:
 		andi.w	#$1F0,d0
@@ -353,7 +353,7 @@ Deform_SLZ:
 		ext.l	d5
 		asl.l	#7,d5
 		bsr.w	Bg_Scroll_Y
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 	; calculate background scroll buffer
 		lea	(v_bgscroll_buffer).w,a1
 		move.w	(v_screenposx).w,d2
@@ -458,7 +458,7 @@ Deform_SYZ:
 		asl.l	#1,d5
 		add.l	d1,d5
 		bsr.w	Bg_Scroll_Y
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 	; calculate background scroll buffer
 		lea	(v_bgscroll_buffer).w,a1
 		move.w	(v_screenposx).w,d2
@@ -568,7 +568,7 @@ Deform_SBZ:
 		move.w	(v_bgscreenposy).w,d0
 		move.w	d0,(v_bg2screenposy).w
 		move.w	d0,(v_bg3screenposy).w
-		move.w	d0,(v_bgscrposy_dup).w
+		move.w	d0,(v_bgscrposy_vdp).w
 		move.b	(v_bg1_scroll_flags).w,d0
 		or.b	(v_bg3_scroll_flags).w,d0
 		or.b	d0,(v_bg2_scroll_flags).w
@@ -635,7 +635,7 @@ Deform_SBZ2:;loc_68A2:
 		ext.l	d5
 		asl.l	#5,d5
 		bsr.w	BGScroll_XY
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 	; copy fg & bg x-position to hscroll table
 		lea	(v_hscrolltablebuffer).w,a1
 		move.w	#223,d1
@@ -697,7 +697,7 @@ MoveScreenHoriz:
 
 SH_AheadOfMid:
 		cmpi.w	#16,d0		; is Sonic within 16px of middle area?
-		bcs.s	SH_Ahead16	; if yes, branch
+		blo.s	SH_Ahead16	; if yes, branch
 		move.w	#16,d0		; set to 16 if greater
 
 SH_Ahead16:
@@ -782,7 +782,7 @@ loc_665C:
 
 loc_666C:
 		cmpi.w	#$800,d1
-		bcc.s	loc_6696
+		bhs.s	loc_6696
 		move.w	#$600,d1
 		cmpi.w	#6,d0
 		bgt.s	loc_66F6

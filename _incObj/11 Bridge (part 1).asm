@@ -16,13 +16,13 @@ Bri_Index:	dc.w Bri_Main-Bri_Index, Bri_Action-Bri_Index
 Bri_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Bri,obMap(a0)
-		move.w	#$438E,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_GHZ_Bridge,2,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$80,obActWid(a0)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
-		_move.b	0(a0),d4	; copy object number ($11) to d4
+		_move.b	obID(a0),d4	; copy object number ($11) to d4
 		lea	obSubtype(a0),a2
 		moveq	#0,d1
 		move.b	(a2),d1		; copy bridge length to d1
@@ -43,27 +43,27 @@ Bri_Main:	; Routine 0
 
 		addi.w	#$10,d3
 		move.w	d2,obY(a0)
-		move.w	d2,$3C(a0)
+		move.w	d2,objoff_3C(a0)
 		move.w	a0,d5
-		subi.w	#$D000,d5
-		lsr.w	#6,d5
+		subi.w	#v_objspace&$FFFF,d5
+		lsr.w	#object_size_bits,d5
 		andi.w	#$7F,d5
 		move.b	d5,(a2)+
 		addq.b	#1,obSubtype(a0)
 
 .notleftmost:
 		move.w	a1,d5
-		subi.w	#$D000,d5
-		lsr.w	#6,d5
+		subi.w	#v_objspace&$FFFF,d5
+		lsr.w	#object_size_bits,d5
 		andi.w	#$7F,d5
 		move.b	d5,(a2)+
 		move.b	#$A,obRoutine(a1)
-		_move.b	d4,0(a1)	; load bridge object (d4 = $11)
+		_move.b	d4,obID(a1)	; load bridge object (d4 = $11)
 		move.w	d2,obY(a1)
-		move.w	d2,$3C(a1)
+		move.w	d2,objoff_3C(a1)
 		move.w	d3,obX(a1)
 		move.l	#Map_Bri,obMap(a1)
-		move.w	#$438E,obGfx(a1)
+		move.w	#make_art_tile(ArtTile_GHZ_Bridge,2,0),obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#3,obPriority(a1)
 		move.b	#8,obActWid(a1)
@@ -72,9 +72,9 @@ Bri_Main:	; Routine 0
 
 Bri_Action:	; Routine 2
 		bsr.s	Bri_Solid
-		tst.b	$3E(a0)
+		tst.b	objoff_3E(a0)
 		beq.s	.display
-		subq.b	#4,$3E(a0)
+		subq.b	#4,objoff_3E(a0)
 		bsr.w	Bri_Bend
 
 .display:
@@ -99,6 +99,6 @@ Bri_Solid:
 		add.w	d1,d0
 		bmi.w	Plat_Exit
 		cmp.w	d2,d0
-		bcc.w	Plat_Exit
+		bhs.w	Plat_Exit
 		bra.s	Plat_NoXCheck
 ; End of function Bri_Solid

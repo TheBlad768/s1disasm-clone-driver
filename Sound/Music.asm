@@ -27,41 +27,42 @@ ptr_musend
 ; ---------------------------------------------------------------------------
 ; Music data
 ; ---------------------------------------------------------------------------
-Music81:	include		"Sound/music/Mus81 - GHZ.asm"
-		even
-Music82:	include		"Sound/music/Mus82 - LZ.asm"
-		even
-Music83:	include		"Sound/music/Mus83 - MZ.asm"
-		even
-Music84:	include		"Sound/music/Mus84 - SLZ.asm"
-		even
-Music85:	include		"Sound/music/Mus85 - SYZ.asm"
-		even
-Music86:	include		"Sound/music/Mus86 - SBZ.asm"
-		even
-Music87:	include		"Sound/music/Mus87 - Invincibility.asm"
-		even
-Music88:	include		"Sound/music/Mus88 - Extra Life.asm"
-		even
-Music89:	include		"Sound/music/Mus89 - Special Stage.asm"
-		even
-Music8A:	include		"Sound/music/Mus8A - Title Screen.asm"
-		even
-Music8B:	include		"Sound/music/Mus8B - Ending.asm"
-		even
-Music8C:	include		"Sound/music/Mus8C - Boss.asm"
-		even
-Music8D:	include		"Sound/music/Mus8D - FZ.asm"
-		even
-Music8E:	include		"Sound/music/Mus8E - Sonic Got Through.asm"
-		even
-Music8F:	include		"Sound/music/Mus8F - Game Over.asm"
-		even
-Music90:	include		"Sound/music/Mus90 - Continue Screen.asm"
-		even
-Music91:	include		"Sound/music/Mus91 - Credits.asm"
-		even
-Music92:	include		"Sound/music/Mus92 - Drowning.asm"
-		even
-Music93:	include		"Sound/music/Mus93 - Get Emerald.asm"
-		even
+
+Music81:			include "Sound/Music/Mus81 - GHZ.asm"
+	even
+Music82:		include "Sound/Music/Mus82 - LZ.asm"
+	even
+Music83:			include "Sound/Music/Mus83 - MZ.asm"
+	even
+Music84:		include "Sound/Music/Mus84 - SLZ.asm"
+	even
+Music85:			include "Sound/Music/Mus85 - SYZ.asm"
+	even
+Music86:		include "Sound/Music/Mus86 - SBZ.asm"
+	even
+Music87:			include "Sound/Music/Mus87 - Invincibility.asm"
+	even
+Music88:		include "Sound/Music/Mus88 - Extra Life.asm"
+	even
+Music89:		include "Sound/Music/Mus89 - Special Stage.asm"
+	even
+Music8A:		include "Sound/Music/Mus8A - Title Screen.asm"
+	even
+Music8B:		include "Sound/Music/Mus8B - Ending.asm"
+	even
+Music8C:		include "Sound/Music/Mus8C - Boss.asm"
+	even
+Music8D:		include "Sound/Music/Mus8D - FZ.asm"
+	even
+Music8E:		include "Sound/Music/Mus8E - Sonic Got Through.asm"
+	even
+Music8F:		include "Sound/Music/Mus8F - Game Over.asm"
+	even
+Music90:		include "Sound/Music/Mus90 - Continue Screen.asm"
+	even
+Music91:			include "Sound/Music/Mus91 - Credits.asm"
+	even
+Music92:		include "Sound/Music/Mus92 - Drowning.asm"
+	even
+Music93:			include "Sound/Music/Mus93 - Get Emerald.asm"
+	even

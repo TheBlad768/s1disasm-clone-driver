@@ -16,7 +16,7 @@ Newt_Index:	dc.w Newt_Main-Newt_Index
 Newt_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Newt,obMap(a0)
-		move.w	#$49B,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Newtron,0,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$14,obActWid(a0)
@@ -49,13 +49,13 @@ Newt_Action:	; Routine 2
 
 .sonicisright:
 		cmpi.w	#$80,d0		; is Sonic within $80 pixels of	the newtron?
-		bcc.s	.outofrange	; if not, branch
+		bhs.s	.outofrange	; if not, branch
 		addq.b	#2,ob2ndRout(a0) ; goto .type00 next
 		move.b	#1,obAnim(a0)
 		tst.b	obSubtype(a0)	; check	object type
 		beq.s	.istype00	; if type is 00, branch
 
-		move.w	#$249B,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Newtron,1,0),obGfx(a0)
 		move.b	#8,ob2ndRout(a0) ; goto .type01 next
 		move.b	#4,obAnim(a0)	; use different	animation
 
@@ -66,7 +66,7 @@ Newt_Action:	; Routine 2
 
 .type00:
 		cmpi.b	#4,obFrame(a0)	; has "appearing" animation finished?
-		bcc.s	.fall		; is yes, branch
+		bhs.s	.fall		; is yes, branch
 		bset	#0,obStatus(a0)
 		move.w	(v_player+obX).w,d0
 		sub.w	obX(a0),d0
@@ -136,12 +136,12 @@ Newt_Action:	; Routine 2
 .firemissile:
 		cmpi.b	#2,obFrame(a0)
 		bne.s	.fail
-		tst.b	$32(a0)
+		tst.b	objoff_32(a0)
 		bne.s	.fail
-		move.b	#1,$32(a0)
+		move.b	#1,objoff_32(a0)
 		bsr.w	FindFreeObj
 		bne.s	.fail
-		_move.b	#id_Missile,0(a1) ; load missile object
+		_move.b	#id_Missile,obID(a1) ; load missile object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		subq.w	#8,obY(a1)

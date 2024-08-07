@@ -15,7 +15,7 @@ Light_Index:	dc.w Light_Main-Light_Index
 Light_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Light,obMap(a0)
-		move.w	#0,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Level,0,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#$10,obActWid(a0)
 		move.b	#6,obPriority(a0)
@@ -26,7 +26,7 @@ Light_Animate:	; Routine 2
 		move.b	#7,obTimeFrame(a0)
 		addq.b	#1,obFrame(a0)
 		cmpi.b	#6,obFrame(a0)
-		bcs.s	.chkdel
+		blo.s	.chkdel
 		move.b	#0,obFrame(a0)
 
 .chkdel:

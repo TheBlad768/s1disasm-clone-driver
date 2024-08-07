@@ -13,9 +13,9 @@ Jun_Index:	dc.w Jun_Main-Jun_Index
 		dc.w Jun_Display-Jun_Index
 		dc.w Jun_Release-Jun_Index
 
-jun_frame = $34		; current frame
-jun_reverse = $36		; flag set when switch is pressed
-jun_switch = $38		; which switch will reverse the disc
+jun_frame = objoff_34		; current frame
+jun_reverse = objoff_36		; flag set when switch is pressed
+jun_switch = objoff_38		; which switch will reverse the disc
 ; ===========================================================================
 
 Jun_Main:	; Routine 0
@@ -28,7 +28,7 @@ Jun_Main:	; Routine 0
 .repeat:
 		bsr.w	FindFreeObj
 		bne.s	.fail
-		_move.b	#id_Junction,0(a1)
+		_move.b	#id_Junction,obID(a1)
 		addq.b	#4,obRoutine(a1) ; goto Jun_Display next
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
@@ -37,7 +37,7 @@ Jun_Main:	; Routine 0
 
 .makeitem:
 		move.l	#Map_Jun,obMap(a1)
-		move.w	#$4348,obGfx(a1)
+		move.w	#make_art_tile(ArtTile_SBZ_Junction,2,0),obGfx(a1)
 		ori.b	#4,obRender(a1)
 		move.b	#$38,obActWid(a1)
 
@@ -46,7 +46,7 @@ Jun_Main:	; Routine 0
 
 		move.b	#$30,obActWid(a0)
 		move.b	#4,obPriority(a0)
-		move.w	#$3C,$30(a0)
+		move.w	#$3C,objoff_30(a0)
 		move.b	#1,jun_frame(a0)
 		move.b	obSubtype(a0),jun_switch(a0)
 
@@ -67,16 +67,16 @@ Jun_Action:	; Routine 2
 		moveq	#$E,d1
 		move.w	obX(a1),d0
 		cmp.w	obX(a0),d0	; is Sonic to the left of the disc?
-		bcs.s	.isleft		; if yes, branch
+		blo.s	.isleft		; if yes, branch
 		moveq	#7,d1		
 
 .isleft:
 		cmp.b	obFrame(a0),d1	; is the gap next to Sonic?
 		bne.s	Jun_Display	; if not, branch
 
-		move.b	d1,$32(a0)
+		move.b	d1,objoff_32(a0)
 		addq.b	#4,obRoutine(a0) ; goto Jun_Release next
-		move.b	#1,(f_lockmulti).w ; lock controls
+		move.b	#1,(f_playerctrl).w ; lock controls
 		move.b	#id_Roll,obAnim(a1) ; make Sonic use "rolling" animation
 		move.w	#$800,obInertia(a1)
 		move.w	#0,obVelX(a1)
@@ -104,7 +104,7 @@ Jun_Release:	; Routine 6
 		bne.s	.dontrelease	; if not, branch
 
 .release:
-		cmp.b	$32(a0),d0
+		cmp.b	objoff_32(a0),d0
 		beq.s	.dontrelease
 		lea	(v_player).w,a1
 		move.w	#0,obVelX(a1)
@@ -115,7 +115,7 @@ Jun_Release:	; Routine 6
 		move.w	#$800,obVelY(a1)
 
 .isdown:
-		clr.b	(f_lockmulti).w	; unlock controls
+		clr.b	(f_playerctrl).w	; unlock controls
 		subq.b	#4,obRoutine(a0)
 
 .dontrelease:

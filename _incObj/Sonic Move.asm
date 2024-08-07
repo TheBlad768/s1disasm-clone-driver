@@ -9,9 +9,9 @@ Sonic_Move:
 		move.w	(v_sonspeedmax).w,d6
 		move.w	(v_sonspeedacc).w,d5
 		move.w	(v_sonspeeddec).w,d4
-		tst.b	(f_jumponly).w
+		tst.b	(f_slidemode).w
 		bne.w	loc_12FEE
-		tst.w	$3E(a0)
+		tst.w	objoff_3E(a0)
 		bne.w	Sonic_ResetScr
 		btst	#bitL,(v_jpadhold2).w ; is left being pressed?
 		beq.s	.notleft	; if not, branch
@@ -35,7 +35,7 @@ Sonic_Move:
 		beq.s	Sonic_Balance
 		moveq	#0,d0
 		move.b	standonobject(a0),d0
-		lsl.w	#6,d0
+		lsl.w	#object_size_bits,d0
 		lea	(v_objspace).w,a1
 		lea	(a1,d0.w),a1
 		tst.b	obStatus(a1)
@@ -58,7 +58,7 @@ Sonic_Balance:
 		jsr	(ObjFloorDist).l
 		cmpi.w	#$C,d1
 		blt.s	Sonic_LookUp
-		cmpi.b	#3,$36(a0)
+		cmpi.b	#3,objoff_36(a0)
 		bne.s	loc_12F62
 
 loc_12F5A:
@@ -67,7 +67,7 @@ loc_12F5A:
 ; ===========================================================================
 
 loc_12F62:
-		cmpi.b	#3,$37(a0)
+		cmpi.b	#3,objoff_37(a0)
 		bne.s	Sonic_LookUp
 
 loc_12F6A:
@@ -205,7 +205,7 @@ loc_13086:
 		bset	#0,obStatus(a0)
 		bne.s	loc_1309A
 		bclr	#5,obStatus(a0)
-		move.b	#1,obNextAni(a0)
+		move.b	#id_Run,obPrevAni(a0) ; restart Sonic's animation
 
 loc_1309A:
 		sub.w	d5,d0
@@ -253,7 +253,7 @@ Sonic_MoveRight:
 		bclr	#0,obStatus(a0)
 		beq.s	loc_13104
 		bclr	#5,obStatus(a0)
-		move.b	#1,obNextAni(a0)
+		move.b	#id_Run,obPrevAni(a0) ; restart Sonic's animation
 
 loc_13104:
 		add.w	d5,d0

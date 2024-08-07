@@ -16,7 +16,7 @@ PauseGame:
 
 Pause_StopGame:
 		move.w	#1,(f_pause).w	; freeze time
-		SMPS_PauseMusic
+		SMPS_PauseMusic ; pause music
 
 Pause_Loop:
 		move.b	#$10,(v_vbla_routine).w
@@ -41,7 +41,7 @@ Pause_ChkStart:
 		beq.s	Pause_Loop	; if not, branch
 
 Pause_EndMusic:
-		SMPS_UnpauseMusic
+		SMPS_UnpauseMusic	; unpause the music
 
 Unpause:
 		move.w	#0,(f_pause).w	; unpause the game
@@ -52,6 +52,6 @@ Pause_DoNothing:
 
 Pause_SlowMo:
 		move.w	#1,(f_pause).w
-		SMPS_UnpauseMusic
+		SMPS_UnpauseMusic	; Unpause the music
 		rts	
 ; End of function PauseGame

@@ -5,57 +5,59 @@
 BossMarble:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
-		move.w	Obj73_Index(pc,d0.w),d1
-		jmp	Obj73_Index(pc,d1.w)
+		move.w	BossMarble_Index(pc,d0.w),d1
+		jmp	BossMarble_Index(pc,d1.w)
 ; ===========================================================================
-Obj73_Index:	dc.w Obj73_Main-Obj73_Index
-		dc.w Obj73_ShipMain-Obj73_Index
-		dc.w Obj73_FaceMain-Obj73_Index
-		dc.w Obj73_FlameMain-Obj73_Index
-		dc.w Obj73_TubeMain-Obj73_Index
+BossMarble_Index:
+		dc.w BossMarble_Main-BossMarble_Index
+		dc.w BossMarble_ShipMain-BossMarble_Index
+		dc.w BossMarble_FaceMain-BossMarble_Index
+		dc.w BossMarble_FlameMain-BossMarble_Index
+		dc.w BossMarble_TubeMain-BossMarble_Index
 
-Obj73_ObjData:	dc.b 2,	0, 4		; routine number, animation, priority
+BossMarble_ObjData:
+		dc.b 2,	0, 4		; routine number, animation, priority
 		dc.b 4,	1, 4
 		dc.b 6,	7, 4
 		dc.b 8,	0, 3
 ; ===========================================================================
 
-Obj73_Main:	; Routine 0
-		move.w	obX(a0),$30(a0)
-		move.w	obY(a0),$38(a0)
+BossMarble_Main:	; Routine 0
+		move.w	obX(a0),objoff_30(a0)
+		move.w	obY(a0),objoff_38(a0)
 		move.b	#$F,obColType(a0)
 		move.b	#8,obColProp(a0) ; set number of hits to 8
-		lea	Obj73_ObjData(pc),a2
+		lea	BossMarble_ObjData(pc),a2
 		movea.l	a0,a1
 		moveq	#3,d1
-		bra.s	Obj73_LoadBoss
+		bra.s	BossMarble_LoadBoss
 ; ===========================================================================
 
-Obj73_Loop:
+BossMarble_Loop:
 		jsr	(FindNextFreeObj).l
-		bne.s	Obj73_ShipMain
-		_move.b	#id_BossMarble,0(a1)
+		bne.s	BossMarble_ShipMain
+		_move.b	#id_BossMarble,obID(a1)
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 
-Obj73_LoadBoss:
+BossMarble_LoadBoss:
 		bclr	#0,obStatus(a0)
 		clr.b	ob2ndRout(a1)
 		move.b	(a2)+,obRoutine(a1)
 		move.b	(a2)+,obAnim(a1)
 		move.b	(a2)+,obPriority(a1)
 		move.l	#Map_Eggman,obMap(a1)
-		move.w	#$400,obGfx(a1)
+		move.w	#make_art_tile(ArtTile_Eggman,0,0),obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#$20,obActWid(a1)
-		move.l	a0,$34(a1)
-		dbf	d1,Obj73_Loop	; repeat sequence 3 more times
+		move.l	a0,objoff_34(a1)
+		dbf	d1,BossMarble_Loop	; repeat sequence 3 more times
 
-Obj73_ShipMain:	; Routine 2
+BossMarble_ShipMain:	; Routine 2
 		moveq	#0,d0
 		move.b	ob2ndRout(a0),d0
-		move.w	Obj73_ShipIndex(pc,d0.w),d1
-		jsr	Obj73_ShipIndex(pc,d1.w)
+		move.w	BossMarble_ShipIndex(pc,d0.w),d1
+		jsr	BossMarble_ShipIndex(pc,d1.w)
 		lea	(Ani_Eggman).l,a1
 		jsr	(AnimateSprite).l
 		moveq	#3,d0
@@ -64,22 +66,23 @@ Obj73_ShipMain:	; Routine 2
 		or.b	d0,obRender(a0)
 		jmp	(DisplaySprite).l
 ; ===========================================================================
-Obj73_ShipIndex:dc.w loc_18302-Obj73_ShipIndex
-		dc.w loc_183AA-Obj73_ShipIndex
-		dc.w loc_184F6-Obj73_ShipIndex
-		dc.w loc_1852C-Obj73_ShipIndex
-		dc.w loc_18582-Obj73_ShipIndex
+BossMarble_ShipIndex:
+		dc.w loc_18302-BossMarble_ShipIndex
+		dc.w loc_183AA-BossMarble_ShipIndex
+		dc.w loc_184F6-BossMarble_ShipIndex
+		dc.w loc_1852C-BossMarble_ShipIndex
+		dc.w loc_18582-BossMarble_ShipIndex
 ; ===========================================================================
 
 loc_18302:
-		move.b	$3F(a0),d0
-		addq.b	#2,$3F(a0)
+		move.b	objoff_3F(a0),d0
+		addq.b	#2,objoff_3F(a0)
 		jsr	(CalcSine).l
 		asr.w	#2,d0
 		move.w	d0,obVelY(a0)
 		move.w	#-$100,obVelX(a0)
 		bsr.w	BossMove
-		cmpi.w	#$1910,$30(a0)
+		cmpi.w	#boss_mz_x+$110,objoff_30(a0)
 		bne.s	loc_18334
 		addq.b	#2,ob2ndRout(a0)
 		clr.b	obSubtype(a0)
@@ -87,25 +90,25 @@ loc_18302:
 
 loc_18334:
 		jsr	(RandomNumber).l
-		move.b	d0,$34(a0)
+		move.b	d0,objoff_34(a0)
 
 loc_1833E:
-		move.w	$38(a0),obY(a0)
-		move.w	$30(a0),obX(a0)
+		move.w	objoff_38(a0),obY(a0)
+		move.w	objoff_30(a0),obX(a0)
 		cmpi.b	#4,ob2ndRout(a0)
-		bcc.s	locret_18390
+		bhs.s	locret_18390
 		tst.b	obStatus(a0)
 		bmi.s	loc_18392
 		tst.b	obColType(a0)
 		bne.s	locret_18390
-		tst.b	$3E(a0)
+		tst.b	objoff_3E(a0)
 		bne.s	loc_18374
-		move.b	#$28,$3E(a0)
+		move.b	#$28,objoff_3E(a0)
 		move.w	#sfx_HitBoss,d0
 		jsr	(PlaySound_Special).l	; play boss damage sound
 
 loc_18374:
-		lea	(v_pal_dry+$22).w,a1
+		lea	(v_palette+$22).w,a1
 		moveq	#0,d0
 		tst.w	(a1)
 		bne.s	loc_18382
@@ -113,7 +116,7 @@ loc_18374:
 
 loc_18382:
 		move.w	d0,(a1)
-		subq.b	#1,$3E(a0)
+		subq.b	#1,objoff_3E(a0)
 		bne.s	locret_18390
 		move.b	#$F,obColType(a0)
 
@@ -125,7 +128,7 @@ loc_18392:
 		moveq	#100,d0
 		bsr.w	AddPoints
 		move.b	#4,ob2ndRout(a0)
-		move.w	#$B4,$3C(a0)
+		move.w	#$B4,objoff_3C(a0)
 		clr.w	obVelX(a0)
 		rts	
 ; ===========================================================================
@@ -139,16 +142,16 @@ loc_183AA:
 		bra.w	loc_1833E
 ; ===========================================================================
 off_183C2:	dc.w loc_183CA-off_183C2
-		dc.w Obj73_MakeLava2-off_183C2
+		dc.w BossMarble_MakeLava2-off_183C2
 		dc.w loc_183CA-off_183C2
-		dc.w Obj73_MakeLava2-off_183C2
+		dc.w BossMarble_MakeLava2-off_183C2
 ; ===========================================================================
 
 loc_183CA:
 		tst.w	obVelX(a0)
 		bne.s	loc_183FE
 		moveq	#$40,d0
-		cmpi.w	#$22C,$38(a0)
+		cmpi.w	#boss_mz_y+$1C,objoff_38(a0)
 		beq.s	loc_183E6
 		bcs.s	loc_183DE
 		neg.w	d0
@@ -166,23 +169,23 @@ loc_183E6:
 		neg.w	obVelX(a0)
 
 loc_183FE:
-		cmpi.b	#$18,$3E(a0)
-		bcc.s	Obj73_MakeLava
+		cmpi.b	#$18,objoff_3E(a0)
+		bhs.s	BossMarble_MakeLava
 		bsr.w	BossMove
 		subq.w	#4,obVelY(a0)
 
-Obj73_MakeLava:
-		subq.b	#1,$34(a0)
+BossMarble_MakeLava:
+		subq.b	#1,objoff_34(a0)
 		bcc.s	loc_1845C
 		jsr	(FindFreeObj).l
 		bne.s	loc_1844A
-		_move.b	#id_LavaBall,0(a1) ; load lava ball object
-		move.w	#$2E8,obY(a1)	; set Y	position
+		_move.b	#id_LavaBall,obID(a1) ; load lava ball object
+		move.w	#boss_mz_y+$D8,obY(a1)	; set Y	position
 		jsr	(RandomNumber).l
 		andi.l	#$FFFF,d0
 		divu.w	#$50,d0
 		swap	d0
-		addi.w	#$1878,d0
+		addi.w	#boss_mz_x+$78,d0
 		move.w	d0,obX(a1)
 		lsr.b	#7,d1
 		move.w	#$FF,obSubtype(a1)
@@ -191,27 +194,27 @@ loc_1844A:
 		jsr	(RandomNumber).l
 		andi.b	#$1F,d0
 		addi.b	#$40,d0
-		move.b	d0,$34(a0)
+		move.b	d0,objoff_34(a0)
 
 loc_1845C:
 		btst	#0,obStatus(a0)
 		beq.s	loc_18474
-		cmpi.w	#$1910,$30(a0)
+		cmpi.w	#boss_mz_x+$110,objoff_30(a0)
 		blt.s	locret_1849C
-		move.w	#$1910,$30(a0)
+		move.w	#boss_mz_x+$110,objoff_30(a0)
 		bra.s	loc_18482
 ; ===========================================================================
 
 loc_18474:
-		cmpi.w	#$1830,$30(a0)
+		cmpi.w	#boss_mz_x+$30,objoff_30(a0)
 		bgt.s	locret_1849C
-		move.w	#$1830,$30(a0)
+		move.w	#boss_mz_x+$30,objoff_30(a0)
 
 loc_18482:
 		clr.w	obVelX(a0)
 		move.w	#-$180,obVelY(a0)
-		cmpi.w	#$22C,$38(a0)
-		bcc.s	loc_18498
+		cmpi.w	#boss_mz_y+$1C,objoff_38(a0)
+		bhs.s	loc_18498
 		neg.w	obVelY(a0)
 
 loc_18498:
@@ -221,27 +224,27 @@ locret_1849C:
 		rts	
 ; ===========================================================================
 
-Obj73_MakeLava2:
+BossMarble_MakeLava2:
 		bsr.w	BossMove
-		move.w	$38(a0),d0
-		subi.w	#$22C,d0
+		move.w	objoff_38(a0),d0
+		subi.w	#boss_mz_y+$1C,d0
 		bgt.s	locret_184F4
-		move.w	#$22C,d0
+		move.w	#boss_mz_y+$1C,d0
 		tst.w	obVelY(a0)
 		beq.s	loc_184EA
 		clr.w	obVelY(a0)
-		move.w	#$50,$3C(a0)
+		move.w	#$50,objoff_3C(a0)
 		bchg	#0,obStatus(a0)
 		jsr	(FindFreeObj).l
 		bne.s	loc_184EA
-		move.w	$30(a0),obX(a1)
-		move.w	$38(a0),obY(a1)
+		move.w	objoff_30(a0),obX(a1)
+		move.w	objoff_38(a0),obY(a1)
 		addi.w	#$18,obY(a1)
-		move.b	#id_BossFire,(a1)	; load lava ball object
+		move.b	#id_BossFire,obID(a1)	; load lava ball object
 		move.b	#1,obSubtype(a1)
 
 loc_184EA:
-		subq.w	#1,$3C(a0)
+		subq.w	#1,objoff_3C(a0)
 		bne.s	locret_184F4
 		addq.b	#2,obSubtype(a0)
 
@@ -250,7 +253,7 @@ locret_184F4:
 ; ===========================================================================
 
 loc_184F6:
-		subq.w	#1,$3C(a0)
+		subq.w	#1,objoff_3C(a0)
 		bmi.s	loc_18500
 		bra.w	BossDefeated
 ; ===========================================================================
@@ -260,7 +263,7 @@ loc_18500:
 		bclr	#7,obStatus(a0)
 		clr.w	obVelX(a0)
 		addq.b	#2,ob2ndRout(a0)
-		move.w	#-$26,$3C(a0)
+		move.w	#-$26,objoff_3C(a0)
 		tst.b	(v_bossstatus).w
 		bne.s	locret_1852A
 		move.b	#1,(v_bossstatus).w
@@ -271,27 +274,27 @@ locret_1852A:
 ; ===========================================================================
 
 loc_1852C:
-		addq.w	#1,$3C(a0)
+		addq.w	#1,objoff_3C(a0)
 		beq.s	loc_18544
 		bpl.s	loc_1854E
-		cmpi.w	#$270,$38(a0)
-		bcc.s	loc_18544
+		cmpi.w	#boss_mz_y+$60,objoff_38(a0)
+		bhs.s	loc_18544
 		addi.w	#$18,obVelY(a0)
 		bra.s	loc_1857A
 ; ===========================================================================
 
 loc_18544:
 		clr.w	obVelY(a0)
-		clr.w	$3C(a0)
+		clr.w	objoff_3C(a0)
 		bra.s	loc_1857A
 ; ===========================================================================
 
 loc_1854E:
-		cmpi.w	#$30,$3C(a0)
-		bcs.s	loc_18566
+		cmpi.w	#$30,objoff_3C(a0)
+		blo.s	loc_18566
 		beq.s	loc_1856C
-		cmpi.w	#$38,$3C(a0)
-		bcs.s	loc_1857A
+		cmpi.w	#$38,objoff_3C(a0)
+		blo.s	loc_1857A
 		addq.b	#2,ob2ndRout(a0)
 		bra.s	loc_1857A
 ; ===========================================================================
@@ -303,7 +306,7 @@ loc_18566:
 
 loc_1856C:
 		clr.w	obVelY(a0)
-		move.w	#bgm_MZ,d0
+		move.w	#mus_MZ,d0
 		jsr	(PlaySound).l		; play MZ music
 
 loc_1857A:
@@ -314,29 +317,32 @@ loc_1857A:
 loc_18582:
 		move.w	#$500,obVelX(a0)
 		move.w	#-$40,obVelY(a0)
-		cmpi.w	#$1960,(v_limitright2).w
-		bcc.s	loc_1859C
+		cmpi.w	#boss_mz_end,(v_limitright2).w
+		bhs.s	loc_1859C
 		addq.w	#2,(v_limitright2).w
 		bra.s	loc_185A2
 ; ===========================================================================
 
 loc_1859C:
 		tst.b	obRender(a0)
-		bpl.s	Obj73_ShipDel
+		bpl.s	BossMarble_ShipDel
 
 loc_185A2:
 		bsr.w	BossMove
 		bra.w	loc_1833E
 ; ===========================================================================
 
-Obj73_ShipDel:
+BossMarble_ShipDel:
+	if FixBugs
+		addq.l	#4,sp
+	endif
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
-Obj73_FaceMain:	; Routine 4
+BossMarble_FaceMain:	; Routine 4
 		moveq	#0,d0
 		moveq	#1,d1
-		movea.l	$34(a0),a1
+		movea.l	objoff_34(a0),a1
 		move.b	ob2ndRout(a1),d0
 		subq.w	#2,d0
 		bne.s	loc_185D2
@@ -364,7 +370,7 @@ loc_185DA:
 
 loc_185E4:
 		cmpi.b	#4,(v_player+obRoutine).w
-		bcs.s	loc_185EE
+		blo.s	loc_185EE
 		moveq	#4,d1
 
 loc_185EE:
@@ -373,24 +379,24 @@ loc_185EE:
 		bne.s	loc_18602
 		move.b	#6,obAnim(a0)
 		tst.b	obRender(a0)
-		bpl.s	Obj73_FaceDel
+		bpl.s	BossMarble_FaceDel
 
 loc_18602:
-		bra.s	Obj73_Display
+		bra.s	BossMarble_Display
 ; ===========================================================================
 
-Obj73_FaceDel:
+BossMarble_FaceDel:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
-Obj73_FlameMain:; Routine 6
+BossMarble_FlameMain:; Routine 6
 		move.b	#7,obAnim(a0)
-		movea.l	$34(a0),a1
+		movea.l	objoff_34(a0),a1
 		cmpi.b	#8,ob2ndRout(a1)
 		blt.s	loc_1862A
 		move.b	#$B,obAnim(a0)
 		tst.b	obRender(a0)
-		bpl.s	Obj73_FlameDel
+		bpl.s	BossMarble_FlameDel
 		bra.s	loc_18636
 ; ===========================================================================
 
@@ -400,19 +406,19 @@ loc_1862A:
 		move.b	#8,obAnim(a0)
 
 loc_18636:
-		bra.s	Obj73_Display
+		bra.s	BossMarble_Display
 ; ===========================================================================
 
-Obj73_FlameDel:
+BossMarble_FlameDel:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
-Obj73_Display:
+BossMarble_Display:
 		lea	(Ani_Eggman).l,a1
 		jsr	(AnimateSprite).l
 
 loc_1864A:
-		movea.l	$34(a0),a1
+		movea.l	objoff_34(a0),a1
 		move.w	obX(a1),obX(a0)
 		move.w	obY(a1),obY(a0)
 		move.b	obStatus(a1),obStatus(a0)
@@ -423,19 +429,19 @@ loc_1864A:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-Obj73_TubeMain:	; Routine 8
-		movea.l	$34(a0),a1
+BossMarble_TubeMain:	; Routine 8
+		movea.l	objoff_34(a0),a1
 		cmpi.b	#8,ob2ndRout(a1)
 		bne.s	loc_18688
 		tst.b	obRender(a0)
-		bpl.s	Obj73_TubeDel
+		bpl.s	BossMarble_TubeDel
 
 loc_18688:
 		move.l	#Map_BossItems,obMap(a0)
-		move.w	#$246C,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Eggman_Weapons,1,0),obGfx(a0)
 		move.b	#4,obFrame(a0)
 		bra.s	loc_1864A
 ; ===========================================================================
 
-Obj73_TubeDel:
+BossMarble_TubeDel:
 		jmp	(DeleteObject).l

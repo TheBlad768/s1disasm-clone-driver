@@ -12,18 +12,18 @@ SBall_Index:	dc.w SBall_Main-SBall_Index
 		dc.w SBall_Move-SBall_Index
 		dc.w SBall_Display-SBall_Index
 
-sball_childs = $29		; number of child objects (1 byte)
+sball_childs = objoff_29	; number of child objects (1 byte)
 		; $30-$37	; object RAM numbers of childs (1 byte each)
-sball_origX = $3A		; centre x-axis position (2 bytes)
-sball_origY = $38		; centre y-axis position (2 bytes)
-sball_radius = $3C		; radius (1 byte)
-sball_speed = $3E		; rate of spin (2 bytes)
+sball_origX = objoff_3A		; centre x-axis position (2 bytes)
+sball_origY = objoff_38		; centre y-axis position (2 bytes)
+sball_radius = objoff_3C	; radius (1 byte)
+sball_speed = objoff_3E		; rate of spin (2 bytes)
 ; ===========================================================================
 
 SBall_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_SBall,obMap(a0)
-		move.w	#$3BA,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_SYZ_Spikeball_Chain,0,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#8,obActWid(a0)
@@ -34,7 +34,7 @@ SBall_Main:	; Routine 0
 		bne.s	.notlz
 
 		move.b	#0,obColType(a0) ; LZ specific code (chain doesn't hurt)
-		move.w	#$310,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_LZ_Spikeball_Chain,0,0),obGfx(a0)
 		move.l	#Map_SBall2,obMap(a0)
 
 .notlz:
@@ -62,16 +62,23 @@ SBall_Main:	; Routine 0
 		bcs.s	.fail
 
 .makechain:
+	if FixBugs
+		; If an object is allocated before the parent object, then
+		; when the child is deleted, it will have already been queued
+		; for display, which is a display-and-delete bug.
+		bsr.w	FindNextFreeObj
+	else
 		bsr.w	FindFreeObj
+	endif
 		bne.s	.fail
 		addq.b	#1,sball_childs(a0) ; increment child object counter
 		move.w	a1,d5		; get child object RAM address
-		subi.w	#$D000,d5	; subtract $D000
-		lsr.w	#6,d5		; divide by $40
+		subi.w	#v_objspace&$FFFF,d5 ; subtract base address
+		lsr.w	#object_size_bits,d5		; divide by $40
 		andi.w	#$7F,d5
 		move.b	d5,(a2)+	; copy child RAM number
 		move.b	#4,obRoutine(a1)
-		_move.b	0(a0),0(a1)
+		_move.b	obID(a0),obID(a1)
 		move.l	obMap(a0),obMap(a1)
 		move.w	obGfx(a0),obGfx(a1)
 		move.b	obRender(a0),obRender(a1)
@@ -92,8 +99,8 @@ SBall_Main:	; Routine 0
 
 .fail:
 		move.w	a0,d5
-		subi.w	#$D000,d5
-		lsr.w	#6,d5
+		subi.w	#v_objspace&$FFFF,d5
+		lsr.w	#object_size_bits,d5
 		andi.w	#$7F,d5
 		move.b	d5,(a2)+
 		cmpi.b	#id_LZ,(v_zone).w ; check if level is LZ
@@ -121,7 +128,7 @@ SBall_Move:	; Routine 2
 .loop:
 		moveq	#0,d4
 		move.b	(a2)+,d4
-		lsl.w	#6,d4
+		lsl.w	#object_size_bits,d4
 		addi.l	#v_objspace&$FFFFFF,d4
 		movea.l	d4,a1
 		moveq	#0,d4
@@ -152,7 +159,7 @@ SBall_Move:	; Routine 2
 .deleteloop:
 		moveq	#0,d0
 		move.b	(a2)+,d0
-		lsl.w	#6,d0
+		lsl.w	#object_size_bits,d0
 		addi.l	#v_objspace&$FFFFFF,d0
 		movea.l	d0,a1
 		bsr.w	DeleteChild

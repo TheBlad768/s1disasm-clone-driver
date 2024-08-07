@@ -28,7 +28,18 @@ Sonic_LevelBound:
 
 .chkbottom:
 		move.w	(v_limitbtm2).w,d0
-		addi.w	#$E0,d0
+	if FixBugs
+		; The original code does not consider that the camera boundary
+		; may be in the middle of lowering itself, which is why going
+		; down the S-tunnel in Green Hill Zone Act 1 fast enough can
+		; kill Sonic.
+		move.w	(v_limitbtm1).w,d1
+		cmp.w	d0,d1
+		blo.s	.skip
+		move.w	d1,d0
+.skip:
+	endif
+		addi.w	#224,d0
 		cmp.w	obY(a0),d0	; has Sonic touched the	bottom boundary?
 		blt.s	.bottom		; if yes, branch
 		rts	
@@ -38,7 +49,7 @@ Sonic_LevelBound:
 		cmpi.w	#(id_SBZ<<8)+1,(v_zone).w ; is level SBZ2 ?
 		bne.w	KillSonic	; if not, kill Sonic
 		cmpi.w	#$2000,(v_player+obX).w
-		bcs.w	KillSonic
+		blo.w	KillSonic
 		clr.b	(v_lastlamp).w	; clear	lamppost counter
 		move.w	#1,(f_restart).w ; restart the level
 		move.w	#(id_LZ<<8)+3,(v_zone).w ; set level to SBZ3 (LZ4)

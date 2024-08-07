@@ -1,9 +1,9 @@
 ; ========SONIC 1 GIT EQUATES========
 
-Size_of_Mega_PCM_guess = $3F0
-Size_of_DAC_driver_guess = Size_of_Mega_PCM_guess
-
 ; ---FLAGS---
+SMPS_RingSFXBehaviour	= 1
+;	| If 1, SndID_Ring alternates between the left and right speakers.
+;
 SMPS_GloopSFXBehaviour	= 0
 ;	| If 1, SndID_Gloop only plays on every other call.
 ;
@@ -41,15 +41,18 @@ SMPS_IsOn32X	= 0
 SMPS_EnablePWM	= 0
 ;	| If 1, support for four PWM tracks is added
 ;
+SMPS_Asserts	= 0
+;	| If 1, some debugging logic is enabled to catch broken behaviour in songs and sounds.
+;
 SMPS_SoundTest	= 0
-;	| If 1, some debugging logic is enabled. I would *really* advise not enabling this.
+;	| If 1, some some extra logic for my 'sound test' homebrew is enabled.
 
-SMPS_S1DACSamples	= 1
-SMPS_S2DACSamples	= 0
-SMPS_S3DACSamples	= 0
-SMPS_SKDACSamples	= 0
+SMPS_S1DACSamples		= 1
+SMPS_S2DACSamples		= 0
+SMPS_S3DACSamples		= 0
+SMPS_SKDACSamples		= 0
 SMPS_S3DDACSamples	= 0
-SMPS_SCDACSamples	= 0
+SMPS_SCDACSamples		= 0
 
 SMPS_S1PSGEnvelopes	= 1
 SMPS_S2PSGEnvelopes	= 0
@@ -60,6 +63,7 @@ SMPS_KCPSGEnvelopes	= 0
 
 ; ---DISASM-DEPENDANT VARIABLES AND FUNCTIONS---
 SoundDriverLoad		= SMPS_LoadDACDriver
+DACDriverLoad		= SMPS_LoadDACDriver
 
 PlayMusic			= SMPS_QueueSound1
 Play_Music			= SMPS_QueueSound1
@@ -69,42 +73,46 @@ PlaySFX				= SMPS_QueueSound2
 Play_SFX			= SMPS_QueueSound2
 PlaySound_Special	= SMPS_QueueSound2
 Play_Sound_2		= SMPS_QueueSound2
+PlaySound_Unused	= SMPS_QueueSound3
+Play_Sample			= SMPS_PlayDACSample
+
+mus_FadeOut		= mus_Fade
 
 Clone_Driver_RAM	= (-(v_snddriver_ram&$80000000)<<1)|v_snddriver_ram
 
 ; ---SOUND ID BOUNDARIES---
-MusID__First		= bgm__First
+MusID__First		= mus__First
 ;	| ID of your first song
 ;
-MusID__End		= bgm__Last+1
+MusID__End			= mus__Last+1
 ;	| ID of your last song+1
 ;
-SndID__First		= sfx__First
+SndID__First			= sfx__First
 ;	| ID of your first SFX
 ;
-SndID__End		= sfx__Last+1
+SndID__End			= sfx__Last+1
 ;	| ID of your last SFX+1
 ;
 SpecID__First		= spec__First
 ;	| ID of your first Special SFX
 ;
-SpecID__End		= spec__Last+1
+SpecID__End			= spec__Last+1
 ;	| ID of your last Special SFX+1
 ;
-FlgID__First		= flg__First
+FlgID__First			= flg__First
 ;	| ID of your first command
 ;
-FlgID__End		= flg__Last+1
+FlgID__End			= flg__Last+1
 ;	| ID of your last command+1
 ;
 
 ; ---MUSIC CONSTANTS---
-MusID_ExtraLife		= bgm_ExtraLife
+MusID_ExtraLife		= mus_ExtraLife
 ;	| ID of your Extra Life jingle
 ;
 
 ; ---SFX CONSTANTS---
-SndID_Ring		= sfx_Ring
+SndID_Ring			= sfx_Ring
 ;	| ID of your ring SFX
 ;
 SndID_RingLeft		= sfx_RingLeft

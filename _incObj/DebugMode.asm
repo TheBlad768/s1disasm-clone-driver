@@ -115,7 +115,7 @@ loc_1D03C:
 		beq.s	loc_1D052	; if not, branch
 		add.l	d1,d2
 		cmpi.l	#$7FF0000,d2
-		bcs.s	loc_1D052
+		blo.s	loc_1D052
 		move.l	#$7FF0000,d2
 
 loc_1D052:
@@ -164,7 +164,7 @@ Debug_ChgItem:
 		bne.s	.backtonormal
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
-		_move.b	4(a0),0(a1)	; create object
+		_move.b	obMap(a0),obID(a1)	; create object
 		move.b	obRender(a0),obRender(a1)
 		move.b	obRender(a0),obStatus(a1)
 		andi.b	#$7F,obStatus(a1)

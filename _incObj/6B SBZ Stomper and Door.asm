@@ -11,10 +11,9 @@ ScrapStomp:
 Sto_Index:	dc.w Sto_Main-Sto_Index
 		dc.w Sto_Action-Sto_Index
 
-sto_height = $16
-sto_origX = $34		; original x-axis position
-sto_origY = $30		; original y-axis position
-sto_active = $38		; flag set when a switch is pressed
+sto_origX = objoff_34		; original x-axis position
+sto_origY = objoff_30		; original y-axis position
+sto_active = objoff_38		; flag set when a switch is pressed
 
 Sto_Var:	dc.b  $40,  $C,	$80,   1 ; width, height, ????,	type number
 		dc.b  $1C, $20,	$38,   3
@@ -31,11 +30,11 @@ Sto_Main:	; Routine 0
 		andi.w	#$1C,d0
 		lea	Sto_Var(pc,d0.w),a3
 		move.b	(a3)+,obActWid(a0)
-		move.b	(a3)+,sto_height(a0)
+		move.b	(a3)+,obHeight(a0)
 		lsr.w	#2,d0
 		move.b	d0,obFrame(a0)
 		move.l	#Map_Stomp,obMap(a0)
-		move.w	#$22C0,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_SBZ_Moving_Block_Short,1,0),obGfx(a0)
 		cmpi.b	#id_LZ,(v_zone).w ; check if level is LZ/SBZ3
 		bne.s	.isSBZ12	; if not, branch
 		bset	#0,(v_obj6B).w
@@ -53,7 +52,7 @@ Sto_Main:	; Routine 0
 ; ===========================================================================
 
 .isSBZ3:
-		move.w	#$41F0,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Level+$1F0,2,0),obGfx(a0)
 		cmpi.w	#$A80,obX(a0)
 		bne.s	.isSBZ12
 		lea	(v_objstate).w,a2
@@ -73,12 +72,12 @@ Sto_Main:	; Routine 0
 		move.w	obY(a0),sto_origY(a0)
 		moveq	#0,d0
 		move.b	(a3)+,d0
-		move.w	d0,$3C(a0)
+		move.w	d0,objoff_3C(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
 		bpl.s	Sto_Action
 		andi.b	#$F,d0
-		move.b	d0,$3E(a0)
+		move.b	d0,objoff_3E(a0)
 		move.b	(a3),obSubtype(a0)
 		cmpi.b	#5,(a3)
 		bne.s	.chkgone
@@ -106,7 +105,7 @@ Sto_Action:	; Routine 2
 		move.b	obActWid(a0),d1
 		addi.w	#$B,d1
 		moveq	#0,d2
-		move.b	sto_height(a0),d2
+		move.b	obHeight(a0),d2
 		move.w	d2,d3
 		addq.w	#1,d3
 		bsr.w	SolidObject
@@ -142,19 +141,19 @@ Sto_Action:	; Routine 2
 		bne.s	.isactive01
 		lea	(f_switch).w,a2
 		moveq	#0,d0
-		move.b	$3E(a0),d0
+		move.b	objoff_3E(a0),d0
 		btst	#0,(a2,d0.w)
 		beq.s	.loc_15DC2
 		move.b	#1,sto_active(a0)
 
 .isactive01:
-		move.w	$3C(a0),d0
-		cmp.w	$3A(a0),d0
+		move.w	objoff_3C(a0),d0
+		cmp.w	objoff_3A(a0),d0
 		beq.s	.loc_15DE0
-		addq.w	#2,$3A(a0)
+		addq.w	#2,objoff_3A(a0)
 
 .loc_15DC2:
-		move.w	$3A(a0),d0
+		move.w	objoff_3A(a0),d0
 		btst	#0,obStatus(a0)
 		beq.s	.noflip01
 		neg.w	d0
@@ -169,7 +168,7 @@ Sto_Action:	; Routine 2
 
 .loc_15DE0:
 		addq.b	#1,obSubtype(a0)
-		move.w	#$B4,$36(a0)
+		move.w	#$B4,objoff_36(a0)
 		clr.b	sto_active(a0)
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
@@ -182,17 +181,17 @@ Sto_Action:	; Routine 2
 .type02:
 		tst.b	sto_active(a0)
 		bne.s	.isactive02
-		subq.w	#1,$36(a0)
+		subq.w	#1,objoff_36(a0)
 		bne.s	.loc_15E1E
 		move.b	#1,sto_active(a0)
 
 .isactive02:
-		tst.w	$3A(a0)
+		tst.w	objoff_3A(a0)
 		beq.s	.loc_15E3C
-		subq.w	#2,$3A(a0)
+		subq.w	#2,objoff_3A(a0)
 
 .loc_15E1E:
-		move.w	$3A(a0),d0
+		move.w	objoff_3A(a0),d0
 		btst	#0,obStatus(a0)
 		beq.s	.noflip02
 		neg.w	d0
@@ -219,27 +218,27 @@ Sto_Action:	; Routine 2
 .type03:
 		tst.b	sto_active(a0)
 		bne.s	.isactive03
-		tst.w	$3A(a0)
+		tst.w	objoff_3A(a0)
 		beq.s	.loc_15E6A
-		subq.w	#1,$3A(a0)
+		subq.w	#1,objoff_3A(a0)
 		bra.s	.loc_15E8E
 ; ===========================================================================
 
 .loc_15E6A:
-		subq.w	#1,$36(a0)
+		subq.w	#1,objoff_36(a0)
 		bpl.s	.loc_15E8E
-		move.w	#$3C,$36(a0)
+		move.w	#$3C,objoff_36(a0)
 		move.b	#1,sto_active(a0)
 
 .isactive03:
-		addq.w	#8,$3A(a0)
-		move.w	$3A(a0),d0
-		cmp.w	$3C(a0),d0
+		addq.w	#8,objoff_3A(a0)
+		move.w	objoff_3A(a0),d0
+		cmp.w	objoff_3C(a0),d0
 		bne.s	.loc_15E8E
 		clr.b	sto_active(a0)
 
 .loc_15E8E:
-		move.w	$3A(a0),d0
+		move.w	objoff_3A(a0),d0
 		btst	#0,obStatus(a0)
 		beq.s	.noflip03
 		neg.w	d0
@@ -255,34 +254,34 @@ Sto_Action:	; Routine 2
 .type04:
 		tst.b	sto_active(a0)
 		bne.s	.isactive04
-		tst.w	$3A(a0)
+		tst.w	objoff_3A(a0)
 		beq.s	.loc_15EBE
-		subq.w	#8,$3A(a0)
+		subq.w	#8,objoff_3A(a0)
 		bra.s	.loc_15EF0
 ; ===========================================================================
 
 .loc_15EBE:
-		subq.w	#1,$36(a0)
+		subq.w	#1,objoff_36(a0)
 		bpl.s	.loc_15EF0
-		move.w	#$3C,$36(a0)
+		move.w	#$3C,objoff_36(a0)
 		move.b	#1,sto_active(a0)
 
 .isactive04:
-		move.w	$3A(a0),d0
-		cmp.w	$3C(a0),d0
+		move.w	objoff_3A(a0),d0
+		cmp.w	objoff_3C(a0),d0
 		beq.s	.loc_15EE0
-		addq.w	#8,$3A(a0)
+		addq.w	#8,objoff_3A(a0)
 		bra.s	.loc_15EF0
 ; ===========================================================================
 
 .loc_15EE0:
-		subq.w	#1,$36(a0)
+		subq.w	#1,objoff_36(a0)
 		bpl.s	.loc_15EF0
-		move.w	#$3C,$36(a0)
+		move.w	#$3C,objoff_36(a0)
 		clr.b	sto_active(a0)
 
 .loc_15EF0:
-		move.w	$3A(a0),d0
+		move.w	objoff_3A(a0),d0
 		btst	#0,obStatus(a0)
 		beq.s	.noflip04
 		neg.w	d0
@@ -300,7 +299,7 @@ Sto_Action:	; Routine 2
 		bne.s	.loc_15F3E
 		lea	(f_switch).w,a2
 		moveq	#0,d0
-		move.b	$3E(a0),d0
+		move.b	objoff_3E(a0),d0
 		btst	#0,(a2,d0.w)
 		beq.s	.locret_15F5C
 		move.b	#1,sto_active(a0)

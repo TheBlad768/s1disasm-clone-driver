@@ -21,13 +21,13 @@ Shi_Main:	; Routine 0
 		move.b	#$10,obActWid(a0)
 		tst.b	obAnim(a0)	; is object a shield?
 		bne.s	.stars		; if not, branch
-		move.w	#$541,obGfx(a0)	; shield specific code
+		move.w	#make_art_tile(ArtTile_Shield,0,0),obGfx(a0)	; shield specific code
 		rts	
 ; ===========================================================================
 
 .stars:
 		addq.b	#2,obRoutine(a0) ; goto Shi_Stars next
-		move.w	#$55C,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Invincibility,0,0),obGfx(a0)
 		rts	
 ; ===========================================================================
 
@@ -61,11 +61,11 @@ Shi_Stars:	; Routine 4
 		lsl.b	#4,d1
 		addq.b	#4,d1
 		sub.b	d1,d0
-		move.b	$30(a0),d1
+		move.b	objoff_30(a0),d1
 		sub.b	d1,d0
 		addq.b	#4,d1
 		andi.b	#$F,d1
-		move.b	d1,$30(a0)
+		move.b	d1,objoff_30(a0)
 		bra.s	.b
 ; ===========================================================================
 
@@ -76,15 +76,15 @@ Shi_Stars:	; Routine 4
 		add.b	d2,d1		; multiply by 3
 		addq.b	#4,d1
 		sub.b	d1,d0
-		move.b	$30(a0),d1
+		move.b	objoff_30(a0),d1
 		sub.b	d1,d0		; use earlier tracking data to create trail
 		addq.b	#4,d1
 		cmpi.b	#$18,d1
-		bcs.s	.a
+		blo.s	.a
 		moveq	#0,d1
 
 .a:
-		move.b	d1,$30(a0)
+		move.b	d1,objoff_30(a0)
 
 .b:
 		lea	(v_tracksonic).w,a1

@@ -11,13 +11,13 @@ Electro:
 Elec_Index:	dc.w Elec_Main-Elec_Index
 		dc.w Elec_Shock-Elec_Index
 
-elec_freq = $34		; frequency
+elec_freq = objoff_34		; frequency
 ; ===========================================================================
 
 Elec_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Elec,obMap(a0)
-		move.w	#$47E,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_SBZ_Electric_Orb,0,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$28,obActWid(a0)
 		moveq	#0,d0

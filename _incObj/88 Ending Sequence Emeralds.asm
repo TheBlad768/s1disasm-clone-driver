@@ -12,10 +12,10 @@ EndChaos:
 ECha_Index:	dc.w ECha_Main-ECha_Index
 		dc.w ECha_Move-ECha_Index
 
-echa_origX = $38	; x-axis centre of emerald circle (2 bytes)
-echa_origY = $3A	; y-axis centre of emerald circle (2 bytes)
-echa_radius = $3C	; radius (2 bytes)
-echa_angle = $3E	; angle for rotation (2 bytes)
+echa_origX = objoff_38	; x-axis centre of emerald circle (2 bytes)
+echa_origY = objoff_3A	; y-axis centre of emerald circle (2 bytes)
+echa_radius = objoff_3C	; radius (2 bytes)
+echa_angle = objoff_3E	; angle for rotation (2 bytes)
 ; ===========================================================================
 
 ECha_Main:	; Routine 0
@@ -34,10 +34,10 @@ ECha_CreateEms:
 		moveq	#5,d1
 
 ECha_LoadLoop:
-		move.b	#id_EndChaos,(a1) ; load chaos emerald object
+		move.b	#id_EndChaos,obID(a1) ; load chaos emerald object
 		addq.b	#2,obRoutine(a1)
 		move.l	#Map_ECha,obMap(a1)
-		move.w	#$3C5,obGfx(a1)
+		move.w	#make_art_tile(ArtTile_Ending_Emeralds,0,0),obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#1,obPriority(a1)
 		move.w	obX(a0),echa_origX(a1)
@@ -47,7 +47,7 @@ ECha_LoadLoop:
 		addq.b	#1,d2
 		move.b	d3,obAngle(a1)
 		addi.b	#$100/6,d3	; angle between each emerald
-		lea	$40(a1),a1
+		lea	object_size(a1),a1
 		dbf	d1,ECha_LoadLoop ; repeat 5 more times
 
 ECha_Move:	; Routine 2

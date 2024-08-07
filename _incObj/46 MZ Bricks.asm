@@ -11,7 +11,7 @@ MarbleBrick:
 Brick_Index:	dc.w Brick_Main-Brick_Index
 		dc.w Brick_Action-Brick_Index
 
-brick_origY = $30
+brick_origY = objoff_30
 ; ===========================================================================
 
 Brick_Main:	; Routine 0
@@ -19,12 +19,12 @@ Brick_Main:	; Routine 0
 		move.b	#$F,obHeight(a0)
 		move.b	#$F,obWidth(a0)
 		move.l	#Map_Brick,obMap(a0)
-		move.w	#$4000,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Level,2,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$10,obActWid(a0)
 		move.w	obY(a0),brick_origY(a0)
-		move.w	#$5C0,$32(a0)
+		move.w	#$5C0,objoff_32(a0)
 
 Brick_Action:	; Routine 2
 		tst.b	obRender(a0)
@@ -70,7 +70,7 @@ Brick_Type02:
 
 loc_E888:
 		cmpi.w	#$90,d0		; is Sonic within $90 pixels of	the block?
-		bcc.s	Brick_Type01	; if not, resume wobbling
+		bhs.s	Brick_Type01	; if not, resume wobbling
 		move.b	#3,obSubtype(a0)	; if yes, make the block fall
 
 Brick_Type01:

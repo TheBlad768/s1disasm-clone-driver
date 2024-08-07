@@ -11,14 +11,14 @@ WaterSurface:
 Surf_Index:	dc.w Surf_Main-Surf_Index
 		dc.w Surf_Action-Surf_Index
 
-surf_origX = $30		; original x-axis position
-surf_freeze = $32		; flag to freeze animation
+surf_origX = objoff_30		; original x-axis position
+surf_freeze = objoff_32		; flag to freeze animation
 ; ===========================================================================
 
 Surf_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Surf,obMap(a0)
-		move.w	#$C300,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_LZ_Water_Surface,2,1),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#$80,obActWid(a0)
 		move.w	obX(a0),surf_origX(a0)
@@ -56,7 +56,7 @@ Surf_Action:	; Routine 2
 		move.b	#7,obTimeFrame(a0)
 		addq.b	#1,obFrame(a0)
 		cmpi.b	#3,obFrame(a0)
-		bcs.s	.display
+		blo.s	.display
 		move.b	#0,obFrame(a0)
 
 .display:

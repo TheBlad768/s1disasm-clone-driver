@@ -66,99 +66,99 @@ ptr_sndend
 ; ---------------------------------------------------------------------------
 ; SFX data
 ; ---------------------------------------------------------------------------
-SoundA0:	include	"Sound/SFX/SndA0 - Jump.asm"
-		even
-SoundA1:	include	"Sound/SFX/SndA1 - Lamppost.asm"
-		even
-SoundA2:	include	"Sound/SFX/SndA2.asm"
-		even
-SoundA3:	include	"Sound/SFX/SndA3 - Death.asm"
-		even
-SoundA4:	include	"Sound/SFX/SndA4 - Skid.asm"
-		even
-SoundA5:	include	"Sound/SFX/SndA5.asm"
-		even
-SoundA6:	include	"Sound/SFX/SndA6 - Hit Spikes.asm"
-		even
-SoundA7:	include	"Sound/SFX/SndA7 - Push Block.asm"
-		even
-SoundA8:	include	"Sound/SFX/SndA8 - SS Goal.asm"
-		even
-SoundA9:	include	"Sound/SFX/SndA9 - SS Item.asm"
-		even
-SoundAA:	include	"Sound/SFX/SndAA - Splash.asm"
-		even
-SoundAB:	include	"Sound/SFX/SndAB.asm"
-		even
-SoundAC:	include	"Sound/SFX/SndAC - Hit Boss.asm"
-		even
-SoundAD:	include	"Sound/SFX/SndAD - Get Bubble.asm"
-		even
-SoundAE:	include	"Sound/SFX/SndAE - Fireball.asm"
-		even
-SoundAF:	include	"Sound/SFX/SndAF - Shield.asm"
-		even
-SoundB0:	include	"Sound/SFX/SndB0 - Saw.asm"
-		even
-SoundB1:	include	"Sound/SFX/SndB1 - Electric.asm"
-		even
-SoundB2:	include	"Sound/SFX/SndB2 - Drown Death.asm"
-		even
-SoundB3:	include	"Sound/SFX/SndB3 - Flamethrower.asm"
-		even
-SoundB4:	include	"Sound/SFX/SndB4 - Bumper.asm"
-		even
-SoundB5:	include	"Sound/SFX/SndB5 - Ring.asm"
-		even
-SoundB6:	include	"Sound/SFX/SndB6 - Spikes Move.asm"
-		even
-SoundB7:	include	"Sound/SFX/SndB7 - Rumbling.asm"
-		even
-SoundB8:	include	"Sound/SFX/SndB8.asm"
-		even
-SoundB9:	include	"Sound/SFX/SndB9 - Collapse.asm"
-		even
-SoundBA:	include	"Sound/SFX/SndBA - SS Glass.asm"
-		even
-SoundBB:	include	"Sound/SFX/SndBB - Door.asm"
-		even
-SoundBC:	include	"Sound/SFX/SndBC - Teleport.asm"
-		even
-SoundBD:	include	"Sound/SFX/SndBD - ChainStomp.asm"
-		even
-SoundBE:	include	"Sound/SFX/SndBE - Roll.asm"
-		even
-SoundBF:	include	"Sound/SFX/SndBF - Get Continue.asm"
-		even
-SoundC0:	include	"Sound/SFX/SndC0 - Basaran Flap.asm"
-		even
-SoundC1:	include	"Sound/SFX/SndC1 - Break Item.asm"
-		even
-SoundC2:	include	"Sound/SFX/SndC2 - Drown Warning.asm"
-		even
-SoundC3:	include	"Sound/SFX/SndC3 - Giant Ring.asm"
-		even
-SoundC4:	include	"Sound/SFX/SndC4 - Bomb.asm"
-		even
-SoundC5:	include	"Sound/SFX/SndC5 - Cash Register.asm"
-		even
-SoundC6:	include	"Sound/SFX/SndC6 - Ring Loss.asm"
-		even
-SoundC7:	include	"Sound/SFX/SndC7 - Chain Rising.asm"
-		even
-SoundC8:	include	"Sound/SFX/SndC8 - Burning.asm"
-		even
-SoundC9:	include	"Sound/SFX/SndC9 - Hidden Bonus.asm"
-		even
-SoundCA:	include	"Sound/SFX/SndCA - Enter SS.asm"
-		even
-SoundCB:	include	"Sound/SFX/SndCB - Wall Smash.asm"
-		even
-SoundCC:	include	"Sound/SFX/SndCC - Spring.asm"
-		even
-SoundCD:	include	"Sound/SFX/SndCD - Switch.asm"
-		even
-SoundCE:	include	"Sound/SFX/SndCE - Ring Left Speaker.asm"
-		even
-SoundCF:	include	"Sound/SFX/SndCF - Signpost.asm"
-		even
+SoundA0:	include "Sound/SFX/SndA0 - Jump.asm"
+	even
+SoundA1:	include "Sound/SFX/SndA1 - Lamppost.asm"
+	even
+SoundA2:	include "Sound/SFX/SndA2.asm"
+	even
+SoundA3:	include "Sound/SFX/SndA3 - Death.asm"
+	even
+SoundA4:	include "Sound/SFX/SndA4 - Skid.asm"
+	even
+SoundA5:	include "Sound/SFX/SndA5.asm"
+	even
+SoundA6:	include "Sound/SFX/SndA6 - Hit Spikes.asm"
+	even
+SoundA7:	include "Sound/SFX/SndA7 - Push Block.asm"
+	even
+SoundA8:	include "Sound/SFX/SndA8 - SS Goal.asm"
+	even
+SoundA9:	include "Sound/SFX/SndA9 - SS Item.asm"
+	even
+SoundAA:	include "Sound/SFX/SndAA - Splash.asm"
+	even
+SoundAB:	include "Sound/SFX/SndAB.asm"
+	even
+SoundAC:	include "Sound/SFX/SndAC - Hit Boss.asm"
+	even
+SoundAD:	include "Sound/SFX/SndAD - Get Bubble.asm"
+	even
+SoundAE:	include "Sound/SFX/SndAE - Fireball.asm"
+	even
+SoundAF:	include "Sound/SFX/SndAF - Shield.asm"
+	even
+SoundB0:	include "Sound/SFX/SndB0 - Saw.asm"
+	even
+SoundB1:	include "Sound/SFX/SndB1 - Electric.asm"
+	even
+SoundB2:	include "Sound/SFX/SndB2 - Drown Death.asm"
+	even
+SoundB3:	include "Sound/SFX/SndB3 - Flamethrower.asm"
+	even
+SoundB4:	include "Sound/SFX/SndB4 - Bumper.asm"
+	even
+SoundB5:	include "Sound/SFX/SndB5 - Ring.asm"
+	even
+SoundB6:	include "Sound/SFX/SndB6 - Spikes Move.asm"
+	even
+SoundB7:	include "Sound/SFX/SndB7 - Rumbling.asm"
+	even
+SoundB8:	include "Sound/SFX/SndB8.asm"
+	even
+SoundB9:	include "Sound/SFX/SndB9 - Collapse.asm"
+	even
+SoundBA:	include "Sound/SFX/SndBA - SS Glass.asm"
+	even
+SoundBB:	include "Sound/SFX/SndBB - Door.asm"
+	even
+SoundBC:	include "Sound/SFX/SndBC - Teleport.asm"
+	even
+SoundBD:	include "Sound/SFX/SndBD - ChainStomp.asm"
+	even
+SoundBE:	include "Sound/SFX/SndBE - Roll.asm"
+	even
+SoundBF:	include "Sound/SFX/SndBF - Get Continue.asm"
+	even
+SoundC0:	include "Sound/SFX/SndC0 - Basaran Flap.asm"
+	even
+SoundC1:	include "Sound/SFX/SndC1 - Break Item.asm"
+	even
+SoundC2:	include "Sound/SFX/SndC2 - Drown Warning.asm"
+	even
+SoundC3:	include "Sound/SFX/SndC3 - Giant Ring.asm"
+	even
+SoundC4:	include "Sound/SFX/SndC4 - Bomb.asm"
+	even
+SoundC5:	include "Sound/SFX/SndC5 - Cash Register.asm"
+	even
+SoundC6:	include "Sound/SFX/SndC6 - Ring Loss.asm"
+	even
+SoundC7:	include "Sound/SFX/SndC7 - Chain Rising.asm"
+	even
+SoundC8:	include "Sound/SFX/SndC8 - Burning.asm"
+	even
+SoundC9:	include "Sound/SFX/SndC9 - Hidden Bonus.asm"
+	even
+SoundCA:	include "Sound/SFX/SndCA - Enter SS.asm"
+	even
+SoundCB:	include "Sound/SFX/SndCB - Wall Smash.asm"
+	even
+SoundCC:	include "Sound/SFX/SndCC - Spring.asm"
+	even
+SoundCD:	include "Sound/SFX/SndCD - Switch.asm"
+	even
+SoundCE:	include "Sound/SFX/SndCE - Ring Left Speaker.asm"
+	even
+SoundCF:	include "Sound/SFX/SndCF - Signpost.asm"
+	even

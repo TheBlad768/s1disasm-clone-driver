@@ -19,12 +19,12 @@ DeformLayers:
 		bsr.w	ScrollHoriz
 		bsr.w	ScrollVertical
 		bsr.w	DynamicLevelEvents
-		move.w	(v_screenposx).w,(v_scrposx_dup).w
-		move.w	(v_screenposy).w,(v_scrposy_dup).w
-		move.w	(v_bgscreenposx).w,(v_bgscreenposx_dup_unused).w
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
-		move.w	(v_bg3screenposx).w,(v_bg3screenposx_dup_unused).w
-		move.w	(v_bg3screenposy).w,(v_bg3screenposy_dup_unused).w
+		move.w	(v_screenposx).w,(v_scrposx_vdp).w
+		move.w	(v_screenposy).w,(v_scrposy_vdp).w
+		move.w	(v_bgscreenposx).w,(v_bgscrposx_vdp).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
+		move.w	(v_bg3screenposx).w,(v_bg3scrposx_vdp).w
+		move.w	(v_bg3screenposy).w,(v_bg3scrposy_vdp).w
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
 		add.w	d0,d0
@@ -67,7 +67,7 @@ Deform_GHZ:
 		move.w	d0,(v_bg2screenposy).w
 		move.w	d0,d4
 		bsr.w	ScrollBlock3
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 		move.w	#$6F,d1
 		sub.w	d4,d1
 		move.w	(v_screenposx).w,d0
@@ -132,7 +132,7 @@ Deform_LZ:
 		ext.l	d5
 		asl.l	#7,d5
 		bsr.w	ScrollBlock1
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 		lea	(v_hscrolltablebuffer).w,a1
 		move.w	#223,d1
 		move.w	(v_screenposx).w,d0
@@ -178,7 +178,7 @@ Deform_MZ:
 loc_6402:
 		move.w	d0,(v_bg2screenposy).w
 		bsr.w	ScrollBlock3
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 		lea	(v_hscrolltablebuffer).w,a1
 		move.w	#223,d1
 		move.w	(v_screenposx).w,d0
@@ -208,7 +208,7 @@ Deform_SLZ:
 		ext.l	d5
 		asl.l	#7,d5
 		bsr.w	ScrollBlock2
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 		bsr.w	Deform_SLZ_2
 		lea	(v_bgscroll_buffer).w,a2
 		move.w	(v_bgscreenposy).w,d0
@@ -321,7 +321,7 @@ Deform_SYZ:
 		asl.l	#1,d5
 		add.l	d1,d5
 		bsr.w	ScrollBlock1
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 		lea	(v_hscrolltablebuffer).w,a1
 		move.w	#223,d1
 		move.w	(v_screenposx).w,d0
@@ -352,7 +352,7 @@ Deform_SBZ:
 		asl.l	#4,d5
 		asl.l	#1,d5
 		bsr.w	ScrollBlock1
-		move.w	(v_bgscreenposy).w,(v_bgscrposy_dup).w
+		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
 		lea	(v_hscrolltablebuffer).w,a1
 		move.w	#223,d1
 		move.w	(v_screenposx).w,d0
@@ -379,10 +379,10 @@ ScrollHoriz:
 		bsr.s	MoveScreenHoriz
 		move.w	(v_screenposx).w,d0
 		andi.w	#$10,d0
-		move.b	($FFFFF74A).w,d1
+		move.b	(v_fg_xblock).w,d1
 		eor.b	d1,d0
 		bne.s	locret_65B0
-		eori.b	#$10,($FFFFF74A).w
+		eori.b	#$10,(v_fg_xblock).w
 		move.w	(v_screenposx).w,d0
 		sub.w	d4,d0		; compare new with old screen position
 		bpl.s	SH_Forward
@@ -414,7 +414,7 @@ MoveScreenHoriz:
 
 SH_AheadOfMid:
 		cmpi.w	#16,d0		; is Sonic within 16px of middle area?
-		bcs.s	SH_Ahead16	; if yes, branch
+		blo.s	SH_Ahead16	; if yes, branch
 		move.w	#16,d0		; set to 16 if greater
 
 SH_Ahead16:
@@ -499,7 +499,7 @@ loc_665C:
 
 loc_666C:
 		cmpi.w	#$800,d1
-		bcc.s	loc_6696
+		bhs.s	loc_6696
 		move.w	#$600,d1
 		cmpi.w	#6,d0
 		bgt.s	loc_66F6
@@ -593,10 +593,10 @@ loc_6724:
 		move.l	d1,(v_screenposy).w
 		move.w	(v_screenposy).w,d0
 		andi.w	#$10,d0
-		move.b	($FFFFF74B).w,d1
+		move.b	(v_fg_yblock).w,d1
 		eor.b	d1,d0
 		bne.s	locret_6766
-		eori.b	#$10,($FFFFF74B).w
+		eori.b	#$10,(v_fg_yblock).w
 		move.w	(v_screenposy).w,d0
 		sub.w	d4,d0
 		bpl.s	loc_6760
@@ -623,10 +623,10 @@ ScrollBlock1:
 		move.l	d0,d1
 		swap	d1
 		andi.w	#$10,d1
-		move.b	($FFFFF74C).w,d3
+		move.b	(v_bg1_xblock).w,d3
 		eor.b	d3,d1
 		bne.s	loc_679C
-		eori.b	#$10,($FFFFF74C).w
+		eori.b	#$10,(v_bg1_xblock).w
 		sub.l	d2,d0
 		bpl.s	loc_6796
 		bset	#2,(v_bg1_scroll_flags).w
@@ -644,10 +644,10 @@ loc_679C:
 		move.l	d0,d1
 		swap	d1
 		andi.w	#$10,d1
-		move.b	($FFFFF74D).w,d2
+		move.b	(v_bg1_yblock).w,d2
 		eor.b	d2,d1
 		bne.s	locret_67D0
-		eori.b	#$10,($FFFFF74D).w
+		eori.b	#$10,(v_bg1_yblock).w
 		sub.l	d3,d0
 		bpl.s	loc_67CA
 		bset	#0,(v_bg1_scroll_flags).w
@@ -677,10 +677,10 @@ ScrollBlock2:
 		move.l	d0,d1
 		swap	d1
 		andi.w	#$10,d1
-		move.b	($FFFFF74D).w,d2
+		move.b	(v_bg1_yblock).w,d2
 		eor.b	d2,d1
 		bne.s	locret_6812
-		eori.b	#$10,($FFFFF74D).w
+		eori.b	#$10,(v_bg1_yblock).w
 		sub.l	d3,d0
 		bpl.s	loc_680C
 		bset	#0,(v_bg1_scroll_flags).w
@@ -703,10 +703,10 @@ ScrollBlock3:
 		move.w	d0,(v_bgscreenposy).w
 		move.w	d0,d1
 		andi.w	#$10,d1
-		move.b	($FFFFF74D).w,d2
+		move.b	(v_bg1_yblock).w,d2
 		eor.b	d2,d1
 		bne.s	locret_6842
-		eori.b	#$10,($FFFFF74D).w
+		eori.b	#$10,(v_bg1_yblock).w
 		sub.w	d3,d0
 		bpl.s	loc_683C
 		bset	#0,(v_bg1_scroll_flags).w
@@ -733,10 +733,10 @@ ScrollBlock4:
 		add.l	d0,(v_bg2screenposx).w
 		move.w	(v_bg2screenposx).w,d0
 		andi.w	#$10,d0
-		move.b	($FFFFF74E).w,d1
+		move.b	(v_bg2_xblock).w,d1
 		eor.b	d1,d0
 		bne.s	locret_6884
-		eori.b	#$10,($FFFFF74E).w
+		eori.b	#$10,(v_bg2_xblock).w
 		move.w	(v_bg2screenposx).w,d0
 		sub.w	d2,d0
 		bpl.s	loc_687E

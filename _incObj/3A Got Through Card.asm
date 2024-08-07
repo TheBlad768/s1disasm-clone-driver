@@ -18,8 +18,8 @@ Got_Index:	dc.w Got_ChkPLC-Got_Index
 		dc.w Got_Move2-Got_Index
 		dc.w loc_C766-Got_Index
 
-got_mainX = $30		; position for card to display on
-got_finalX = $32		; position for card to finish on
+got_mainX = objoff_30		; position for card to display on
+got_finalX = objoff_32		; position for card to finish on
 ; ===========================================================================
 
 Got_ChkPLC:	; Routine 0
@@ -34,7 +34,7 @@ Got_Main:
 		moveq	#6,d1
 
 Got_Loop:
-		_move.b	#id_GotThroughCard,0(a1)
+		_move.b	#id_GotThroughCard,obID(a1)
 		move.w	(a2),obX(a1)	; load start x-position
 		move.w	(a2)+,got_finalX(a1) ; load finish x-position (same as start)
 		move.w	(a2)+,got_mainX(a1) ; load main x-position
@@ -48,9 +48,9 @@ Got_Loop:
 loc_C5CA:
 		move.b	d0,obFrame(a1)
 		move.l	#Map_Got,obMap(a1)
-		move.w	#$8580,obGfx(a1)
+		move.w	#make_art_tile(ArtTile_Title_Card,0,1),obGfx(a1)
 		move.b	#0,obRender(a1)
-		lea	$40(a1),a1
+		lea	object_size(a1),a1
 		dbf	d1,Got_Loop	; repeat 6 times
 
 Got_Move:	; Routine 2
@@ -68,7 +68,7 @@ loc_C5FE:
 		move.w	obX(a0),d0
 		bmi.s	locret_C60E
 		cmpi.w	#$200,d0	; has item moved beyond	$200 on	x-axis?
-		bcc.s	locret_C60E	; if yes, branch
+		bhs.s	locret_C60E	; if yes, branch
 		bra.w	DisplaySprite
 ; ===========================================================================
 
@@ -82,7 +82,7 @@ loc_C610:
 ; ===========================================================================
 
 loc_C61A:
-		cmpi.b	#$E,($FFFFD724).w
+		cmpi.b	#$E,(v_endcardring+obRoutine).w
 		beq.s	loc_C610
 		cmpi.b	#4,obFrame(a0)
 		bne.s	loc_C5FE
@@ -158,12 +158,12 @@ Got_NextLevel:	; Routine $A
 Got_ChkSS:
 		clr.b	(v_lastlamp).w	; clear	lamppost counter
 		tst.b	(f_bigring).w	; has Sonic jumped into	a giant	ring?
-		beq.s	VBla_08A	; if not, branch
+		beq.s	loc_C6EA	; if not, branch
 		move.b	#id_Special,(v_gamemode).w ; set game mode to Special Stage (10)
 		bra.s	Got_Display2
 ; ===========================================================================
 
-VBla_08A:
+loc_C6EA:
 		move.w	#1,(f_restart).w ; restart level
 
 Got_Display2:
@@ -225,7 +225,7 @@ Got_ChgPos2:
 		move.w	obX(a0),d0
 		bmi.s	locret_C748
 		cmpi.w	#$200,d0	; has item moved beyond	$200 on	x-axis?
-		bcc.s	locret_C748	; if yes, branch
+		bhs.s	locret_C748	; if yes, branch
 		bra.w	DisplaySprite
 ; ===========================================================================
 
@@ -238,7 +238,7 @@ Got_SBZ2:
 		bne.w	DeleteObject
 		addq.b	#2,obRoutine(a0)
 		clr.b	(f_lockctrl).w	; unlock controls
-		move.w	#bgm_FZ,d0
+		move.w	#mus_FZ,d0
 		jmp	(PlaySound).l	; play FZ music
 ; ===========================================================================
 

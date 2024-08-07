@@ -13,13 +13,13 @@ GFire_Index:	dc.w GFire_Main-GFire_Index
 		dc.w loc_B238-GFire_Index
 		dc.w GFire_Move-GFire_Index
 
-gfire_origX = $2A
+gfire_origX = objoff_2A
 ; ===========================================================================
 
 GFire_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Fire,obMap(a0)
-		move.w	#$345,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_MZ_Fireball,0,0),obGfx(a0)
 		move.w	obX(a0),gfire_origX(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
@@ -34,7 +34,7 @@ GFire_Main:	; Routine 0
 ; ===========================================================================
 
 loc_B238:	; Routine 2
-		movea.l	$30(a0),a1
+		movea.l	objoff_30(a0),a1
 		move.w	obX(a0),d1
 		sub.w	gfire_origX(a0),d1
 		addi.w	#$C,d1
@@ -42,27 +42,27 @@ loc_B238:	; Routine 2
 		lsr.w	#1,d0
 		move.b	(a1,d0.w),d0
 		neg.w	d0
-		add.w	$2C(a0),d0
+		add.w	objoff_2C(a0),d0
 		move.w	d0,d2
-		add.w	$3C(a0),d0
+		add.w	objoff_3C(a0),d0
 		move.w	d0,obY(a0)
 		cmpi.w	#$84,d1
-		bcc.s	loc_B2B0
+		bhs.s	loc_B2B0
 		addi.l	#$10000,obX(a0)
 		cmpi.w	#$80,d1
-		bcc.s	loc_B2B0
+		bhs.s	loc_B2B0
 		move.l	obX(a0),d0
 		addi.l	#$80000,d0
 		andi.l	#$FFFFF,d0
 		bne.s	loc_B2B0
 		bsr.w	FindNextFreeObj
 		bne.s	loc_B2B0
-		_move.b	#id_GrassFire,0(a1)
+		_move.b	#id_GrassFire,obID(a1)
 		move.w	obX(a0),obX(a1)
-		move.w	d2,$2C(a1)
-		move.w	$3C(a0),$3C(a1)
+		move.w	d2,objoff_2C(a1)
+		move.w	objoff_3C(a0),objoff_3C(a1)
 		move.b	#1,obSubtype(a1)
-		movea.l	$38(a0),a2
+		movea.l	objoff_38(a0),a2
 		bsr.w	sub_B09C
 
 loc_B2B0:
@@ -70,8 +70,8 @@ loc_B2B0:
 ; ===========================================================================
 
 GFire_Move:	; Routine 4
-		move.w	$2C(a0),d0
-		add.w	$3C(a0),d0
+		move.w	objoff_2C(a0),d0
+		add.w	objoff_3C(a0),d0
 		move.w	d0,obY(a0)
 
 GFire_Animate:

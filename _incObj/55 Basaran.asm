@@ -15,7 +15,7 @@ Bas_Index:	dc.w Bas_Main-Bas_Index
 Bas_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Bas,obMap(a0)
-		move.w	#$84B8,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Basaran,0,1),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#$C,obHeight(a0)
 		move.b	#2,obPriority(a0)
@@ -42,11 +42,11 @@ Bas_Action:	; Routine 2
 		bsr.w	.chkdistance	; is Sonic < $80 pixels from basaran?
 		bcc.s	.nodrop		; if not, branch
 		move.w	(v_player+obY).w,d0
-		move.w	d0,$36(a0)
+		move.w	d0,objoff_36(a0)
 		sub.w	obY(a0),d0
 		bcs.s	.nodrop
 		cmpi.w	#$80,d0		; is Sonic < $80 pixels from basaran?
-		bcc.s	.nodrop		; if not, branch
+		bhs.s	.nodrop		; if not, branch
 		tst.w	(v_debuguse).w	; is debug mode	on?
 		bne.s	.nodrop		; if yes, branch
 
@@ -66,11 +66,11 @@ Bas_Action:	; Routine 2
 		addi.w	#$18,obVelY(a0)	; make basaran fall
 		move.w	#$80,d2
 		bsr.w	.chkdistance
-		move.w	$36(a0),d0
+		move.w	objoff_36(a0),d0
 		sub.w	obY(a0),d0
 		bcs.s	.chkdel
 		cmpi.w	#$10,d0		; is basaran close to Sonic vertically?
-		bcc.s	.dropmore	; if not, branch
+		bhs.s	.dropmore	; if not, branch
 		move.w	d1,obVelX(a0)	; make basaran fly horizontally
 		move.w	#0,obVelY(a0)	; stop basaran falling
 		move.b	#2,obAnim(a0)
@@ -81,7 +81,16 @@ Bas_Action:	; Routine 2
 
 .chkdel:
 		tst.b	obRender(a0)
+	if FixBugs
+		; Objects shouldn't call DisplaySprite and DeleteObject on
+		; the same frame or else cause a null-pointer dereference.
+		bmi.s	.return
+		addq.l	#4,sp
+		bra.w	DeleteObject
+.return:
+	else
 		bpl.w	DeleteObject
+	endif
 		rts	
 ; ===========================================================================
 
@@ -101,7 +110,7 @@ Bas_Action:	; Routine 2
 
 .isright:
 		cmpi.w	#$80,d0		; is Sonic within $80 pixels of basaran?
-		bcs.s	.dontflyup	; if yes, branch
+		blo.s	.dontflyup	; if yes, branch
 		move.b	(v_vbla_byte).w,d0
 		add.b	d7,d0
 		andi.b	#7,d0

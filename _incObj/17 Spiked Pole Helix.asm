@@ -14,7 +14,7 @@ Hel_Index:	dc.w Hel_Main-Hel_Index
 		dc.w Hel_Delete-Hel_Index
 		dc.w Hel_Display-Hel_Index
 
-hel_frame = $3E		; start frame (different for each spike)
+hel_frame = objoff_3E		; start frame (different for each spike)
 
 ;		$29-38 are used for child object addresses
 ; ===========================================================================
@@ -22,14 +22,14 @@ hel_frame = $3E		; start frame (different for each spike)
 Hel_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Hel,obMap(a0)
-		move.w	#$4398,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_GHZ_Spike_Pole,2,0),obGfx(a0)
 		move.b	#7,obStatus(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#8,obActWid(a0)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
-		_move.b	0(a0),d4
+		_move.b	obID(a0),d4
 		lea	obSubtype(a0),a2 ; move helix length to a2
 		moveq	#0,d1
 		move.b	(a2),d1		; move helix length to d1
@@ -47,16 +47,16 @@ Hel_Build:
 		bne.s	Hel_Action
 		addq.b	#1,obSubtype(a0)
 		move.w	a1,d5
-		subi.w	#$D000,d5
-		lsr.w	#6,d5
+		subi.w	#v_objspace&$FFFF,d5
+		lsr.w	#object_size_bits,d5
 		andi.w	#$7F,d5
 		move.b	d5,(a2)+	; copy child address to parent RAM
 		move.b	#8,obRoutine(a1)
-		_move.b	d4,0(a1)
+		_move.b	d4,obID(a1)
 		move.w	d2,obY(a1)
 		move.w	d3,obX(a1)
 		move.l	obMap(a0),obMap(a1)
-		move.w	#$4398,obGfx(a1)
+		move.w	#make_art_tile(ArtTile_GHZ_Spike_Pole,2,0),obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#3,obPriority(a1)
 		move.b	#8,obActWid(a1)
@@ -114,7 +114,7 @@ Hel_DelAll:
 Hel_DelLoop:
 		moveq	#0,d0
 		move.b	(a2)+,d0
-		lsl.w	#6,d0
+		lsl.w	#object_size_bits,d0
 		addi.l	#v_objspace&$FFFFFF,d0
 		movea.l	d0,a1		; get child address
 		bsr.w	DeleteChild	; delete object

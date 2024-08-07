@@ -45,10 +45,10 @@ AniArt_GHZ_Waterfall:
 		addq.b	#1,(v_lani0_frame).w ; increment frame counter
 		andi.w	#1,d0		; there are only 2 frames
 		beq.s	.isframe0	; branch if frame 0
-		lea	.size*$20(a1),a1 ; use graphics for frame 1
+		lea	.size*tile_size(a1),a1 ; use graphics for frame 1
 
 .isframe0:
-		locVRAM	$6F00		; VRAM address
+		locVRAM	ArtTile_GHZ_Waterfall*tile_size		; VRAM address
 		move.w	#.size-1,d1	; number of 8x8	tiles
 		bra.w	LoadTiles
 ; ===========================================================================
@@ -66,17 +66,17 @@ AniArt_GHZ_Bigflower:
 		addq.b	#1,(v_lani1_frame).w
 		andi.w	#1,d0
 		beq.s	.isframe0
-		lea	.size*$20(a1),a1
+		lea	.size*tile_size(a1),a1
 
 .isframe0:
-		locVRAM	$6B80
+		locVRAM	ArtTile_GHZ_Big_Flower_1*tile_size
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
 ; ===========================================================================
 
 AniArt_GHZ_Smallflower:
 
-.size:		equ 12	; number of tiles per frame
+.size		= 12	; number of tiles per frame
 
 		subq.b	#1,(v_lani2_time).w
 		bpl.s	.end
@@ -95,7 +95,7 @@ AniArt_GHZ_Smallflower:
 		move.w	d0,d1
 		add.w	d0,d0
 		add.w	d1,d0		; multiply that by 3 (i.e. frame num times 12 * $20)
-		locVRAM	$6D80
+		locVRAM	ArtTile_GHZ_Small_Flower*tile_size
 		lea	(Art_GhzFlower2).l,a1 ;	load small flower patterns
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#.size-1,d1
@@ -130,9 +130,9 @@ AniArt_MZ_Lava:
 
 .frame01or2:
 		move.b	d0,(v_lani0_frame).w
-		mulu.w	#.size*$20,d0
+		mulu.w	#.size*tile_size,d0
 		adda.w	d0,a1		; jump to appropriate tile
-		locVRAM	$5C40
+		locVRAM	ArtTile_MZ_Animated_Lava*tile_size
 		move.w	#.size-1,d1
 		bsr.w	LoadTiles
 
@@ -146,7 +146,7 @@ AniArt_MZ_Magma:
 		lea	(Art_MzLava2).l,a4 ; load magma gfx
 		ror.w	#7,d0		; multiply frame num by $200
 		adda.w	d0,a4		; jump to appropriate tile
-		locVRAM	$5A40
+		locVRAM	ArtTile_MZ_Animated_Magma*tile_size
 		moveq	#0,d3
 		move.b	(v_lani1_frame).w,d3
 		addq.b	#1,(v_lani1_frame).w ; increment frame counter (unused)
@@ -181,9 +181,9 @@ AniArt_MZ_Torch:
 		move.b	(v_lani3_frame).w,d0
 		addq.b	#1,(v_lani3_frame).w ; increment frame counter
 		andi.b	#3,(v_lani3_frame).w ; there are 3 frames
-		mulu.w	#.size*$20,d0
+		mulu.w	#.size*tile_size,d0
 		adda.w	d0,a1		; jump to appropriate tile
-		locVRAM	$5E40
+		locVRAM	ArtTile_MZ_Torch*tile_size
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
 
@@ -211,13 +211,13 @@ AniArt_SBZ:
 		
 		move.b	#7,(v_lani0_time).w ; time to display each frame
 		lea	(Art_SbzSmoke).l,a1 ; load smoke patterns
-		locVRAM	$8900
+		locVRAM	ArtTile_SBZ_Smoke_Puff_1*tile_size
 		move.b	(v_lani0_frame).w,d0
 		addq.b	#1,(v_lani0_frame).w ; increment frame counter
 		andi.w	#7,d0
 		beq.s	.untilnextpuff	; branch if frame 0
 		subq.w	#1,d0
-		mulu.w	#.size*$20,d0
+		mulu.w	#.size*tile_size,d0
 		lea	(a1,d0.w),a1
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
@@ -248,13 +248,13 @@ AniArt_SBZ:
 		
 		move.b	#7,(v_lani1_time).w ; time to display each frame
 		lea	(Art_SbzSmoke).l,a1 ; load smoke patterns
-		locVRAM	$8A80
+		locVRAM	ArtTile_SBZ_Smoke_Puff_2*tile_size
 		move.b	(v_lani1_frame).w,d0
 		addq.b	#1,(v_lani1_frame).w ; increment frame counter
 		andi.w	#7,d0
 		beq.s	.untilnextpuff2	; branch if frame 0
 		subq.w	#1,d0
-		mulu.w	#.size*$20,d0
+		mulu.w	#.size*tile_size,d0
 		lea	(a1,d0.w),a1
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
@@ -283,27 +283,27 @@ AniArt_Ending_BigFlower:
 		
 		move.b	#7,(v_lani1_time).w
 		lea	(Art_GhzFlower1).l,a1 ;	load big flower	patterns
-		lea	($FFFF9400).w,a2 ; load 2nd big flower from RAM
+		lea	(v_256x256_end-$1000).w,a2 ; load 2nd big flower from RAM
 		move.b	(v_lani1_frame).w,d0
 		addq.b	#1,(v_lani1_frame).w ; increment frame counter
 		andi.w	#1,d0		; only 2 frames
 		beq.s	.isframe0	; branch if frame 0
-		lea	.size*$20(a1),a1
-		lea	.size*$20(a2),a2
+		lea	.size*tile_size(a1),a1
+		lea	.size*tile_size(a2),a2
 
 .isframe0:
-		locVRAM	$6B80
+		locVRAM	ArtTile_GHZ_Big_Flower_1*tile_size
 		move.w	#.size-1,d1
 		bsr.w	LoadTiles
 		movea.l	a2,a1
-		locVRAM	$7200
+		locVRAM	ArtTile_GHZ_Big_Flower_2*tile_size
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
 ; ===========================================================================
 
 AniArt_Ending_SmallFlower:
 
-.size:		= 12	; number of tiles per frame
+.size		= 12	; number of tiles per frame
 
 		subq.b	#1,(v_lani2_time).w ; decrement timer
 		bpl.s	AniArt_Ending_Flower3 ; branch if not 0
@@ -317,7 +317,7 @@ AniArt_Ending_SmallFlower:
 		move.w	d0,d1
 		add.w	d0,d0
 		add.w	d1,d0		; multiply by 3
-		locVRAM	$6D80
+		locVRAM	ArtTile_GHZ_Small_Flower*tile_size
 		lea	(Art_GhzFlower2).l,a1 ;	load small flower patterns
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#.size-1,d1
@@ -340,8 +340,8 @@ AniArt_Ending_Flower3:
 		move.b	AniArt_Ending_Flower3_sequence(pc,d0.w),d0 ; get actual frame num from sequence data
 		lsl.w	#8,d0		; multiply by $100
 		add.w	d0,d0		; multiply by 2
-		locVRAM	$7000
-		lea	($FFFF9800).w,a1 ; load	special	flower patterns	(from RAM)
+		locVRAM	ArtTile_GHZ_Flower_3*tile_size
+		lea	(v_256x256_end-$1000+$400).w,a1 ; load	special	flower patterns	(from RAM)
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
@@ -363,8 +363,8 @@ AniArt_Ending_Flower4:
 		move.b	AniArt_Ending_Flower3_sequence(pc,d0.w),d0 ; get actual frame num from sequence data
 		lsl.w	#8,d0		; multiply by $100
 		add.w	d0,d0		; multiply by 2
-		locVRAM	$6800
-		lea	($FFFF9E00).w,a1 ; load	special	flower patterns	(from RAM)
+		locVRAM	ArtTile_GHZ_Flower_4*tile_size
+		lea	(v_256x256_end-$1000+$A00).w,a1 ; load	special	flower patterns	(from RAM)
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
@@ -561,7 +561,7 @@ loc_1C4FA:
 
 AniArt_GiantRing:
 
-.size:		equ 14
+.size		= 14
 
 		tst.w	(v_gfxbigring).w	; Is there any of the art left to load?
 		bne.s	.loadTiles		; If so, get to work
@@ -569,13 +569,13 @@ AniArt_GiantRing:
 ; ===========================================================================
 ; loc_1C518:
 .loadTiles:
-		subi.w	#.size*$20,(v_gfxbigring).w	; Count-down the 14 tiles we're going to load now
+		subi.w	#.size*tile_size,(v_gfxbigring).w	; Count-down the 14 tiles we're going to load now
 		lea	(Art_BigRing).l,a1 ; load giant	ring patterns
 		moveq	#0,d0
 		move.w	(v_gfxbigring).w,d0
 		lea	(a1,d0.w),a1
 		; Turn VRAM address into VDP command
-		addi.w	#$8000,d0
+		addi.w	#ArtTile_Giant_Ring*tile_size,d0
 		lsl.l	#2,d0
 		lsr.w	#2,d0
 		ori.w	#$4000,d0

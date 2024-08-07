@@ -11,8 +11,8 @@ LargeGrass:
 LGrass_Index:	dc.w LGrass_Main-LGrass_Index
 		dc.w LGrass_Action-LGrass_Index
 
-lgrass_origX = $2A
-lgrass_origY = $2C
+lgrass_origX = objoff_2A
+lgrass_origY = objoff_2C
 
 LGrass_Data:	dc.w LGrass_Data1-LGrass_Data 	; collision angle data
 		dc.b 0,	$40			; frame	number,	platform width
@@ -25,7 +25,7 @@ LGrass_Data:	dc.w LGrass_Data1-LGrass_Data 	; collision angle data
 LGrass_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_LGrass,obMap(a0)
-		move.w	#$C000,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Level,2,1),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#5,obPriority(a0)
 		move.w	obY(a0),lgrass_origY(a0)
@@ -37,16 +37,16 @@ LGrass_Main:	; Routine 0
 		lea	LGrass_Data(pc,d0.w),a1
 		move.w	(a1)+,d0
 		lea	LGrass_Data(pc,d0.w),a2
-		move.l	a2,$30(a0)
+		move.l	a2,objoff_30(a0)
 		move.b	(a1)+,obFrame(a0)
 		move.b	(a1),obActWid(a0)
 		andi.b	#$F,obSubtype(a0)
 		move.b	#$40,obHeight(a0)
-		bset	#4,1(a0)
+		bset	#4,obRender(a0)
 
 LGrass_Action:	; Routine 2
 		bsr.w	LGrass_Types
-		tst.b	ob2ndRout(a0)
+		tst.b	obSolid(a0)
 		beq.s	LGrass_Solid
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
@@ -54,7 +54,7 @@ LGrass_Action:	; Routine 2
 		bsr.w	ExitPlatform
 		btst	#3,obStatus(a1)
 		bne.w	LGrass_Slope
-		clr.b	ob2ndRout(a0)
+		clr.b	obSolid(a0)
 		bra.s	LGrass_Display
 ; ===========================================================================
 
@@ -62,7 +62,7 @@ LGrass_Slope:
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		addi.w	#$B,d1
-		movea.l	$30(a0),a2
+		movea.l	objoff_30(a0),a2
 		move.w	obX(a0),d2
 		bsr.w	SlopeObject2
 		bra.s	LGrass_Display
@@ -78,11 +78,14 @@ LGrass_Solid:
 		move.w	#$30,d2
 
 loc_AF8E:
-		movea.l	$30(a0),a2
+		movea.l	objoff_30(a0),a2
 		bsr.w	SolidObject2F
 
 LGrass_Display:
+	if ~~FixBugs
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	LGrass_ChkDel
 
 ; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
@@ -146,8 +149,8 @@ loc_AFF2:
 ; ===========================================================================
 
 LGrass_Type05:
-		move.b	$34(a0),d0
-		tst.b	ob2ndRout(a0)
+		move.b	objoff_34(a0),d0
+		tst.b	obSolid(a0)
 		bne.s	loc_B010
 		subq.b	#2,d0
 		bcc.s	loc_B01C
@@ -158,37 +161,37 @@ LGrass_Type05:
 loc_B010:
 		addq.b	#4,d0
 		cmpi.b	#$40,d0
-		bcs.s	loc_B01C
+		blo.s	loc_B01C
 		move.b	#$40,d0
 
 loc_B01C:
-		move.b	d0,$34(a0)
+		move.b	d0,objoff_34(a0)
 		jsr	(CalcSine).l
 		lsr.w	#4,d0
 		move.w	d0,d1
 		add.w	lgrass_origY(a0),d0
 		move.w	d0,obY(a0)
-		cmpi.b	#$20,$34(a0)
+		cmpi.b	#$20,objoff_34(a0)
 		bne.s	loc_B07A
-		tst.b	$35(a0)
+		tst.b	objoff_35(a0)
 		bne.s	loc_B07A
-		move.b	#1,$35(a0)
+		move.b	#1,objoff_35(a0)
 		bsr.w	FindNextFreeObj
 		bne.s	loc_B07A
-		_move.b	#id_GrassFire,0(a1) ; load sitting flame object
+		_move.b	#id_GrassFire,obID(a1) ; load sitting flame object
 		move.w	obX(a0),obX(a1)
 		move.w	lgrass_origY(a0),lgrass_origY(a1)
 		addq.w	#8,lgrass_origY(a1)
 		subq.w	#3,lgrass_origY(a1)
 		subi.w	#$40,obX(a1)
-		move.l	$30(a0),$30(a1)
-		move.l	a0,$38(a1)
+		move.l	objoff_30(a0),objoff_30(a1)
+		move.l	a0,objoff_38(a1)
 		movea.l	a0,a2
 		bsr.s	sub_B09C
 
 loc_B07A:
 		moveq	#0,d2
-		lea	$36(a0),a2
+		lea	objoff_36(a0),a2
 		move.b	(a2)+,d2
 		subq.b	#1,d2
 		bcs.s	locret_B09A
@@ -196,10 +199,10 @@ loc_B07A:
 loc_B086:
 		moveq	#0,d0
 		move.b	(a2)+,d0
-		lsl.w	#6,d0
-		addi.w	#$D000,d0
+		lsl.w	#object_size_bits,d0
+		addi.w	#v_objspace&$FFFF,d0
 		movea.w	d0,a1
-		move.w	d1,$3C(a1)
+		move.w	d1,objoff_3C(a1)
 		dbf	d2,loc_B086
 
 locret_B09A:
@@ -209,14 +212,14 @@ locret_B09A:
 
 
 sub_B09C:
-		lea	$36(a2),a2
+		lea	objoff_36(a2),a2
 		moveq	#0,d0
 		move.b	(a2),d0
 		addq.b	#1,(a2)
 		lea	1(a2,d0.w),a2
 		move.w	a1,d0
-		subi.w	#$D000,d0
-		lsr.w	#6,d0
+		subi.w	#v_objspace&$FFFF,d0
+		lsr.w	#object_size_bits,d0
 		andi.w	#$7F,d0
 		move.b	d0,(a2)
 		rts	
@@ -225,21 +228,26 @@ sub_B09C:
 ; ===========================================================================
 
 LGrass_ChkDel:
-		tst.b	$35(a0)
+		tst.b	objoff_35(a0)
 		beq.s	loc_B0C6
 		tst.b	obRender(a0)
 		bpl.s	LGrass_DelFlames
 
 loc_B0C6:
 		out_of_range.w	DeleteObject,lgrass_origX(a0)
+	if FixBugs
+		; This has been moved to prevent a display-after-free bug.
+		bra.w	DisplaySprite
+	else
 		rts	
+	endif
 ; ===========================================================================
 
 LGrass_DelFlames:
 		moveq	#0,d2
 
 loc_B0E8:
-		lea	$36(a0),a2
+		lea	objoff_36(a0),a2
 		move.b	(a2),d2
 		clr.b	(a2)+
 		subq.b	#1,d2
@@ -249,16 +257,21 @@ loc_B0F4:
 		moveq	#0,d0
 		move.b	(a2),d0
 		clr.b	(a2)+
-		lsl.w	#6,d0
-		addi.w	#$D000,d0
+		lsl.w	#object_size_bits,d0
+		addi.w	#v_objspace&$FFFF,d0
 		movea.w	d0,a1
 		bsr.w	DeleteChild
 		dbf	d2,loc_B0F4
-		move.b	#0,$35(a0)
-		move.b	#0,$34(a0)
+		move.b	#0,objoff_35(a0)
+		move.b	#0,objoff_34(a0)
 
 locret_B116:
+	if FixBugs
+		; This has been moved to prevent a display-after-free bug.
+		bra.w	DisplaySprite
+	else
 		rts	
+	endif
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Collision data for large moving platforms (MZ)

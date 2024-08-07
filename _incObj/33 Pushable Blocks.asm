@@ -21,16 +21,16 @@ PushB_Main:	; Routine 0
 		move.b	#$F,obHeight(a0)
 		move.b	#$F,obWidth(a0)
 		move.l	#Map_Push,obMap(a0)
-		move.w	#$42B8,obGfx(a0) ; MZ specific code
-		cmpi.b	#1,(v_zone).w
+		move.w	#make_art_tile(ArtTile_MZ_Block,2,0),obGfx(a0) ; MZ specific code
+		cmpi.b	#id_LZ,(v_zone).w
 		bne.s	.notLZ
-		move.w	#$43DE,obGfx(a0) ; LZ specific code
+		move.w	#make_art_tile(ArtTile_LZ_Push_Block,2,0),obGfx(a0) ; LZ specific code
 
 .notLZ:
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
-		move.w	obX(a0),$34(a0)
-		move.w	obY(a0),$36(a0)
+		move.w	obX(a0),objoff_34(a0)
+		move.w	obY(a0),objoff_36(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
 		add.w	d0,d0
@@ -40,7 +40,7 @@ PushB_Main:	; Routine 0
 		move.b	(a2)+,obFrame(a0)
 		tst.b	obSubtype(a0)
 		beq.s	.chkgone
-		move.w	#$C2B8,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_MZ_Block,2,1),obGfx(a0)
 
 .chkgone:
 		lea	(v_objstate).w,a2
@@ -52,7 +52,7 @@ PushB_Main:	; Routine 0
 		bne.w	DeleteObject
 
 loc_BF6E:	; Routine 2
-		tst.b	$32(a0)
+		tst.b	objoff_32(a0)
 		bne.w	loc_C046
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
@@ -66,9 +66,9 @@ loc_BF6E:	; Routine 2
 		bclr	#7,obSubtype(a0)
 		move.w	obX(a0),d0
 		cmpi.w	#$A20,d0
-		bcs.s	loc_BFC6
+		blo.s	loc_BFC6
 		cmpi.w	#$AA1,d0
-		bcc.s	loc_BFC6
+		bhs.s	loc_BFC6
 		move.w	(v_obj31ypos).w,d0
 		subi.w	#$1C,d0
 		move.w	d0,obY(a0)
@@ -81,9 +81,9 @@ loc_BFC6:
 ; ===========================================================================
 
 loc_ppppp:
-		out_of_range.s	loc_C016,$34(a0)
-		move.w	$34(a0),obX(a0)
-		move.w	$36(a0),obY(a0)
+		out_of_range.s	loc_C016,objoff_34(a0)
+		move.w	objoff_34(a0),obX(a0)
+		move.w	objoff_36(a0),obY(a0)
 		move.b	#4,obRoutine(a0)
 		bra.s	loc_C02C
 ; ===========================================================================
@@ -103,7 +103,7 @@ loc_C02C:	; Routine 4
 		bsr.w	ChkPartiallyVisible
 		beq.s	locret_C044
 		move.b	#2,obRoutine(a0)
-		clr.b	$32(a0)
+		clr.b	objoff_32(a0)
 		clr.w	obVelX(a0)
 		clr.w	obVelY(a0)
 
@@ -113,8 +113,8 @@ locret_C044:
 
 loc_C046:
 		move.w	obX(a0),-(sp)
-		cmpi.b	#4,ob2ndRout(a0)
-		bcc.s	loc_C056
+		cmpi.b	#4,obSolid(a0)
+		bhs.s	loc_C056
 		bsr.w	SpeedToPos
 
 loc_C056:
@@ -130,12 +130,12 @@ loc_C056:
 		move.w	(a1),d0
 		andi.w	#$3FF,d0
 		cmpi.w	#$16A,d0
-		bcs.s	loc_C09E
-		move.w	$30(a0),d0
+		blo.s	loc_C09E
+		move.w	objoff_30(a0),d0
 		asr.w	#3,d0
 		move.w	d0,obVelX(a0)
-		move.b	#1,$32(a0)
-		clr.w	$E(a0)
+		move.b	#1,objoff_32(a0)
+		clr.w	obY+2(a0)
 
 loc_C09E:
 		bra.s	loc_C0E6
@@ -171,7 +171,7 @@ PushB_StopPush:
 loc_C0D6:
 		addi.l	#$2001,obY(a0)
 		cmpi.b	#$A0,obY+3(a0)
-		bcc.s	loc_C104
+		bhs.s	loc_C104
 
 loc_C0E6:
 		moveq	#0,d1
@@ -222,26 +222,26 @@ PushB_NoLava:
 PushB_LoadLava:
 		bsr.w	FindFreeObj
 		bne.s	locret_C184
-		_move.b	#id_GeyserMaker,0(a1) ; load lava geyser object
+		_move.b	#id_GeyserMaker,obID(a1) ; load lava geyser object
 		move.w	obX(a0),obX(a1)
 		add.w	d2,obX(a1)
 		move.w	obY(a0),obY(a1)
 		addi.w	#$10,obY(a1)
-		move.l	a0,$3C(a1)
+		move.l	a0,objoff_3C(a1)
 
 locret_C184:
 		rts	
 ; ===========================================================================
 
 loc_C186:
-		move.b	ob2ndRout(a0),d0
+		move.b	obSolid(a0),d0
 		beq.w	loc_C218
 		subq.b	#2,d0
 		bne.s	loc_C1AA
 		bsr.w	ExitPlatform
 		btst	#3,obStatus(a1)
 		bne.s	loc_C1A4
-		clr.b	ob2ndRout(a0)
+		clr.b	obSolid(a0)
 		rts	
 ; ===========================================================================
 
@@ -260,15 +260,15 @@ loc_C1AA:
 		bpl.w	locret_C1F0
 		add.w	d1,obY(a0)
 		clr.w	obVelY(a0)
-		clr.b	ob2ndRout(a0)
+		clr.b	obSolid(a0)
 		move.w	(a1),d0
 		andi.w	#$3FF,d0
 		cmpi.w	#$16A,d0
-		bcs.s	locret_C1F0
-		move.w	$30(a0),d0
+		blo.s	locret_C1F0
+		move.w	objoff_30(a0),d0
 		asr.w	#3,d0
 		move.w	d0,obVelX(a0)
-		move.b	#1,$32(a0)
+		move.b	#1,objoff_32(a0)
 		clr.w	obY+2(a0)
 
 locret_C1F0:
@@ -281,9 +281,9 @@ loc_C1F2:
 		andi.w	#$C,d0
 		bne.w	locret_C2E4
 		andi.w	#-$10,obX(a0)
-		move.w	obVelX(a0),$30(a0)
+		move.w	obVelX(a0),objoff_30(a0)
 		clr.w	obVelX(a0)
-		subq.b	#2,ob2ndRout(a0)
+		subq.b	#2,obSolid(a0)
 		rts	
 ; ===========================================================================
 
@@ -292,7 +292,7 @@ loc_C218:
 		tst.w	d4
 		beq.w	locret_C2E4
 		bmi.w	locret_C2E4
-		tst.b	$32(a0)
+		tst.b	objoff_32(a0)
 		beq.s	loc_C230
 		bra.w	locret_C2E4
 ; ===========================================================================
@@ -353,7 +353,7 @@ loc_C294:
 		neg.w	obVelX(a0)
 
 loc_C2D8:
-		move.b	#6,ob2ndRout(a0)
+		move.b	#6,obSolid(a0)
 		bra.s	locret_C2E4
 ; ===========================================================================
 

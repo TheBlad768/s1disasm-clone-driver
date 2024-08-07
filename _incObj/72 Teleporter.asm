@@ -26,10 +26,10 @@ Tele_Main:	; Routine 0
 		andi.w	#$1E,d0
 		lea	Tele_Data(pc),a2
 		adda.w	(a2,d0.w),a2
-		move.w	(a2)+,$3A(a0)
-		move.l	a2,$3C(a0)
-		move.w	(a2)+,$36(a0)
-		move.w	(a2)+,$38(a0)
+		move.w	(a2)+,objoff_3A(a0)
+		move.l	a2,objoff_3C(a0)
+		move.w	(a2)+,objoff_36(a0)
+		move.w	(a2)+,objoff_38(a0)
 
 loc_166C8:	; Routine 2
 		lea	(v_player).w,a1
@@ -41,22 +41,22 @@ loc_166C8:	; Routine 2
 
 loc_166E0:
 		cmpi.w	#$10,d0
-		bcc.s	locret_1675C
+		bhs.s	locret_1675C
 		move.w	obY(a1),d1
 		sub.w	obY(a0),d1
 		addi.w	#$20,d1
 		cmpi.w	#$40,d1
-		bcc.s	locret_1675C
-		tst.b	(f_lockmulti).w
+		bhs.s	locret_1675C
+		tst.b	(f_playerctrl).w
 		bne.s	locret_1675C
 		cmpi.b	#7,obSubtype(a0)
 		bne.s	loc_1670E
 		cmpi.w	#50,(v_rings).w
-		bcs.s	locret_1675C
+		blo.s	locret_1675C
 
 loc_1670E:
 		addq.b	#2,obRoutine(a0)
-		move.b	#$81,(f_lockmulti).w ; lock controls
+		move.b	#$81,(f_playerctrl).w ; lock controls and disable object interaction
 		move.b	#id_Roll,obAnim(a1) ; use Sonic's rolling animation
 		move.w	#$800,obInertia(a1)
 		move.w	#0,obVelX(a1)
@@ -66,7 +66,7 @@ loc_1670E:
 		bset	#1,obStatus(a1)
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
-		clr.b	$32(a0)
+		clr.b	objoff_32(a0)
 		move.w	#sfx_Roll,d0
 		jsr	(PlaySound_Special).l	; play Sonic rolling sound
 
@@ -76,14 +76,14 @@ locret_1675C:
 
 loc_1675E:	; Routine 4
 		lea	(v_player).w,a1
-		move.b	$32(a0),d0
-		addq.b	#2,$32(a0)
+		move.b	objoff_32(a0),d0
+		addq.b	#2,objoff_32(a0)
 		jsr	(CalcSine).l
 		asr.w	#5,d0
 		move.w	obY(a0),d2
 		sub.w	d0,d2
 		move.w	d2,obY(a1)
-		cmpi.b	#$80,$32(a0)
+		cmpi.b	#$80,objoff_32(a0)
 		bne.s	locret_16796
 		bsr.w	sub_1681C
 		addq.b	#2,obRoutine(a0)
@@ -97,24 +97,24 @@ locret_16796:
 loc_16798:	; Routine 6
 		addq.l	#4,sp
 		lea	(v_player).w,a1
-		subq.b	#1,$2E(a0)
+		subq.b	#1,objoff_2E(a0)
 		bpl.s	loc_167DA
-		move.w	$36(a0),obX(a1)
-		move.w	$38(a0),obY(a1)
+		move.w	objoff_36(a0),obX(a1)
+		move.w	objoff_38(a0),obY(a1)
 		moveq	#0,d1
-		move.b	$3A(a0),d1
+		move.b	objoff_3A(a0),d1
 		addq.b	#4,d1
-		cmp.b	$3B(a0),d1
-		bcs.s	loc_167C2
+		cmp.b	objoff_3B(a0),d1
+		blo.s	loc_167C2
 		moveq	#0,d1
 		bra.s	loc_16800
 ; ===========================================================================
 
 loc_167C2:
-		move.b	d1,$3A(a0)
-		movea.l	$3C(a0),a2
-		move.w	(a2,d1.w),$36(a0)
-		move.w	2(a2,d1.w),$38(a0)
+		move.b	d1,objoff_3A(a0)
+		movea.l	objoff_3C(a0),a2
+		move.w	(a2,d1.w),objoff_36(a0)
+		move.w	2(a2,d1.w),objoff_38(a0)
 		bra.w	sub_1681C
 ; ===========================================================================
 
@@ -137,7 +137,7 @@ loc_167DA:
 loc_16800:
 		andi.w	#$7FF,obY(a1)
 		clr.b	obRoutine(a0)
-		clr.b	(f_lockmulti).w
+		clr.b	(f_playerctrl).w
 		move.w	#0,obVelX(a1)
 		move.w	#$200,obVelY(a1)
 		rts	
@@ -148,7 +148,7 @@ loc_16800:
 sub_1681C:
 		moveq	#0,d0
 		move.w	#$1000,d2
-		move.w	$36(a0),d0
+		move.w	objoff_36(a0),d0
 		sub.w	obX(a1),d0
 		bge.s	loc_16830
 		neg.w	d0
@@ -157,7 +157,7 @@ sub_1681C:
 loc_16830:
 		moveq	#0,d1
 		move.w	#$1000,d3
-		move.w	$38(a0),d1
+		move.w	objoff_38(a0),d1
 		sub.w	obY(a1),d1
 		bge.s	loc_16844
 		neg.w	d1
@@ -165,14 +165,14 @@ loc_16830:
 
 loc_16844:
 		cmp.w	d0,d1
-		bcs.s	loc_1687A
+		blo.s	loc_1687A
 		moveq	#0,d1
-		move.w	$38(a0),d1
+		move.w	objoff_38(a0),d1
 		sub.w	obY(a1),d1
 		swap	d1
 		divs.w	d3,d1
 		moveq	#0,d0
-		move.w	$36(a0),d0
+		move.w	objoff_36(a0),d0
 		sub.w	obX(a1),d0
 		beq.s	loc_16866
 		swap	d0
@@ -186,18 +186,18 @@ loc_16866:
 		neg.w	d1
 
 loc_16874:
-		move.w	d1,$2E(a0)
+		move.w	d1,objoff_2E(a0)
 		rts	
 ; ===========================================================================
 
 loc_1687A:
 		moveq	#0,d0
-		move.w	$36(a0),d0
+		move.w	objoff_36(a0),d0
 		sub.w	obX(a1),d0
 		swap	d0
 		divs.w	d2,d0
 		moveq	#0,d1
-		move.w	$38(a0),d1
+		move.w	objoff_38(a0),d1
 		sub.w	obY(a1),d1
 		beq.s	loc_16898
 		swap	d1
@@ -211,7 +211,7 @@ loc_16898:
 		neg.w	d0
 
 loc_168A6:
-		move.w	d0,$2E(a0)
+		move.w	d0,objoff_2E(a0)
 		rts	
 ; End of function sub_1681C
 

@@ -19,15 +19,15 @@ Sign_Index:	dc.w Sign_Main-Sign_Index
 		dc.w Sign_SonicRun-Sign_Index
 		dc.w Sign_Exit-Sign_Index
 
-spintime = $30		; time for signpost to spin
-sparkletime = $32		; time between sparkles
-sparkle_id = $34		; counter to keep track of sparkles
+spintime = objoff_30		; time for signpost to spin
+sparkletime = objoff_32		; time between sparkles
+sparkle_id = objoff_34		; counter to keep track of sparkles
 ; ===========================================================================
 
 Sign_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Sign,obMap(a0)
-		move.w	#$680,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Signpost,0,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#$18,obActWid(a0)
 		move.b	#4,obPriority(a0)
@@ -37,7 +37,7 @@ Sign_Touch:	; Routine 2
 		sub.w	obX(a0),d0
 		bcs.s	.notouch
 		cmpi.w	#$20,d0		; is Sonic within $20 pixels of	the signpost?
-		bcc.s	.notouch	; if not, branch
+		bhs.s	.notouch	; if not, branch
 		move.w	#sfx_Signpost,d0
 		jsr	(PlaySound).l	; play signpost sound
 		clr.b	(f_timecount).w	; stop time counter
@@ -68,7 +68,7 @@ Sign_Spin:	; Routine 4
 		lea	Sign_SparkPos(pc,d0.w),a2 ; load sparkle position data
 		bsr.w	FindFreeObj
 		bne.s	.fail
-		_move.b	#id_Rings,0(a1)	; load rings object
+		_move.b	#id_Rings,obID(a1)	; load rings object
 		move.b	#id_Ring_Sparkle,obRoutine(a1) ; jump to ring sparkle subroutine
 		move.b	(a2)+,d0
 		ext.w	d0
@@ -79,7 +79,7 @@ Sign_Spin:	; Routine 4
 		add.w	obY(a0),d0
 		move.w	d0,obY(a1)
 		move.l	#Map_Ring,obMap(a1)
-		move.w	#$27B2,obGfx(a1)
+		move.w	#make_art_tile(ArtTile_Ring,1,0),obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#2,obPriority(a1)
 		move.b	#8,obActWid(a1)
@@ -100,19 +100,31 @@ Sign_SparkPos:	dc.b -$18,-$10		; x-position, y-position
 Sign_SonicRun:	; Routine 6
 		tst.w	(v_debuguse).w	; is debug mode	on?
 		bne.w	locret_ECEE	; if yes, branch
+	if FixBugs
+		; This function's checks are a mess, creating an edgecase where it's
+		; possible for the player to avoid having their controls locked by
+		; jumping at the right side of the screen just as the score tally
+		; appears.
+		tst.b	(v_player+obID).w	; Check if Sonic's object has been deleted (because he entered the giant ring)
+		beq.s	loc_EC86
+		btst	#1,(v_player+obStatus).w
+		bne.w	locret_ECEE
+	else
 		btst	#1,(v_player+obStatus).w
 		bne.s	loc_EC70
+	endif
 		move.b	#1,(f_lockctrl).w ; lock controls
 		move.w	#btnR<<8,(v_jpadhold2).w ; make Sonic run to the right
-
+	if ~~FixBugs
 loc_EC70:
-		tst.b	(v_player).w
+		tst.b	(v_player+obID).w	; Check if Sonic's object has been deleted (because he entered the giant ring)
 		beq.s	loc_EC86
+	endif
 		move.w	(v_player+obX).w,d0
 		move.w	(v_limitright2).w,d1
 		addi.w	#$128,d1
 		cmp.w	d1,d0
-		bcs.s	locret_ECEE
+		blo.s	locret_ECEE
 
 loc_EC86:
 		addq.b	#2,obRoutine(a0)
@@ -126,12 +138,12 @@ loc_EC86:
 
 
 GotThroughAct:
-		tst.b	(v_objspace+$5C0).w
+		tst.b	(v_endcard).w
 		bne.s	locret_ECEE
 		move.w	(v_limitright2).w,(v_limitleft2).w
 		clr.b	(v_invinc).w	; disable invincibility
 		clr.b	(f_timecount).w	; stop time counter
-		move.b	#id_GotThroughCard,(v_objspace+$5C0).w
+		move.b	#id_GotThroughCard,(v_endcard).w
 		moveq	#plcid_TitleCard,d0
 		jsr	(NewPLC).l	; load title card patterns
 		move.b	#1,(f_endactbonus).w
@@ -144,7 +156,7 @@ GotThroughAct:
 		divu.w	#15,d0		; divide by 15
 		moveq	#$14,d1
 		cmp.w	d1,d0		; is time 5 minutes or higher?
-		bcs.s	.hastimebonus	; if not, branch
+		blo.s	.hastimebonus	; if not, branch
 		move.w	d1,d0		; use minimum time bonus (0)
 
 .hastimebonus:
@@ -153,7 +165,7 @@ GotThroughAct:
 		move.w	(v_rings).w,d0	; load number of rings
 		mulu.w	#10,d0		; multiply by 10
 		move.w	d0,(v_ringbonus).w ; set ring bonus
-		move.w	#bgm_GotThrough,d0
+		move.w	#mus_GotThrough,d0
 		jsr	(PlaySound_Special).l	; play "Sonic got through" music
 
 locret_ECEE:

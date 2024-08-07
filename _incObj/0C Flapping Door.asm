@@ -11,14 +11,14 @@ FlapDoor:
 Flap_Index:	dc.w Flap_Main-Flap_Index
 		dc.w Flap_OpenClose-Flap_Index
 
-flap_time = $32		; time between opening/closing
-flap_wait = $30		; time until change
+flap_time = objoff_32		; time between opening/closing
+flap_wait = objoff_30		; time until change
 ; ===========================================================================
 
 Flap_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Flap,obMap(a0)
-		move.w	#$4328,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_LZ_Flapping_Door,2,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$28,obActWid(a0)
 		moveq	#0,d0
@@ -45,7 +45,7 @@ Flap_OpenClose:	; Routine 2
 		bne.s	.display	; if yes, branch
 		move.w	(v_player+obX).w,d0
 		cmp.w	obX(a0),d0	; has Sonic passed through the door?
-		bcc.s	.display	; if yes, branch
+		bhs.s	.display	; if yes, branch
 		move.b	#1,(f_wtunnelallow).w ; disable wind tunnel
 		move.w	#$13,d1
 		move.w	#$20,d2

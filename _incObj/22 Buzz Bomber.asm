@@ -13,15 +13,15 @@ Buzz_Index:	dc.w Buzz_Main-Buzz_Index
 		dc.w Buzz_Action-Buzz_Index
 		dc.w Buzz_Delete-Buzz_Index
 
-buzz_timedelay = $32
-buzz_buzzstatus = $34
-buzz_parent = $3C
+buzz_timedelay = objoff_32
+buzz_buzzstatus = objoff_34
+buzz_parent = objoff_3C
 ; ===========================================================================
 
 Buzz_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Buzz,obMap(a0)
-		move.w	#$444,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Buzz_Bomber,0,0),obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#8,obColType(a0)
@@ -60,13 +60,17 @@ Buzz_Action:	; Routine 2
 .fire:
 		bsr.w	FindFreeObj
 		bne.s	.fail
-		_move.b	#id_Missile,0(a1) ; load missile object
+		_move.b	#id_Missile,obID(a1) ; load missile object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		addi.w	#$1C,obY(a1)
 		move.w	#$200,obVelY(a1) ; move missile downwards
 		move.w	#$200,obVelX(a1) ; move missile to the right
+	if FixBugs
+		moveq	#$18-4,d0
+	else
 		move.w	#$18,d0
+	endif
 		btst	#0,obStatus(a0)	; is Buzz Bomber facing	left?
 		bne.s	.noflip2	; if not, branch
 		neg.w	d0
@@ -98,7 +102,7 @@ Buzz_Action:	; Routine 2
 
 .isleft:
 		cmpi.w	#$60,d0		; is Buzz Bomber within	$60 pixels of Sonic?
-		bcc.s	.keepgoing	; if not, branch
+		bhs.s	.keepgoing	; if not, branch
 		tst.b	obRender(a0)
 		bpl.s	.keepgoing
 		move.b	#2,buzz_buzzstatus(a0) ; set Buzz Bomber to "near Sonic"

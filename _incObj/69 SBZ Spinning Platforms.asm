@@ -12,14 +12,14 @@ Spin_Index:	dc.w Spin_Main-Spin_Index
 		dc.w Spin_Trapdoor-Spin_Index
 		dc.w Spin_Spinner-Spin_Index
 
-spin_timer = $30		; time counter until change
-spin_timelen = $32		; time between changes (general)
+spin_timer = objoff_30		; time counter until change
+spin_timelen = objoff_32	; time between changes (general)
 ; ===========================================================================
 
 Spin_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Trap,obMap(a0)
-		move.w	#$4492,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_SBZ_Trap_Door,2,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$80,obActWid(a0)
 		moveq	#0,d0
@@ -32,7 +32,7 @@ Spin_Main:	; Routine 0
 
 		addq.b	#2,obRoutine(a0) ; goto Spin_Spinner next
 		move.l	#Map_Spin,obMap(a0)
-		move.w	#$4DF,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_SBZ_Spinning_Platform,0,0),obGfx(a0)
 		move.b	#$10,obActWid(a0)
 		move.b	#2,obAnim(a0)
 		moveq	#0,d0
@@ -46,7 +46,7 @@ Spin_Main:	; Routine 0
 		addi.w	#$10,d1
 		lsl.w	#2,d1
 		subq.w	#1,d1
-		move.w	d1,$36(a0)
+		move.w	d1,objoff_36(a0)
 		bra.s	Spin_Spinner
 ; ===========================================================================
 
@@ -89,17 +89,17 @@ Spin_Trapdoor:	; Routine 2
 
 Spin_Spinner:	; Routine 4
 		move.w	(v_framecount).w,d0
-		and.w	$36(a0),d0
+		and.w	objoff_36(a0),d0
 		bne.s	.delay
-		move.b	#1,$34(a0)
+		move.b	#1,objoff_34(a0)
 
 .delay:
-		tst.b	$34(a0)
+		tst.b	objoff_34(a0)
 		beq.s	.animate
 		subq.w	#1,spin_timer(a0)
 		bpl.s	.animate
 		move.w	spin_timelen(a0),spin_timer(a0)
-		clr.b	$34(a0)
+		clr.b	objoff_34(a0)
 		bchg	#0,obAnim(a0)
 
 .animate:

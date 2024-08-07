@@ -13,15 +13,15 @@ Bom_Index:	dc.w Bom_Main-Bom_Index
 		dc.w Bom_Display-Bom_Index
 		dc.w Bom_End-Bom_Index
 
-bom_time = $30		; time of fuse
-bom_origY = $34		; original y-axis position
-bom_parent = $3C		; address of parent object
+bom_time = objoff_30		; time of fuse
+bom_origY = objoff_34		; original y-axis position
+bom_parent = objoff_3C		; address of parent object
 ; ===========================================================================
 
 Bom_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Bomb,obMap(a0)
-		move.w	#$400,obGfx(a0)
+		move.w	#make_art_tile(ArtTile_Bomb,0,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$C,obActWid(a0)
@@ -84,7 +84,7 @@ Bom_Action:	; Routine 2
 .explode:
 		subq.w	#1,bom_time(a0)	; subtract 1 from time delay
 		bpl.s	.noexplode	; if time remains, branch
-		_move.b	#id_ExplosionBomb,0(a0) ; change bomb into an explosion
+		_move.b	#id_ExplosionBomb,obID(a0) ; change bomb into an explosion
 		move.b	#0,obRoutine(a0)
 
 .noexplode:
@@ -99,7 +99,7 @@ Bom_Action:	; Routine 2
 
 .isleft:
 		cmpi.w	#$60,d0		; is Sonic within $60 pixels?
-		bcc.s	.outofrange	; if not, branch
+		bhs.s	.outofrange	; if not, branch
 		move.w	(v_player+obY).w,d0
 		sub.w	obY(a0),d0
 		bcc.s	.isabove
@@ -107,7 +107,7 @@ Bom_Action:	; Routine 2
 
 .isabove:
 		cmpi.w	#$60,d0
-		bcc.s	.outofrange
+		bhs.s	.outofrange
 		tst.w	(v_debuguse).w
 		bne.s	.outofrange
 
@@ -117,7 +117,7 @@ Bom_Action:	; Routine 2
 		move.b	#2,obAnim(a0)	; use activated animation
 		bsr.w	FindNextFreeObj
 		bne.s	.outofrange
-		_move.b	#id_Bomb,0(a1)	; load fuse object
+		_move.b	#id_Bomb,obID(a1)	; load fuse object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.w	obY(a0),bom_origY(a1)
@@ -152,6 +152,11 @@ loc_11B70:
 ; ===========================================================================
 
 loc_11B7C:
+	if FixBugs
+		; Avoid returning to Bom_Display to prevent display-and-delete
+		; and double-delete bugs.
+		addq.l	#4,sp
+	endif
 		clr.w	bom_time(a0)
 		clr.b	obRoutine(a0)
 		move.w	bom_origY(a0),obY(a0)
@@ -166,7 +171,7 @@ loc_11B7C:
 		bne.s	.fail
 
 .makeshrapnel:
-		_move.b	#id_Bomb,0(a1)	; load shrapnel	object
+		_move.b	#id_Bomb,obID(a1)	; load shrapnel	object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	#6,obSubtype(a1)
