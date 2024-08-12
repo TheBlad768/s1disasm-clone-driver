@@ -9,6 +9,8 @@
 
 	cpu 68000
 
+MSUMode	= 0	; if 1, enable MSU
+
 EnableSRAM	  = 0	; change to 1 to enable SRAM
 BackupSRAM	  = 1
 AddressSRAM	  = 3	; 0 = odd+even; 2 = even only; 3 = odd only
@@ -350,8 +352,13 @@ GameInit:
 		move.l	d7,(a6)+
 		dbf	d6,.clearRAM	; clear RAM ($0000-$FDFF)
 
+	if MSUMode
 		jsr	(Init_MSU_Driver).l
 		seq	(SegaCD_Mode).w
+	else
+		clr.b	(SegaCD_Mode).w
+	endif
+
 		bsr.w	VDPSetupGame
 		bsr.w	DACDriverLoad
 		bsr.w	JoypadInit
