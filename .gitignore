@@ -9,6 +9,7 @@ SonLVL INI Files/SonLVL.log
 sonic.lst
 sonic.log
 sonic.p
+sonic.h
 
 # Built ROMs.
 s1built.bin

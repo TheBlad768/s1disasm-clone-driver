@@ -2073,7 +2073,7 @@ Sega_WaitPal:
 		bsr.w	PlaySound_Special	; play "SEGA" sound
 		move.b	#$14,(v_vbla_routine).w
 		bsr.w	WaitForVBla
-		move.w	#$1E,(v_demolength).w
+		move.w	#3*60,(v_demolength).w	; 3 seconds
 
 Sega_WaitEnd:
 		move.b	#$14,(v_vbla_routine).w
@@ -2098,7 +2098,9 @@ GM_Title:
 		bsr.w	ClearPLC
 		bsr.w	PaletteFadeOut
 		disable_ints
-		bsr.w	DACDriverLoad
+
+;		bsr.w	DACDriverLoad
+
 		lea	(vdp_control_port).l,a6
 		move.w	#$8004,(a6)	; 8-colour mode
 		move.w	#$8200+(vram_fg>>10),(a6) ; set foreground nametable address

@@ -23,7 +23,7 @@ SMPS_First_ContSFX	= $BC
 ;	| Set this to the sound ID of your first continuous SFX. This ID must be a higher number than any of your normal SFXes
 ;	| (Default value is S&K's)
 ;
-SMPS_IdlingSegaSound	= 1
+SMPS_IdlingSegaSound	= 0
 ;	| If 1, the Sega sound makes the 68k idle. Needed for stock Sonic 1
 ;
 SMPS_EnableUniversalVoiceBank	= 0

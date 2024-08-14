@@ -34,7 +34,7 @@ mus__Last =			SMPS_id(ptr_musend)-1
 ; Sound effects
 offset :=	SoundIndex
 ptrsize :=	4
-idstart :=	$80
+idstart :=	$20
 
 sfx__First = idstart
 sfx_Jump =			SMPS_id(ptr_sndA0)
