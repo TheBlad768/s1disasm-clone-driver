@@ -1310,6 +1310,13 @@ StopSpecialSFX:
 		tst.b	SMPS_Track.PlaybackControl(a5)		; Is track playing?
 		bpl.s	.fadedfm				; Branch if not
 		movea.l	SMPS_RAM.v_voice_ptr(a6),a1		; Voice pointer
+	if FixBugs
+		moveq	#0, d0
+	else
+		; DANGER! `SetVoice` expects d0 to be a word, but it's only passed
+		; as a byte below. This may result in restoring invalid/broken FM
+		; voices during fade out sequence if upper byte of d0 was trashed.
+	endif
 		move.b	SMPS_Track.VoiceIndex(a5),d0		; Current voice
 		jsr	SetVoice(pc)
 ; loc_724AE:
@@ -2277,6 +2284,13 @@ cfStopSpecialFM4:
 		movea.l	SMPS_RAM.v_voice_ptr(a6),a1		; Voice pointer
 		bclr	#2,SMPS_Track.PlaybackControl(a5)	; Clear 'SFX is overriding' bit
 		bset	#1,SMPS_Track.PlaybackControl(a5)	; Set 'track at rest' bit
+	if FixBugs
+		moveq	#0, d0
+	else
+		; DANGER! `SetVoice` expects d0 to be a word, but it's only passed
+		; as a byte below. This may result in restoring invalid/broken FM
+		; voices during fade out sequence if upper byte of d0 was trashed.
+	endif
 		move.b	SMPS_Track.VoiceIndex(a5),d0		; Current voice
 		jsr	SetVoice(pc)
 		movea.l	a3,a5
