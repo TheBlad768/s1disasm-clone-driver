@@ -949,7 +949,7 @@ PlayCD_Index:
 	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $13 (Emerald)
 
 	; Extra
-	dc.l _MCD_PlayTrack<<24|$00000000			; $07 (Speedup)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $14 (Speedup)
 	even
 
 ; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
