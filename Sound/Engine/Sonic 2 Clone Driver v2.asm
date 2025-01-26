@@ -922,18 +922,31 @@ PlayCD_Index:
 	; flag, loop time
 
 	; Levels
-	dc.l _MCD_PlayTrack<<24|$00000000			; $01 (DEZ)
-
-	; Bosses
-	dc.l _MCD_PlayTrack<<24|$00000000			; $02 (Mid Boss)
-	dc.l _MCD_PlayTrack<<24|$00000000			; $03 (Boss)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $01 (GHZ)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $02 (LZ)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $03 (MZ)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $04 (SLZ)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $05 (SYZ)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $06 (SBZ)
 
 	; Main
-	dc.l _MCD_PlayTrack<<24|$00000000			; $04 (Invincible)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $07 (Invincible)
+	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $08 (Extra Life)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $09 (Special Stage)
+	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $0A (Title)
+	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $0B (Ending)
+
+	; Bosses
+	dc.l _MCD_PlayTrack<<24|$00000000			; $0C (Boss)
+	dc.l _MCD_PlayTrack<<24|$00000000			; $0D (FZ)
 
 	; End
-	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $05 (Act Clear)
-	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $06 (Countdown)
+	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $0E (Act Clear)
+	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $0F (Game Over)
+	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $10 (Continue)
+	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $11 (Credits)
+	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $12 (Countdown)
+	dc.l _MCD_PlayTrack_Once<<24|$00000000	; $13 (Emerald)
 
 	; Extra
 	dc.l _MCD_PlayTrack<<24|$00000000			; $07 (Speedup)
