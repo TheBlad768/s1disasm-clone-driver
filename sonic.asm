@@ -9180,11 +9180,15 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
 		include "Sound/Engine/Sonic 2 Clone Driver v2.asm"
 
+	if MSUMode
+
 ; ---------------------------------------------------------------------------
 ; MegaCD Driver
 ; ---------------------------------------------------------------------------
 
 		include "Sound/MSU/MSU.asm"
+
+	endif
 
 ; ---------------------------------------------------------------
 ; Error handling module
