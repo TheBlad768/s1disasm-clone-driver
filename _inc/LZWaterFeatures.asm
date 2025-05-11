@@ -345,12 +345,12 @@ LZWindTunnels:
 		move.w	#0,obVelY(a1)
 		move.b	#id_Float2,obAnim(a1)	; use floating animation
 		bset	#1,obStatus(a1)
-		btst	#0,(v_jpadhold2).w ; is up pressed?
+		btst	#bitUp,(v_jpadhold2).w ; is up pressed?
 		beq.s	.down		; if not, branch
 		subq.w	#1,obY(a1)	; move Sonic up on pole
 
 .down:
-		btst	#1,(v_jpadhold2).w ; is down being pressed?
+		btst	#bitDn,(v_jpadhold2).w ; is down being pressed?
 		beq.s	.end		; if not, branch
 		addq.w	#1,obY(a1)	; move Sonic down on pole
 
