@@ -9196,6 +9196,14 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
 		include "ErrorHandler/ErrorHandler.asm"
 
+; ---------------------------------------------------------------
+; WARNING!
+;	DO NOT put any data from now on! DO NOT use ROM padding!
+;	Symbol data should be appended here after ROM is compiled
+;	by ConvSym utility, otherwise debugger modules won't be able
+;	to resolve symbol names.
+; ---------------------------------------------------------------
+
 ; end of 'ROM'
 EndOfRom:
 
