@@ -441,7 +441,7 @@ loc_1A216:
 		clr.w	(v_player+obInertia).w
 		tst.w	obVelY(a0)
 		bpl.s	loc_1A248
-		move.w	#$100,(v_jpadhold2).w
+		move.w	#btnUp<<8,(v_jpadhold2).w
 
 loc_1A23A:
 		cmpi.w	#boss_fz_end+$E0,(v_player+obX).w

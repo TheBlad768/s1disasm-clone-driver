@@ -2175,17 +2175,17 @@ LevelSelect:
 ;		addi.w	#$80,d0
 		tst.b	(f_creditscheat).w ; is Japanese Credits cheat on?
 		beq.s	LevSel_NoCheat	; if not, branch
-		cmpi.w	#$1F,d0		; is sound $9F being played?
+		cmpi.w	#$9F-$80,d0		; is sound $1F being played?
 		beq.s	LevSel_Ending	; if yes, branch
-		cmpi.w	#$1E,d0		; is sound $9E being played?
+		cmpi.w	#$9E-$80,d0		; is sound $1E being played?
 		beq.s	LevSel_Credits	; if yes, branch
 
 LevSel_NoCheat:
 		; This is a workaround for a bug; see PlaySoundID for more.
 		; Once you've fixed the bugs there, comment these four instructions out.
-		cmpi.w	#mus__Last+1,d0	; is sound $80-$93 being played?
+		cmpi.w	#mus__Last+1,d0	; is sound $00-$13 being played?
 		blo.s	LevSel_PlaySnd	; if yes, branch
-		cmpi.w	#sfx__First,d0	; is sound $94-$9F being played?
+		cmpi.w	#sfx__First,d0	; is sound $14-$1F being played?
 		blo.s	LevelSelect	; if yes, branch
 
 LevSel_PlaySnd:
@@ -2428,7 +2428,7 @@ LevSel_SndTest:
 		beq.s	LevSel_Right	; if not, branch
 		subq.w	#1,d0		; subtract 1 from sound	test
 		bhs.s	LevSel_Right
-		move.w	#$FF,d0		; if sound test	moves below 0, set to $FF
+		move.w	#$FF,d0		; if sound test	moves below 0, set to $4F
 
 LevSel_Right:
 		btst	#bitR,d1	; is right pressed?

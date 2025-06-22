@@ -47,8 +47,8 @@ Debug_Main:	; Routine 0
 
 .noreset:
 		bsr.w	Debug_ShowItem
-		move.b	#12,(v_debugxspeed).w
-		move.b	#1,(v_debugyspeed).w
+		move.b	#12,(v_debugspeedtimer).w
+		move.b	#1,(v_debugspeed).w
 
 Debug_Action:	; Routine 2
 		moveq	#6,d0
@@ -80,25 +80,25 @@ Debug_Control:
 		andi.w	#btnDir,d0	; is up/down/left/right	held?
 		bne.s	.dirheld	; if yes, branch
 
-		move.b	#12,(v_debugxspeed).w
-		move.b	#15,(v_debugyspeed).w
+		move.b	#12,(v_debugspeedtimer).w
+		move.b	#15,(v_debugspeed).w
 		bra.w	Debug_ChgItem
 ; ===========================================================================
 
 .dirheld:
-		subq.b	#1,(v_debugxspeed).w
+		subq.b	#1,(v_debugspeedtimer).w
 		bne.s	loc_1D01C
-		move.b	#1,(v_debugxspeed).w
-		addq.b	#1,(v_debugyspeed).w
+		move.b	#1,(v_debugspeedtimer).w
+		addq.b	#1,(v_debugspeed).w
 		bne.s	.dirpressed
-		move.b	#-1,(v_debugyspeed).w
+		move.b	#-1,(v_debugspeed).w
 
 .dirpressed:
 		move.b	(v_jpadhold1).w,d4
 
 loc_1D01C:
 		moveq	#0,d1
-		move.b	(v_debugyspeed).w,d1
+		move.b	(v_debugspeed).w,d1
 		addq.w	#1,d1
 		swap	d1
 		asr.l	#4,d1
