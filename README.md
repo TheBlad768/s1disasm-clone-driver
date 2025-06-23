@@ -1,7 +1,7 @@
 s1disasm_git
 ============
 
-The very latest Sonic 1 Disassembly.
+The very latest Sonic 1 Disassembly with Sonic 2 Clone Driver v2 (Mega PCM 2.0 version).
 
 See: http://info.sonicretro.org/Disassemblies
 
