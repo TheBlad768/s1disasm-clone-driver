@@ -261,10 +261,10 @@ SetupValues:	dc.w $8000		; VDP register start number
 		dc.l $40000080		; VRAM address 0
 
 	; Z80 instructions (not the sound driver; that gets loaded later)
-    if (*)+$26 < $10000
-    save
-    CPU Z80 ; start assembling Z80 code
-    phase 0 ; pretend we're at address 0
+	if (*)+$26 < $10000
+	save
+	CPU Z80 ; start assembling Z80 code
+	phase 0 ; pretend we're at address 0
 	xor	a	; clear a to 0
 	ld	bc,((z80_ram_end-z80_ram)-zStartupCodeEndLoc)-1 ; prepare to loop this many times
 	ld	de,zStartupCodeEndLoc+1	; initial destination address
@@ -291,13 +291,13 @@ SetupValues:	dc.w $8000		; VDP register start number
 	ld	(hl),0E9h ; replace the first instruction with a jump to itself
 	jp	(hl)	  ; jump to the first instruction (to stay there forever)
 zStartupCodeEndLoc:
-    dephase ; stop pretending
+	dephase ; stop pretending
 	restore
-    padding off ; unfortunately our flags got reset so we have to set them again...
-    else ; due to an address range limitation I could work around but don't think is worth doing so:
+	padding off ; unfortunately our flags got reset so we have to set them again...
+	else ; due to an address range limitation I could work around but don't think is worth doing so:
 	message "Warning: using pre-assembled Z80 startup code."
 	dc.w $AF01,$D91F,$1127,$0021,$2600,$F977,$EDB0,$DDE1,$FDE1,$ED47,$ED4F,$D1E1,$F108,$D9C1,$D1E1,$F1F9,$F3ED,$5636,$E9E9
-    endif
+	endif
 
 		dc.w $8104		; VDP display mode
 		dc.w $8F02		; VDP increment
@@ -388,11 +388,11 @@ ptr_GM_Credits:	bra.w	GM_Credits	; Credits ($1C)
 CheckSumError:
 		bsr.w	VDPSetupGame
 		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
-		moveq	#$3F,d7
+		moveq	#($80)/2-1,d7
 
 .fillred:
 		move.w	#cRed,(vdp_data_port).l ; fill palette with red
-		dbf	d7,.fillred	; repeat $3F more times
+		dbf	d7,.fillred	; repeat until CRAM is filled
 
 .endlessloop:
 		bra.s	.endlessloop
@@ -981,7 +981,7 @@ VDPSetupGame:
 		lea	(vdp_control_port).l,a0
 		lea	(vdp_data_port).l,a1
 		lea	(VDPSetupArray).l,a2
-		moveq	#$12,d7
+		moveq	#(VDPSetupArray_End-VDPSetupArray)/2-1,d7
 
 .setreg:
 		move.w	(a2)+,(a0)
@@ -992,7 +992,7 @@ VDPSetupGame:
 		move.w	#$8A00+223,(v_hbla_hreg).w	; H-INT every 224th scanline
 		moveq	#0,d0
 		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
-		move.w	#$3F,d7
+		move.w	#($80)/2-1,d7
 
 .clrCRAM:
 		move.w	d0,(a1)
@@ -1026,6 +1026,7 @@ VDPSetupArray:	dc.w $8004		; 8-colour mode
 		dc.w $9001		; 64-cell hscroll size
 		dc.w $9100		; window horizontal position
 		dc.w $9200		; window vertical position
+VDPSetupArray_End:
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	clear the screen
@@ -1227,7 +1228,7 @@ RunPLC:
 		lea	(v_ngfx_buffer).w,a1
 		move.w	(a0)+,d2
 		bpl.s	loc_160E
-		adda.w	#$A,a3
+		adda.w	#NemPCD_WriteRowToVDP_XOR-NemPCD_WriteRowToVDP,a3
 
 loc_160E:
 		andi.w	#$7FFF,d2
@@ -1417,7 +1418,7 @@ PalFadeIn_Alt:				; start position and size are already set
 		move.w	d1,(a0)+
 		dbf	d0,.fill 	; fill palette with black
 
-		move.w	#$15,d4
+		move.w	#$16-1,d4
 
 .mainloop:
 		move.b	#$12,(v_vbla_routine).w
@@ -1512,7 +1513,7 @@ FadeIn_AddColour:
 
 PaletteFadeOut:
 		move.w	#$003F,(v_pfade_start).w ; start position = 0; size = $40
-		move.w	#$15,d4
+		move.w	#$16-1,d4
 
 .mainloop:
 		move.b	#$12,(v_vbla_routine).w
@@ -1606,7 +1607,7 @@ PaletteWhiteIn:
 		move.w	d1,(a0)+
 		dbf	d0,.fill 	; fill palette with white
 
-		move.w	#$15,d4
+		move.w	#$16-1,d4
 
 .mainloop:
 		move.b	#$12,(v_vbla_routine).w
@@ -1700,7 +1701,7 @@ WhiteIn_DecColour:
 
 PaletteWhiteOut:
 		move.w	#$003F,(v_pfade_start).w ; start position = 0; size = $40
-		move.w	#$15,d4
+		move.w	#$16-1,d4
 
 .mainloop:
 		move.b	#$12,(v_vbla_routine).w
@@ -2054,8 +2055,8 @@ GM_Sega:
 		copyTilemap	(v_256x256+24*8*2)&$FFFFFF,vram_fg,40,28
 
 		if Revision<>0
-			tst.b   (v_megadrive).w	; is console Japanese?
-			bmi.s   .loadpal
+			tst.b	(v_megadrive).w	; is console Japanese?
+			bmi.s	.loadpal
 			copyTilemap	(v_256x256+$A40)&$FFFFFF,vram_fg+$53A,3,2 ; hide "TM" with a white rectangle
 		endif
 
@@ -2080,7 +2081,7 @@ Sega_WaitPal:
 		bsr.w	PlaySound_Special	; play "SEGA" sound
 		move.b	#$14,(v_vbla_routine).w
 		bsr.w	WaitForVBla
-		move.w	#$1E,(v_demolength).w
+		move.w	#30,(v_demolength).w
 
 Sega_WaitEnd:
 		move.b	#2,(v_vbla_routine).w
@@ -2199,7 +2200,7 @@ Tit_LoadText:
 		move.b	#bgm_Title,d0
 		bsr.w	PlaySound_Special	; play title screen music
 		move.b	#0,(f_debugmode).w ; disable debug mode
-		move.w	#$178,(v_demolength).w ; run title screen for $178 frames
+		move.w	#376,(v_demolength).w ; run title screen for 376 frames
 		
 	if FixBugs
 		clearRAM v_sonicteam,v_sonicteam+object_size
@@ -2215,8 +2216,8 @@ Tit_LoadText:
 		;clr.b	(v_pressstart+obRoutine).w ; The 'Mega Games 10' version of Sonic 1 added this line, to fix the 'PRESS START BUTTON' object not appearing
 
 		if Revision<>0
-			tst.b   (v_megadrive).w	; is console Japanese?
-			bpl.s   .isjap		; if yes, branch
+			tst.b	(v_megadrive).w	; is console Japanese?
+			bpl.s	.isjap		; if yes, branch
 		endif
 
 		move.b	#id_PSBTM,(v_titletm).w ; load "TM" object
@@ -2495,7 +2496,7 @@ LevSelCode_US:	dc.b btnUp,btnDn,btnL,btnR,0,$FF
 ; ---------------------------------------------------------------------------
 
 GotoDemo:
-		move.w	#$1E,(v_demolength).w
+		move.w	#30,(v_demolength).w
 
 loc_33B6:
 		move.b	#4,(v_vbla_routine).w
@@ -2570,7 +2571,7 @@ LevSelControls:
 		bpl.s	LevSel_SndTest	; if time remains, branch
 
 LevSel_UpDown:
-		move.w	#$B,(v_levseldelay).w ; reset time delay
+		move.w	#$C-1,(v_levseldelay).w ; reset time delay
 		move.b	(v_jpadhold1).w,d1
 		andi.b	#btnUp+btnDn,d1	; is up/down pressed?
 		beq.s	LevSel_SndTest	; if not, branch
@@ -2640,7 +2641,7 @@ textpos:	= ($40000000+(($E210&$3FFF)<<16)+(($E210&$C000)>>14))
 		lea	(vdp_data_port).l,a6
 		move.l	#textpos,d4	; text position on screen
 		move.w	#$E680,d3	; VRAM setting (4th palette, $680th tile)
-		moveq	#$14,d1		; number of lines of text
+		moveq	#$15-1,d1	; number of lines of text
 
 LevSel_DrawAll:
 		move.l	d4,4(a6)
@@ -2702,7 +2703,7 @@ LevSel_Numb:
 
 
 LevSel_ChgLine:
-		moveq	#$17,d2		; number of characters per line
+		moveq	#$18-1,d2	; number of characters per line
 
 LevSel_LineLoop:
 		moveq	#0,d0
@@ -2960,7 +2961,7 @@ Level_WtrNotSbz:
 		bsr.w	PalLoad_Water
 
 Level_Delay:
-		move.w	#3,d1
+		move.w	#4-1,d1
 
 Level_DelayLoop:
 		move.b	#8,(v_vbla_routine).w
@@ -3002,8 +3003,8 @@ Level_MainLoop:
 		bsr.w	LZWaterFeatures
 		jsr	(ExecuteObjects).l
 		if Revision<>0
-			tst.w   (f_restart).w
-			bne     GM_Level
+			tst.w	(f_restart).w
+			bne	GM_Level
 		endif
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.s	Level_DoScroll	; if yes, branch
@@ -3053,7 +3054,7 @@ Level_EndDemo:
 		move.b	#id_Credits,(v_gamemode).w ; go to credits
 
 Level_FadeDemo:
-		move.w	#$3C,(v_demolength).w
+		move.w	#60,(v_demolength).w
 		move.w	#$3F,(v_pfade_start).w
 		clr.w	(v_palchgspeed).w
 
@@ -3121,7 +3122,7 @@ SynchroAnimate:
 Sync1:
 		subq.b	#1,(v_ani0_time).w ; has timer reached 0?
 		bpl.s	Sync2		; if not, branch
-		move.b	#$B,(v_ani0_time).w ; reset timer
+		move.b	#$C-1,(v_ani0_time).w ; reset timer
 		subq.b	#1,(v_ani0_frame).w ; next frame
 		andi.b	#7,(v_ani0_frame).w ; max frame is 7
 
@@ -3129,7 +3130,7 @@ Sync1:
 Sync2:
 		subq.b	#1,(v_ani1_time).w
 		bpl.s	Sync3
-		move.b	#7,(v_ani1_time).w
+		move.b	#8-1,(v_ani1_time).w
 		addq.b	#1,(v_ani1_frame).w
 		andi.b	#3,(v_ani1_frame).w
 
@@ -3137,7 +3138,7 @@ Sync2:
 Sync3:
 		subq.b	#1,(v_ani2_time).w
 		bpl.s	Sync4
-		move.b	#7,(v_ani2_time).w
+		move.b	#8-1,(v_ani2_time).w
 		addq.b	#1,(v_ani2_frame).w
 		cmpi.b	#6,(v_ani2_frame).w
 		blo.s	Sync4
@@ -3646,7 +3647,7 @@ loc_4C10:
 		swap	d0
 		lea	(byte_4CCC).l,a1
 		lea	(v_ngfx_buffer).w,a3
-		moveq	#9,d3
+		moveq	#$A-1,d3
 
 loc_4C26:
 		move.w	2(a3),d0
@@ -3782,7 +3783,7 @@ Cont_MainLoop:
 		bhs.s	loc_4DF2
 		disable_ints
 		move.w	(v_demolength).w,d1
-		divu.w	#$3C,d1
+		divu.w	#60,d1
 		andi.l	#$F,d1
 		jsr	(ContScrCounter).l
 		enable_ints
@@ -3880,7 +3881,7 @@ End_LoadSonic:
 		bset	#0,(v_player+obStatus).w ; make Sonic face left
 		move.b	#1,(f_lockctrl).w ; lock controls
 		move.w	#(btnL<<8),(v_jpadhold2).w ; move Sonic to the left
-		move.w	#$F800,(v_player+obInertia).w ; set Sonic's speed
+		move.w	#-$800,(v_player+obInertia).w ; set Sonic's speed
 		move.b	#id_HUD,(v_hud).w ; load HUD object
 		jsr	(ObjPosLoad).l
 		jsr	(ExecuteObjects).l
@@ -4125,7 +4126,7 @@ EndingDemoLoad:
 		bne.s	EndDemo_Exit	; if not, branch
 		lea	(EndDemo_LampVar).l,a1 ; load lamppost variables
 		lea	(v_lastlamp).w,a2
-		move.w	#8,d0
+		move.w	#(EndDemo_LampVar_End-EndDemo_LampVar)/4-1,d0
 
 EndDemo_LampLoad:
 		move.l	(a1)+,(a2)+
@@ -4155,6 +4156,7 @@ EndDemo_LampVar:
 		dc.w $4AB, $3A6, 0, $28C, 0, 0 ; scroll info
 		dc.w $308		; water height
 		dc.b 1,	1		; water routine and state
+EndDemo_LampVar_End:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; "TRY AGAIN" and "END"	screens
@@ -8477,22 +8479,22 @@ AddPoints:
 
 		else
 
-			lea     (v_score).w,a3
-			add.l   d0,(a3)
-			move.l  #999999,d1
-			cmp.l   (a3),d1 ; is score below 999999?
-			bhi.s   .belowmax ; if yes, branch
-			move.l  d1,(a3) ; reset score to 999999
+			lea	(v_score).w,a3
+			add.l	d0,(a3)
+			move.l	#999999,d1
+			cmp.l	(a3),d1 ; is score below 999999?
+			bhi.s	.belowmax ; if yes, branch
+			move.l	d1,(a3) ; reset score to 999999
 .belowmax:
-			move.l  (a3),d0
-			cmp.l   (v_scorelife).w,d0 ; has Sonic got 50000+ points?
-			blo.s   .noextralife ; if not, branch
+			move.l	(a3),d0
+			cmp.l	(v_scorelife).w,d0 ; has Sonic got 50000+ points?
+			blo.s	.noextralife ; if not, branch
 
-			addi.l  #5000,(v_scorelife).w ; increase requirement by 50000
-			tst.b   (v_megadrive).w
-			bmi.s   .noextralife ; branch if Mega Drive is Japanese
-			addq.b  #1,(v_lives).w ; give extra life
-			addq.b  #1,(f_lifecount).w
+			addi.l	#5000,(v_scorelife).w ; increase requirement by 50000
+			tst.b	(v_megadrive).w
+			bmi.s	.noextralife ; branch if Mega Drive is Japanese
+			addq.b	#1,(v_lives).w ; give extra life
+			addq.b	#1,(f_lifecount).w
 			move.w	#bgm_ExtraLife,d0
 			jmp	(PlaySound).l
 		endif
