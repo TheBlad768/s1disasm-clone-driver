@@ -39,7 +39,7 @@ AniArt_GHZ_Waterfall:
 		subq.b	#1,(v_lani0_time).w ; decrement timer
 		bpl.s	AniArt_GHZ_Bigflower ; branch if not 0
 
-		move.b	#5,(v_lani0_time).w ; time to display each frame
+		move.b	#6-1,(v_lani0_time).w ; time to display each frame
 		lea	(Art_GhzWater).l,a1 ; load waterfall patterns
 		move.b	(v_lani0_frame).w,d0
 		addq.b	#1,(v_lani0_frame).w ; increment frame counter
@@ -60,7 +60,7 @@ AniArt_GHZ_Bigflower:
 		subq.b	#1,(v_lani1_time).w
 		bpl.s	AniArt_GHZ_Smallflower
 
-		move.b	#$F,(v_lani1_time).w
+		move.b	#$10-1,(v_lani1_time).w
 		lea	(Art_GhzFlower1).l,a1 ;	load big flower	patterns
 		move.b	(v_lani1_frame).w,d0
 		addq.b	#1,(v_lani1_frame).w
@@ -81,7 +81,7 @@ AniArt_GHZ_Smallflower:
 		subq.b	#1,(v_lani2_time).w
 		bpl.s	.end
 
-		move.b	#7,(v_lani2_time).w
+		move.b	#8-1,(v_lani2_time).w
 		move.b	(v_lani2_frame).w,d0
 		addq.b	#1,(v_lani2_frame).w ; increment frame counter
 		andi.w	#3,d0		; there are 4 frames
@@ -119,7 +119,7 @@ AniArt_MZ_Lava:
 		subq.b	#1,(v_lani0_time).w ; decrement timer
 		bpl.s	AniArt_MZ_Magma	; branch if not 0
 
-		move.b	#$13,(v_lani0_time).w ; time to display each frame
+		move.b	#$14-1,(v_lani0_time).w ; time to display each frame
 		lea	(Art_MzLava1).l,a1 ; load lava surface patterns
 		moveq	#0,d0
 		move.b	(v_lani0_frame).w,d0
@@ -140,7 +140,7 @@ AniArt_MZ_Magma:
 		subq.b	#1,(v_lani1_time).w ; decrement timer
 		bpl.s	AniArt_MZ_Torch	; branch if not 0
 		
-		move.b	#1,(v_lani1_time).w ; time between each gfx change
+		move.b	#2-1,(v_lani1_time).w ; time between each gfx change
 		moveq	#0,d0
 		move.b	(v_lani0_frame).w,d0 ; get surface lava frame number
 		lea	(Art_MzLava2).l,a4 ; load magma gfx
@@ -175,7 +175,7 @@ AniArt_MZ_Torch:
 		subq.b	#1,(v_lani2_time).w ; decrement timer
 		bpl.w	.end		; branch if not 0
 		
-		move.b	#7,(v_lani2_time).w ; time to display each frame
+		move.b	#8-1,(v_lani2_time).w ; time to display each frame
 		lea	(Art_MzTorch).l,a1 ; load torch	patterns
 		moveq	#0,d0
 		move.b	(v_lani3_frame).w,d0
@@ -209,7 +209,7 @@ AniArt_SBZ:
 		subq.b	#1,(v_lani0_time).w ; decrement timer
 		bpl.s	.chk_smokepuff2 ; branch if not 0
 		
-		move.b	#7,(v_lani0_time).w ; time to display each frame
+		move.b	#8-1,(v_lani0_time).w ; time to display each frame
 		lea	(Art_SbzSmoke).l,a1 ; load smoke patterns
 		locVRAM	ArtTile_SBZ_Smoke_Puff_1*tile_size
 		move.b	(v_lani0_frame).w,d0
@@ -246,7 +246,7 @@ AniArt_SBZ:
 		subq.b	#1,(v_lani1_time).w ; decrement timer
 		bpl.s	.end		; branch if not 0
 		
-		move.b	#7,(v_lani1_time).w ; time to display each frame
+		move.b	#8-1,(v_lani1_time).w ; time to display each frame
 		lea	(Art_SbzSmoke).l,a1 ; load smoke patterns
 		locVRAM	ArtTile_SBZ_Smoke_Puff_2*tile_size
 		move.b	(v_lani1_frame).w,d0
@@ -281,7 +281,7 @@ AniArt_Ending_BigFlower:
 		subq.b	#1,(v_lani1_time).w ; decrement timer
 		bpl.s	AniArt_Ending_SmallFlower ; branch if not 0
 		
-		move.b	#7,(v_lani1_time).w
+		move.b	#8-1,(v_lani1_time).w
 		lea	(Art_GhzFlower1).l,a1 ;	load big flower	patterns
 		lea	(v_256x256_end-$1000).w,a2 ; load 2nd big flower from RAM
 		move.b	(v_lani1_frame).w,d0
@@ -308,7 +308,7 @@ AniArt_Ending_SmallFlower:
 		subq.b	#1,(v_lani2_time).w ; decrement timer
 		bpl.s	AniArt_Ending_Flower3 ; branch if not 0
 		
-		move.b	#7,(v_lani2_time).w
+		move.b	#8-1,(v_lani2_time).w
 		move.b	(v_lani2_frame).w,d0
 		addq.b	#1,(v_lani2_frame).w ; increment frame counter
 		andi.w	#7,d0		; max 8 frames
@@ -333,7 +333,7 @@ AniArt_Ending_Flower3:
 		subq.b	#1,(v_lani4_time).w ; decrement timer
 		bpl.s	AniArt_Ending_Flower4 ; branch if not 0
 		
-		move.b	#$E,(v_lani4_time).w
+		move.b	#$F-1,(v_lani4_time).w
 		move.b	(v_lani4_frame).w,d0
 		addq.b	#1,(v_lani4_frame).w ; increment frame counter
 		andi.w	#3,d0		; max 4 frames
@@ -356,7 +356,7 @@ AniArt_Ending_Flower4:
 		subq.b	#1,(v_lani5_time).w ; decrement timer
 		bpl.s	.end		; branch if not 0
 		
-		move.b	#$B,(v_lani5_time).w
+		move.b	#$C-1,(v_lani5_time).w
 		move.b	(v_lani5_frame).w,d0
 		addq.b	#1,(v_lani5_frame).w ; increment frame counter
 		andi.w	#3,d0
