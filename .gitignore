@@ -12,5 +12,13 @@ sonic.p
 s1built.bin
 s1built.prev.bin
 
+# Automatically-generated (D)PCM data.
+sound/dac/dpcm/generated/*.inc
+sound/dac/dpcm/generated/*.dpcm
+sound/dac/dpcm/generated/hashes.lua
+sound/dac/pcm/generated/*.inc
+sound/dac/pcm/generated/*.pcm
+sound/dac/pcm/generated/hashes.lua
+
 # Typical CMake build directory.
 build_tools/s1p2bin/build

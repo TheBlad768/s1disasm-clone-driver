@@ -66,8 +66,7 @@ zBankSwitchLoop:
 ; ===========================================================================
 	ensure1byteoffset 10h
 zDACDecodeTbl:
-	db	   0,	 1,   2,   4,   8,  10h,  20h,  40h
-	db	 80h,	-1,  -2,  -4,  -8, -10h, -20h, -40h
+	binclude "sound/dac/dpcm/deltas.bin"
 
 zCheckForSamples:
 	ld	hl,zDAC_Sample			; Load the address of next sample.
@@ -206,31 +205,31 @@ zPlaySEGAPCMLoop:
 					; 90 in total
 	jp	zCheckForSamples		; SEGA sound is done; wait for new samples
 
-zPCMMetadata macro label,sampleRate
-	dw	label				; Start
-	dw	label_End-label			; Length
-	dw	dpcmLoopCounter(sampleRate)	; Pitch
-	dw	0				; Padding
+zPCMMetadata macro label
+	dw	label					; Start
+	dw	label_End-label				; Length
+	dw	dpcmLoopCounter(label.sample_rate)	; Pitch
+	dw	0					; Padding
     endm
 
 ; DPCM metadata
 zPCM_Table:
-	zPCMMetadata zDAC_Kick,8250
-	zPCMMetadata zDAC_Snare,24000
+	zPCMMetadata zDAC_Kick
+	zPCMMetadata zDAC_Snare
 zTimpani_Pitch = $+4
-	zPCMMetadata zDAC_Timpani,7250
+	zPCMMetadata zDAC_Timpani
 
 ; DPCM data
 zDAC_Kick:
-	binclude "sound/dac/kick.dpcm"
+	include "sound/dac/dpcm/generated/kick.inc"
 zDAC_Kick_End:
 
 zDAC_Snare:
-	binclude "sound/dac/snare.dpcm"
+	include "sound/dac/dpcm/generated/snare.inc"
 zDAC_Snare_End:
 
 zDAC_Timpani:
-	binclude "sound/dac/timpani.dpcm"
+	include "sound/dac/dpcm/generated/timpani.inc"
 zDAC_Timpani_End:
 
 	if MOMPASS==2

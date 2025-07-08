@@ -316,14 +316,16 @@ DACUpdateTrack:
 ; Note: this only defines rates for samples $88-$8D, meaning $8E-$8F are invalid.
 ; Also, $8C-$8D are so slow you may want to skip them.
 ; byte_71CC4:
+timpaniLoopCounter function scale,dpcmLoopCounter(int(zDAC_Timpani.sample_rate*scale))
+
 DAC_sample_rate:
-		dc.b dpcmLoopCounter(9750)
-		dc.b dpcmLoopCounter(8750)
-		dc.b dpcmLoopCounter(7150)
-		dc.b dpcmLoopCounter(7000)
+		dc.b timpaniLoopCounter(1.30)
+		dc.b timpaniLoopCounter(1.20)
+		dc.b timpaniLoopCounter(0.97)
+		dc.b timpaniLoopCounter(0.95)
 		dc.b $FF, $FF
 		even
-
+;7250
 ; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71CCA:
@@ -2847,7 +2849,7 @@ SoundD0:	include "sound/sfx/SndD0 - Waterfall.asm"
 		if ((*)&$7FFF)+Size_of_SegaPCM>$8000
 			align $8000
 		endif
-SegaPCM:	binclude "sound/dac/sega.pcm"
+SegaPCM:	include "sound/dac/pcm/generated/sega.inc"
 SegaPCM_End
 		even
 
