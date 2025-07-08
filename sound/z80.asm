@@ -207,7 +207,7 @@ zPlaySEGAPCMLoop:
 
 zPCMMetadata macro label
 	dw	label					; Start
-	dw	label_End-label				; Length
+	dw	label.end-label				; Length
 	dw	dpcmLoopCounter(label.sample_rate)	; Pitch
 	dw	0					; Padding
     endm
@@ -219,18 +219,16 @@ zPCM_Table:
 zTimpani_Pitch = $+4
 	zPCMMetadata zDAC_Timpani
 
+dac_include macro {INTLABEL},path
+__LABEL__ label $
+	include path
+__LABEL__.end = $
+    endm
+
 ; DPCM data
-zDAC_Kick:
-	include "sound/dac/dpcm/generated/kick.inc"
-zDAC_Kick_End:
-
-zDAC_Snare:
-	include "sound/dac/dpcm/generated/snare.inc"
-zDAC_Snare_End:
-
-zDAC_Timpani:
-	include "sound/dac/dpcm/generated/timpani.inc"
-zDAC_Timpani_End:
+zDAC_Kick:	dac_include "sound/dac/dpcm/generated/kick.inc"
+zDAC_Snare:	dac_include "sound/dac/dpcm/generated/snare.inc"
+zDAC_Timpani:	dac_include "sound/dac/dpcm/generated/timpani.inc"
 
 	if MOMPASS==2
 		if $ > z80_stack
