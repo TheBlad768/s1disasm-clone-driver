@@ -186,7 +186,7 @@ zPlayPCMLoop:
 ;
 zPlay_SegaPCM:
 	ld	de,zmake68kPtr(SegaPCM)		; de = bank-relative location of the SEGA sound
-	ld	hl,SegaPCM_End-SegaPCM		; hl = size of the SEGA sound
+	ld	hl,SegaPCM.size			; hl = size of the SEGA sound
 	ld	c,2Ah				; c = Command to select DAC output register
 
 zPlaySEGAPCMLoop:
@@ -207,7 +207,7 @@ zPlaySEGAPCMLoop:
 
 zPCMMetadata macro label
 	dw	label					; Start
-	dw	label.end-label				; Length
+	dw	label.size				; Length
 	dw	dpcmLoopCounter(label.sample_rate)	; Pitch
 	dw	0					; Padding
     endm
@@ -219,16 +219,10 @@ zPCM_Table:
 zTimpani_Pitch = $+4
 	zPCMMetadata zDAC_Timpani
 
-dac_include macro {INTLABEL},path
-__LABEL__ label $
-	include path
-__LABEL__.end = $
-    endm
-
 ; DPCM data
-zDAC_Kick:	dac_include "sound/dac/dpcm/generated/kick.inc"
-zDAC_Snare:	dac_include "sound/dac/dpcm/generated/snare.inc"
-zDAC_Timpani:	dac_include "sound/dac/dpcm/generated/timpani.inc"
+zDAC_Kick:	include "sound/dac/dpcm/generated/kick.inc"
+zDAC_Snare:	include "sound/dac/dpcm/generated/snare.inc"
+zDAC_Timpani:	include "sound/dac/dpcm/generated/timpani.inc"
 
 	if MOMPASS==2
 		if $ > z80_stack
