@@ -1,3 +1,7 @@
+The sound driver is ported from SCE:
+
+See: https://github.com/TheBlad768/Sonic-Clean-Engine-S.C.E.-
+
 s1disasm_git
 ============
 
