@@ -31,7 +31,6 @@ local extra_tools = common.find_tools("debug symbol generator", "https://github.
 
 os.execute(extra_tools.convsym .. " sonic.lst s1built.bin -input as_lst -range 0 FFFFFF -exclude -filter \"z[A-Z].+\" -a")
 
-
 -- Correct the ROM's header with a proper checksum and end-of-ROM value.
 common.fix_header("s1built.bin")
 
