@@ -22,7 +22,7 @@ Revision	  = 1
 
 ZoneCount	  = 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
 
-FixBugs		  = 1	; change to 1 to enable bugfixes
+FixBugs		  = 0	; change to 1 to enable bugfixes
 
 zeroOffsetOptimization = 1	; if 1, makes a handful of zero-offset instructions smaller
 
