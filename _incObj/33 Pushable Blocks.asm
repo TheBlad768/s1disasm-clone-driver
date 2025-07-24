@@ -76,11 +76,11 @@ loc_BF6E:	; Routine 2
 		bset	#7,obSubtype(a0)
 
 loc_BFC6:
-		out_of_range.s	loc_ppppp
+		out_of_range.s	loc_BFE6
 		bra.w	DisplaySprite
 ; ===========================================================================
 
-loc_ppppp:
+loc_BFE6:
 		out_of_range.s	loc_C016,objoff_34(a0)
 		move.w	objoff_34(a0),obX(a0)
 		move.w	objoff_36(a0),obY(a0)
@@ -190,7 +190,7 @@ loc_C104:
 		lea	(v_player).w,a1
 		bclr	#3,obStatus(a1)
 		bclr	#3,obStatus(a0)
-		bra.w	loc_ppppp
+		bra.w	loc_BFE6
 ; ===========================================================================
 
 PushB_ChkLava:
