@@ -66,7 +66,7 @@ loc_BDC8:
 
 loc_BDD6:
 		bset	d3,(a3)
-		bset	#0,obFrame(a0)	; use "pressed"	frame
+		bset	#0,obFrame(a0)	; use "pressed" frame
 
 loc_BDDE:
 		btst	#5,obSubtype(a0)
@@ -86,7 +86,7 @@ But_Delete:
 		bsr.w	DeleteObject
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 But_MZBlock:
@@ -107,7 +107,7 @@ But_MZLoop:
 		beq.s	loc_BE5E	; if yes, branch
 
 loc_BE4E:
-		lea	$40(a1),a1	; check	next object
+		lea	$40(a1),a1	; check next object
 		dbf	d6,But_MZLoop	; repeat $5F times
 
 		move.w	(sp)+,d3

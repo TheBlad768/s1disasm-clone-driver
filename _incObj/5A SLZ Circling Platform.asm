@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 5A - platforms	moving in circles (SLZ)
+; Object 5A - platforms moving in circles (SLZ)
 ; ---------------------------------------------------------------------------
 
 CirclingPlatform:

@@ -25,16 +25,16 @@ Map_Monitor_internal:
 @eggman:	dc.b 2			; Eggman monitor
 		dc.b $F5, 5, 0,	$18, $F8
 		dc.b $EF, $F, 0, 0, $F0
-@sonic:		dc.b 2			; Sonic	monitor
+@sonic:		dc.b 2			; Sonic monitor
 		dc.b $F5, 5, 0,	$1C, $F8
 		dc.b $EF, $F, 0, 0, $F0
-@shoes:		dc.b 2			; speed	shoes monitor
+@shoes:		dc.b 2			; speed shoes monitor
 		dc.b $F5, 5, 0,	$24, $F8
 		dc.b $EF, $F, 0, 0, $F0
 @shield:	dc.b 2			; shield monitor
 		dc.b $F5, 5, 0,	$28, $F8
 		dc.b $EF, $F, 0, 0, $F0
-@invincible:	dc.b 2			; invincibility	monitor
+@invincible:	dc.b 2			; invincibility monitor
 		dc.b $F5, 5, 0,	$2C, $F8
 		dc.b $EF, $F, 0, 0, $F0
 @rings:		dc.b 2			; 10 rings monitor

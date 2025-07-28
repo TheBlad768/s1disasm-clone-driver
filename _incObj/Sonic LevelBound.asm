@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	prevent	Sonic leaving the boundaries of	a level
+; Subroutine to prevent Sonic leaving the boundaries of a level
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_LevelBound:
@@ -14,7 +14,7 @@ Sonic_LevelBound:
 		swap	d1
 		move.w	(v_limitleft2).w,d0
 		addi.w	#$10,d0
-		cmp.w	d1,d0		; has Sonic touched the	side boundary?
+		cmp.w	d1,d0		; has Sonic touched the side boundary?
 		bhi.s	@sides		; if yes, branch
 		move.w	(v_limitright2).w,d0
 		addi.w	#$128,d0
@@ -23,13 +23,13 @@ Sonic_LevelBound:
 		addi.w	#$40,d0
 
 	@screenlocked:
-		cmp.w	d1,d0		; has Sonic touched the	side boundary?
+		cmp.w	d1,d0		; has Sonic touched the side boundary?
 		bls.s	@sides		; if yes, branch
 
 	@chkbottom:
 		move.w	(v_limitbtm2).w,d0
 		addi.w	#$E0,d0
-		cmp.w	obY(a0),d0	; has Sonic touched the	bottom boundary?
+		cmp.w	obY(a0),d0	; has Sonic touched the bottom boundary?
 		blt.s	@bottom		; if yes, branch
 		rts	
 ; ===========================================================================
@@ -39,7 +39,7 @@ Sonic_LevelBound:
 		bne.w	KillSonic	; if not, kill Sonic
 		cmpi.w	#$2000,(v_player+obX).w
 		bcs.w	KillSonic
-		clr.b	(v_lastlamp).w	; clear	lamppost counter
+		clr.b	(v_lastlamp).w	; clear lamppost counter
 		move.w	#1,(f_restart).w ; restart the level
 		move.w	#(id_LZ<<8)+3,(v_zone).w ; set level to SBZ3 (LZ4)
 		rts	

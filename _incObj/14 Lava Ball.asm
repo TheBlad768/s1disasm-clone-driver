@@ -79,7 +79,7 @@ LBall_TypeIndex:dc.w LBall_Type00-LBall_TypeIndex, LBall_Type00-LBall_TypeIndex
 LBall_Type00:
 		addi.w	#$18,obVelY(a0)	; increase object's downward speed
 		move.w	$30(a0),d0
-		cmp.w	obY(a0),d0	; has object fallen back to its	original position?
+		cmp.w	obY(a0),d0	; has object fallen back to its original position?
 		bcc.s	loc_E41E	; if not, branch
 		addq.b	#2,obRoutine(a0)	; goto "LBall_Delete" routine
 
@@ -92,7 +92,7 @@ loc_E41E:
 locret_E430:
 		rts	
 ; ===========================================================================
-; lavaball type	04 flies up until it hits the ceiling
+; lavaball type 04 flies up until it hits the ceiling
 
 LBall_Type04:
 		bset	#1,obStatus(a0)
@@ -106,7 +106,7 @@ LBall_Type04:
 locret_E452:
 		rts	
 ; ===========================================================================
-; lavaball type	05 falls down until it hits the	floor
+; lavaball type 05 falls down until it hits the floor
 
 LBall_Type05:
 		bclr	#1,obStatus(a0)
@@ -130,7 +130,7 @@ LBall_Type06:
 		bpl.s	locret_E498
 		move.b	#8,obSubtype(a0)
 		move.b	#3,obAnim(a0)
-		move.w	#0,obVelX(a0)	; stop object when it touches a	wall
+		move.w	#0,obVelX(a0)	; stop object when it touches a wall
 
 locret_E498:
 		rts	
@@ -144,7 +144,7 @@ LBall_Type07:
 		bpl.s	locret_E4BC
 		move.b	#8,obSubtype(a0)
 		move.b	#3,obAnim(a0)
-		move.w	#0,obVelX(a0)	; stop object when it touches a	wall
+		move.w	#0,obVelX(a0)	; stop object when it touches a wall
 
 locret_E4BC:
 		rts	

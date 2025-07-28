@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - SYZ	platforms
+; Sprite mappings - SYZ platforms
 ; ---------------------------------------------------------------------------
 Map_Plat_SYZ_internal:
 		dc.w @platform-Map_Plat_SYZ_internal

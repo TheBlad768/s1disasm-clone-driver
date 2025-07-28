@@ -20,7 +20,7 @@ Obj85_Index:	dc.w Obj85_Main-Obj85_Index
 		dc.w loc_1A3AC-Obj85_Index
 		dc.w loc_1A264-Obj85_Index
 
-Obj85_ObjData:	dc.w $100, $100, $470	; X pos, Y pos,	VRAM setting
+Obj85_ObjData:	dc.w $100, $100, $470	; X pos, Y pos, VRAM setting
 		dc.l Map_SEgg		; mappings pointer
 		dc.w $25B0, $590, $300
 		dc.l Map_EggCyl
@@ -88,7 +88,7 @@ loc_19E3E:
 		jsr	(FindNextFreeObj).l
 		bne.s	loc_19E5A
 		move.w	a1,(a2)+
-		move.b	#id_EggmanCylinder,(a1) ; load crushing	cylinder object
+		move.b	#id_EggmanCylinder,(a1) ; load crushing cylinder object
 		move.l	a0,$34(a1)
 		move.b	d2,obSubtype(a1)
 		addq.w	#2,d2

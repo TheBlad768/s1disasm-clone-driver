@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - spiked ball	on a chain (LZ)
+; Sprite mappings - spiked ball on a chain (LZ)
 ; ---------------------------------------------------------------------------
 Map_SBall2_internal:
 		dc.w @chain-Map_SBall2_internal

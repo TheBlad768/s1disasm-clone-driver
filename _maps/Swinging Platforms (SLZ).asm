@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - SLZ	swinging platforms
+; Sprite mappings - SLZ swinging platforms
 ; ---------------------------------------------------------------------------
 Map_Swing_SLZ_internal:
 		dc.w @block-Map_Swing_SLZ_internal

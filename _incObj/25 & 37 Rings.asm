@@ -100,7 +100,7 @@ loc_9C02:
 		add.w	d5,d2		; add ring spacing value to d2
 		add.w	d6,d3		; add ring spacing value to d3
 		swap	d1
-		dbf	d1,Ring_MakeRings ; repeat for	number of rings
+		dbf	d1,Ring_MakeRings ; repeat for number of rings
 
 loc_9C0E:
 		btst	#0,(a2)
@@ -133,7 +133,7 @@ Ring_Sparkle:	; Routine 6
 Ring_Delete:	; Routine 8
 		bra.w	DeleteObject
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 CollectRing:
@@ -160,7 +160,7 @@ CollectRing:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 37 - rings flying out of Sonic	when he's hit
+; Object 37 - rings flying out of Sonic when he's hit
 ; ---------------------------------------------------------------------------
 
 RingLoss:

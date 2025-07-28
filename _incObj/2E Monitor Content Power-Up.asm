@@ -35,7 +35,7 @@ Pow_Move:	; Routine 2
 		tst.w	obVelY(a0)	; is object moving?
 		bpl.w	Pow_Checks	; if not, branch
 		bsr.w	SpeedToPos
-		addi.w	#$18,obVelY(a0)	; reduce object	speed
+		addi.w	#$18,obVelY(a0)	; reduce object speed
 		rts	
 ; ===========================================================================
 
@@ -71,7 +71,7 @@ Pow_ChkShoes:
 		move.w	#$18,(v_sonspeedacc).w	; change Sonic's acceleration
 		move.w	#$80,(v_sonspeeddec).w	; change Sonic's deceleration
 		move.w	#bgm_Speedup,d0
-		jmp	(PlaySound).l		; Speed	up the music
+		jmp	(PlaySound).l		; Speed up the music
 ; ===========================================================================
 
 Pow_ChkShield:

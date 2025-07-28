@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 89 - "SONIC THE HEDGEHOG" text	on the ending sequence
+; Object 89 - "SONIC THE HEDGEHOG" text on the ending sequence
 ; ---------------------------------------------------------------------------
 
 EndSTH:
@@ -22,7 +22,7 @@ esth_time:	equ $30		; time until exit
 
 ESth_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.w	#-$20,obX(a0)	; object starts	outside	the level boundary
+		move.w	#-$20,obX(a0)	; object starts outside the level boundary
 		move.w	#$D8,obScreenY(a0)
 		move.l	#Map_ESth,obMap(a0)
 		move.w	#$5C5,obGfx(a0)

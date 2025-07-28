@@ -15,7 +15,7 @@
 ; See http://www.segaretro.org/Enigma_compression for format description
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 EniDec:
@@ -236,7 +236,7 @@ EniDec_Masks:
 		dc.w  $1FF, $3FF, $7FF, $FFF
 		dc.w $1FFF,$3FFF,$7FFF,$FFFF
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_188C:
 EniDec_FetchByte:

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 83 - blocks that disintegrate Eggman	presses	a switch (SBZ2)
+; Object 83 - blocks that disintegrate Eggman presses a switch (SBZ2)
 ; ---------------------------------------------------------------------------
 
 FalseFloor:
@@ -39,7 +39,7 @@ FFloor_MakeBlock:
 		move.b	#$10,obActWid(a1)
 		move.b	#$10,obHeight(a1)
 		move.b	#3,obPriority(a1)
-		move.w	d5,obX(a1)	; set X	position
+		move.w	d5,obX(a1)	; set X position
 		move.w	#$5D0,obY(a1)
 		addi.w	#$20,d5		; add $20 for next X position
 		move.b	#8,obRoutine(a1)

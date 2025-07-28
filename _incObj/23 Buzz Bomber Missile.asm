@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 23 - missile that Buzz	Bomber throws
+; Object 23 - missile that Buzz Bomber throws
 ; ---------------------------------------------------------------------------
 
 Missile:
@@ -27,7 +27,7 @@ Msl_Main:	; Routine 0
 		move.b	#3,obPriority(a0)
 		move.b	#8,obActWid(a0)
 		andi.b	#3,obStatus(a0)
-		tst.b	obSubtype(a0)	; was object created by	a Newtron?
+		tst.b	obSubtype(a0)	; was object created by a Newtron?
 		beq.s	Msl_Animate	; if not, branch
 
 		move.b	#8,obRoutine(a0) ; run "Msl_FromNewt" routine
@@ -43,10 +43,10 @@ Msl_Animate:	; Routine 2
 		bra.w	DisplaySprite
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	check if the Buzz Bomber which fired the missile has been
-; destroyed, and if it has, then cancel	the missile
+; Subroutine to check if the Buzz Bomber which fired the missile has been
+; destroyed, and if it has, then cancel the missile
 ; ---------------------------------------------------------------------------
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Msl_ChkCancel:

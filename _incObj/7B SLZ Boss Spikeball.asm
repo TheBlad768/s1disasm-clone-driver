@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 7B - exploding	spikeys	that Eggman drops (SLZ)
+; Object 7B - exploding spikeys that Eggman drops (SLZ)
 ; ---------------------------------------------------------------------------
 
 BossSpikeball:
@@ -72,7 +72,7 @@ loc_18D8E:
 
 loc_18DAE:
 		move.w	#$F0,obSubtype(a0)
-		move.b	#10,obDelayAni(a0)	; set frame duration to	10 frames
+		move.b	#10,obDelayAni(a0)	; set frame duration to 10 frames
 		move.b	obDelayAni(a0),obTimeFrame(a0)
 		bra.w	loc_18FA2
 ; ===========================================================================

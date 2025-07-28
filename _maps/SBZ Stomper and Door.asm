@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - stomper and	platforms (SBZ)
+; Sprite mappings - stomper and platforms (SBZ)
 ; ---------------------------------------------------------------------------
 Map_Stomp_internal:
 		dc.w @door-Map_Stomp_internal

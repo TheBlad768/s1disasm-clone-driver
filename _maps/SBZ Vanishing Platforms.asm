@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - vanishing platforms	(SBZ)
+; Sprite mappings - vanishing platforms (SBZ)
 ; ---------------------------------------------------------------------------
 Map_VanP_internal:
 		dc.w @whole-Map_VanP_internal

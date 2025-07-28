@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - GHZ	collapsing ledge
+; Sprite mappings - GHZ collapsing ledge
 ; ---------------------------------------------------------------------------
 Map_Ledge_internal:
 		dc.w @left-Map_Ledge_internal
@@ -41,7 +41,7 @@ Map_Ledge_internal:
 		dc.b $10, $D, 0, $AB, $10
 		dc.b $10, 5, 0,	$B7, 0
 @leftsmash:	dc.b $19
-		dc.b $C8, 6, 0,	$5D, $20 ; ledge facing	left in	pieces
+		dc.b $C8, 6, 0,	$5D, $20 ; ledge facing left in pieces
 		dc.b $C8, 6, 0,	$57, $10
 		dc.b $D0, 5, 0,	$67, 0
 		dc.b $D0, 5, 0,	$63, $F0
@@ -67,7 +67,7 @@ Map_Ledge_internal:
 		dc.b $10, 5, 0,	$AB, $10
 		dc.b $10, 5, 0,	$B7, 0
 @rightsmash:	dc.b $19
-		dc.b $C8, 6, 0,	$5D, $20 ; ledge facing	right in pieces
+		dc.b $C8, 6, 0,	$5D, $20 ; ledge facing right in pieces
 		dc.b $C8, 6, 0,	$57, $10
 		dc.b $D0, 5, 0,	$67, 0
 		dc.b $D0, 5, 0,	$63, $F0

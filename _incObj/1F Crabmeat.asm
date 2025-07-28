@@ -71,7 +71,7 @@ Crab_Action:	; Routine 2
 	@movecrab:
 		addq.b	#2,ob2ndRout(a0)
 		move.w	#127,crab_timedelay(a0) ; set time delay to approx 2 seconds
-		move.w	#$80,obVelX(a0)	; move Crabmeat	to the right
+		move.w	#$80,obVelX(a0)	; move Crabmeat to the right
 		bsr.w	Crab_SetAni
 		addq.b	#3,d0
 		move.b	d0,obAnim(a0)
@@ -149,10 +149,10 @@ loc_966E:
 		move.b	d0,obAnim(a0)
 		rts	
 ; ---------------------------------------------------------------------------
-; Subroutine to	set the	correct	animation for a	Crabmeat
+; Subroutine to set the correct animation for a Crabmeat
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Crab_SetAni:
@@ -189,7 +189,7 @@ Crab_Delete:	; Routine 4
 		rts	
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Sub-object - missile that the	Crabmeat throws
+; Sub-object - missile that the Crabmeat throws
 ; ---------------------------------------------------------------------------
 
 Crab_BallMain:	; Routine 6

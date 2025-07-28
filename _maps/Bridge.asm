@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - GHZ	bridge
+; Sprite mappings - GHZ bridge
 ; ---------------------------------------------------------------------------
 Map_Bri_internal:
 		dc.w M_Bri_Log-Map_Bri_internal

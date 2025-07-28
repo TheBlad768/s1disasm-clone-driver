@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	find which tile	the object is standing on
+; Subroutine to find which tile the object is standing on
 
 ; input:
 ;	d2 = y-position of object's bottom edge
@@ -10,7 +10,7 @@
 ;	     (refers to a 16x16 tile number)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 FindNearestTile:

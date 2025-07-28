@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sonic	when he	gets hurt
+; Sonic when he gets hurt
 ; ---------------------------------------------------------------------------
 
 Sonic_Hurt:	; Routine 4
@@ -18,10 +18,10 @@ loc_1380C:
 		jmp	(DisplaySprite).l
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	stop Sonic falling after he's been hurt
+; Subroutine to stop Sonic falling after he's been hurt
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_HurtStop:
@@ -45,7 +45,7 @@ locret_13860:
 ; End of function Sonic_HurtStop
 
 ; ---------------------------------------------------------------------------
-; Sonic	when he	dies
+; Sonic when he dies
 ; ---------------------------------------------------------------------------
 
 Sonic_Death:	; Routine 6
@@ -56,7 +56,7 @@ Sonic_Death:	; Routine 6
 		bsr.w	Sonic_LoadGfx
 		jmp	(DisplaySprite).l
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 GameOver:
@@ -100,7 +100,7 @@ locret_13900:
 ; End of function GameOver
 
 ; ---------------------------------------------------------------------------
-; Sonic	when the level is restarted
+; Sonic when the level is restarted
 ; ---------------------------------------------------------------------------
 
 Sonic_ResetLevel:; Routine 8

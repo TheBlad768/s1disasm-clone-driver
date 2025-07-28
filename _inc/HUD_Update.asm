@@ -1,11 +1,11 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	update the HUD
+; Subroutine to update the HUD
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 HUD_Update:
-		tst.w	(f_debugmode).w	; is debug mode	on?
+		tst.w	(f_debugmode).w	; is debug mode on?
 		bne.w	HudDebug	; if yes, branch
 		tst.b	(f_scorecount).w ; does the score need updating?
 		beq.s	@chkrings	; if not, branch
@@ -16,7 +16,7 @@ HUD_Update:
 		bsr.w	Hud_Score
 
 	@chkrings:
-		tst.b	(f_ringcount).w	; does the ring	counter	need updating?
+		tst.b	(f_ringcount).w	; does the ring counter need updating?
 		beq.s	@chktime	; if not, branch
 		bpl.s	@notzero
 		bsr.w	Hud_LoadZero	; reset rings to 0 if Sonic is hit
@@ -29,7 +29,7 @@ HUD_Update:
 		bsr.w	Hud_Rings
 
 	@chktime:
-		tst.b	(f_timecount).w	; does the time	need updating?
+		tst.b	(f_timecount).w	; does the time need updating?
 		beq.s	@chklives	; if not, branch
 		tst.w	(f_pause).w	; is the game paused?
 		bne.s	@chklives	; if yes, branch
@@ -53,11 +53,11 @@ HUD_Update:
 	@updatetime:
 		locVRAM	$DE40,d0
 		moveq	#0,d1
-		move.b	(v_timemin).w,d1 ; load	minutes
+		move.b	(v_timemin).w,d1 ; load minutes
 		bsr.w	Hud_Mins
 		locVRAM	$DEC0,d0
 		moveq	#0,d1
-		move.b	(v_timesec).w,d1 ; load	seconds
+		move.b	(v_timesec).w,d1 ; load seconds
 		bsr.w	Hud_Secs
 
 	@chklives:
@@ -93,7 +93,7 @@ TimeOver:
 
 HudDebug:
 		bsr.w	HudDb_XY
-		tst.b	(f_ringcount).w	; does the ring	counter	need updating?
+		tst.b	(f_ringcount).w	; does the ring counter need updating?
 		beq.s	@objcounter	; if not, branch
 		bpl.s	@notzero
 		bsr.w	Hud_LoadZero	; reset rings to 0 if Sonic is hit
@@ -132,10 +132,10 @@ HudDebug:
 ; End of function HUD_Update
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	load "0" on the	HUD
+; Subroutine to load "0" on the HUD
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hud_LoadZero:
@@ -146,10 +146,10 @@ Hud_LoadZero:
 ; End of function Hud_LoadZero
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	load uncompressed HUD patterns ("E", "0", colon)
+; Subroutine to load uncompressed HUD patterns ("E", "0", colon)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hud_Base:
@@ -191,10 +191,10 @@ loc_1C85E:
 Hud_TilesBase:	dc.b $16, $FF, $FF, $FF, $FF, $FF, $FF,	0, 0, $14, 0, 0
 Hud_TilesZero:	dc.b $FF, $FF, 0, 0
 ; ---------------------------------------------------------------------------
-; Subroutine to	load debug mode	numbers	patterns
+; Subroutine to load debug mode numbers patterns
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 HudDb_XY:
@@ -209,7 +209,7 @@ HudDb_XY:
 ; End of function HudDb_XY
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 HudDb_XY2:
@@ -236,16 +236,16 @@ loc_1C8B2:
 		move.l	(a3)+,(a6)
 		move.l	(a3)+,(a6)
 		swap	d1
-		dbf	d6,HudDb_XYLoop	; repeat 7 more	times
+		dbf	d6,HudDb_XYLoop	; repeat 7 more times
 
 		rts	
 ; End of function HudDb_XY2
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	load rings numbers patterns
+; Subroutine to load rings numbers patterns
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hud_Rings:
@@ -255,10 +255,10 @@ Hud_Rings:
 ; End of function Hud_Rings
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	load score numbers patterns
+; Subroutine to load score numbers patterns
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hud_Score:

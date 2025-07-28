@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Special stage	mappings and VRAM pointers
+; Special stage mappings and VRAM pointers
 ; ---------------------------------------------------------------------------
 	dc.l Map_SSWalls	; address of mappings
 	dc.w $142		; VRAM setting
@@ -99,7 +99,7 @@
 	dc.w $45F0
 	dc.l Map_SS_R
 	dc.w $2F0
-	dc.l Map_Bump+$1000000	; add frame no.	* $1000000
+	dc.l Map_Bump+$1000000	; add frame no. * $1000000
 	dc.w $23B
 	dc.l Map_Bump+$2000000
 	dc.w $23B

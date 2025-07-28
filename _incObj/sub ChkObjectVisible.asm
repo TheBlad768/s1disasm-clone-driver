@@ -1,11 +1,11 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	check if an object is off screen
+; Subroutine to check if an object is off screen
 
 ; output:
 ;	d0 = flag set if object is off screen
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ChkObjectVisible:
@@ -30,14 +30,14 @@ ChkObjectVisible:
 ; End of function ChkObjectVisible
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	check if an object is off screen
+; Subroutine to check if an object is off screen
 ; More precise than above subroutine, taking width into account
 
 ; output:
 ;	d0 = flag set if object is off screen
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ChkPartiallyVisible:

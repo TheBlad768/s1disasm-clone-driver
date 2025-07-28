@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - purple rock	(GHZ)
+; Sprite mappings - purple rock (GHZ)
 ; ---------------------------------------------------------------------------
 Map_PRock_internal:
 		dc.w byte_D110-Map_PRock_internal

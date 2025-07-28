@@ -166,7 +166,7 @@ loc_11B7C:
 		bne.s	@fail
 
 @makeshrapnel:
-		move.b	#id_Bomb,0(a1)	; load shrapnel	object
+		move.b	#id_Bomb,0(a1)	; load shrapnel object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	#6,obSubtype(a1)
@@ -177,7 +177,7 @@ loc_11B7C:
 		bset	#7,obRender(a1)
 
 	@fail:
-		dbf	d1,@loop	; repeat 3 more	times
+		dbf	d1,@loop	; repeat 3 more times
 
 		move.b	#6,obRoutine(a0)
 

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - Sonic on the ending	sequence
+; Sprite mappings - Sonic on the ending sequence
 ; ---------------------------------------------------------------------------
 Map_ESon_internal:
 		dc.w M_ESon_Hold1-Map_ESon_internal

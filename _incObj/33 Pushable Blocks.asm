@@ -12,7 +12,7 @@ PushB_Index:	dc.w PushB_Main-PushB_Index
 		dc.w loc_BF6E-PushB_Index
 		dc.w loc_C02C-PushB_Index
 
-PushB_Var:	dc.b $10, 0	; object width,	frame number
+PushB_Var:	dc.b $10, 0	; object width, frame number
 		dc.b $40, 1
 ; ===========================================================================
 

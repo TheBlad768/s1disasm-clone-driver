@@ -81,7 +81,7 @@ Bri_Action:	; Routine 2
 		bsr.w	DisplaySprite
 		bra.w	Bri_ChkDel
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Bri_Solid:

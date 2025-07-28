@@ -2,7 +2,7 @@
 ; Background layer deformation subroutines
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 DeformLayers:
@@ -30,7 +30,7 @@ DeformLayers:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Offset index for background layer deformation	code
+; Offset index for background layer deformation code
 ; ---------------------------------------------------------------------------
 Deform_Index:	dc.w Deform_GHZ-Deform_Index, Deform_LZ-Deform_Index
 		dc.w Deform_MZ-Deform_Index, Deform_SLZ-Deform_Index
@@ -38,10 +38,10 @@ Deform_Index:	dc.w Deform_GHZ-Deform_Index, Deform_LZ-Deform_Index
 		zonewarning Deform_Index,2
 		dc.w Deform_GHZ-Deform_Index
 ; ---------------------------------------------------------------------------
-; Green	Hill Zone background layer deformation code
+; Green Hill Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_GHZ:
@@ -84,7 +84,7 @@ Deform_GHZ:
 		addi.l	#$10000,(a2)+
 		addi.l	#$C000,(a2)+
 		addi.l	#$8000,(a2)+
-	; calculate background scroll	
+	; calculate background scroll
 		move.w	(v_bgscroll_buffer).w,d0
 		add.w	(v_bg3screenposx).w,d0
 		neg.w	d0
@@ -153,7 +153,7 @@ Deform_GHZ:
 ; Labyrinth Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_LZ:
@@ -235,7 +235,7 @@ Lz_Scroll_Data:
 ; Marble Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_MZ:
@@ -344,7 +344,7 @@ Deform_MZ:
 ; Star Light Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SLZ:
@@ -443,10 +443,10 @@ Bg_Scroll_X:
 		rts
 
 ; ---------------------------------------------------------------------------
-; Spring Yard Zone background layer deformation	code
+; Spring Yard Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SYZ:
@@ -528,10 +528,10 @@ Deform_SYZ:
 ; End of function Deform_SYZ
 
 ; ---------------------------------------------------------------------------
-; Scrap	Brain Zone background layer deformation	code
+; Scrap Brain Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SBZ:
@@ -651,10 +651,10 @@ Deform_SBZ2:;loc_68A2:
 ; End of function Deform_SBZ
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	scroll the level horizontally as Sonic moves
+; Subroutine to scroll the level horizontally as Sonic moves
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollHoriz:
@@ -681,7 +681,7 @@ ScrollHoriz:
 ; End of function ScrollHoriz
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 MoveScreenHoriz:
@@ -734,10 +734,10 @@ loc_6610:
 		bra.s	SH_AheadOfMid
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	scroll the level vertically as Sonic moves
+; Subroutine to scroll the level vertically as Sonic moves
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollVertical:
@@ -895,7 +895,7 @@ loc_6724:
 ; End of function ScrollVertical
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 ; Scrolls background and sets redraw flags.
 ; d4 - background x offset * $10000
 ; d5 - background y offset * $10000
@@ -962,7 +962,7 @@ Bg_Scroll_Y:
 		rts
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 BGScroll_YAbsolute:
@@ -985,7 +985,7 @@ BGScroll_YAbsolute:
 ; End of function BGScroll_YAbsolute
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 ; d6 - bit to set for redraw
 
 BGScroll_Block1:
@@ -1012,7 +1012,7 @@ BGScroll_Block1:
 ; End of function BGScroll_Block1
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 BGScroll_Block2:

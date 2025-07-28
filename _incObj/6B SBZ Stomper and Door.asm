@@ -16,7 +16,7 @@ sto_origX:	equ $34		; original x-axis position
 sto_origY:	equ $30		; original y-axis position
 sto_active:	equ $38		; flag set when a switch is pressed
 
-Sto_Var:	dc.b  $40,  $C,	$80,   1 ; width, height, ????,	type number
+Sto_Var:	dc.b  $40,  $C,	$80,   1 ; width, height, ????, type number
 		dc.b  $1C, $20,	$38,   3
 		dc.b  $1C, $20,	$40,   4
 		dc.b  $1C, $20,	$60,   4

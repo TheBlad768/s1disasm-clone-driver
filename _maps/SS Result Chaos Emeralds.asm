@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - chaos emeralds from	the special stage results screen
+; Sprite mappings - chaos emeralds from the special stage results screen
 ; ---------------------------------------------------------------------------
 Map_SSRC_internal:
 		dc.w byte_CE02-Map_SSRC_internal

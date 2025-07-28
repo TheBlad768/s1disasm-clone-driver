@@ -437,7 +437,7 @@ MS_GetAir:	dc.b 3			; collecting bubble (LZ)
 		dc.b $EB, 9, 0,	0, $F4
 		dc.b $FB, $E, 0, 6, $EC
 		dc.b 3,	1, 0, $12, $C
-MS_WaterSlide:	dc.b 2			; water	slide (LZ)
+MS_WaterSlide:	dc.b 2			; water slide (LZ)
 		dc.b $F0, $F, 0, 0, $EC
 		dc.b $F8, 2, 0,	$10, $C
 		even

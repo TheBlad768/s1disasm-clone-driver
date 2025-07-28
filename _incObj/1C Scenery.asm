@@ -31,11 +31,11 @@ Scen_ChkDel:	; Routine 2
 		bra.w	DisplaySprite
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Variables for	object $1C are stored in an array
+; Variables for object $1C are stored in an array
 ; ---------------------------------------------------------------------------
 Scen_Values:	dc.l Map_Scen		; mappings address
 		dc.w $44D8		; VRAM setting
-		dc.b 0,	8, 2, 0		; frame, width,	priority, collision response
+		dc.b 0,	8, 2, 0		; frame, width, priority, collision response
 		dc.l Map_Scen
 		dc.w $44D8
 		dc.b 0,	8, 2, 0

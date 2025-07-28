@@ -22,7 +22,7 @@ Over_ChkPLC:	; Routine 0
 Over_Main:
 		addq.b	#2,obRoutine(a0)
 		move.w	#$50,obX(a0)	; set x-position
-		btst	#0,obFrame(a0)	; is the object	"OVER"?
+		btst	#0,obFrame(a0)	; is the object "OVER"?
 		beq.s	Over_1stWord	; if not, branch
 		move.w	#$1F0,obX(a0)	; set x-position for "OVER"
 

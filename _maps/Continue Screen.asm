@@ -23,15 +23,15 @@ M_Cont_text:	dc.b $B
 		dc.b $38, 5, $20, $21, 8
 		dc.b $36, 5, 1,	$FC, $F8
 M_Cont_Sonic1:	dc.b 3
-		dc.b 4,	5, 0, $15, $FC	; Sonic	on floor
+		dc.b 4,	5, 0, $15, $FC	; Sonic on floor
 		dc.b $F4, $A, 0, 6, $EC
 		dc.b $F4, 6, 0,	$F, 4
 M_Cont_Sonic2:	dc.b 3
-		dc.b 4,	5, 0, $19, $FC	; Sonic	on floor #2
+		dc.b 4,	5, 0, $19, $FC	; Sonic on floor #2
 		dc.b $F4, $A, 0, 6, $EC
 		dc.b $F4, 6, 0,	$F, 4
 M_Cont_Sonic3:	dc.b 3
-		dc.b 4,	5, 0, $1D, $FC	; Sonic	on floor #3
+		dc.b 4,	5, 0, $1D, $FC	; Sonic on floor #3
 		dc.b $F4, $A, 0, 6, $EC
 		dc.b $F4, 6, 0,	$F, 4
 M_Cont_oval:	dc.b 2

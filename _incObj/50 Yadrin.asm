@@ -1,4 +1,4 @@
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Yad_ChkWall:
@@ -60,7 +60,7 @@ Yad_Main:	; Routine 0
 		bsr.w	ObjFloorDist
 		tst.w	d1
 		bpl.s	locret_F89E
-		add.w	d1,obY(a0)	; match	object's position with the floor
+		add.w	d1,obY(a0)	; match object's position with the floor
 		move.w	#0,obVelY(a0)
 		addq.b	#2,obRoutine(a0)
 		bchg	#0,obStatus(a0)
@@ -103,7 +103,7 @@ Yad_FixToFloor:
 		blt.s	Yad_Pause
 		cmpi.w	#$C,d1
 		bge.s	Yad_Pause
-		add.w	d1,obY(a0)	; match	object's position to the floor
+		add.w	d1,obY(a0)	; match object's position to the floor
 		bsr.w	Yad_ChkWall
 		bne.s	Yad_Pause
 		rts	

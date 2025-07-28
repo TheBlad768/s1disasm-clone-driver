@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	change Sonic's direction while jumping
+; Subroutine to change Sonic's direction while jumping
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_JumpDirection:

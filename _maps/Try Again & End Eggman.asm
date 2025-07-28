@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - Robotnik on	the "TRY AGAIN"	and "END" screens
+; Sprite mappings - Robotnik on the "TRY AGAIN" and "END" screens
 ; ---------------------------------------------------------------------------
 Map_EEgg_internal:
 		dc.w M_EEgg_Try1-Map_EEgg_internal

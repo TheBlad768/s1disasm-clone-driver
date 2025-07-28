@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Uncompressed graphics	loading	array for Sonic
+; Uncompressed graphics loading array for Sonic
 ; ---------------------------------------------------------------------------
 SonicDynPLC_internal:
 		dc.w SonPLC_Null-SonicDynPLC_internal

@@ -32,7 +32,7 @@ Bub_Main:	; Routine 0
 		bpl.s	@bubble		; if type is $0-$7F, branch
 
 		addq.b	#8,obRoutine(a0) ; goto Bub_BblMaker next
-		andi.w	#$7F,d0		; read only last 7 bits	(deduct	$80)
+		andi.w	#$7F,d0		; read only last 7 bits (deduct $80)
 		move.b	d0,bub_time(a0)
 		move.b	d0,bub_freq(a0)	; set bubble frequency
 		move.b	#6,obAnim(a0)
@@ -76,7 +76,7 @@ Bub_ChkWater:	; Routine 4
 		move.w	d0,obX(a0)	; change bubble's x-axis position
 		tst.b	bub_inhalable(a0)
 		beq.s	@display
-		bsr.w	Bub_ChkSonic	; has Sonic touched the	bubble?
+		bsr.w	Bub_ChkSonic	; has Sonic touched the bubble?
 		beq.s	@display	; if not, branch
 
 		bsr.w	ResumeMusic	; cancel countdown music
@@ -217,7 +217,7 @@ Bub_BblMaker:	; Routine $A
 ; ===========================================================================
 ; bubble production sequence
 
-; 0 = small bubble, 1 =	large bubble
+; 0 = small bubble, 1 = large bubble
 
 Bub_BblTypes:	dc.b 0,	1, 0, 0, 0, 0, 1, 0, 0,	0, 0, 1, 0, 1, 0, 0, 1,	0
 

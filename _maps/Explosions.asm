@@ -22,7 +22,7 @@ byte_8EF7:	dc.b 4
 		dc.b $FC, $A, $18, $33,	$FC
 		even
 ; ---------------------------------------------------------------------------
-; Sprite mappings - explosion from when	a boss is destroyed
+; Sprite mappings - explosion from when a boss is destroyed
 ; ---------------------------------------------------------------------------
 Map_ExplodeBomb:dc.w byte_8ED0-Map_ExplodeBomb
 		dc.w byte_8F16-Map_ExplodeBomb

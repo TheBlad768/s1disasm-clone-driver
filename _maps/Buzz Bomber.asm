@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - Buzz Bomber	enemy
+; Sprite mappings - Buzz Bomber enemy
 ; ---------------------------------------------------------------------------
 Map_Buzz_internal:
 		dc.w @Fly1-Map_Buzz_internal

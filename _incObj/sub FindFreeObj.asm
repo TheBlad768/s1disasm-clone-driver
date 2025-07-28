@@ -5,7 +5,7 @@
 ;	a1 = free position in object RAM
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 FindFreeObj:
@@ -13,7 +13,7 @@ FindFreeObj:
 		move.w	#$5F,d0
 
 	FFree_Loop:
-		tst.b	(a1)		; is object RAM	slot empty?
+		tst.b	(a1)		; is object RAM slot empty?
 		beq.s	FFree_Found	; if yes, branch
 		lea	$40(a1),a1	; goto next object RAM slot
 		dbf	d0,FFree_Loop	; repeat $5F times
@@ -31,7 +31,7 @@ FindFreeObj:
 ;	a1 = free position in object RAM
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 FindNextFreeObj:

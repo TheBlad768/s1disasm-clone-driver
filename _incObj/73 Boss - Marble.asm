@@ -177,7 +177,7 @@ Obj73_MakeLava:
 		jsr	(FindFreeObj).l
 		bne.s	loc_1844A
 		move.b	#id_LavaBall,0(a1) ; load lava ball object
-		move.w	#$2E8,obY(a1)	; set Y	position
+		move.w	#$2E8,obY(a1)	; set Y position
 		jsr	(RandomNumber).l
 		andi.l	#$FFFF,d0
 		divu.w	#$50,d0

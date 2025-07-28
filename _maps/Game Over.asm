@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - "GAME OVER"	and "TIME OVER"
+; Sprite mappings - "GAME OVER" and "TIME OVER"
 ; ---------------------------------------------------------------------------
 Map_Over_internal:
 		dc.w byte_CBAC-Map_Over_internal

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 17 - helix of spikes on a pole	(GHZ)
+; Object 17 - helix of spikes on a pole (GHZ)
 ; ---------------------------------------------------------------------------
 
 Helix:
@@ -16,7 +16,7 @@ Hel_Index:	dc.w Hel_Main-Hel_Index
 
 hel_frame:	equ $3E		; start frame (different for each spike)
 
-;		$29-38 are used for child object addresses
+;  $29-38 are used for child object addresses
 ; ===========================================================================
 
 Hel_Main:	; Routine 0
@@ -81,7 +81,7 @@ Hel_Action:	; Routine 2, 4
 		bsr.w	DisplaySprite
 		bra.w	Hel_ChkDel
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hel_RotateSpikes:

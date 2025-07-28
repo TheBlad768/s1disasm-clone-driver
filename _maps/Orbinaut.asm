@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - Orbinaut enemy (LZ,	SLZ, SBZ)
+; Sprite mappings - Orbinaut enemy (LZ, SLZ, SBZ)
 ; ---------------------------------------------------------------------------
 Map_Orb_internal:
 		dc.w @normal-Map_Orb_internal

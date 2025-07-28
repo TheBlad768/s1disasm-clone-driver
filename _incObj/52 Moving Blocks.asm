@@ -15,7 +15,7 @@ MBlock_Index:	dc.w MBlock_Main-MBlock_Index
 mblock_origX:	equ $30
 mblock_origY:	equ $32
 
-MBlock_Var:	dc.b $10, 0		; object width,	frame number
+MBlock_Var:	dc.b $10, 0		; object width, frame number
 		dc.b $20, 1
 		dc.b $20, 2
 		dc.b $40, 3
@@ -126,13 +126,13 @@ MBlock_Type03:
 		bsr.w	ObjHitWallRight
 		tst.w	d1		; has the platform hit a wall?
 		bmi.s	MBlock_03_End	; if yes, branch
-		addq.w	#1,obX(a0)	; move platform	to the right
+		addq.w	#1,obX(a0)	; move platform to the right
 		move.w	obX(a0),mblock_origX(a0)
 		rts	
 ; ===========================================================================
 
 MBlock_03_End:
-		clr.b	obSubtype(a0)	; change to type 00 (non-moving	type)
+		clr.b	obSubtype(a0)	; change to type 00 (non-moving type)
 		rts	
 ; ===========================================================================
 
@@ -142,7 +142,7 @@ MBlock_Type05:
 		bsr.w	ObjHitWallRight
 		tst.w	d1		; has the platform hit a wall?
 		bmi.s	MBlock_05_End	; if yes, branch
-		addq.w	#1,obX(a0)	; move platform	to the right
+		addq.w	#1,obX(a0)	; move platform to the right
 		move.w	obX(a0),mblock_origX(a0)
 		rts	
 ; ===========================================================================
@@ -159,7 +159,7 @@ MBlock_Type06:
 		tst.w	d1		; has platform hit the floor?
 		bpl.w	locret_FFA0	; if not, branch
 		add.w	d1,obY(a0)
-		clr.w	obVelY(a0)	; stop platform	falling
+		clr.w	obVelY(a0)	; stop platform falling
 		clr.b	obSubtype(a0)	; change to type 00 (non-moving)
 
 locret_FFA0:

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 3A - "SONIC GOT THROUGH" title	card
+; Object 3A - "SONIC GOT THROUGH" title card
 ; ---------------------------------------------------------------------------
 
 GotThroughCard:
@@ -67,7 +67,7 @@ Got_Move:	; Routine 2
 	loc_C5FE:
 		move.w	obX(a0),d0
 		bmi.s	locret_C60E
-		cmpi.w	#$200,d0	; has item moved beyond	$200 on	x-axis?
+		cmpi.w	#$200,d0	; has item moved beyond $200 on x-axis?
 		bcc.s	locret_C60E	; if yes, branch
 		bra.w	DisplaySprite
 ; ===========================================================================
@@ -102,13 +102,13 @@ Got_TimeBonus:	; Routine 6
 		bsr.w	DisplaySprite
 		move.b	#1,(f_endactbonus).w ; set time/ring bonus update flag
 		moveq	#0,d0
-		tst.w	(v_timebonus).w	; is time bonus	= zero?
+		tst.w	(v_timebonus).w	; is time bonus = zero?
 		beq.s	Got_RingBonus	; if yes, branch
 		addi.w	#10,d0		; add 10 to score
 		subi.w	#10,(v_timebonus).w ; subtract 10 from time bonus
 
 Got_RingBonus:
-		tst.w	(v_ringbonus).w	; is ring bonus	= zero?
+		tst.w	(v_ringbonus).w	; is ring bonus = zero?
 		beq.s	Got_ChkBonus	; if yes, branch
 		addi.w	#10,d0		; add 10 to score
 		subi.w	#10,(v_ringbonus).w ; subtract 10 from ring bonus
@@ -156,8 +156,8 @@ Got_NextLevel:	; Routine $A
 ; ===========================================================================
 
 Got_ChkSS:
-		clr.b	(v_lastlamp).w	; clear	lamppost counter
-		tst.b	(f_bigring).w	; has Sonic jumped into	a giant	ring?
+		clr.b	(v_lastlamp).w	; clear lamppost counter
+		tst.b	(f_bigring).w	; has Sonic jumped into a giant ring?
 		beq.s	VBla_08A	; if not, branch
 		move.b	#id_Special,(v_gamemode).w ; set game mode to Special Stage (10)
 		bra.s	Got_Display2
@@ -170,7 +170,7 @@ Got_Display2:
 		bra.w	DisplaySprite
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Level	order array
+; Level order array
 ; ---------------------------------------------------------------------------
 LevelOrder:
 		; Green Hill Zone
@@ -224,7 +224,7 @@ Got_Move2:	; Routine $E
 		add.w	d1,obX(a0)	; change item's position
 		move.w	obX(a0),d0
 		bmi.s	locret_C748
-		cmpi.w	#$200,d0	; has item moved beyond	$200 on	x-axis?
+		cmpi.w	#$200,d0	; has item moved beyond $200 on x-axis?
 		bcc.s	locret_C748	; if yes, branch
 		bra.w	DisplaySprite
 ; ===========================================================================
@@ -248,8 +248,8 @@ loc_C766:	; Routine $10
 		beq.w	DeleteObject
 		rts	
 ; ===========================================================================
-		;    x-start,	x-main,	y-main,
-		;				routine, frame number
+		;    x-start, x-main, y-main,
+		;    routine, frame number
 
 Got_Config:	dc.w 4,		$124,	$BC			; "SONIC HAS"
 		dc.b 				2,	0

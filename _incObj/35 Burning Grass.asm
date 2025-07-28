@@ -1,6 +1,6 @@
 ; ---------------------------------------------------------------------------
-; Object 35 - fireball that sits on the	floor (MZ)
-; (appears when	you walk on sinking platforms)
+; Object 35 - fireball that sits on the floor (MZ)
+; (appears when you walk on sinking platforms)
 ; ---------------------------------------------------------------------------
 
 GrassFire:

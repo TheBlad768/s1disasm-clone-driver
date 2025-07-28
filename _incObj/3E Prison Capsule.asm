@@ -43,7 +43,7 @@ Pri_Main:	; Routine 0
 		move.b	(a1)+,obActWid(a0)
 		move.b	(a1)+,obPriority(a0)
 		move.b	(a1)+,obFrame(a0)
-		cmpi.w	#8,d0		; is object type number	02?
+		cmpi.w	#8,d0		; is object type number 02?
 		bne.s	@not02		; if not, branch
 
 		move.b	#6,obColType(a0)
@@ -71,7 +71,7 @@ Pri_BodyMain:	; Routine 2
 		bset	#1,(v_player+obStatus).w
 
 	@open:
-		move.b	#2,obFrame(a0)	; use frame number 2 (destroyed	prison)
+		move.b	#2,obFrame(a0)	; use frame number 2 (destroyed prison)
 		rts	
 ; ===========================================================================
 
@@ -147,7 +147,7 @@ Pri_Explosion:	; Routine 6, 8, $A
 		addq.w	#7,d4
 		move.w	d5,$36(a1)
 		subq.w	#8,d5
-		dbf	d6,@loop	; repeat 7 more	times
+		dbf	d6,@loop	; repeat 7 more times
 
 	@fail:
 		rts	
@@ -190,7 +190,7 @@ Pri_EndAct:	; Routine $E
 		lea	(v_objspace+$40).w,a1 ; load object RAM
 
 	@findanimal:
-		cmp.b	(a1),d1		; is object $28	(animal) loaded?
+		cmp.b	(a1),d1		; is object $28 (animal) loaded?
 		beq.s	@found		; if yes, branch
 		adda.w	d2,a1		; next object RAM
 		dbf	d0,@findanimal	; repeat $3E times

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - "SONIC TEAM	PRESENTS" and credits
+; Sprite mappings - "SONIC TEAM PRESENTS" and credits
 ; ---------------------------------------------------------------------------
 Map_Cred_internal:
 		dc.w @staff-Map_Cred_internal
@@ -81,7 +81,7 @@ Map_Cred_internal:
 		dc.b 8,	5, 0, 4, $10
 		dc.b 8,	5, 0, $1A, $20
 		dc.b 8,	5, 0, $42, $30
-@design:	dc.b $14		 ; DESIGN JINYA	PHENIX RIE
+@design:	dc.b $14		 ; DESIGN JINYA PHENIX RIE
 		dc.b $D0, 5, 0,	$42, $A0
 		dc.b $D0, 5, 0,	$E, $B0
 		dc.b $D0, 5, 0,	$2E, $C0
@@ -102,7 +102,7 @@ Map_Cred_internal:
 		dc.b $20, 5, 0,	$22, $30
 		dc.b $20, 1, 0,	$46, $40
 		dc.b $20, 5, 0,	$E, $48
-@soundproduce:	dc.b $1A		 ; SOUND PRODUCE MASATO	NAKAMURA
+@soundproduce:	dc.b $1A		 ; SOUND PRODUCE MASATO NAKAMURA
 		dc.b $D8, 5, 0,	$2E, $98
 		dc.b $D8, 5, 0,	$26, $A8
 		dc.b $D8, 5, 0,	$32, $B8
@@ -129,7 +129,7 @@ Map_Cred_internal:
 		dc.b 8,	5, 0, $32, $4C
 		dc.b 8,	5, 0, $22, $5C
 		dc.b 8,	5, 0, 4, $6C
-@soundprogram:	dc.b $17		 ; SOUND PROGRAM JIMITA	MACKY
+@soundprogram:	dc.b $17		 ; SOUND PROGRAM JIMITA MACKY
 		dc.b $D0, 5, 0,	$2E, $98
 		dc.b $D0, 5, 0,	$26, $A8
 		dc.b $D0, 5, 0,	$32, $B8
@@ -153,7 +153,7 @@ Map_Cred_internal:
 		dc.b $20, 5, 0,	$1E, $F4
 		dc.b $20, 5, 0,	$58, 4
 		dc.b $20, 5, 0,	$2A, $14
-@thanks:	dc.b $1F		 ; SPECIAL THANKS FUJIO	MINEGISHI PAPA
+@thanks:	dc.b $1F		 ; SPECIAL THANKS FUJIO MINEGISHI PAPA
 		dc.b $D8, 5, 0,	$2E, $80
 		dc.b $D8, 5, 0,	$12, $90
 		dc.b $D8, 5, 0,	$E, $A0
@@ -185,7 +185,7 @@ Map_Cred_internal:
 		dc.b $20, 5, 0,	4, 8
 		dc.b $20, 5, 0,	$12, $18
 		dc.b $20, 5, 0,	4, $28
-@presentedby:	dc.b $F			 ; PRESENTED BY	SEGA
+@presentedby:	dc.b $F			 ; PRESENTED BY SEGA
 		dc.b $F8, 5, 0,	$12, $80
 		dc.b $F8, 5, 0,	$22, $90
 		dc.b $F8, 5, 0,	$E, $A0

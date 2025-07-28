@@ -33,7 +33,7 @@ HUD_Flash:	; Routine 2
 		btst	#3,(v_framebyte).w
 		bne.s	@display
 		addq.w	#1,d0		; make ring counter flash red
-		cmpi.b	#9,(v_timemin).w ; have	9 minutes elapsed?
+		cmpi.b	#9,(v_timemin).w ; have 9 minutes elapsed?
 		bne.s	@display	; if not, branch
 		addq.w	#2,d0		; make time counter flash red
 

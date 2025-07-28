@@ -45,7 +45,7 @@ Map_Bomb_internal:
 		dc.b $F1, $A, 0, 9, $F4
 		dc.b 9,	8, 0, $12, $F4
 @fuse1:		dc.b 1
-		dc.b $E7, 1, 0,	$23, $FC ; fuse	(just before it	explodes)
+		dc.b $E7, 1, 0,	$23, $FC ; fuse (just before it explodes)
 @fuse2:		dc.b 1
 		dc.b $E7, 1, 0,	$25, $FC
 @shrapnel1:	dc.b 1

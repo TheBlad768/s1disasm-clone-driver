@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	animate	level graphics
+; Subroutine to animate level graphics
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 AnimateLevelGfx:
@@ -49,7 +49,7 @@ AniArt_GHZ_Waterfall:
 
 	@isframe0:
 		locVRAM	$6F00		; VRAM address
-		move.w	#@size-1,d1	; number of 8x8	tiles
+		move.w	#@size-1,d1	; number of 8x8 tiles
 		bra.w	LoadTiles
 ; ===========================================================================
 
@@ -61,7 +61,7 @@ AniArt_GHZ_Bigflower:
 		bpl.s	AniArt_GHZ_Smallflower
 
 		move.b	#$F,(v_lani1_time).w
-		lea	(Art_GhzFlower1).l,a1 ;	load big flower	patterns
+		lea	(Art_GhzFlower1).l,a1 ; load big flower patterns
 		move.b	(v_lani1_frame).w,d0
 		addq.b	#1,(v_lani1_frame).w
 		andi.w	#1,d0
@@ -96,7 +96,7 @@ AniArt_GHZ_Smallflower:
 		add.w	d0,d0
 		add.w	d1,d0		; multiply that by 3 (i.e. frame num times 12 * $20)
 		locVRAM	$6D80
-		lea	(Art_GhzFlower2).l,a1 ;	load small flower patterns
+		lea	(Art_GhzFlower2).l,a1 ; load small flower patterns
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#@size-1,d1
 		bsr.w	LoadTiles
@@ -176,7 +176,7 @@ AniArt_MZ_Torch:
 		bpl.w	@end		; branch if not 0
 		
 		move.b	#7,(v_lani2_time).w ; time to display each frame
-		lea	(Art_MzTorch).l,a1 ; load torch	patterns
+		lea	(Art_MzTorch).l,a1 ; load torch patterns
 		moveq	#0,d0
 		move.b	(v_lani3_frame).w,d0
 		addq.b	#1,(v_lani3_frame).w ; increment frame counter
@@ -282,7 +282,7 @@ AniArt_Ending_BigFlower:
 		bpl.s	AniArt_Ending_SmallFlower ; branch if not 0
 		
 		move.b	#7,(v_lani1_time).w
-		lea	(Art_GhzFlower1).l,a1 ;	load big flower	patterns
+		lea	(Art_GhzFlower1).l,a1 ; load big flower patterns
 		lea	($FFFF9400).w,a2 ; load 2nd big flower from RAM
 		move.b	(v_lani1_frame).w,d0
 		addq.b	#1,(v_lani1_frame).w ; increment frame counter
@@ -318,7 +318,7 @@ AniArt_Ending_SmallFlower:
 		add.w	d0,d0
 		add.w	d1,d0		; multiply by 3
 		locVRAM	$6D80
-		lea	(Art_GhzFlower2).l,a1 ;	load small flower patterns
+		lea	(Art_GhzFlower2).l,a1 ; load small flower patterns
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#@size-1,d1
 		bra.w	LoadTiles
@@ -341,7 +341,7 @@ AniArt_Ending_Flower3:
 		lsl.w	#8,d0		; multiply by $100
 		add.w	d0,d0		; multiply by 2
 		locVRAM	$7000
-		lea	($FFFF9800).w,a1 ; load	special	flower patterns	(from RAM)
+		lea	($FFFF9800).w,a1 ; load special flower patterns (from RAM)
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#@size-1,d1
 		bra.w	LoadTiles
@@ -364,7 +364,7 @@ AniArt_Ending_Flower4:
 		lsl.w	#8,d0		; multiply by $100
 		add.w	d0,d0		; multiply by 2
 		locVRAM	$6800
-		lea	($FFFF9E00).w,a1 ; load	special	flower patterns	(from RAM)
+		lea	($FFFF9E00).w,a1 ; load special flower patterns (from RAM)
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#@size-1,d1
 		bra.w	LoadTiles
@@ -378,7 +378,7 @@ AniArt_none:
 		rts	
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	transfer graphics to VRAM
+; Subroutine to transfer graphics to VRAM
 
 ; input:
 ;	a1 = source address
@@ -386,7 +386,7 @@ AniArt_none:
 ;	d1 = number of tiles to load (minus one)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LoadTiles:
@@ -556,7 +556,7 @@ loc_1C4FA:
 ; Animated pattern routine - giant ring
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 AniArt_GiantRing:
@@ -570,7 +570,7 @@ AniArt_GiantRing:
 ; loc_1C518:
 @loadTiles:
 		subi.w	#@size*$20,(v_gfxbigring).w	; Count-down the 14 tiles we're going to load now
-		lea	(Art_BigRing).l,a1 ; load giant	ring patterns
+		lea	(Art_BigRing).l,a1 ; load giant ring patterns
 		moveq	#0,d0
 		move.w	(v_gfxbigring).w,d0
 		lea	(a1,d0.w),a1

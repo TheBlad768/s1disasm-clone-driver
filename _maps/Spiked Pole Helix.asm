@@ -24,6 +24,6 @@ byte_7E26:	dc.b 1
 		dc.b 4,	0, 0, $10, $FD	; 45 degree
 byte_7E2C:	dc.b 1
 		dc.b $F4
-byte_7E2E:	; reads the 0 below	; not visible
+byte_7E2E:	; reads the 0 below ; not visible
 		dc.b 0, 0,	$11, $FD ; 45 degree
 		even

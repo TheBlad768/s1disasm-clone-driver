@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 46 - solid blocks and blocks that fall	from the ceiling (MZ)
+; Object 46 - solid blocks and blocks that fall from the ceiling (MZ)
 ; ---------------------------------------------------------------------------
 
 MarbleBrick:
@@ -31,7 +31,7 @@ Brick_Action:	; Routine 2
 		bpl.s	@chkdel
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object type
-		andi.w	#7,d0		; read only the	1st digit
+		andi.w	#7,d0		; read only the 1st digit
 		add.w	d0,d0
 		move.w	Brick_TypeIndex(pc,d0.w),d1
 		jsr	Brick_TypeIndex(pc,d1.w)
@@ -69,7 +69,7 @@ Brick_Type02:
 		neg.w	d0
 
 loc_E888:
-		cmpi.w	#$90,d0		; is Sonic within $90 pixels of	the block?
+		cmpi.w	#$90,d0		; is Sonic within $90 pixels of the block?
 		bcc.s	Brick_Type01	; if not, resume wobbling
 		move.b	#3,obSubtype(a0)	; if yes, make the block fall
 
@@ -92,7 +92,7 @@ Brick_Type03:
 		bsr.w	SpeedToPos
 		addi.w	#$18,obVelY(a0)	; increase falling speed
 		bsr.w	ObjFloorDist
-		tst.w	d1		; has the block	hit the	floor?
+		tst.w	d1		; has the block hit the floor?
 		bpl.w	locret_E8EE	; if not, branch
 		add.w	d1,obY(a0)
 		clr.w	obVelY(a0)	; stop the block falling

@@ -107,7 +107,7 @@ SStom_ChkDel:
 		out_of_range.w	DeleteObject,$3A(a0)
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 SStom_Move:

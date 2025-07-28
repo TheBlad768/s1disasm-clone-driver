@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - SLZ	platforms
+; Sprite mappings - SLZ platforms
 ; ---------------------------------------------------------------------------
 Map_Plat_SLZ_internal:
 		dc.w @platform-Map_Plat_SLZ_internal

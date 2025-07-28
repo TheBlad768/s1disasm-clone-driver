@@ -51,7 +51,7 @@ ESon_MakeEmeralds:
 Obj87_LookUp:	; Routine 6
 		cmpi.w	#$2000,((v_objspace&$FFFFFF)+$400+$3C).l
 		bne.s	locret_5480
-		move.w	#1,(f_restart).w ; set level to	restart	(causes	flash)
+		move.w	#1,(f_restart).w ; set level to restart (causes flash)
 		move.w	#90,eson_time(a0)
 		addq.b	#2,ob2ndRout(a0)
 
@@ -105,7 +105,7 @@ Obj87_Leap:	; Routine $10
 		clr.b	obStatus(a0)
 		move.b	#2,obPriority(a0)
 		move.b	#5,obFrame(a0)
-		move.b	#2,obAnim(a0)	; use "leaping"	animation
+		move.b	#2,obAnim(a0)	; use "leaping" animation
 		move.b	#id_EndSTH,(v_endlogo).w ; load "SONIC THE HEDGEHOG" object
 		bra.s	Obj87_Animate
 ; ===========================================================================

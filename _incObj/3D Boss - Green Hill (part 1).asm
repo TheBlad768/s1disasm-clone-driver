@@ -95,7 +95,7 @@ loc_177E6:
 		bne.s	locret_1784A
 		tst.b	$3E(a0)
 		bne.s	BGHZ_ShipFlash
-		move.b	#$20,$3E(a0)	; set number of	times for ship to flash
+		move.b	#$20,$3E(a0)	; set number of times for ship to flash
 		move.w	#sfx_HitBoss,d0
 		jsr	(PlaySound_Special).l	; play boss damage sound
 
@@ -107,7 +107,7 @@ BGHZ_ShipFlash:
 		move.w	#cWhite,d0	; move 0EEE (white) to d0
 
 loc_1783C:
-		move.w	d0,(a1)		; load colour stored in	d0
+		move.w	d0,(a1)		; load colour stored in d0
 		subq.b	#1,$3E(a0)
 		bne.s	locret_1784A
 		move.b	#$F,obColType(a0)

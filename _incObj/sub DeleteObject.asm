@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	delete an object
+; Subroutine to delete an object
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 DeleteObject:
@@ -13,7 +13,7 @@ DeleteChild:				; child objects are already in (a1)
 		moveq	#$F,d0
 
 	DelObj_Loop:
-		move.l	d1,(a1)+	; clear	the object RAM
+		move.l	d1,(a1)+	; clear the object RAM
 		dbf	d0,DelObj_Loop	; repeat for length of object RAM
 		rts	
 

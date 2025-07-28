@@ -15,7 +15,7 @@ lgrass_origX:	equ $2A
 lgrass_origY:	equ $2C
 
 LGrass_Data:	dc.w LGrass_Data1-LGrass_Data 	; collision angle data
-		dc.b 0,	$40			; frame	number,	platform width
+		dc.b 0,	$40			; frame number, platform width
 		dc.w LGrass_Data3-LGrass_Data
 		dc.b 1,	$40
 		dc.w LGrass_Data2-LGrass_Data
@@ -85,7 +85,7 @@ LGrass_Display:
 		bsr.w	DisplaySprite
 		bra.w	LGrass_ChkDel
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LGrass_Types:
@@ -205,7 +205,7 @@ loc_B086:
 locret_B09A:
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_B09C:

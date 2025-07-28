@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - ground saws	and pizza cutters (SBZ)
+; Sprite mappings - ground saws and pizza cutters (SBZ)
 ; ---------------------------------------------------------------------------
 Map_Saw_internal:
 		dc.w @pizzacutter1-Map_Saw_internal

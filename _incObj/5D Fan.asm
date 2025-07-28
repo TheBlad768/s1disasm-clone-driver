@@ -45,7 +45,7 @@ Fan_Delay:	; Routine 2
 
 @chksonic:
 		addi.w	#$50,d0
-		cmpi.w	#$F0,d0		; is Sonic more	than $A0 pixels	from the fan?
+		cmpi.w	#$F0,d0		; is Sonic more than $A0 pixels from the fan?
 		bcc.s	@animate	; if yes, branch
 		move.w	obY(a1),d1
 		addi.w	#$60,d1

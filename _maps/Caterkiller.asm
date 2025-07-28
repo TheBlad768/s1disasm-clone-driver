@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - Caterkiller	enemy (MZ, SBZ)
+; Sprite mappings - Caterkiller enemy (MZ, SBZ)
 ; ---------------------------------------------------------------------------
 Map_Cat_internal:
 		dc.w byte_16D9E-Map_Cat_internal

@@ -21,7 +21,7 @@ Edge_Main:	; Routine 0
 		move.b	#8,obActWid(a0)
 		move.b	#6,obPriority(a0)
 		move.b	obSubtype(a0),obFrame(a0) ; copy object type number to frame number
-		bclr	#4,obFrame(a0)	; clear	4th bit	(deduct	$10)
+		bclr	#4,obFrame(a0)	; clear 4th bit (deduct $10)
 		beq.s	Edge_Solid	; make object solid if 4th bit = 0
 		addq.b	#2,obRoutine(a0)
 		bra.s	Edge_Display	; don't make it solid if 4th bit = 1

@@ -22,7 +22,7 @@ Bump_Main:	; Routine 0
 		move.b	#$D7,obColType(a0)
 
 Bump_Hit:	; Routine 2
-		tst.b	obColProp(a0)	; has Sonic touched the	bumper?
+		tst.b	obColProp(a0)	; has Sonic touched the bumper?
 		beq.w	@display	; if not, branch
 		clr.b	obColProp(a0)
 		lea	(v_player).w,a1
@@ -50,7 +50,7 @@ Bump_Hit:	; Routine 2
 		move.b	obRespawnNo(a0),d0
 		beq.s	@addscore
 		cmpi.b	#$8A,2(a2,d0.w)	; has bumper been hit 10 times?
-		bcc.s	@display	; if yes, Sonic	gets no	points
+		bcc.s	@display	; if yes, Sonic gets no points
 		addq.b	#1,2(a2,d0.w)
 
 	@addscore:

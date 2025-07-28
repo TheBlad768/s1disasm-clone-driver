@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - SLZ	lava thrower
+; Sprite mappings - SLZ lava thrower
 ; ---------------------------------------------------------------------------
 Map_Scen_internal:
 		dc.w byte_8858-Map_Scen_internal
