@@ -1,6 +1,6 @@
 ; ---------------------------------------------------------------------------
 ; Object 15 - swinging platforms (GHZ, MZ, SLZ)
-;     - spiked ball on a chain (SBZ)
+;           - spiked ball on a chain (SBZ)
 ; ---------------------------------------------------------------------------
 
 SwingingPlatform:

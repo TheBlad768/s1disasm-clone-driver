@@ -5326,7 +5326,7 @@ PlatformObject:
 		tst.w	obVelY(a1)	; is Sonic moving up/jumping?
 		bmi.w	Plat_Exit	; if yes, branch
 
-;  perform x-axis range check
+;		perform x-axis range check
 		move.w	obX(a1),d0
 		sub.w	obX(a0),d0
 		add.w	d1,d0
@@ -5340,7 +5340,7 @@ Plat_NoXCheck:
 		subq.w	#8,d0
 
 Platform3:
-;  perform y-axis range check
+;		perform y-axis range check
 		move.w	obY(a1),d2
 		move.b	obHeight(a1),d1
 		ext.w	d1
@@ -7701,7 +7701,7 @@ ObjHitWallLeft:
 		; Engine bug: colliding with left walls is erratic with this function.
 		; The cause is this: a missing instruction to flip collision on the found
 		; 16x16 block; this one:
-		;eori.w #$F,d3
+		;eori.w	#$F,d3
 		lea	(v_anglebuffer).w,a4
 		move.b	#0,(a4)
 		movea.w	#-$10,a3
