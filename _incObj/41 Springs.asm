@@ -24,8 +24,8 @@ Spring_Index:	dc.w Spring_Main-Spring_Index
 
 spring_pow = objoff_30			; power of current spring
 
-Spring_Powers:	dc.w -$1000		; power	of red spring
-		dc.w -$A00		; power	of yellow spring
+Spring_Powers:	dc.w -$1000		; power of red spring
+		dc.w -$A00		; power of yellow spring
 ; ===========================================================================
 
 Spring_Main:	; Routine 0
@@ -121,7 +121,7 @@ Spring_BounceLR:
 		btst	#0,obStatus(a0)	; is object flipped?
 		bne.s	Spring_Flipped	; if yes, branch
 		subi.w	#$10,obX(a1)
-		neg.w	obVelX(a1)	; move Sonic to	the right
+		neg.w	obVelX(a1)	; move Sonic to the right
 
 Spring_Flipped:
 		move.w	#$F,objoff_3E(a1)

@@ -36,7 +36,7 @@ Sign_Touch:	; Routine 2
 		move.w	(v_player+obX).w,d0
 		sub.w	obX(a0),d0
 		bcs.s	.notouch
-		cmpi.w	#$20,d0		; is Sonic within $20 pixels of	the signpost?
+		cmpi.w	#$20,d0		; is Sonic within $20 pixels of the signpost?
 		bhs.s	.notouch	; if not, branch
 		move.w	#sfx_Signpost,d0
 		jsr	(PlaySound).l	; play signpost sound
@@ -98,7 +98,7 @@ Sign_SparkPos:	dc.b -$18,-$10		; x-position, y-position
 ; ===========================================================================
 
 Sign_SonicRun:	; Routine 6
-		tst.w	(v_debuguse).w	; is debug mode	on?
+		tst.w	(v_debuguse).w	; is debug mode on?
 		bne.w	locret_ECEE	; if yes, branch
 	if FixBugs
 		; This function's checks are a mess, creating an edgecase where it's
@@ -131,10 +131,10 @@ loc_EC86:
 
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	set up bonuses at the end of an	act
+; Subroutine to set up bonuses at the end of an act
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 GotThroughAct:

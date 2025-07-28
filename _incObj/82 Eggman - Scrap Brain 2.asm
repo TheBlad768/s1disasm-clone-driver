@@ -67,7 +67,7 @@ SEgg_EggIndex:	dc.w SEgg_ChkSonic-SEgg_EggIndex
 SEgg_ChkSonic:
 		move.w	obX(a0),d0
 		sub.w	(v_player+obX).w,d0
-		cmpi.w	#128,d0		; is Sonic within 128 pixels of	Eggman?
+		cmpi.w	#128,d0		; is Sonic within 128 pixels of Eggman?
 		bhs.s	loc_19934	; if not, branch
 		addq.b	#2,ob2ndRout(a0)
 		move.w	#180,objoff_3C(a0)	; set delay to 3 seconds
@@ -130,7 +130,7 @@ SEgg_FindBlocks:
 SEgg_FindLoop:
 		adda.w	d1,a1		; jump to next object RAM
 		cmpi.b	#id_FalseFloor,obID(a1) ; is object a block? (object $83)
-		dbeq	d0,SEgg_FindLoop ; if not, repeat (max	$3E times)
+		dbeq	d0,SEgg_FindLoop ; if not, repeat (max $3E times)
 
 		bne.s	loc_199D0
 		move.w	#"GO",obSubtype(a1) ; set block to disintegrate

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - blocks that	disintegrate when Eggman presses a switch
+; Sprite mappings - blocks that disintegrate when Eggman presses a switch
 ; ---------------------------------------------------------------------------
 Map_FFloor_internal:	mappingsTable
 	mappingsTableEntry.w	.wholeblock

@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine for Sonic to interact with	the floor after	jumping/falling
+; Subroutine for Sonic to interact with the floor after jumping/falling
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_Floor:

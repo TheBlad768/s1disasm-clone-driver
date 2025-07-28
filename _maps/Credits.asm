@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - "SONIC TEAM	PRESENTS" and credits
+; Sprite mappings - "SONIC TEAM PRESENTS" and credits
 ; ---------------------------------------------------------------------------
 Map_Cred_internal:	mappingsTable
 	mappingsTableEntry.w	.staff

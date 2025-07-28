@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Solid	object subroutine (includes spikes, blocks, rocks etc)
+; Solid object subroutine (includes spikes, blocks, rocks etc)
 ;
 ; input:
 ;	d1 = width
@@ -8,7 +8,7 @@
 ;	d4 = x-axis position
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 SolidObject:
@@ -277,7 +277,7 @@ Solid_Miss:
 ; End of function SolidObject
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Solid_ResetFloor:

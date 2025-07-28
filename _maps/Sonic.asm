@@ -611,7 +611,7 @@ MS_GetAir:	spriteHeader
 MS_GetAir_End
 
 MS_WaterSlide:	spriteHeader
-	spritePiece	-$14, -$10, 4, 4, 0, 0, 0, 0, 0	; water	slide (LZ)
+	spritePiece	-$14, -$10, 4, 4, 0, 0, 0, 0, 0	; water slide (LZ)
 	spritePiece	$C, -8, 1, 3, $10, 0, 0, 0, 0
 MS_WaterSlide_End
 

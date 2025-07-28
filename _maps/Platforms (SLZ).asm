@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - SLZ	platforms
+; Sprite mappings - SLZ platforms
 ; ---------------------------------------------------------------------------
 Map_Plat_SLZ_internal:	mappingsTable
 	mappingsTableEntry.w	.platform

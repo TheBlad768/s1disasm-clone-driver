@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 48 - ball on a	chain that Eggman swings (GHZ)
+; Object 48 - ball on a chain that Eggman swings (GHZ)
 ; ---------------------------------------------------------------------------
 
 BossBall:
@@ -62,7 +62,7 @@ GBall_MakeBall:
 		rts	
 ; ===========================================================================
 
-GBall_PosData:	dc.b 0,	$10, $20, $30, $40, $60	; y-position data for links and	giant ball
+GBall_PosData:	dc.b 0,	$10, $20, $30, $40, $60	; y-position data for links and giant ball
 
 ; ===========================================================================
 
@@ -110,7 +110,7 @@ GBall_Display2:	; Routine 4
 		jsr	(Obj48_Move).l
 		jmp	(DisplaySprite).l
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_17C2A:

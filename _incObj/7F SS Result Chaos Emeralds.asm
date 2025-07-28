@@ -24,7 +24,7 @@ SSRC_Main:	; Routine 0
 		moveq	#0,d1
 		move.b	(v_emeralds).w,d1 ; d1 is number of emeralds
 		subq.b	#1,d1		; subtract 1 from d1
-		bcs.w	DeleteObject	; if you have 0	emeralds, branch
+		bcs.w	DeleteObject	; if you have 0 emeralds, branch
 
 SSRC_Loop:
 		_move.b	#id_SSRChaos,obID(a1)
@@ -40,7 +40,7 @@ SSRC_Loop:
 		move.w	#make_art_tile(ArtTile_SS_Results_Emeralds,0,1),obGfx(a1)
 		move.b	#0,obRender(a1)
 		lea	object_size(a1),a1	; next object
-		dbf	d1,SSRC_Loop	; loop for d1 number of	emeralds
+		dbf	d1,SSRC_Loop	; loop for d1 number of emeralds
 
 SSRC_Flash:	; Routine 2
 		move.b	obFrame(a0),d0

@@ -49,9 +49,9 @@ Burro_Action:	; Routine 2
 		move.w	#255,burro_timedelay(a0)
 		move.w	#$80,obVelX(a0)
 		move.b	#1,obAnim(a0)
-		bchg	#0,obStatus(a0)	; change direction the Burrobot	is facing
+		bchg	#0,obStatus(a0)	; change direction the Burrobot is facing
 		beq.s	.nochg
-		neg.w	obVelX(a0)	; change direction the Burrobot	is moving
+		neg.w	obVelX(a0)	; change direction the Burrobot is moving
 
 .nochg:
 		rts	
@@ -136,7 +136,7 @@ Burro_ChkSonic:
 locret_AE20:
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Burro_ChkSonic2:

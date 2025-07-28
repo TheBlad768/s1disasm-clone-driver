@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 5A - platforms	moving in circles (SLZ)
+; Object 5A - platforms moving in circles (SLZ)
 ; ---------------------------------------------------------------------------
 
 circ_origX = objoff_32		; original x-axis position

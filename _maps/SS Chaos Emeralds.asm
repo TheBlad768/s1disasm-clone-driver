@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - special stage chaos	emeralds
+; Sprite mappings - special stage chaos emeralds
 ; ---------------------------------------------------------------------------
 Map_SS_Chaos1:	mappingsTable
 	mappingsTableEntry.w	byte_1B96C

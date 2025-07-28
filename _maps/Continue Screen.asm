@@ -26,19 +26,19 @@ M_Cont_text:	spriteHeader
 M_Cont_text_End
 
 M_Cont_Sonic1:	spriteHeader
-	spritePiece	-4, 4, 2, 2, $15, 0, 0, 0, 0	; Sonic	on floor
+	spritePiece	-4, 4, 2, 2, $15, 0, 0, 0, 0	; Sonic on floor
 	spritePiece	-$14, -$C, 3, 3, 6, 0, 0, 0, 0
 	spritePiece	4, -$C, 2, 3, $F, 0, 0, 0, 0
 M_Cont_Sonic1_End
 
 M_Cont_Sonic2:	spriteHeader
-	spritePiece	-4, 4, 2, 2, $19, 0, 0, 0, 0	; Sonic	on floor #2
+	spritePiece	-4, 4, 2, 2, $19, 0, 0, 0, 0	; Sonic on floor #2
 	spritePiece	-$14, -$C, 3, 3, 6, 0, 0, 0, 0
 	spritePiece	4, -$C, 2, 3, $F, 0, 0, 0, 0
 M_Cont_Sonic2_End
 
 M_Cont_Sonic3:	spriteHeader
-	spritePiece	-4, 4, 2, 2, $1D, 0, 0, 0, 0	; Sonic	on floor #3
+	spritePiece	-4, 4, 2, 2, $1D, 0, 0, 0, 0	; Sonic on floor #3
 	spritePiece	-$14, -$C, 3, 3, 6, 0, 0, 0, 0
 	spritePiece	4, -$C, 2, 3, $F, 0, 0, 0, 0
 M_Cont_Sonic3_End

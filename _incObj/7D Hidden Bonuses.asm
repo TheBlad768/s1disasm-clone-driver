@@ -57,7 +57,7 @@ Bonus_Main:	; Routine 0
 		jmp	(DeleteObject).l
 
 ; ===========================================================================
-.points:	dc.w 0			; Bonus	points array
+.points:	dc.w 0			; Bonus points array
 		dc.w 1000
 		dc.w 100
 	if FixBugs

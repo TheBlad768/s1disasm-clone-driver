@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - purple rock	(GHZ)
+; Sprite mappings - purple rock (GHZ)
 ; ---------------------------------------------------------------------------
 Map_PRock_internal:	mappingsTable
 	mappingsTableEntry.w	byte_D110

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	do special water effects in Labyrinth Zone
+; Subroutine to do special water effects in Labyrinth Zone
 ; ---------------------------------------------------------------------------
 
 LZWaterFeatures:
@@ -270,14 +270,14 @@ DynWater_SBZ3:
 		rts
 
 ; ---------------------------------------------------------------------------
-; Labyrinth Zone "wind tunnels"	subroutine
+; Labyrinth Zone "wind tunnels" subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LZWindTunnels:
-		tst.w	(v_debuguse).w	; is debug mode	being used?
+		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.w	.quit	; if yes, branch
 		lea	(LZWind_Data+8).l,a2
 		moveq	#0,d0
@@ -386,7 +386,7 @@ LZWind_Data:	dc.w $A80, $300, $C10,  $380 ; act 1 values (set 1)
 ; Labyrinth Zone water slide subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LZWaterSlides:

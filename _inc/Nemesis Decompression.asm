@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Nemesis decompression	subroutine, decompresses art directly to VRAM
+; Nemesis decompression subroutine, decompresses art directly to VRAM
 ; Inputs:
 ; a0 = art address
 
@@ -52,7 +52,7 @@ loc_146A:
 ; Part of the Nemesis decompressor, processes the actual compressed data
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 NemDec_ProcessCompressedData:
@@ -91,7 +91,7 @@ NemPCD_WritePixel:
 ; End of function NemDec_ProcessCompressedData
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 NemPCD_NewRow:
@@ -159,7 +159,7 @@ NemPCD_WriteRowToRAM_XOR:
 		bne.s	NemPCD_NewRow
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 ; ---------------------------------------------------------------------------
 ; Part of the Nemesis decompressor, builds the code table (in RAM)
 ; ---------------------------------------------------------------------------

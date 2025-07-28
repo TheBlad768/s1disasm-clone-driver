@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	record Sonic's previous positions for invincibility stars
+; Subroutine to record Sonic's previous positions for invincibility stars
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_RecordPosition:

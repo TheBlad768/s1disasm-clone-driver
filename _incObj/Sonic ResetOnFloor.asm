@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	reset Sonic's mode when he lands on the floor
+; Subroutine to reset Sonic's mode when he lands on the floor
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_ResetOnFloor:

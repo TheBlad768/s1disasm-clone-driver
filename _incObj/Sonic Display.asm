@@ -15,8 +15,8 @@ Sonic_Display:
 .chkinvincible:
 		tst.b	(v_invinc).w	; does Sonic have invincibility?
 		beq.s	.chkshoes	; if not, branch
-		tst.w	invtime(a0)	; check	time remaining for invinciblity
-		beq.s	.chkshoes	; if no	time remains, branch
+		tst.w	invtime(a0)	; check time remaining for invinciblity
+		beq.s	.chkshoes	; if no time remains, branch
 		subq.w	#1,invtime(a0)	; subtract 1 from time
 		bne.s	.chkshoes
 		tst.b	(f_lockscreen).w
@@ -38,9 +38,9 @@ Sonic_Display:
 		move.b	#0,(v_invinc).w ; cancel invincibility
 
 .chkshoes:
-		tst.b	(v_shoes).w	; does Sonic have speed	shoes?
+		tst.b	(v_shoes).w	; does Sonic have speed shoes?
 		beq.s	.exit		; if not, branch
-		tst.w	shoetime(a0)	; check	time remaining
+		tst.w	shoetime(a0)	; check time remaining
 		beq.s	.exit
 		subq.w	#1,shoetime(a0)	; subtract 1 from time
 		bne.s	.exit

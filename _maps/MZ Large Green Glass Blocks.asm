@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - large green	glassy blocks (MZ)
+; Sprite mappings - large green glassy blocks (MZ)
 ; ---------------------------------------------------------------------------
 Map_Glass_internal:	mappingsTable
 	mappingsTableEntry.w	.tall

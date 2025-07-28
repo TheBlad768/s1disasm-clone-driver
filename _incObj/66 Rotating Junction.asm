@@ -123,7 +123,7 @@ Jun_Release:	; Routine 6
 		bsr.s	Jun_ChgPos
 		bra.w	RememberState
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Jun_ChkSwitch:
@@ -133,7 +133,7 @@ Jun_ChkSwitch:
 		btst	#0,(a2,d0.w)	; is switch pressed?
 		beq.s	.unpressed	; if not, branch
 
-		tst.b	jun_reverse(a0)	; has switch previously	been pressed?
+		tst.b	jun_reverse(a0)	; has switch previously been pressed?
 		bne.s	.animate	; if yes, branch
 		neg.b	jun_frame(a0)
 		move.b	#1,jun_reverse(a0) ; set to "previously pressed"
@@ -158,7 +158,7 @@ Jun_ChkSwitch:
 ; End of function Jun_ChkSwitch
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Jun_ChgPos:

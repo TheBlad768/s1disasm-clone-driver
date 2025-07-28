@@ -24,7 +24,7 @@ PSB_Main:	; Routine 0
 		blo.s	PSB_PrsStart	; if yes, branch
 
 		addq.b	#2,obRoutine(a0)
-		cmpi.b	#3,obFrame(a0)	; is the object	"TM"?
+		cmpi.b	#3,obFrame(a0)	; is the object "TM"?
 		bne.s	PSB_Exit	; if not, branch
 
 		move.w	#make_art_tile(ArtTile_Title_Trademark,1,0),obGfx(a0) ; "TM" specific code

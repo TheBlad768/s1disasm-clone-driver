@@ -198,7 +198,7 @@ Drown_Countdown:; Routine $A
 		move.b	d0,objoff_34(a0)
 		move.w	(v_air).w,d0	; check air remaining
 		cmpi.w	#25,d0
-		beq.s	.warnsound	; play sound if	air is 25
+		beq.s	.warnsound	; play sound if air is 25
 		cmpi.w	#20,d0
 		beq.s	.warnsound
 		cmpi.w	#15,d0

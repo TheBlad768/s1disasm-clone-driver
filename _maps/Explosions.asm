@@ -36,7 +36,7 @@ byte_8EF7_End
 
 	even
 ; ---------------------------------------------------------------------------
-; Sprite mappings - explosion from when	a boss is destroyed
+; Sprite mappings - explosion from when a boss is destroyed
 ; ---------------------------------------------------------------------------
 Map_ExplodeBomb:	mappingsTable
 	mappingsTableEntry.w	byte_8ED0

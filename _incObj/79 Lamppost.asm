@@ -47,7 +47,7 @@ Lamp_Main:	; Routine 0
 ; ===========================================================================
 
 Lamp_Blue:	; Routine 2
-		tst.w	(v_debuguse).w	; is debug mode	being used?
+		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.w	.donothing	; if yes, branch
 		tst.b	(f_playerctrl).w
 		bmi.w	.donothing
@@ -83,7 +83,7 @@ Lamp_Blue:	; Routine 2
 		addq.b	#2,obRoutine(a0)
 		jsr	(FindFreeObj).l
 		bne.s	.fail
-		_move.b	#id_Lamppost,obID(a1)	; load twirling	lamp object
+		_move.b	#id_Lamppost,obID(a1)	; load twirling lamp object
 		move.b	#6,obRoutine(a1) ; goto Lamp_Twirl next
 		move.w	obX(a0),lamp_origX(a1)
 		move.w	obY(a0),lamp_origY(a1)
@@ -133,7 +133,7 @@ Lamp_Twirl:	; Routine 6
 		rts	
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to	store information when you hit a lamppost
+; Subroutine to store information when you hit a lamppost
 ; ---------------------------------------------------------------------------
 
 Lamp_StoreInfo:
@@ -160,10 +160,10 @@ Lamp_StoreInfo:
 		rts	
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	load stored info when you start	a level	from a lamppost
+; Subroutine to load stored info when you start a level from a lamppost
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Lamp_LoadInfo:

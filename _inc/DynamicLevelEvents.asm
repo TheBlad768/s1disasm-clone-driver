@@ -2,7 +2,7 @@
 ; Dynamic level events
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 DynamicLevelEvents:
@@ -59,7 +59,7 @@ DLE_Index:	dc.w DLE_GHZ-DLE_Index, DLE_LZ-DLE_Index
 		dc.w DLE_Ending-DLE_Index
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Green	Hill Zone dynamic level events
+; Green Hill Zone dynamic level events
 ; ---------------------------------------------------------------------------
 
 DLE_GHZ:
@@ -150,7 +150,7 @@ loc_6EB0:
 		blo.s	locret_6EE8
 		bsr.w	FindFreeObj
 		bne.s	loc_6ED0
-		_move.b	#id_BossGreenHill,obID(a1) ; load GHZ boss	object
+		_move.b	#id_BossGreenHill,obID(a1) ; load GHZ boss object
 		move.w	#boss_ghz_x+$100,obX(a1)
 		move.w	#boss_ghz_y-$80,obY(a1)
 
@@ -193,7 +193,7 @@ DLE_LZ12:
 ; ===========================================================================
 
 DLE_LZ3:
-		tst.b	(f_switch+$F).w	; has switch $F	been pressed?
+		tst.b	(f_switch+$F).w	; has switch $F been pressed?
 		beq.s	loc_6F28	; if not, branch
 		lea	(v_lvllayout+$80*2+6).w,a1
 		cmpi.b	#7,(a1)
@@ -559,7 +559,7 @@ DLE_SYZ3end:
 		rts	
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Scrap	Brain Zone dynamic level events
+; Scrap Brain Zone dynamic level events
 ; ---------------------------------------------------------------------------
 
 DLE_SBZ:

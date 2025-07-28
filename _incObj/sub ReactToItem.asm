@@ -2,7 +2,7 @@
 ; Subroutine to react to obColType(a0)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ReactToItem:
@@ -128,7 +128,7 @@ ReactToItem:
 
 		move.b	obColType(a1),d0
 		andi.b	#$3F,d0
-		cmpi.b	#6,d0		; is collision type $46	?
+		cmpi.b	#6,d0		; is collision type $46 ?
 		beq.s	React_Monitor	; if yes, branch
 		cmpi.w	#90,flashtime(a0)	; is Sonic invincible?
 		bhs.w	.invincible	; if yes, branch
@@ -251,10 +251,10 @@ React_ChkHurt:
 ; continue straight to HurtSonic
 
 ; ---------------------------------------------------------------------------
-; Hurting Sonic	subroutine
+; Hurting Sonic subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 HurtSonic:
@@ -316,18 +316,18 @@ HurtSonic:
 ; ===========================================================================
 
 .norings:
-		tst.w	(f_debugmode).w	; is debug mode	cheat on?
+		tst.w	(f_debugmode).w	; is debug mode cheat on?
 		bne.w	.hasshield	; if yes, branch
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	kill Sonic
+; Subroutine to kill Sonic
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 KillSonic:
-		tst.w	(v_debuguse).w	; is debug mode	active?
+		tst.w	(v_debuguse).w	; is debug mode active?
 		bne.s	.dontdie	; if yes, branch
 		move.b	#0,(v_invinc).w	; remove invincibility
 		move.b	#6,obRoutine(a0)
@@ -341,15 +341,15 @@ KillSonic:
 		bset	#7,obGfx(a0)
 	if FixBugs
 		move.w	#sfx_HitSpikes,d0 ; play spikes death sound
-		cmpi.b	#id_Spikes,obID(a2)	; check	if you were killed by spikes
+		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
 		beq.s	.sound
-		cmpi.b	#id_Harpoon,obID(a2)	; check	if you were killed by a harpoon
+		cmpi.b	#id_Harpoon,obID(a2)	; check if you were killed by a harpoon
 		beq.s	.sound
 		move.w	#sfx_Death,d0	; play normal death sound
 	else
 		; This fails to check for the harpoon object.
 		move.w	#sfx_Death,d0	; play normal death sound
-		cmpi.b	#id_Spikes,obID(a2)	; check	if you were killed by spikes
+		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
 		bne.s	.sound
 		move.w	#sfx_HitSpikes,d0 ; play spikes death sound
 	endif
@@ -363,19 +363,19 @@ KillSonic:
 ; End of function KillSonic
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 React_Special:
 		move.b	obColType(a1),d1
 		andi.b	#$3F,d1
-		cmpi.b	#$B,d1		; is collision type $CB	?
+		cmpi.b	#$B,d1		; is collision type $CB ?
 		beq.s	.caterkiller	; if yes, branch
-		cmpi.b	#$C,d1		; is collision type $CC	?
+		cmpi.b	#$C,d1		; is collision type $CC ?
 		beq.s	.yadrin		; if yes, branch
-		cmpi.b	#$17,d1		; is collision type $D7	?
+		cmpi.b	#$17,d1		; is collision type $D7 ?
 		beq.s	.D7orE1		; if yes, branch
-		cmpi.b	#$21,d1		; is collision type $E1	?
+		cmpi.b	#$21,d1		; is collision type $E1 ?
 		beq.s	.D7orE1		; if yes, branch
 		rts	
 ; ===========================================================================

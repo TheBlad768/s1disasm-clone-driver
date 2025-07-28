@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - stomper and	platforms (SBZ)
+; Sprite mappings - stomper and platforms (SBZ)
 ; ---------------------------------------------------------------------------
 Map_Stomp_internal:	mappingsTable
 	mappingsTableEntry.w	.door

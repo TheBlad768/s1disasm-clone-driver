@@ -2,7 +2,7 @@
 ; Palette cycling routine loading subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PaletteCycle:
@@ -28,7 +28,7 @@ PalCycle_Index:	dc.w PalCycle_GHZ-PalCycle_Index
 		dc.w PalCycle_GHZ-PalCycle_Index	; Ending
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_Title:
@@ -57,7 +57,7 @@ PCycGHZ_Skip:
 ; End of function PalCycle_GHZ
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_LZ:
@@ -73,7 +73,7 @@ PalCycle_LZ:
 		lea	(Pal_LZCyc1).l,a0
 		cmpi.b	#3,(v_act).w	; check if level is SBZ3
 		bne.s	PCycLZ_NotSBZ3
-		lea	(Pal_SBZ3Cyc).l,a0 ; load SBZ3	palette instead
+		lea	(Pal_SBZ3Cyc).l,a0 ; load SBZ3 palette instead
 
 PCycLZ_NotSBZ3:
 		lea	(v_palette+$56).w,a1
@@ -132,7 +132,7 @@ PCycLZ_Seq:	dc.b 1,	0, 0, 1, 0, 0, 1, 0
 PalCycle_MZ:
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_SLZ:
@@ -161,7 +161,7 @@ locret_1A80:
 ; End of function PalCycle_SLZ
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_SYZ:
@@ -188,7 +188,7 @@ locret_1AC6:
 ; End of function PalCycle_SYZ
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_SBZ:

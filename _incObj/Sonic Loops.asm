@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	make Sonic run around loops (GHZ/SLZ)
+; Subroutine to make Sonic run around loops (GHZ/SLZ)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_Loops:
@@ -19,7 +19,7 @@ Sonic_Loops:
 		andi.w	#$7F,d1
 		add.w	d1,d0
 		lea	(v_lvllayout).w,a1
-		move.b	(a1,d0.w),d1	; d1 is	the 256x256 tile Sonic is currently on
+		move.b	(a1,d0.w),d1	; d1 is the 256x256 tile Sonic is currently on
 
 		cmp.b	(v_256roll1).w,d1 ; is Sonic on a "roll tunnel" tile?
 		beq.w	Sonic_ChkRoll	; if yes, branch
@@ -55,7 +55,7 @@ Sonic_Loops:
 		cmpi.b	#$E0,d2
 		blo.s	.chkangle1
 
-		bset	#6,obRender(a0)	; send Sonic to	low plane
+		bset	#6,obRender(a0)	; send Sonic to low plane
 		rts	
 ; ===========================================================================
 
@@ -67,7 +67,7 @@ Sonic_Loops:
 		beq.s	.done
 		cmpi.b	#$80,d1		; is Sonic upside-down?
 		bhi.s	.done		; if yes, branch
-		bset	#6,obRender(a0)	; send Sonic to	low plane
+		bset	#6,obRender(a0)	; send Sonic to low plane
 		rts	
 ; ===========================================================================
 
@@ -75,7 +75,7 @@ Sonic_Loops:
 		move.b	obAngle(a0),d1
 		cmpi.b	#$80,d1		; is Sonic upright?
 		bls.s	.done		; if yes, branch
-		bclr	#6,obRender(a0)	; send Sonic to	high plane
+		bclr	#6,obRender(a0)	; send Sonic to high plane
 
 .noloops:
 .done:

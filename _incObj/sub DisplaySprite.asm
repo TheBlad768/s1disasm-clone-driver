@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	display	a sprite/object, when a0 is the	object RAM
+; Subroutine to display a sprite/object, when a0 is the object RAM
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 DisplaySprite:
@@ -24,10 +24,10 @@ DSpr_Full:
 
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	display	a 2nd sprite/object, when a1 is	the object RAM
+; Subroutine to display a 2nd sprite/object, when a1 is the object RAM
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 DisplaySprite1:

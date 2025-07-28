@@ -1,6 +1,6 @@
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 22 - Buzz Bomber enemy	(GHZ, MZ, SYZ)
+; Object 22 - Buzz Bomber enemy (GHZ, MZ, SYZ)
 ; ---------------------------------------------------------------------------
 
 BuzzBomber:
@@ -49,7 +49,7 @@ Buzz_Action:	; Routine 2
 		move.w	#127,buzz_timedelay(a0) ; set time delay to just over 2 seconds
 		move.w	#$400,obVelX(a0) ; move Buzz Bomber to the right
 		move.b	#1,obAnim(a0)	; use "flying" animation
-		btst	#0,obStatus(a0)	; is Buzz Bomber facing	left?
+		btst	#0,obStatus(a0)	; is Buzz Bomber facing left?
 		bne.s	.noflip		; if not, branch
 		neg.w	obVelX(a0)	; move Buzz Bomber to the left
 
@@ -71,7 +71,7 @@ Buzz_Action:	; Routine 2
 	else
 		move.w	#$18,d0
 	endif
-		btst	#0,obStatus(a0)	; is Buzz Bomber facing	left?
+		btst	#0,obStatus(a0)	; is Buzz Bomber facing left?
 		bne.s	.noflip2	; if not, branch
 		neg.w	d0
 		neg.w	obVelX(a1)	; move missile to the left
@@ -101,7 +101,7 @@ Buzz_Action:	; Routine 2
 		neg.w	d0
 
 .isleft:
-		cmpi.w	#$60,d0		; is Buzz Bomber within	$60 pixels of Sonic?
+		cmpi.w	#$60,d0		; is Buzz Bomber within $60 pixels of Sonic?
 		bhs.s	.keepgoing	; if not, branch
 		tst.b	obRender(a0)
 		bpl.s	.keepgoing

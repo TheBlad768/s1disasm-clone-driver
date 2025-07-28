@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 59 - platforms	that move when you stand on them (SLZ)
+; Object 59 - platforms that move when you stand on them (SLZ)
 ; ---------------------------------------------------------------------------
 
 elev_origX = objoff_32		; original x-axis position
@@ -193,7 +193,7 @@ Elev_Types:
 .delete:
 		bra.w	DeleteObject
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Elev_Move:

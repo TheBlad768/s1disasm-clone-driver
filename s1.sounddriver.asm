@@ -76,7 +76,7 @@ SpeedUpIndex:
 		;dc.b ?		; Get Emerald
 
 ; ---------------------------------------------------------------------------
-; Music	Pointers
+; Music Pointers
 ; ---------------------------------------------------------------------------
 MusicIndex:
 ptr_mus81:	dc.l Music81
@@ -122,7 +122,7 @@ SoundPriorities:
 ; (Called by horizontal & vert. interrupts)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71B4C:
 UpdateMusic:
@@ -253,7 +253,7 @@ DoStartZ80:
 ; End of function UpdateMusic
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71C4E: UpdateDAC:
 DACUpdateTrack:
@@ -326,7 +326,7 @@ DAC_sample_rate:
 		dc.b $FF, $FF
 		even
 ;7250
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71CCA:
 FMUpdateTrack:
@@ -345,7 +345,7 @@ FMUpdateTrack:
 ; End of function FMUpdateTrack
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71CEC:
 FMDoNext:
@@ -378,7 +378,7 @@ FMDoNext:
 ; End of function FMDoNext
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71D22:
 FMSetFreq:
@@ -394,7 +394,7 @@ FMSetFreq:
 ; End of function FMSetFreq
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71D40:
 SetDuration:
@@ -420,7 +420,7 @@ TrackSetRest:
 		bset	#1,SMPS_Track.PlaybackControl(a5)	; Set 'track at rest' bit
 		clr.w	SMPS_Track.Freq(a5)			; Clear frequency
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71D60:
 FinishTrackUpdate:
@@ -446,7 +446,7 @@ FinishTrackUpdate:
 ; End of function FinishTrackUpdate
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71D9E: NoteFillUpdate
 NoteTimeoutUpdate:
@@ -471,7 +471,7 @@ NoteTimeoutUpdate:
 ; End of function NoteTimeoutUpdate
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71DC6:
 DoModulation:
@@ -514,7 +514,7 @@ DoModulation:
 ; End of function DoModulation
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71E18:
 FMPrepareNote:
@@ -625,10 +625,10 @@ PauseMusic:
 		bra.w	DoStartZ80
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	play a sound or	music track
+; Subroutine to play a sound or music track
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; Sound_Play:
 CycleSoundQueue:
@@ -669,7 +669,7 @@ CycleSoundQueue:
 ; End of function CycleSoundQueue
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; Sound_ChkValue:
 PlaySoundID:
@@ -677,7 +677,7 @@ PlaySoundID:
 		move.b	SMPS_RAM.v_sound_id(a6),d7
 		beq.w	StopAllSound
 		bpl.s	.locret				; If >= 0, return (not a valid sound, bgm or command)
-		move.b	#$80,SMPS_RAM.v_sound_id(a6)	; reset	music flag
+		move.b	#$80,SMPS_RAM.v_sound_id(a6)	; reset music flag
 	if FixBugs
 		cmpi.b	#bgm__Last,d7		; Is this music ($81-$93)?
 	else
@@ -964,7 +964,7 @@ Sound_PlaySFX:
 		bne.w	.clear_sndprio			; Exit if it is
 		tst.b	SMPS_RAM.f_fadein_flag(a6)	; Is music being faded in?
 		bne.w	.clear_sndprio			; Exit if it is
-		cmpi.b	#sfx_Ring,d7			; is ring sound	effect played?
+		cmpi.b	#sfx_Ring,d7			; is ring sound effect played?
 		bne.s	.sfx_notRing			; if not, branch
 		tst.b	SMPS_RAM.v_ring_speaker(a6)	; Is the ring sound playing on right speaker?
 		bne.s	.gotringspeaker			; Branch if not
@@ -1206,7 +1206,7 @@ Sound_PlaySpecial:
 		dc.l (v_snddriver_ram.v_spcsfx_fm4_track)&$FFFFFF
 		dc.l (v_snddriver_ram.v_spcsfx_psg3_track)&$FFFFFF
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; Snd_FadeOut1: Snd_FadeOutSFX: FadeOutSFX:
 StopSFX:
@@ -1295,7 +1295,7 @@ StopSFX:
 ; End of function StopSFX
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; Snd_FadeOut2: FadeOutSFX2: FadeOutSpecialSFX:
 StopSpecialSFX:
@@ -1357,7 +1357,7 @@ FadeOutMusic:
 		clr.b	SMPS_RAM.f_speedup(a6)				; Disable speed shoes tempo
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_72504:
 DoFadeOut:
@@ -1414,7 +1414,7 @@ DoFadeOut:
 ; End of function DoFadeOut
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_7256A:
 FMSilenceAll:
@@ -1475,7 +1475,7 @@ StopAllSound:
 		jsr	FMSilenceAll(pc)
 		bra.w	PSGSilenceAll
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_725CA:
 InitMusicPlayback:
@@ -1541,7 +1541,7 @@ InitMusicPlayback:
 ; End of function InitMusicPlayback
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_7260C:
 TempoWait:
@@ -1560,7 +1560,7 @@ TempoWait:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Speed	up music
+; Speed up music
 ; ---------------------------------------------------------------------------
 ; Sound_E2:
 SpeedUpMusic:
@@ -1597,7 +1597,7 @@ SlowDownMusic:
 		clr.b	SMPS_RAM.v_1up_ram_copy+SMPS_RAM.f_speedup(a6)
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_7267C:
 DoFadeIn:
@@ -1666,7 +1666,7 @@ FMNoteOn:
 .locret:
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_726FE:
 FMNoteOff:
@@ -1696,7 +1696,7 @@ WriteFMIorIIMain:
 .locret:
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_72722:
 WriteFMIorII:
@@ -1706,7 +1706,7 @@ WriteFMIorII:
 ; End of function WriteFMIorII
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; Strangely, despite this driver being SMPS 68k Type 1b,
 ; WriteFMI and WriteFMII are the Type 1a versions.
@@ -1739,7 +1739,7 @@ WriteFMIIPart:
 		bclr	#2,d2				; Clear chip toggle
 		add.b	d2,d0				; Add in to destination register
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_72764:
 WriteFMII:
@@ -1800,7 +1800,7 @@ FMFrequencies:
 		MakeFMFrequenciesOctave 6
 		MakeFMFrequenciesOctave 7
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_72850:
 PSGUpdateTrack:
@@ -1821,7 +1821,7 @@ PSGUpdateTrack:
 ; End of function PSGUpdateTrack
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_72878:
 PSGDoNext:
@@ -1854,7 +1854,7 @@ PSGDoNext:
 ; End of function PSGDoNext
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_728AC:
 PSGSetFreq:
@@ -1876,7 +1876,7 @@ PSGSetFreq:
 ; End of function PSGSetFreq
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_728DC:
 PSGDoNoteOn:
@@ -1885,7 +1885,7 @@ PSGDoNoteOn:
 ; End of function PSGDoNoteOn
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_728E2:
 PSGUpdateFreq:
@@ -1920,7 +1920,7 @@ PSGSetRest:
 		bset	#1,SMPS_Track.PlaybackControl(a5)	; Set 'track at rest' bit
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_72926:
 PSGUpdateVolFX:
@@ -1952,7 +1952,7 @@ PSGDoVolFX:	; This can actually be made a bit more efficient, see the comments f
 ; End of function PSGUpdateVolFX
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_7296A:
 SetPSGVolume:
@@ -1986,7 +1986,7 @@ VolEnvHold:
 		subq.b	#1,SMPS_Track.VolEnvIndex(a5)	; Decrement volume envelope index
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_729A0:
 PSGNoteOff:
@@ -2013,7 +2013,7 @@ locret_729B4:
 ; End of function PSGNoteOff
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_729B6:
 PSGSilenceAll:
@@ -2060,7 +2060,7 @@ PSGFrequencies:
 		MakePSGFrequencies 2071.49,   2193.34,   2330.42,   2485.78,   2601.40,   2796.51,   2943.69,   3107.23,   3290.01,   3495.64,   3608.40,   3857.25
 		MakePSGFrequencies 4142.98,   4302.32,   4660.85,   4863.50,   5084.56,   5326.69,   5887.39,   6214.47,   6580.02, 223721.56
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_72A5A:
 CoordFlag:
@@ -2316,7 +2316,7 @@ cfSetVoice:
 		bmi.s	SetVoice				; If yes, branch
 		movea.l	SMPS_RAM.v_special_voice_ptr(a6),a1	; Special SFX voice pointer
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_72C4E:
 SetVoice:
@@ -2371,7 +2371,7 @@ locret_72CAA:
 ; byte_72CAC:
 FMSlotMask:	dc.b 8,	8, 8, 8, $A, $E, $E, $F
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_72CB4:
 SendVoiceTL:
@@ -2675,7 +2675,7 @@ Music93:	include "sound/music/Mus93 - Get Emerald.asm"
 		even
 
 ; ---------------------------------------------------------------------------
-; Sound	effect pointers
+; Sound effect pointers
 ; ---------------------------------------------------------------------------
 SoundIndex:
 ptr_sndA0:	dc.l SoundA0

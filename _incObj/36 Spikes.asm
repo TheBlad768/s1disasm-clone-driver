@@ -14,7 +14,7 @@ Spik_Index:	dc.w Spik_Main-Spik_Index
 spik_origX = objoff_30		; start X position
 spik_origY = objoff_32		; start Y position
 
-Spik_Var:	dc.b 0,	$14		; frame	number,	object width
+Spik_Var:	dc.b 0,	$14		; frame number, object width
 		dc.b 1,	$10
 		dc.b 2,	4
 		dc.b 3,	$1C
@@ -48,7 +48,7 @@ Spik_Solid:	; Routine 2
 		bne.s	Spik_Upright	; if not, branch
 		move.w	#$14,d2
 
-; Spikes types $1x and $5x face	sideways
+; Spikes types $1x and $5x face sideways
 
 Spik_SideWays:
 		move.w	#$1B,d1
@@ -63,7 +63,7 @@ Spik_SideWays:
 		bra.s	Spik_Display
 ; ===========================================================================
 
-; Spikes types $0x, $2x, $3x and $4x face up or	down
+; Spikes types $0x, $2x, $3x and $4x face up or down
 
 Spik_Upright:
 		moveq	#0,d1
@@ -146,7 +146,7 @@ Spik_Type02:
 ; ===========================================================================
 
 Spik_Wait:
-		tst.w	objoff_38(a0)		; is time delay	= zero?
+		tst.w	objoff_38(a0)		; is time delay = zero?
 		beq.s	loc_CFA4	; if yes, branch
 		subq.w	#1,objoff_38(a0)	; subtract 1 from time delay
 		bne.s	locret_CFE6

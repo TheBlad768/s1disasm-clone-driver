@@ -52,7 +52,7 @@ GRing_Collect:	; Routine 4
 		move.w	(v_player+obX).w,d0
 		cmp.w	obX(a0),d0	; has Sonic come from the left?
 		blo.s	GRing_PlaySnd	; if yes, branch
-		bset	#0,obRender(a1)	; reverse flash	object
+		bset	#0,obRender(a1)	; reverse flash object
 
 GRing_PlaySnd:
 		move.w	#sfx_GiantRing,d0

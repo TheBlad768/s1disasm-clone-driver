@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - SLZ	swinging platforms
+; Sprite mappings - SLZ swinging platforms
 ; ---------------------------------------------------------------------------
 Map_Swing_SLZ_internal:	mappingsTable
 	mappingsTableEntry.w	.block
