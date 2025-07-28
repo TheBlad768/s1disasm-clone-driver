@@ -993,7 +993,7 @@ Sound_PlaySFX:
 	if FixBugs
 		moveq	#0,d7
 	else
-		; DANGER! there is a missing 'moveq #0,d7' here, without which SFXes whose
+		; DANGER! there is a missing 'moveq	#0,d7' here, without which SFXes whose
 		; index entry is above $3F will cause a crash.
 		; This bug is fixed in Ristar's driver.
 	endif
@@ -1118,7 +1118,7 @@ Sound_PlaySpecial:
 	if FixBugs
 		moveq	#0,d7
 	else
-		; DANGER! there is a missing 'moveq #0,d7' here, without which special SFXes whose
+		; DANGER! there is a missing 'moveq	#0,d7' here, without which special SFXes whose
 		; index entry is above $3F will cause a crash. This instance was not fixed in Ristar's driver.
 	endif
 		move.b	(a1)+,d7	; Number of tracks (FM + PSG)
@@ -1229,7 +1229,7 @@ StopSFX:
 	if FixBugs
 		movea.l	a5,a3
 	else
-		; DANGER! there is a missing 'movea.l a5,a3' here, without which the
+		; DANGER! there is a missing 'movea.l	a5,a3' here, without which the
 		; code is broken. It is dangerous to do a fade out when a GHZ waterfall
 		; is playing its sound!
 	endif

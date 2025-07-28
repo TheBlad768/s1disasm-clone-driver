@@ -84,7 +84,7 @@ Deform_GHZ:
 		addi.l	#$10000,(a2)+
 		addi.l	#$C000,(a2)+
 		addi.l	#$8000,(a2)+
-	; calculate background scroll 
+	; calculate background scroll
 		move.w	(v_bgscroll_buffer).w,d0
 		add.w	(v_bg3screenposx).w,d0
 		neg.w	d0
