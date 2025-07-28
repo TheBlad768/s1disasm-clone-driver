@@ -3,7 +3,7 @@
 ; ---------------------------------------------------------------------------
 
 SonicSpecial:
-		tst.w	(v_debuguse).w	; is debug mode	being used?
+		tst.w	(v_debuguse).w	; is debug mode being used?
 		beq.s	Obj09_Normal	; if not, branch
 		bsr.w	SS_FixCamera
 		bra.w	DebugMode
@@ -34,7 +34,7 @@ Obj09_Main:	; Routine 0
 		bset	#1,obStatus(a0)
 
 Obj09_ChkDebug:	; Routine 2
-		tst.w	(f_debugmode).w	; is debug mode	cheat enabled?
+		tst.w	(f_debugmode).w	; is debug mode cheat enabled?
 		beq.s	Obj09_NoDebug	; if not, branch
 		btst	#bitB,(v_jpadpress1).w ; is button B pressed?
 		beq.s	Obj09_NoDebug	; if not, branch
@@ -77,7 +77,7 @@ Obj09_Display:
 		jsr	(Sonic_Animate).l
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_Move:
@@ -142,7 +142,7 @@ loc_1BAF2:
 ; End of function Obj09_Move
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_MoveLeft:
@@ -173,7 +173,7 @@ loc_1BB22:
 ; End of function Obj09_MoveLeft
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_MoveRight:
@@ -203,12 +203,12 @@ locret_1BB54:
 ; End of function Obj09_MoveRight
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_Jump:
 		move.b	(v_jpadpress2).w,d0
-		andi.b	#btnABC,d0	; is A,	B or C pressed?
+		andi.b	#btnABC,d0	; is A, B or C pressed?
 		beq.s	Obj09_NoJump	; if not, branch
 		move.b	(v_ssangle).w,d0
 		andi.b	#$FC,d0
@@ -230,7 +230,7 @@ Obj09_NoJump:
 ; End of function Obj09_Jump
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 nullsub_2:
@@ -252,10 +252,10 @@ nullsub_2:
 locret_1BBB4:
 		rts	
 ; ---------------------------------------------------------------------------
-; Subroutine to	fix the	camera on Sonic's position (special stage)
+; Subroutine to fix the camera on Sonic's position (special stage)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 SS_FixCamera:
@@ -315,7 +315,7 @@ loc_1BC40:
 		bsr.w	SS_FixCamera
 		jmp	(DisplaySprite).l
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_Fall:
@@ -377,7 +377,7 @@ loc_1BCD4:
 ; End of function Obj09_Fall
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_1BCE8:
@@ -412,7 +412,7 @@ sub_1BCE8:
 ; End of function sub_1BCE8
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_1BD30:
@@ -436,7 +436,7 @@ loc_1BD46:
 ; End of function sub_1BD30
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_ChkItems:
@@ -461,7 +461,7 @@ Obj09_ChkItems:
 ; ===========================================================================
 
 Obj09_ChkCont:
-		cmpi.b	#$3A,d4		; is the item a	ring?
+		cmpi.b	#$3A,d4		; is the item a ring?
 		bne.s	Obj09_Chk1Up
 		bsr.w	SS_RemoveCollectedItem
 		bne.s	Obj09_GetCont
@@ -522,22 +522,22 @@ Obj09_GetEmer:
 
 Obj09_NoEmer:
 		move.w	#bgm_Emerald,d0
-		jsr	(PlaySound_Special).l ;	play emerald music
+		jsr	(PlaySound_Special).l ; play emerald music
 		moveq	#0,d4
 		rts	
 ; ===========================================================================
 
 Obj09_ChkGhost:
-		cmpi.b	#$41,d4		; is the item a	ghost block?
+		cmpi.b	#$41,d4		; is the item a ghost block?
 		bne.s	Obj09_ChkGhostTag
 		move.b	#1,objoff_3A(a0)	; mark the ghost block as "passed"
 
 Obj09_ChkGhostTag:
-		cmpi.b	#$4A,d4		; is the item a	switch for ghost blocks?
+		cmpi.b	#$4A,d4		; is the item a switch for ghost blocks?
 		bne.s	Obj09_NoGhost
-		cmpi.b	#1,objoff_3A(a0)	; have the ghost blocks	been passed?
+		cmpi.b	#1,objoff_3A(a0)	; have the ghost blocks been passed?
 		bne.s	Obj09_NoGhost	; if not, branch
-		move.b	#2,objoff_3A(a0)	; mark the ghost blocks	as "solid"
+		move.b	#2,objoff_3A(a0)	; mark the ghost blocks as "solid"
 
 Obj09_NoGhost:
 		moveq	#-1,d4
@@ -554,9 +554,9 @@ Obj09_GhostLoop2:
 		moveq	#$40-1,d2
 
 Obj09_GhostLoop:
-		cmpi.b	#$41,(a1)	; is the item a	ghost block?
+		cmpi.b	#$41,(a1)	; is the item a ghost block?
 		bne.s	Obj09_NoReplace	; if not, branch
-		move.b	#$2C,(a1)	; replace ghost	block with a solid block
+		move.b	#$2C,(a1)	; replace ghost block with a solid block
 
 Obj09_NoReplace:
 		addq.w	#1,a1
@@ -571,7 +571,7 @@ Obj09_GhostNotSolid:
 ; End of function Obj09_ChkItems
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_ChkItems2:
@@ -591,7 +591,7 @@ locret_1BEAC:
 ; ===========================================================================
 
 Obj09_ChkBumper:
-		cmpi.b	#$25,d0		; is the item a	bumper?
+		cmpi.b	#$25,d0		; is the item a bumper?
 		bne.s	Obj09_GOAL
 		move.l	objoff_32(a0),d1
 		subi.l	#$FF0001,d1
@@ -627,7 +627,7 @@ Obj09_BumpSnd:
 ; ===========================================================================
 
 Obj09_GOAL:
-		cmpi.b	#$27,d0		; is the item a	"GOAL"?
+		cmpi.b	#$27,d0		; is the item a "GOAL"?
 		bne.s	Obj09_UPblock
 		addq.b	#2,obRoutine(a0) ; run routine "Obj09_ExitStage"
 		move.w	#sfx_SSGoal,d0
@@ -654,7 +654,7 @@ Obj09_UPsnd:
 ; ===========================================================================
 
 Obj09_DOWNblock:
-		cmpi.b	#$2A,d0		; is the item a	"DOWN" block?
+		cmpi.b	#$2A,d0		; is the item a "DOWN" block?
 		bne.s	Obj09_Rblock
 		tst.b	objoff_36(a0)
 		bne.w	Obj09_NoGlass
@@ -691,7 +691,7 @@ Obj09_RevStage:
 ; ===========================================================================
 
 Obj09_ChkGlass:
-		cmpi.b	#$2D,d0		; is the item a	glass block?
+		cmpi.b	#$2D,d0		; is the item a glass block?
 		beq.s	Obj09_Glass	; if yes, branch
 		cmpi.b	#$2E,d0
 		beq.s	Obj09_Glass
@@ -710,7 +710,7 @@ Obj09_Glass:
 		move.b	(a1),d0
 		addq.b	#1,d0		; change glass type when touched
 		cmpi.b	#$30,d0
-		bls.s	Obj09_GlassUpdate ; if glass is	still there, branch
+		bls.s	Obj09_GlassUpdate ; if glass is still there, branch
 		clr.b	d0		; remove the glass block when it's destroyed
 
 Obj09_GlassUpdate:

@@ -133,7 +133,7 @@ LBlk_Action:	; Routine 2
 ; ===========================================================================
 
 .type05:
-		cmpi.b	#1,objoff_3F(a0)	; is Sonic touching the	block?
+		cmpi.b	#1,objoff_3F(a0)	; is Sonic touching the block?
 		bne.s	.notouch05	; if not, branch
 		addq.b	#1,obSubtype(a0) ; goto .type06
 		clr.b	lblk_untouched(a0)

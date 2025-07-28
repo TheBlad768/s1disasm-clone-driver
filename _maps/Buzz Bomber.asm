@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - Buzz Bomber	enemy
+; Sprite mappings - Buzz Bomber enemy
 ; ---------------------------------------------------------------------------
 Map_Buzz_internal:	mappingsTable
 	mappingsTableEntry.w	.Fly1

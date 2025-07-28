@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 88 - chaos emeralds on	the ending sequence
+; Object 88 - chaos emeralds on the ending sequence
 ; ---------------------------------------------------------------------------
 
 EndChaos:

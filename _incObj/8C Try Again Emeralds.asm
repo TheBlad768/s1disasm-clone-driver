@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 8C - chaos emeralds on	the "TRY AGAIN"	screen
+; Object 8C - chaos emeralds on the "TRY AGAIN" screen
 ; ---------------------------------------------------------------------------
 
 TryChaos:

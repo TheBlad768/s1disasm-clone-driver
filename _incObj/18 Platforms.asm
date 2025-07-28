@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 18 - platforms	(GHZ, SYZ, SLZ)
+; Object 18 - platforms (GHZ, SYZ, SLZ)
 ; ---------------------------------------------------------------------------
 
 BasicPlatform:
@@ -88,10 +88,10 @@ loc_7F06:
 		rts
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	move platform slightly when you	stand on it
+; Subroutine to move platform slightly when you stand on it
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Plat_Nudge:
@@ -106,10 +106,10 @@ Plat_Nudge:
 ; End of function Plat_Nudge
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	move platforms
+; Subroutine to move platforms
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Plat_Move:
@@ -191,11 +191,11 @@ Plat_Move:
 ; ===========================================================================
 
 .type03:
-		tst.w	objoff_3A(a0)		; is time delay	set?
+		tst.w	objoff_3A(a0)		; is time delay set?
 		bne.s	.type03_wait	; if yes, branch
 		btst	#3,obStatus(a0)	; is Sonic standing on the platform?
 		beq.s	.type03_nomove	; if not, branch
-		move.w	#30,objoff_3A(a0)	; set time delay to 0.5	seconds
+		move.w	#30,objoff_3A(a0)	; set time delay to 0.5 seconds
 
 .type03_nomove:
 		rts	
@@ -244,12 +244,12 @@ Plat_Move:
 ; ===========================================================================
 
 .type07:
-		tst.w	objoff_3A(a0)		; is time delay	set?
+		tst.w	objoff_3A(a0)		; is time delay set?
 		bne.s	.type07_wait	; if yes, branch
 		lea	(f_switch).w,a2	; load switch statuses
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; move object type ($x7) to d0
-		lsr.w	#4,d0		; divide d0 by 8, round	down
+		lsr.w	#4,d0		; divide d0 by 8, round down
 		tst.b	(a2,d0.w)	; has switch no. d0 been pressed?
 		beq.s	.type07_nomove	; if not, branch
 		move.w	#60,objoff_3A(a0)	; set time delay to 1 second
@@ -265,7 +265,7 @@ Plat_Move:
 ; ===========================================================================
 
 .type08:
-		subq.w	#2,objoff_2C(a0)	; move platform	up
+		subq.w	#2,objoff_2C(a0)	; move platform up
 		move.w	objoff_34(a0),d0
 		subi.w	#$200,d0
 		cmp.w	objoff_2C(a0),d0	; has platform moved $200 pixels?

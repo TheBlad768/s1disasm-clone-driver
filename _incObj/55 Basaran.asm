@@ -47,7 +47,7 @@ Bas_Action:	; Routine 2
 		bcs.s	.nodrop
 		cmpi.w	#$80,d0		; is Sonic < $80 pixels from basaran?
 		bhs.s	.nodrop		; if not, branch
-		tst.w	(v_debuguse).w	; is debug mode	on?
+		tst.w	(v_debuguse).w	; is debug mode on?
 		bne.s	.nodrop		; if yes, branch
 
 		move.b	(v_vbla_byte).w,d0

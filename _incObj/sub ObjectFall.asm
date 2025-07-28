@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	make an	object fall downwards, increasingly fast
+; Subroutine to make an object fall downwards, increasingly fast
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ObjectFall:

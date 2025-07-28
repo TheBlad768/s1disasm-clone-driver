@@ -27,7 +27,7 @@ WFall_Main:	; Routine 0
 		bset	#7,obGfx(a0)
 
 .under80:
-		andi.b	#$F,d0		; read only the	2nd digit
+		andi.b	#$F,d0		; read only the 2nd digit
 		move.b	d0,obFrame(a0)	; set frame number
 		cmpi.b	#9,d0		; is object type $x9 ?
 		bne.s	WFall_ChkDel	; if not, branch
@@ -55,7 +55,7 @@ WFall_ChkDel:	; Routine 4
 WFall_OnWater:	; Routine 6
 		move.w	(v_waterpos1).w,d0
 		subi.w	#$10,d0
-		move.w	d0,obY(a0)	; match	object position	to water height
+		move.w	d0,obY(a0)	; match object position to water height
 		bra.s	WFall_Animate
 ; ===========================================================================
 

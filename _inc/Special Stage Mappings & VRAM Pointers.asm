@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Special stage	mappings and VRAM pointers
+; Special stage mappings and VRAM pointers
 ; ---------------------------------------------------------------------------
 specialStageData: macro frame,mappings,palette,vram
 		dc.l	mappings|(frame<<24)

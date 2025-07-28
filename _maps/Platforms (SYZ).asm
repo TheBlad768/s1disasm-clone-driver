@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - SYZ	platforms
+; Sprite mappings - SYZ platforms
 ; ---------------------------------------------------------------------------
 Map_Plat_SYZ_internal:	mappingsTable
 	mappingsTableEntry.w	.platform

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 67 - disc that	you run	around (SBZ)
+; Object 67 - disc that you run around (SBZ)
 ; ---------------------------------------------------------------------------
 
 RunningDisc:
@@ -30,14 +30,14 @@ Disc_Main:	; Routine 0
 		move.b	#$18,disc_spot_distance(a0)
 		move.b	#$48,disc_radius(a0)
 		move.b	obSubtype(a0),d1 ; get object type
-		andi.b	#$F,d1		; read only the	2nd digit
+		andi.b	#$F,d1		; read only the 2nd digit
 		beq.s	.typeis0	; branch if 0
 		move.b	#$10,disc_spot_distance(a0)
 		move.b	#$38,disc_radius(a0)
 
 .typeis0:
 		move.b	obSubtype(a0),d1 ; get object type
-		andi.b	#$F0,d1		; read only the	1st digit
+		andi.b	#$F0,d1		; read only the 1st digit
 		ext.w	d1
 		asl.w	#3,d1
 		move.w	d1,objoff_36(a0)

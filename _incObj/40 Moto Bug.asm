@@ -29,7 +29,7 @@ Moto_Main:	; Routine 0
 		jsr	(ObjFloorDist).l
 		tst.w	d1
 		bpl.s	.notonfloor
-		add.w	d1,obY(a0)	; match	object's position with the floor
+		add.w	d1,obY(a0)	; match object's position with the floor
 		move.w	#0,obVelY(a0)
 		addq.b	#2,obRoutine(a0) ; goto Moto_Action next
 		bchg	#0,obStatus(a0)
@@ -62,7 +62,7 @@ Moto_ActIndex:	dc.w .move-Moto_ActIndex
 ; ===========================================================================
 
 .move:
-		subq.w	#1,.time(a0)	; subtract 1 from pause	time
+		subq.w	#1,.time(a0)	; subtract 1 from pause time
 		bpl.s	.wait		; if time remains, branch
 		addq.b	#2,ob2ndRout(a0)
 		move.w	#-$100,obVelX(a0) ; move object to the left
@@ -82,7 +82,7 @@ Moto_ActIndex:	dc.w .move-Moto_ActIndex
 		blt.s	.pause
 		cmpi.w	#$C,d1
 		bge.s	.pause
-		add.w	d1,obY(a0)	; match	object's position with the floor
+		add.w	d1,obY(a0)	; match object's position with the floor
 		subq.b	#1,.smokedelay(a0)
 		bpl.s	.nosmoke
 		move.b	#$F,.smokedelay(a0)

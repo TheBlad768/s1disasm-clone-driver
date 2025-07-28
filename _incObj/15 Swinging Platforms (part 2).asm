@@ -1,4 +1,4 @@
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Swing_Move:
@@ -14,7 +14,7 @@ loc_7B78:
 ; End of function Swing_Move
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj48_Move:
@@ -44,7 +44,7 @@ loc_7BB6:
 ; End of function Obj48_Move
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Swing_Move2:
@@ -95,7 +95,7 @@ Swing_DelLoop:
 		addi.l	#v_objspace&$FFFFFF,d0
 		movea.l	d0,a1
 		bsr.w	DeleteChild
-		dbf	d2,Swing_DelLoop ; repeat for length of	chain
+		dbf	d2,Swing_DelLoop ; repeat for length of chain
 		rts	
 ; ===========================================================================
 

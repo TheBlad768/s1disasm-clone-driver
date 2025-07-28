@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	make Sonic walk/run
+; Subroutine to make Sonic walk/run
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_Move:
@@ -25,7 +25,7 @@ Sonic_Move:
 .notright:
 		move.b	obAngle(a0),d0
 		addi.b	#$20,d0
-		andi.b	#$C0,d0		; is Sonic on a	slope?
+		andi.b	#$C0,d0		; is Sonic on a slope?
 		bne.w	Sonic_ResetScr	; if yes, branch
 		tst.w	obInertia(a0)	; is Sonic moving?
 		bne.w	Sonic_ResetScr	; if yes, branch
@@ -109,7 +109,7 @@ loc_12FBE:
 
 loc_12FC2:
 		move.b	(v_jpadhold2).w,d0
-		andi.b	#btnL+btnR,d0	; is left/right	pressed?
+		andi.b	#btnL+btnR,d0	; is left/right pressed?
 		bne.s	loc_12FEE	; if yes, branch
 		move.w	obInertia(a0),d0
 		beq.s	loc_12FEE
@@ -193,7 +193,7 @@ locret_1307C:
 ; End of function Sonic_Move
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_MoveLeft:
@@ -244,7 +244,7 @@ locret_130E8:
 ; End of function Sonic_MoveLeft
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_MoveRight:

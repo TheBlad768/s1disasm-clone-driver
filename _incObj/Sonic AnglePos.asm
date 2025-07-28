@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	change Sonic's angle & position as he walks along the floor
+; Subroutine to change Sonic's angle & position as he walks along the floor
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_AnglePos:
@@ -159,10 +159,10 @@ locret_1470A:
 		rts	
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	change Sonic's angle as he walks along the floor
+; Subroutine to change Sonic's angle as he walks along the floor
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_Angle:
@@ -188,10 +188,10 @@ loc_1476A:
 ; End of function Sonic_Angle
 
 ; ---------------------------------------------------------------------------
-; Subroutine allowing Sonic to walk up a vertical slope/wall to	his right
+; Subroutine allowing Sonic to walk up a vertical slope/wall to his right
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_WalkVertR:
@@ -258,7 +258,7 @@ loc_147FE:
 ; Subroutine allowing Sonic to walk upside-down
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_WalkCeiling:
@@ -323,10 +323,10 @@ loc_148A0:
 ; End of function Sonic_WalkCeiling
 
 ; ---------------------------------------------------------------------------
-; Subroutine allowing Sonic to walk up a vertical slope/wall to	his left
+; Subroutine allowing Sonic to walk up a vertical slope/wall to his left
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_WalkVertL:

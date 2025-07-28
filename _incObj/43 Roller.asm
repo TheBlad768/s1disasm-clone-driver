@@ -19,7 +19,7 @@ Roll_Main:	; Routine 0
 		bsr.w	ObjFloorDist
 		tst.w	d1
 		bpl.s	locret_E052
-		add.w	d1,obY(a0)	; match	roller's position with the floor
+		add.w	d1,obY(a0)	; match roller's position with the floor
 		move.w	#0,obVelY(a0)
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Roll,obMap(a0)
@@ -70,7 +70,7 @@ Roll_RollChk:
 		move.w	(v_player+obX).w,d0
 		subi.w	#$100,d0
 		bcs.s	loc_E0D2
-		sub.w	obX(a0),d0	; check	distance between Roller	and Sonic
+		sub.w	obX(a0),d0	; check distance between Roller and Sonic
 		bcs.s	loc_E0D2
 		addq.b	#4,ob2ndRout(a0)
 		move.b	#2,obAnim(a0)
@@ -129,14 +129,14 @@ Roll_MatchFloor:
 		bsr.w	ObjFloorDist
 		tst.w	d1
 		bpl.s	locret_E150
-		add.w	d1,obY(a0)	; match	Roller's position with the floor
+		add.w	d1,obY(a0)	; match Roller's position with the floor
 		subq.b	#2,ob2ndRout(a0)
 		move.w	#0,obVelY(a0)
 
 locret_E150:
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Roll_Stop:
@@ -149,7 +149,7 @@ Roll_Stop:
 		move.b	#0,obAnim(a0)
 		move.b	#$E,obColType(a0)
 		clr.w	obVelX(a0)
-		move.w	#120,objoff_30(a0)	; set waiting time to 2	seconds
+		move.w	#120,objoff_30(a0)	; set waiting time to 2 seconds
 		move.b	#2,ob2ndRout(a0)
 		bset	#7,objoff_32(a0)
 

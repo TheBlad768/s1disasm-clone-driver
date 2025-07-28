@@ -108,7 +108,7 @@ FBlock_Action:	; Routine 2
 		move.w	obX(a0),-(sp)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object subtype
-		andi.w	#$F,d0		; read only the	2nd digit
+		andi.w	#$F,d0		; read only the 2nd digit
 		add.w	d0,d0
 		move.w	.index(pc,d0.w),d1
 		jsr	.index(pc,d1.w)	; move block subroutines

@@ -1,13 +1,13 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	pause the game
+; Subroutine to pause the game
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PauseGame:
 		nop	
-		tst.b	(v_lives).w	; do you have any lives	left?
+		tst.b	(v_lives).w	; do you have any lives left?
 		beq.s	Unpause		; if not, branch
 		tst.w	(f_pause).w	; is game already paused?
 		bne.s	Pause_StopGame	; if yes, branch

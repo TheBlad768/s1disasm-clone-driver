@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - ground saws	and pizza cutters (SBZ)
+; Sprite mappings - ground saws and pizza cutters (SBZ)
 ; ---------------------------------------------------------------------------
 Map_Saw_internal:	mappingsTable
 	mappingsTableEntry.w	.pizzacutter1

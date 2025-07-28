@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	animate	Sonic's sprites
+; Subroutine to animate Sonic's sprites
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_Animate:
@@ -17,7 +17,7 @@ Sonic_Animate:
 
 .do:
 		add.w	d0,d0
-		adda.w	(a1,d0.w),a1	; jump to appropriate animation	script
+		adda.w	(a1,d0.w),a1	; jump to appropriate animation script
 		move.b	(a1),d0
 		bmi.s	.walkrunroll	; if animation is walk/run/roll/jump, branch
 		move.b	obStatus(a0),d1
@@ -43,7 +43,7 @@ Sonic_Animate:
 ; ===========================================================================
 
 .end_FF:
-		addq.b	#1,d0		; is the end flag = $FF	?
+		addq.b	#1,d0		; is the end flag = $FF ?
 		bne.s	.end_FE		; if not, branch
 		move.b	#0,obAniFrame(a0) ; restart the animation
 		move.b	1(a1),d0	; read sprite number
@@ -51,9 +51,9 @@ Sonic_Animate:
 ; ===========================================================================
 
 .end_FE:
-		addq.b	#1,d0		; is the end flag = $FE	?
+		addq.b	#1,d0		; is the end flag = $FE ?
 		bne.s	.end_FD		; if not, branch
-		move.b	2(a1,d1.w),d0	; read the next	byte in	the script
+		move.b	2(a1,d1.w),d0	; read the next byte in the script
 		sub.b	d0,obAniFrame(a0) ; jump back d0 bytes in the script
 		sub.b	d0,d1
 		move.b	1(a1,d1.w),d0	; read sprite number
@@ -61,7 +61,7 @@ Sonic_Animate:
 ; ===========================================================================
 
 .end_FD:
-		addq.b	#1,d0		; is the end flag = $FD	?
+		addq.b	#1,d0		; is the end flag = $FD ?
 		bne.s	.end		; if not, branch
 		move.b	2(a1,d1.w),obAnim(a0) ; read next byte, run that animation
 
@@ -94,13 +94,13 @@ Sonic_Animate:
 		bne.w	.push		; if yes, branch
 
 		lsr.b	#4,d0		; divide angle by $10
-		andi.b	#6,d0		; angle	must be	0, 2, 4	or 6
+		andi.b	#6,d0		; angle must be 0, 2, 4 or 6
 		move.w	obInertia(a0),d2 ; get Sonic's speed
 		bpl.s	.nomodspeed
 		neg.w	d2		; modulus speed
 
 .nomodspeed:
-		lea	(SonAni_Run).l,a1 ; use	running	animation
+		lea	(SonAni_Run).l,a1 ; use running animation
 		cmpi.w	#$600,d2	; is Sonic at running speed?
 		bhs.s	.running	; if yes, branch
 
@@ -136,7 +136,7 @@ Sonic_Animate:
 		lea	(SonAni_Roll2).l,a1 ; use fast animation
 		cmpi.w	#$600,d2	; is Sonic moving fast?
 		bhs.s	.rollfast	; if yes, branch
-		lea	(SonAni_Roll).l,a1 ; use slower	animation
+		lea	(SonAni_Roll).l,a1 ; use slower animation
 
 .rollfast:
 		neg.w	d2

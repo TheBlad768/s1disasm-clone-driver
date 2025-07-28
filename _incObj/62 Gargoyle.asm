@@ -25,7 +25,7 @@ Gar_Main:	; Routine 0
 		move.b	#3,obPriority(a0)
 		move.b	#$10,obActWid(a0)
 		move.b	obSubtype(a0),d0 ; get object type
-		andi.w	#$F,d0		; read only the	2nd digit
+		andi.w	#$F,d0		; read only the 2nd digit
 		move.b	Gar_SpitRate(pc,d0.w),obDelayAni(a0) ; set fireball spit rate
 		move.b	obDelayAni(a0),obTimeFrame(a0)
 		andi.b	#$F,obSubtype(a0)
@@ -85,9 +85,9 @@ Gar_AniFire:	; Routine 6
 		bsr.w	ObjHitWallLeft
 		tst.w	d1
 	if FixBugs
-		bmi.s	.delete		; delete if the	fireball hits a	wall
+		bmi.s	.delete		; delete if the fireball hits a wall
 	else
-		bmi.w	DeleteObject	; delete if the	fireball hits a	wall
+		bmi.w	DeleteObject	; delete if the fireball hits a wall
 	endif
 		rts	
 

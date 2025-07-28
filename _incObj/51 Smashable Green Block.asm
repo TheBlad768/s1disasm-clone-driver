@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 51 - smashable	green block (MZ)
+; Object 51 - smashable green block (MZ)
 ; ---------------------------------------------------------------------------
 
 SmashBlock:
@@ -58,7 +58,7 @@ sonicAniFrame = objoff_32		; Sonic's current animation number
 		clr.b	obSolid(a0)
 		move.b	#1,obFrame(a0)
 		lea	(Smab_Speeds).l,a4 ; load broken fragment speed data
-		moveq	#3,d1		; set number of	fragments to 4
+		moveq	#3,d1		; set number of fragments to 4
 		move.w	#$38,d2
 		bsr.w	SmashObject
 		bsr.w	FindFreeObj

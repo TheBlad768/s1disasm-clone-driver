@@ -38,7 +38,7 @@ MDis_Animate:	; Routine 2
 ; ===========================================================================
 
 ; ---------------------------------------------------------------------------
-; Object 27 - explosion	from a destroyed enemy or monitor
+; Object 27 - explosion from a destroyed enemy or monitor
 ; ---------------------------------------------------------------------------
 
 ExplosionItem:
@@ -86,7 +86,7 @@ ExItem_Animate:	; Routine 4 (2 for ExplosionBomb)
 		bra.w	DisplaySprite
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 3F - explosion	from a destroyed boss, bomb or cannonball
+; Object 3F - explosion from a destroyed boss, bomb or cannonball
 ; ---------------------------------------------------------------------------
 
 ExplosionBomb:

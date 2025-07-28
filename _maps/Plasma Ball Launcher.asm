@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - energy ball	launcher (FZ)
+; Sprite mappings - energy ball launcher (FZ)
 ; ---------------------------------------------------------------------------
 Map_PLaunch_internal:	mappingsTable
 	mappingsTableEntry.w	.red

@@ -95,7 +95,7 @@ loc_19762:	; Routine 4
 BossBlock_Delete:
 		jmp	(DeleteObject).l
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 BossBlock_Break:

@@ -180,7 +180,7 @@ BossMarble_MakeLava:
 		jsr	(FindFreeObj).l
 		bne.s	loc_1844A
 		_move.b	#id_LavaBall,obID(a1) ; load lava ball object
-		move.w	#boss_mz_y+$D8,obY(a1)	; set Y	position
+		move.w	#boss_mz_y+$D8,obY(a1)	; set Y position
 		jsr	(RandomNumber).l
 		andi.l	#$FFFF,d0
 		divu.w	#$50,d0

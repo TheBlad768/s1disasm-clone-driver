@@ -1,4 +1,4 @@
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Bri_MoveSonic:
@@ -19,7 +19,7 @@ Bri_MoveSonic:
 ; End of function Bri_MoveSonic
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Bri_Bend:
@@ -95,7 +95,7 @@ locret_76CA:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; GHZ bridge-bending data
-; (Defines how the bridge bends	when Sonic walks across	it)
+; (Defines how the bridge bends when Sonic walks across it)
 ; ---------------------------------------------------------------------------
 Obj11_BendData:	binclude	"misc/ghzbend1.bin"
 		even
@@ -112,7 +112,7 @@ Bri_ChkDel:
 .deletebridge:
 		moveq	#0,d2
 		lea	obSubtype(a0),a2 ; load bridge length
-		move.b	(a2)+,d2	; move bridge length to	d2
+		move.b	(a2)+,d2	; move bridge length to d2
 		subq.b	#1,d2		; subtract 1
 		bcs.s	.delparent
 

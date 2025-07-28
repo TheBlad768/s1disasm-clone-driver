@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - points that	appear when you	destroy	something
+; Sprite mappings - points that appear when you destroy something
 ; ---------------------------------------------------------------------------
 Map_Poi_internal:	mappingsTable
 	mappingsTableEntry.w	byte_94BC

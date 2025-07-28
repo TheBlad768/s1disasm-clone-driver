@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	push Sonic down	a slope	while he's rolling
+; Subroutine to push Sonic down a slope while he's rolling
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Sonic_RollRepel:

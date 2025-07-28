@@ -103,10 +103,10 @@ Anml_FromEnemy:
 		lea	Anml_Variables(pc),a1
 		adda.w	d0,a1
 		move.w	(a1)+,objoff_32(a0)	; load horizontal speed
-		move.w	(a1)+,objoff_34(a0)	; load vertical	speed
+		move.w	(a1)+,objoff_34(a0)	; load vertical speed
 		move.l	(a1)+,obMap(a0)	; load mappings
 		move.w	#make_art_tile(ArtTile_Animal_1,0,0),obGfx(a0)	; VRAM setting for 1st animal
-		btst	#0,objoff_30(a0)	; is 1st animal	used?
+		btst	#0,objoff_30(a0)	; is 1st animal used?
 		beq.s	loc_90C0	; if yes, branch
 		move.w	#make_art_tile(ArtTile_Animal_2,0,0),obGfx(a0)	; VRAM setting for 2nd animal
 
@@ -396,7 +396,7 @@ loc_93EC:
 locret_9402:
 		rts	
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_9404:

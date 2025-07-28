@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 6C - vanishing	platforms (SBZ)
+; Object 6C - vanishing platforms (SBZ)
 ; ---------------------------------------------------------------------------
 
 VanishPlatform:
@@ -26,7 +26,7 @@ VanP_Main:	; Routine 0
 		move.b	#4,obPriority(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object type
-		andi.w	#$F,d0		; read only the	2nd digit
+		andi.w	#$F,d0		; read only the 2nd digit
 		addq.w	#1,d0		; add 1
 		lsl.w	#7,d0		; multiply by $80
 		move.w	d0,d1
@@ -35,7 +35,7 @@ VanP_Main:	; Routine 0
 		move.w	d0,vanp_timelen(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object type
-		andi.w	#$F0,d0		; read only the	1st digit
+		andi.w	#$F0,d0		; read only the 1st digit
 		addi.w	#$80,d1
 		mulu.w	d1,d0
 		lsr.l	#8,d0

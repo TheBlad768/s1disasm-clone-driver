@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	load level boundaries and start	locations
+; Subroutine to load level boundaries and start locations
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LevelSizeLoad:
@@ -18,7 +18,7 @@ LevelSizeLoad:
 		move.w	d0,d1
 		add.w	d0,d0
 		add.w	d1,d0
-		lea	LevelSizeArray(pc,d0.w),a0 ; load level	boundaries
+		lea	LevelSizeArray(pc,d0.w),a0 ; load level boundaries
 		move.w	(a0)+,d0
 		move.w	d0,(v_unused11).w
 		move.l	(a0)+,d0
@@ -211,10 +211,10 @@ BGScrollBlockSizes:
 		dc.w $100
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	set scroll speed of some backgrounds
+; Subroutine to set scroll speed of some backgrounds
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 BgScrollSpeed:

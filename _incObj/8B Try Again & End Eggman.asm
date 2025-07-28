@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 8B - Eggman on "TRY AGAIN" and "END"	screens
+; Object 8B - Eggman on "TRY AGAIN" and "END" screens
 ; ---------------------------------------------------------------------------
 
 EndEggman:

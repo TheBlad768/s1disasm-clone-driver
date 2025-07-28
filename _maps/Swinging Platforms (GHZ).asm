@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - GHZ	and MZ swinging	platforms
+; Sprite mappings - GHZ and MZ swinging platforms
 ; ---------------------------------------------------------------------------
 Map_Swing_GHZ_internal:	mappingsTable
 	mappingsTableEntry.w	.block

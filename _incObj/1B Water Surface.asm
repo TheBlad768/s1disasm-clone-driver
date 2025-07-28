@@ -32,14 +32,14 @@ Surf_Action:	; Routine 2
 		addi.w	#$20,d1
 
 .even:
-		move.w	d1,obX(a0)	; match	obj x-position to screen position
+		move.w	d1,obX(a0)	; match obj x-position to screen position
 		move.w	(v_waterpos1).w,d1
-		move.w	d1,obY(a0)	; match	obj y-position to water	height
+		move.w	d1,obY(a0)	; match obj y-position to water height
 		tst.b	surf_freeze(a0)
 		bne.s	.stopped
 		btst	#bitStart,(v_jpadpress1).w ; is Start button pressed?
 		beq.s	.animate	; if not, branch
-		addq.b	#3,obFrame(a0)	; use different	frames
+		addq.b	#3,obFrame(a0)	; use different frames
 		move.b	#1,surf_freeze(a0) ; stop animation
 		bra.s	.display
 ; ===========================================================================

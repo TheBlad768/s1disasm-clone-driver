@@ -9,10 +9,10 @@ Hud_10:		dc.l 10
 Hud_1:		dc.l 1
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	load time numbers patterns
+; Subroutine to load time numbers patterns
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hud_Mins:
@@ -22,7 +22,7 @@ Hud_Mins:
 ; End of function Hud_Mins
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hud_Secs:
@@ -77,10 +77,10 @@ loc_1C9D6:
 ; End of function Hud_Secs
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	load time/ring bonus numbers patterns
+; Subroutine to load time/ring bonus numbers patterns
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hud_TimeRingBonus:
@@ -145,10 +145,10 @@ Hud_ClrBonusLoop:
 ; End of function Hud_TimeRingBonus
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	load uncompressed lives	counter	patterns
+; Subroutine to load uncompressed lives counter patterns
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hud_Lives:

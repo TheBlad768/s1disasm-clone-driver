@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - spiked balls on the	seesaws	(SLZ)
+; Sprite mappings - spiked balls on the seesaws (SLZ)
 ; ---------------------------------------------------------------------------
 Map_SSawBall_internal:	mappingsTable
 	mappingsTableEntry.w	.red
