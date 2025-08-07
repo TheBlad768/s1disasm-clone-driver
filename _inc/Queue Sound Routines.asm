@@ -7,7 +7,7 @@
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
-
+; PlaySound:
 QueueSound1:
 		move.b	d0,(v_snddriver_ram.v_soundqueue0).w
 		rts	
@@ -19,7 +19,7 @@ QueueSound1:
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
-
+; PlaySound_Special:
 QueueSound2:
 		move.b	d0,(v_snddriver_ram.v_soundqueue1).w
 		rts	
@@ -31,6 +31,7 @@ QueueSound2:
 ; Enabling "FixBugs" will make this usable.
 ; ---------------------------------------------------------------------------
 
+; PlaySound_Unused:
 QueueSound3:
 		move.b	d0,(v_snddriver_ram.v_soundqueue2).w
 		rts	
