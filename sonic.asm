@@ -3100,7 +3100,7 @@ ColPointers:	dc.l Col_GHZ
 		dc.l Col_SYZ
 		dc.l Col_SBZ
 		zonewarning ColPointers,4
-;  dc.l Col_GHZ ; Pointer for Ending is missing by default.
+;		dc.l Col_GHZ ; Pointer for Ending is missing by default.
 
 		include	"_inc/Oscillatory Routines.asm"
 
