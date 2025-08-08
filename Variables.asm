@@ -233,7 +233,8 @@ v_ssrotate:		ds.w	1		; Special Stage rotation speed
 v_btnpushtime1:		ds.w	1		; button push duration - in level
 v_btnpushtime2:		ds.w	1		; button push duration - in demo
 v_palchgspeed:		ds.w	1		; palette fade/transition speed (0 is fastest)
-v_collindex:		ds.l	1		; ROM address for collision index of current level
+v_collindex:		ds.w	1		; RAM address for collision index of current level
+			ds.b	2		; unused
 v_palss_num:		ds.w	1		; palette cycling in Special Stage - reference number
 v_palss_time:		ds.w	1		; palette cycling in Special Stage - time until next change
 v_palss_index:		ds.w	1		; palette cycling in Special Stage - index into palette cycle 2 (unused?)

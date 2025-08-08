@@ -3087,7 +3087,7 @@ ColIndexLoad:
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
 		lsl.w	#3,d0				; MJ: multiply by 8 not 4
-		move.l	#v_collision1&$FFFFFF,(v_collindex).w
+		move.w	#v_collision1,(v_collindex).w
 		move.w	d0,-(sp)
 		movea.l	ColPointers(pc,d0.w),a0		; MJ: get first collision set
 		lea	(v_collision1).w,a1
@@ -7285,12 +7285,12 @@ ConvertCollisionArray:
 
 
 Sonic_WalkSpeed:
-		move.l	#v_collision1&$FFFFFF,(v_collindex).w	; MJ: load first collision data location
-		cmpi.b	#$C,(v_top_solid_bit).w			; MJ: is second collision set to be used?
-		beq.s	.first					; MJ: if not, branch
-		move.l	#v_collision2&$FFFFFF,(v_collindex).w	; MJ: load second collision data location
+		move.w	#v_collision1,(v_collindex).w	; MJ: load first collision data location
+		cmpi.b	#$C,(v_top_solid_bit).w		; MJ: is second collision set to be used?
+		beq.s	.first				; MJ: if not, branch
+		move.w	#v_collision2,(v_collindex).w	; MJ: load second collision data location
 .first:
-		move.b	(v_lrb_solid_bit).w,d5			; MJ: load L/R/B soldity bit
+		move.b	(v_lrb_solid_bit).w,d5		; MJ: load L/R/B soldity bit
 		move.l	obX(a0),d3
 		move.l	obY(a0),d2
 		move.w	obVelX(a0),d1
@@ -7346,12 +7346,12 @@ loc_14D3C:
 
 
 sub_14D48:
-		move.l	#v_collision1&$FFFFFF,(v_collindex).w	; MJ: load first collision data location
-		cmpi.b	#$C,(v_top_solid_bit).w			; MJ: is second collision set to be used?
-		beq.s	.first					; MJ: if not, branch
-		move.l	#v_collision2&$FFFFFF,(v_collindex).w	; MJ: load second collision data location
+		move.w	#v_collision1,(v_collindex).w	; MJ: load first collision data location
+		cmpi.b	#$C,(v_top_solid_bit).w		; MJ: is second collision set to be used?
+		beq.s	.first				; MJ: if not, branch
+		move.w	#v_collision2,(v_collindex).w	; MJ: load second collision data location
 .first:
-		move.b	(v_lrb_solid_bit).w,d5			; MJ: load L/R/B soldity bit
+		move.b	(v_lrb_solid_bit).w,d5		; MJ: load L/R/B soldity bit
 		move.b	d0,(v_anglebuffer).w
 		move.b	d0,(v_anglebuffer2).w
 		addi.b	#$20,d0
@@ -7373,12 +7373,12 @@ sub_14D48:
 
 
 Sonic_HitFloor:
-		move.l	#v_collision1&$FFFFFF,(v_collindex).w	; MJ: load first collision data location
-		cmpi.b	#$C,(v_top_solid_bit).w			; MJ: is second collision set to be used?
-		beq.s	.first					; MJ: if not, branch
-		move.l	#v_collision2&$FFFFFF,(v_collindex).w	; MJ: load second collision data location
+		move.w	#v_collision1,(v_collindex).w	; MJ: load first collision data location
+		cmpi.b	#$C,(v_top_solid_bit).w		; MJ: is second collision set to be used?
+		beq.s	.first				; MJ: if not, branch
+		move.w	#v_collision2,(v_collindex).w	; MJ: load second collision data location
 .first:
-		move.b	(v_top_solid_bit).w,d5			; MJ: load L/R/B soldity bit
+		move.b	(v_top_solid_bit).w,d5		; MJ: load L/R/B soldity bit
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 		moveq	#0,d0

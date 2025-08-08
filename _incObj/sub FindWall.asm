@@ -19,7 +19,7 @@ loc_14B1E:
 ; ===========================================================================
 
 loc_14B2C:
-		movea.l	(v_collindex).w,a2	; MJ: load address of collision for level
+		movea.w	(v_collindex).w,a2	; MJ: load address of collision for level
 		move.b	(a2,d0.w),d0		; MJ: load correct colision ID based on the block ID
 		andi.w	#$FF,d0			; MJ: keep within FF
 		beq.s	loc_14B1E		; MJ: if it's null, branch
@@ -100,7 +100,7 @@ loc_14BC6:
 ; ===========================================================================
 
 loc_14BD4:
-		movea.l	(v_collindex).w,a2
+		movea.w	(v_collindex).w,a2
 		move.b	(a2,d0.w),d0
 		andi.w	#$FF,d0
 		beq.s	loc_14BC6

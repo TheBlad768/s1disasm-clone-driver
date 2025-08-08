@@ -34,7 +34,7 @@ FindFloor:
 ; ===========================================================================
 
 .issolid:
-		movea.l	(v_collindex).w,a2	; MJ: load collision index address
+		movea.w	(v_collindex).w,a2	; MJ: load collision index address
 		move.b	(a2,d0.w),d0		; MJ: load correct Collision ID based on the Block ID
 		andi.w	#$FF,d0			; MJ: clear the left byte
 		beq.s	.isblank		; MJ: if collision ID is 00, branch
@@ -115,7 +115,7 @@ FindFloor2:
 ; ===========================================================================
 
 .issolid:
-		movea.l	(v_collindex).w,a2
+		movea.w	(v_collindex).w,a2
 		move.b	(a2,d0.w),d0
 		andi.w	#$FF,d0
 		beq.s	.isblank2

@@ -6,12 +6,12 @@
 
 
 Sonic_AnglePos:
-		move.l	#v_collision1&$FFFFFF,(v_collindex).w	; MJ: load first collision data location
-		cmpi.b	#$C,(v_top_solid_bit).w			; MJ: is second collision set to be used?
-		beq.s	.first					; MJ: if not, branch
-		move.l	#v_collision2&$FFFFFF,(v_collindex).w	; MJ: load second collision data location
+		move.w	#v_collision1,(v_collindex).w	; MJ: load first collision data location
+		cmpi.b	#$C,(v_top_solid_bit).w		; MJ: is second collision set to be used?
+		beq.s	.first				; MJ: if not, branch
+		move.w	#v_collision2,(v_collindex).w	; MJ: load second collision data location
 .first:
-		move.b	(v_top_solid_bit).w,d5			; MJ: load L/R/B soldity bit
+		move.b	(v_top_solid_bit).w,d5		; MJ: load L/R/B soldity bit
 		btst	#3,obStatus(a0)
 		beq.s	loc_14602
 		moveq	#0,d0
