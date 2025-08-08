@@ -169,7 +169,7 @@ DynWater_LZ3:
 		bhs.s	.setwaterlz3	; if not, branch
 
 		move.w	#$4C8,d1	; set new water height
-		move.w	#$F8F9,(v_lvllayout+$50C).w ; update level layout
+		move.w	#$F8F9,(v_lvllayout+$100*5+12).w ; update level layout
 		move.b	#1,(v_wtr_routine).w ; use second routine next
 		move.w	#sfx_Rumbling,d0
 		bsr.w	QueueSound2 ; play sound $B7 (rumbling)
@@ -457,12 +457,13 @@ Slide_Speeds:
 		dc.b -11
 		even
 
-Slide_Chunks:	dc.b $05,$06,$09,$0A				; MJ: Chunks to read (128x128 ID's)
+Slide_Chunks:
+		dc.b $05,$06,$09,$0A				; MJ: Chunks to read (128x128 ID's)
 		dc.b $FA,$FB,$FC,$FD
 		dc.b $0B,$0C,$0D,$0E
 		dc.b $15,$16,$F8,$F9
 		dc.b $19,$1A,$1B,$1C
 		dc.b $17
-; byte_3FCF:
+; byte_3FCF
 Slide_Chunks_End
 		even

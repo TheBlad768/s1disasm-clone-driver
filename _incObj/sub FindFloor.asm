@@ -52,7 +52,7 @@ FindFloor:
 		beq.s	.noflip2		; MJ: if not, branch
 		addi.b	#$40,(a4)		; MJ: increase angle ID by 40..
 		neg.b	(a4)			; MJ: ..reverse the angle ID..
-		subi.b	#$40,(a4)		; MJ: ..and subtract 40 again 
+		subi.b	#$40,(a4)		; MJ: ..and subtract 40 again
 
 .noflip2:
 		andi.w	#$F,d1			; MJ: get only within 10 (d1 is pixel based on the collision block)

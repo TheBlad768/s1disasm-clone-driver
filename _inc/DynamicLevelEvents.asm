@@ -195,7 +195,7 @@ DLE_LZ12:
 DLE_LZ3:
 		tst.b	(f_switch+$F).w	; has switch $F been pressed?
 		beq.s	loc_6F28	; if not, branch
-		lea	(v_lvllayout+$50C).w,a1
+		lea	(v_lvllayout+$100*5+12).w,a1
 		cmpi.w	#$1718,(a1)
 		beq.s	loc_6F28
 		move.w	#$1718,(a1)		; modify level layout

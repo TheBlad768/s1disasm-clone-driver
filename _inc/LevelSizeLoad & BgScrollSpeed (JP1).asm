@@ -103,7 +103,7 @@ LevSz_StartLoc:
 		move.w	(v_zone).w,d0
 		lsl.b	#6,d0
 		lsr.w	#4,d0
-		lea	StartLocArray(pc,d0.w),a1 ; load Sonic's start location address
+		lea	StartLocArray(pc,d0.w),a1 ; load Sonic's start location
 		tst.w	(f_demo).w	; is ending demo mode on?
 		bpl.s	LevSz_SonicPos	; if not, branch
 
@@ -155,7 +155,6 @@ SetScr_WithinTop:
 SetScr_WithinBottom:
 		move.w	d0,(v_screenposy).w ; set vertical screen position
 		bra.w	BgScrollSpeed
-
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Sonic start location array
