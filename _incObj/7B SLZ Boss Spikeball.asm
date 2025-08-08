@@ -176,7 +176,7 @@ loc_18EAA:	; Routine 6
 	if FixBugs
 		moveq	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d2
 	else
-		moveq	#(v_objend-(v_objspace+object_size*1))/object_size/2-1,d2	; Nonsensical length, it only covers the first half of object RAM.
+		moveq	#(v_objspace_end-(v_objspace+object_size*1))/object_size/2-1,d2	; Nonsensical length, it only covers the first half of object RAM.
 	endif
 
 loc_18EB4:
@@ -302,7 +302,7 @@ loc_18FDC:
 		movea.l	(sp)+,a0
 		move.b	#2,obRoutine(a2)
 		move.w	#sfx_Spring,d0
-		jsr	(PlaySound_Special).l	; play "spring" sound
+		jsr	(QueueSound2).l	; play "spring" sound
 
 loc_19008:
 		clr.w	obVelX(a0)

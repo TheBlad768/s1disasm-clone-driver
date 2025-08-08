@@ -16,9 +16,9 @@ locVRAM:	macro loc,controlport
 ; input: source, length, destination
 ; ---------------------------------------------------------------------------
 
-writeVRAM:	macro source,length,destination
+writeVRAM:	macro source,destination
 		lea	(vdp_control_port).l,a5
-		move.l	#$94000000+(((length>>1)&$FF00)<<8)+$9300+((length>>1)&$FF),(a5)
+		move.l	#$94000000+((((source_end-source)>>1)&$FF00)<<8)+$9300+(((source_end-source)>>1)&$FF),(a5)
 		move.l	#$96000000+(((source>>1)&$FF00)<<8)+$9500+((source>>1)&$FF),(a5)
 		move.w	#$9700+((((source>>1)&$FF0000)>>16)&$7F),(a5)
 		move.w	#$4000+((destination)&$3FFF),(a5)
@@ -31,9 +31,9 @@ writeVRAM:	macro source,length,destination
 ; input: source, length, destination
 ; ---------------------------------------------------------------------------
 
-writeCRAM:	macro source,length,destination
+writeCRAM:	macro source,destination
 		lea	(vdp_control_port).l,a5
-		move.l	#$94000000+(((length>>1)&$FF00)<<8)+$9300+((length>>1)&$FF),(a5)
+		move.l	#$94000000+((((source_end-source)>>1)&$FF00)<<8)+$9300+(((source_end-source)>>1)&$FF),(a5)
 		move.l	#$96000000+(((source>>1)&$FF00)<<8)+$9500+((source>>1)&$FF),(a5)
 		move.w	#$9700+((((source>>1)&$FF0000)>>16)&$7F),(a5)
 		move.w	#$C000+(destination&$3FFF),(a5)
@@ -46,12 +46,12 @@ writeCRAM:	macro source,length,destination
 ; input: value, length, destination
 ; ---------------------------------------------------------------------------
 
-fillVRAM:	macro byte,length,loc
+fillVRAM:	macro byte,start,end
 		lea	(vdp_control_port).l,a5
 		move.w	#$8F01,(a5) ; Set increment to 1, since DMA fill writes bytes
-		move.l	#$94000000+((((length)-1)&$FF00)<<8)+$9300+(((length)-1)&$FF),(a5)
+		move.l	#$94000000+((((end)-(start)-1)&$FF00)<<8)+$9300+(((end)-(start)-1)&$FF),(a5)
 		move.w	#$9780,(a5)
-		move.l	#$40000080+(((loc)&$3FFF)<<16)+(((loc)&$C000)>>14),(a5)
+		move.l	#$40000080+(((start)&$3FFF)<<16)+(((start)&$C000)>>14),(a5)
 		move.w	#(byte)|(byte)<<8,(vdp_data_port).l
 .wait:		move.w	(a5),d1
 		btst	#1,d1
@@ -64,20 +64,25 @@ fillVRAM:	macro byte,length,loc
 ; input: start, end
 ; ---------------------------------------------------------------------------
 
-clearRAM:	macro start,end
-		lea	(start).w,a1
+clearRAM:	macro startAddress,endAddress
+	if "endAddress"<>""
+.length := (endAddress)-(startAddress)
+	else
+.length := startAddress_end-startAddress
+	endif
+		lea	(startAddress).w,a1
 		moveq	#0,d0
-		move.w	#((end)-(start))/4-1,d1
+		move.w	#.length/4-1,d1
 
 .loop:
 		move.l	d0,(a1)+
 		dbf	d1,.loop
 
-	if (end-start)&2
+	if (endAddress-startAddress)&2
 		move.w	d0,(a1)+
 	endif
 
-	if (end-start)&1
+	if (endAddress-startAddress)&1
 		move.b	d0,(a1)+
 	endif
 		endm
@@ -90,8 +95,8 @@ clearRAM:	macro start,end
 copyTilemap:	macro source,destination,width,height
 		lea	(source).l,a1
 		locVRAM	destination,d0
-		moveq	#width,d1
-		moveq	#height,d2
+		moveq	#(width)-1,d1
+		moveq	#(height)-1,d2
 		bsr.w	TilemapToVRAM
 		endm
 
@@ -116,11 +121,11 @@ waitZ80:	macro
 ; reset the Z80
 ; ---------------------------------------------------------------------------
 
-resetZ80:	macro
+deassertZ80Reset:	macro
 		move.w	#$100,(z80_reset).l
 		endm
 
-resetZ80a:	macro
+assertZ80Reset:	macro
 		move.w	#0,(z80_reset).l
 		endm
 
@@ -291,10 +296,3 @@ make_art_tile function addr,pal,pri,((pri&1)<<15)|((pal&3)<<13)|addr
 SonicMappingsVer = 1
 SonicDplcVer = 1
 		include	"_maps/MapMacros.asm"
-
-; ---------------------------------------------------------------------------
-; turn a sample rate into a djnz loop counter
-; ---------------------------------------------------------------------------
-
-pcmLoopCounter function sampleRate,baseCycles, 1+(53693175/15/(sampleRate)-(baseCycles)+(13/2))/13
-dpcmLoopCounter function sampleRate, pcmLoopCounter(sampleRate,301/2) ; 301 is the number of cycles zPlayPCMLoop takes.

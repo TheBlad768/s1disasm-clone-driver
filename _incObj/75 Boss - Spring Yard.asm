@@ -110,10 +110,10 @@ loc_19202:
 		bne.s	loc_1923A
 		move.b	#$20,objoff_3E(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l	; play boss damage sound
+		jsr	(QueueSound2).l	; play boss damage sound
 
 loc_1923A:
-		lea	(v_pal_dry+$22).w,a1
+		lea	(v_palette+$22).w,a1
 		moveq	#0,d0
 		tst.w	(a1)
 		bne.s	loc_19248
@@ -350,7 +350,7 @@ BossSpringYard_FindBlocks:
 		moveq	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d0
 	else
 		lea	(v_objspace+object_size*1).w,a1 ; Nonsensical starting point, since dynamic object allocations begin at v_lvlobjspace.
-		moveq	#(v_objend-(v_objspace+object_size*1))/object_size/2-1,d0	; Nonsensical length, it only covers the first half of object RAM.
+		moveq	#(v_objspace_end-(v_objspace+object_size*1))/object_size/2-1,d0	; Nonsensical length, it only covers the first half of object RAM.
 	endif
 		moveq	#id_BossBlock,d1
 		move.b	objoff_34(a0),d2
@@ -426,7 +426,7 @@ loc_194DA:
 loc_194E0:
 		clr.w	obVelY(a0)
 		move.w	#bgm_SYZ,d0
-		jsr	(PlaySound).l		; play SYZ music
+		jsr	(QueueSound1).l		; play SYZ music
 
 loc_194EE:
 		bra.w	loc_191F2

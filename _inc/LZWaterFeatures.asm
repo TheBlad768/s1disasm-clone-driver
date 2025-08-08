@@ -172,7 +172,7 @@ DynWater_LZ3:
 		move.w	#$F8F9,(v_lvllayout+$50C).w ; update level layout
 		move.b	#1,(v_wtr_routine).w ; use second routine next
 		move.w	#sfx_Rumbling,d0
-		bsr.w	PlaySound_Special ; play sound $B7 (rumbling)
+		bsr.w	QueueSound2 ; play sound $B7 (rumbling)
 
 .setwaterlz3:
 		move.w	d1,(v_waterpos3).w
@@ -316,7 +316,7 @@ LZWindTunnels:
 		andi.b	#$3F,d0		; does VInt counter fall on 0, $40, $80 or $C0?
 		bne.s	.skipsound	; if not, branch
 		move.w	#sfx_Waterfall,d0
-		jsr	(PlaySound_Special).l	; play rushing water sound (only every $40 frames)
+		jsr	(QueueSound2).l	; play rushing water sound (only every $40 frames)
 
 .skipsound:
 		tst.b	(f_wtunnelallow).w ; are wind tunnels disabled?
@@ -345,12 +345,12 @@ LZWindTunnels:
 		move.w	#0,obVelY(a1)
 		move.b	#id_Float2,obAnim(a1)	; use floating animation
 		bset	#1,obStatus(a1)
-		btst	#0,(v_jpadhold2).w ; is up pressed?
+		btst	#bitUp,(v_jpadhold2).w ; is up pressed?
 		beq.s	.down		; if not, branch
 		subq.w	#1,obY(a1)	; move Sonic up on pole
 
 .down:
-		btst	#1,(v_jpadhold2).w ; is down being pressed?
+		btst	#bitDn,(v_jpadhold2).w ; is down being pressed?
 		beq.s	.end		; if not, branch
 		addq.w	#1,obY(a1)	; move Sonic down on pole
 
@@ -440,7 +440,7 @@ loc_3F9A:
 		andi.b	#$1F,d0
 		bne.s	locret_3FBE
 		move.w	#sfx_Waterfall,d0
-		jsr	(PlaySound_Special).l	; play water sound
+		jsr	(QueueSound2).l	; play water sound
 
 locret_3FBE:
 		rts	

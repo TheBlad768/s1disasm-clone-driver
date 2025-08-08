@@ -156,7 +156,7 @@ loc_19EC6:
 		move.w	#1,objoff_32(a0)
 		clr.b	objoff_35(a0)
 		move.w	#sfx_Rumbling,d0
-		jsr	(PlaySound_Special).l	; play rumbling sound
+		jsr	(QueueSound2).l	; play rumbling sound
 
 loc_19F10:
 		tst.w	objoff_32(a0)
@@ -198,7 +198,7 @@ loc_19F6A:
 		subq.b	#1,obColProp(a0)
 		move.b	#$64,objoff_35(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l	; play boss damage sound
+		jsr	(QueueSound2).l	; play boss damage sound
 
 loc_19F88:
 		subq.b	#1,objoff_35(a0)
@@ -267,7 +267,7 @@ locret_1A01E:
 
 loc_1A020:
 		move.w	#sfx_Electric,d0
-		jmp	(PlaySound_Special).l	; play electricity sound
+		jmp	(QueueSound2).l	; play electricity sound
 ; ===========================================================================
 
 loc_1A02A:
@@ -419,7 +419,7 @@ loc_1A1D4:
 		bne.s	loc_1A216
 		move.w	#$1E,objoff_30(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l	; play boss damage sound
+		jsr	(QueueSound2).l	; play boss damage sound
 
 loc_1A1FC:
 		subq.w	#1,objoff_30(a0)
@@ -441,7 +441,7 @@ loc_1A216:
 		clr.w	(v_player+obInertia).w
 		tst.w	obVelY(a0)
 		bpl.s	loc_1A248
-		move.w	#$100,(v_jpadhold2).w
+		move.w	#btnUp<<8,(v_jpadhold2).w
 
 loc_1A23A:
 		cmpi.w	#boss_fz_end+$E0,(v_player+obX).w

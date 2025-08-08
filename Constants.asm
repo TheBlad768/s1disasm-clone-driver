@@ -5,6 +5,13 @@
 Size_of_SegaPCM:		equ $6978
 Size_of_DAC_driver_guess:	equ $1760
 
+; Clocks
+Master_Clock:    equ 53693175
+M68000_Clock:    equ Master_Clock/7
+Z80_Clock:       equ Master_Clock/15
+FM_Sample_Rate:  equ M68000_Clock/(6*6*4)
+PSG_Sample_Rate: equ Z80_Clock/16
+
 ; VDP addressses
 vdp_data_port:		equ $C00000
 vdp_control_port:	equ $C00004
@@ -14,9 +21,6 @@ psg_input:		equ $C00011
 
 ; Z80 addresses
 z80_ram:		equ $A00000	; start of Z80 RAM
-z80_dac_timpani_pitch:	equ z80_ram+zTimpani_Pitch
-z80_dac_status:		equ z80_ram+zDAC_Status
-z80_dac_sample:		equ z80_ram+zDAC_Sample
 z80_ram_end:		equ $A02000	; end of non-reserved Z80 RAM
 z80_version:		equ $A10001
 z80_port_1_data:	equ $A10002
@@ -34,43 +38,13 @@ sram_port:		equ $A130F1
 
 security_addr:		equ $A14000
 
-; Sound driver constants
-TrackPlaybackControl:	equ 0		; All tracks
-TrackVoiceControl:	equ 1		; All tracks
-TrackTempoDivider:	equ 2		; All tracks
-TrackDataPointer:	equ 4		; All tracks (4 bytes)
-TrackTranspose:		equ 8		; FM/PSG only (sometimes written to as a word, to include TrackVolume)
-TrackVolume:		equ 9		; FM/PSG only
-TrackAMSFMSPan:		equ $A		; FM/DAC only
-TrackVoiceIndex:	equ $B		; FM/PSG only
-TrackVolEnvIndex:	equ $C		; PSG only
-TrackStackPointer:	equ $D		; All tracks
-TrackDurationTimeout:	equ $E		; All tracks
-TrackSavedDuration:	equ $F		; All tracks
-TrackSavedDAC:		equ $10		; DAC only
-TrackFreq:		equ $10		; FM/PSG only (2 bytes)
-TrackNoteTimeout:	equ $12		; FM/PSG only
-TrackNoteTimeoutMaster:equ $13		; FM/PSG only
-TrackModulationPtr:	equ $14		; FM/PSG only (4 bytes)
-TrackModulationWait:	equ $18		; FM/PSG only
-TrackModulationSpeed:	equ $19		; FM/PSG only
-TrackModulationDelta:	equ $1A		; FM/PSG only
-TrackModulationSteps:	equ $1B		; FM/PSG only
-TrackModulationVal:	equ $1C		; FM/PSG only (2 bytes)
-TrackDetune:		equ $1E		; FM/PSG only
-TrackPSGNoise:		equ $1F		; PSG only
-TrackFeedbackAlgo:	equ $1F		; FM only
-TrackVoicePtr:		equ $20		; FM SFX only (4 bytes)
-TrackLoopCounters:	equ $24		; All tracks (multiple bytes)
-TrackGoSubStack:	equ TrackSz	; All tracks (multiple bytes. This constant won't get to be used because of an optimisation that just uses TrackSz)
-
-TrackSz:	equ $30
-
 ; VRAM data
 vram_fg:	equ $C000	; foreground namespace
 vram_bg:	equ $E000	; background namespace
 vram_sprites:	equ $F800	; sprite table
 vram_hscroll:	equ $FC00	; horizontal scroll table
+tile_size:	equ 8*8/2
+plane_size_64x32:	equ 64*32*2
 
 ; Game modes
 id_Sega:	equ ptr_GM_Sega-GameModeArray	; $00
@@ -103,24 +77,24 @@ cAqua:		equ cGreen+cBlue	; colour aqua
 cMagenta:	equ cBlue+cRed		; colour magenta
 
 ; Joypad input
-btnStart:	equ %10000000 ; Start button	($80)
-btnA:		equ %01000000 ; A		($40)
-btnC:		equ %00100000 ; C		($20)
-btnB:		equ %00010000 ; B		($10)
-btnR:		equ %00001000 ; Right		($08)
-btnL:		equ %00000100 ; Left		($04)
-btnDn:		equ %00000010 ; Down		($02)
-btnUp:		equ %00000001 ; Up		($01)
-btnDir:		equ %00001111 ; Any direction	($0F)
-btnABC:		equ %01110000 ; A, B or C	($70)
-bitStart:	equ 7
-bitA:		equ 6
-bitC:		equ 5
-bitB:		equ 4
-bitR:		equ 3
-bitL:		equ 2
-bitDn:		equ 1
 bitUp:		equ 0
+bitDn:		equ 1
+bitL:		equ 2
+bitR:		equ 3
+bitB:		equ 4
+bitC:		equ 5
+bitA:		equ 6
+bitStart:	equ 7
+btnUp:		equ 1<<bitUp			; ($01)
+btnDn:		equ 1<<bitDn			; ($02)
+btnL:		equ 1<<bitL			; ($04)
+btnR:		equ 1<<bitR			; ($08)
+btnB:		equ 1<<bitB			; ($10)
+btnC:		equ 1<<bitC			; ($20)
+btnA:		equ 1<<bitA			; ($40)
+btnStart:	equ 1<<bitStart			; ($80)
+btnDir:		equ btnUp|btnDn|btnL|btnR	; ($0F)
+btnABC:		equ btnA|btnB|btnC		; ($70)
 
 ; Object variables
 obID:		equ 0	; object ID number
@@ -550,7 +524,11 @@ ArtTile_Mini_Sonic:		equ $551
 ArtTile_Bonuses:		equ $570
 ArtTile_Signpost:		equ $680
 
+; Sega Screen
+ArtTile_Sega_Tiles:		equ $000
+
 ; Title Screen
+ArtTile_Title_Japanese_Text:	equ $000
 ArtTile_Title_Foreground:	equ $200
 ArtTile_Title_Sonic:		equ $300
 ArtTile_Title_Trademark:	equ $510
@@ -558,6 +536,7 @@ ArtTile_Level_Select_Font:	equ $680
 
 ; Continue Screen
 ArtTile_Continue_Sonic:		equ $500
+ArtTile_Continue_Number:	equ $6FC
 
 ; Ending
 ArtTile_Ending_Flowers:		equ $3A0
@@ -581,16 +560,22 @@ ArtTile_Try_Again_Eggman:	equ $3E1
 ArtTile_SS_Background_Clouds:	equ $000
 ArtTile_SS_Background_Fish:	equ $051
 ArtTile_SS_Wall:		equ $142
+ArtTile_SS_Plane_1:		equ $200
 ArtTile_SS_Bumper:		equ $23B
 ArtTile_SS_Goal:		equ $251
 ArtTile_SS_Up_Down:		equ $263
 ArtTile_SS_R_Block:		equ $2F0
+ArtTile_SS_Plane_2:		equ $300
 ArtTile_SS_Extra_Life:		equ $370
 ArtTile_SS_Emerald_Sparkle:	equ $3F0
+ArtTile_SS_Plane_3:		equ $400
 ArtTile_SS_Red_White_Block:	equ $470
 ArtTile_SS_Ghost_Block:		equ $4F0
+ArtTile_SS_Plane_4:		equ $500
 ArtTile_SS_W_Block:		equ $570
 ArtTile_SS_Glass:		equ $5F0
+ArtTile_SS_Plane_5:		equ $600
+ArtTile_SS_Plane_6:		equ $700
 ArtTile_SS_Emerald:		equ $770
 ArtTile_SS_Zone_1:		equ $797
 ArtTile_SS_Zone_2:		equ $7A0
@@ -605,3 +590,6 @@ ArtTile_SS_Results_Emeralds:	equ $541
 ; Font
 ArtTile_Sonic_Team_Font:	equ $0A6
 ArtTile_Credits_Font:		equ $5A0
+
+; Error Handler
+ArtTile_Error_Handler_Font:	equ $7C0

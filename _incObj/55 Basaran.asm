@@ -99,7 +99,7 @@ Bas_Action:	; Routine 2
 		andi.b	#$F,d0
 		bne.s	.nosound
 		move.w	#sfx_Basaran,d0
-		jsr	(PlaySound_Special).l	; play flapping sound every 16th frame
+		jsr	(QueueSound2).l	; play flapping sound every 16th frame
 
 .nosound:
 		bsr.w	SpeedToPos
@@ -141,11 +141,11 @@ Bas_Action:	; Routine 2
 ; Subroutine to check Sonic's distance from the basaran
 
 ; input:
-;	d2 = distance to compare
+; d2 = distance to compare
 
 ; output:
-;	d0 = distance between Sonic and basaran
-;	d1 = speed/direction for basaran to fly
+; d0 = distance between Sonic and basaran
+; d1 = speed/direction for basaran to fly
 
 .chkdistance:
 		move.w	#$100,d1

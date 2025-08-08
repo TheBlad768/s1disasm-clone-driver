@@ -93,10 +93,10 @@ Newt_Action:	; Routine 2
 		addq.b	#2,ob2ndRout(a0)
 		move.b	#2,obAnim(a0)
 		btst	#5,obGfx(a0)
-		beq.s	.pppppppp
+		beq.s	.notgreen
 		addq.b	#1,obAnim(a0)
 
-.pppppppp:
+.notgreen:
 		move.b	#$D,obColType(a0)
 		move.w	#$200,obVelX(a0) ; move newtron horizontally
 		btst	#0,obStatus(a0)

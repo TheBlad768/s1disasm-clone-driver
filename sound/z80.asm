@@ -66,8 +66,7 @@ zBankSwitchLoop:
 ; ===========================================================================
 	ensure1byteoffset 10h
 zDACDecodeTbl:
-	db	   0,	 1,   2,   4,   8,  10h,  20h,  40h
-	db	 80h,	-1,  -2,  -4,  -8, -10h, -20h, -40h
+	binclude "sound/dac/dpcm/deltas.bin"
 
 zCheckForSamples:
 	ld	hl,zDAC_Sample			; Load the address of next sample.
@@ -187,7 +186,7 @@ zPlayPCMLoop:
 ;
 zPlay_SegaPCM:
 	ld	de,zmake68kPtr(SegaPCM)		; de = bank-relative location of the SEGA sound
-	ld	hl,SegaPCM_End-SegaPCM		; hl = size of the SEGA sound
+	ld	hl,SegaPCM.size			; hl = size of the SEGA sound
 	ld	c,2Ah				; c = Command to select DAC output register
 
 zPlaySEGAPCMLoop:
@@ -195,7 +194,7 @@ zPlaySEGAPCMLoop:
 	ld	(ix+0),c		; 19	; Select DAC output register
 	ld	(ix+1),a		; 19	; Send current data
 
-	ld	b,pcmLoopCounter(16000,90) ; 7	; b = pitch of the SEGA sample
+	ld	b,pcmLoopCounter(16000)	; 7	; b = pitch of the SEGA sample
 	djnz	$			; 8	; Pitch loop
 
 	inc	de			; 6	; Point to next byte of DAC sample
@@ -206,32 +205,24 @@ zPlaySEGAPCMLoop:
 					; 90 in total
 	jp	zCheckForSamples		; SEGA sound is done; wait for new samples
 
-zPCMMetadata macro label,sampleRate
-	dw	label				; Start
-	dw	label_End-label			; Length
-	dw	dpcmLoopCounter(sampleRate)	; Pitch
-	dw	0				; Padding
+zPCMMetadata macro label
+	dw	label					; Start
+	dw	label.size				; Length
+	dw	dpcmLoopCounter(label.sample_rate)	; Pitch
+	dw	0					; Padding
     endm
 
 ; DPCM metadata
 zPCM_Table:
-	zPCMMetadata zDAC_Kick,8250
-	zPCMMetadata zDAC_Snare,24000
+	zPCMMetadata zDAC_Kick
+	zPCMMetadata zDAC_Snare
 zTimpani_Pitch = $+4
-	zPCMMetadata zDAC_Timpani,7250
+	zPCMMetadata zDAC_Timpani
 
 ; DPCM data
-zDAC_Kick:
-	binclude "sound/dac/kick.dpcm"
-zDAC_Kick_End:
-
-zDAC_Snare:
-	binclude "sound/dac/snare.dpcm"
-zDAC_Snare_End:
-
-zDAC_Timpani:
-	binclude "sound/dac/timpani.dpcm"
-zDAC_Timpani_End:
+zDAC_Kick:	include "sound/dac/dpcm/generated/kick.inc"
+zDAC_Snare:	include "sound/dac/dpcm/generated/snare.inc"
+zDAC_Timpani:	include "sound/dac/dpcm/generated/timpani.inc"
 
 	if MOMPASS==2
 		if $ > z80_stack

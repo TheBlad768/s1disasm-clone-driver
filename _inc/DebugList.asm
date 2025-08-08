@@ -90,8 +90,16 @@ dbug:	macro map,object,subtype,frame,vram
 	dbug	Map_Push,	id_PushBlock,	0,	0,	make_art_tile(ArtTile_MZ_Block,2,0)
 	dbug	Map_Yad,	id_Yadrin,	0,	0,	make_art_tile(ArtTile_Yadrin,1,0)
 	dbug	Map_Smab,	id_SmashBlock,	0,	0,	make_art_tile(ArtTile_MZ_Block,2,0)
-	dbug	Map_MBlock,	id_MovingBlock,	0,	0,	make_art_tile(ArtTile_MZ_Block,0,0)
-	dbug	Map_CFlo,	id_CollapseFloor, 0,	0,	make_art_tile(ArtTile_MZ_Block,3,0)
+	if FixBugs
+	dbug	Map_MBlock,	id_MovingBlock,	0,	0,	make_art_tile(ArtTile_MZ_Block,2,0)
+	else
+	dbug	Map_MBlock,	id_MovingBlock,	0,	0,	make_art_tile(ArtTile_MZ_Block,0,0) ; Incorrect palette line.
+	endif
+	if FixBugs
+	dbug	Map_CFlo,	id_CollapseFloor, 0,	0,	make_art_tile(ArtTile_MZ_Block,2,0)
+	else
+	dbug	Map_CFlo,	id_CollapseFloor, 0,	0,	make_art_tile(ArtTile_MZ_Block,3,0) ; Incorrect palette line.
+	endif
 	dbug	Map_LTag,	id_LavaTag,	0,	0,	make_art_tile(ArtTile_Monitor,0,1)
 	dbug	Map_Bas,	id_Basaran,	0,	0,	make_art_tile(ArtTile_Basaran,0,0)
 	dbug	Map_Cat,	id_Caterkiller,	0,	0,	make_art_tile(ArtTile_MZ_SYZ_Caterkiller,1,0)
