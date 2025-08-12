@@ -3,12 +3,8 @@
 ; input: 16-bit VRAM address, control port (default is (vdp_control_port).l)
 ; ---------------------------------------------------------------------------
 
-locVRAM:	macro loc,controlport
-		if ("controlport"=="")
-		move.l	#($40000000+(((loc)&$3FFF)<<16)+(((loc)&$C000)>>14)),(vdp_control_port).l
-		else
+locVRAM:	macro loc,controlport=(vdp_control_port).l
 		move.l	#($40000000+(((loc)&$3FFF)<<16)+(((loc)&$C000)>>14)),controlport
-		endif
 		endm
 
 ; ---------------------------------------------------------------------------
