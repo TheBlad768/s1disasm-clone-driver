@@ -2720,12 +2720,58 @@ LevSel_CharOk:
 ; ---------------------------------------------------------------------------
 ; Level select menu text
 ; ---------------------------------------------------------------------------
-LevelMenuText:	if Revision=0
-		binclude	"misc/Level Select Text.bin"
-		else
-		binclude	"misc/Level Select Text (JP1).bin"
-		endif
+
+LevelMenuText:
+		charset ' ', $FF
+		charset '0', "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09"
+		charset '$', $0A
+		charset '-', $0B
+		charset '=', $0C
+		charset '>', $0D
+		;charset '>', $0E ; there are two identical right arrows back-to-back in the menutext font, for some reason
+		charset 'Y', "\x0F\x10" ; Y and Z come before A-X
+		charset 'A', "\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F\x20\x21\x22\x23\x24\x25\x26\x27\x28"
+
+		dc.b "GREEN HILL ZONE  STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+	if Revision=0
+		dc.b "LABYRINTH ZONE   STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "MARBLE ZONE      STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "STAR LIGHT ZONE  STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "SPRING YARD ZONE STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+	else
+		dc.b "MARBLE ZONE      STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "SPRING YARD ZONE STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "LABYRINTH ZONE   STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "STAR LIGHT ZONE  STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+	endif
+		dc.b "SCRAP BRAIN ZONE STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "FINAL ZONE              "
+		dc.b "SPECIAL STAGE           "
+		dc.b "SOUND SELECT            "
+
 		even
+		charset
+
 ; ---------------------------------------------------------------------------
 ; Music playlist
 ; ---------------------------------------------------------------------------
