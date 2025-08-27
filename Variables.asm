@@ -98,10 +98,12 @@ v_endeggman	= v_objspace+object_size*2	; object variable space for Eggman after 
 v_tryagain	= v_objspace+object_size*3	; object variable space for the "TRY AGAIN" text ($40 bytes)
 v_eggmanchaos	= v_objspace+object_size*32	; object variable space for the emeralds juggled by Eggman ($180 bytes)
 
-v_snddriver_ram:		ds.b $5C0		; sound driver state
-			ds.b	$40		; unused
+Snd_driver_RAM:		ds.b $5C0		; sound driver state
+			ds.b $40		; unused
 
-SegaCD_Mode	= v_snddriver_ram+$580
+SegaCD_Mode		= Snd_driver_RAM+$580
+
+Snd_driver_RAM_end	= *
 
 v_gamemode:		ds.b	1		; game mode (00=Sega; 04=Title; 08=Demo; 0C=Level; 10=SS; 14=Cont; 18=End; 1C=Credit; +8C=PreLevel)
 			ds.b	1		; unused
