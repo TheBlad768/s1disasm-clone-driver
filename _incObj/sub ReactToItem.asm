@@ -36,7 +36,7 @@ ReactToItem:
 		dbf	d6,.loop	; repeat $5F more times
 
 		moveq	#0,d0
-		rts	
+		rts
 ; ===========================================================================
 .sizes:		;   width, height
 		dc.b  $14, $14		; $01
@@ -135,7 +135,7 @@ ReactToItem:
 		addq.b	#2,obRoutine(a1) ; advance the object's routine counter
 
 .invincible:
-		rts	
+		rts
 ; ===========================================================================
 
 React_Monitor:
@@ -151,7 +151,7 @@ React_Monitor:
 		tst.b	ob2ndRout(a1)
 		bne.s	.donothing
 		addq.b	#4,ob2ndRout(a1) ; advance the monitor's routine counter
-		rts	
+		rts
 ; ===========================================================================
 
 .movingdown:
@@ -161,7 +161,7 @@ React_Monitor:
 		addq.b	#2,obRoutine(a1) ; advance the monitor's routine counter
 
 .donothing:
-		rts	
+		rts
 ; ===========================================================================
 
 React_Enemy:
@@ -184,7 +184,7 @@ React_Enemy:
 		bset	#7,obStatus(a1)
 
 .flagnotclear:
-		rts	
+		rts
 ; ===========================================================================
 
 .breakenemy:
@@ -214,16 +214,16 @@ React_Enemy:
 		cmp.w	obY(a1),d0
 		bhs.s	.bounceup
 		neg.w	obVelY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .bouncedown:
 		addi.w	#$100,obVelY(a0)
-		rts	
+		rts
 
 .bounceup:
 		subi.w	#$100,obVelY(a0)
-		rts	
+		rts
 
 .points:	dc.w 10, 20, 50, 100	; points awarded div 10
 
@@ -238,7 +238,7 @@ React_ChkHurt:
 
 .isflashing:
 		moveq	#-1,d0
-		rts	
+		rts
 ; ===========================================================================
 
 .notinvincible:
@@ -312,7 +312,7 @@ HurtSonic:
 .sound:
 		jsr	(QueueSound2).l
 		moveq	#-1,d0
-		rts	
+		rts
 ; ===========================================================================
 
 .norings:
@@ -359,7 +359,7 @@ KillSonic:
 
 .dontdie:
 		moveq	#-1,d0
-		rts	
+		rts
 ; End of function KillSonic
 
 
@@ -377,7 +377,7 @@ React_Special:
 		beq.s	.D7orE1		; if yes, branch
 		cmpi.b	#$21,d1		; is collision type $E1 ?
 		beq.s	.D7orE1		; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 .caterkiller:
@@ -416,5 +416,5 @@ React_Special:
 
 .D7orE1:
 		addq.b	#1,obColProp(a1)
-		rts	
+		rts
 ; End of function React_Special

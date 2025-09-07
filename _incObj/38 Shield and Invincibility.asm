@@ -22,13 +22,13 @@ Shi_Main:	; Routine 0
 		tst.b	obAnim(a0)	; is object a shield?
 		bne.s	.stars		; if not, branch
 		move.w	#make_art_tile(ArtTile_Shield,0,0),obGfx(a0)	; shield specific code
-		rts	
+		rts
 ; ===========================================================================
 
 .stars:
 		addq.b	#2,obRoutine(a0) ; goto Shi_Stars next
 		move.w	#make_art_tile(ArtTile_Invincibility,0,0),obGfx(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Shi_Shield:	; Routine 2
@@ -44,7 +44,7 @@ Shi_Shield:	; Routine 2
 		jmp	(DisplaySprite).l
 
 .remove:
-		rts	
+		rts
 
 .delete:
 		jmp	(DeleteObject).l

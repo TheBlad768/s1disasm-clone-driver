@@ -16,7 +16,7 @@ Over_Index:	dc.w Over_ChkPLC-Over_Index
 Over_ChkPLC:	; Routine 0
 		tst.l	(v_plc_buffer).w ; are the pattern load cues empty?
 		beq.s	Over_Main	; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 Over_Main:
@@ -48,7 +48,7 @@ Over_UpdatePos:
 Over_SetWait:
 		move.w	#720,obTimeFrame(a0) ; set time delay to 12 seconds
 		addq.b	#2,obRoutine(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Over_Wait:	; Routine 4

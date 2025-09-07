@@ -58,7 +58,7 @@ Bas_Action:	; Routine 2
 		addq.b	#2,ob2ndRout(a0)
 
 .nodrop:
-		rts	
+		rts
 ; ===========================================================================
 
 .dropfly:
@@ -77,7 +77,7 @@ Bas_Action:	; Routine 2
 		addq.b	#2,ob2ndRout(a0)
 
 .dropmore:
-		rts	
+		rts
 
 .chkdel:
 		tst.b	obRender(a0)
@@ -91,7 +91,7 @@ Bas_Action:	; Routine 2
 	else
 		bpl.w	DeleteObject
 	endif
-		rts	
+		rts
 ; ===========================================================================
 
 .flapsound:
@@ -118,7 +118,7 @@ Bas_Action:	; Routine 2
 		addq.b	#2,ob2ndRout(a0)
 
 .dontflyup:
-		rts	
+		rts
 ; ===========================================================================
 
 .flyup:
@@ -135,7 +135,7 @@ Bas_Action:	; Routine 2
 		clr.b	ob2ndRout(a0)
 
 .noceiling:
-		rts	
+		rts
 ; ===========================================================================
 
 ; Subroutine to check Sonic's distance from the basaran
@@ -159,11 +159,11 @@ Bas_Action:	; Routine 2
 
 .right:
 		cmp.w	d2,d0
-		rts	
+		rts
 ; ===========================================================================
 ; unused crap
 		bsr.w	SpeedToPos
 		bsr.w	DisplaySprite
 		tst.b	obRender(a0)
 		bpl.w	DeleteObject
-		rts	
+		rts

@@ -18,7 +18,7 @@ DisplaySprite:
 		move.w	a0,(a1)		; insert RAM address for object
 
 DSpr_Full:
-		rts	
+		rts
 
 ; End of function DisplaySprite
 
@@ -43,6 +43,6 @@ DisplaySprite1:
 		move.w	a1,(a2)
 
 DSpr1_Full:
-		rts	
+		rts
 
 ; End of function DisplaySprite1

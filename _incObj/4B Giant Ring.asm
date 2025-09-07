@@ -25,7 +25,7 @@ GRing_Main:	; Routine 0
 		beq.w	GRing_Delete	; if yes, branch
 		cmpi.w	#50,(v_rings).w	; do you have at least 50 rings?
 		bhs.s	GRing_Okay	; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 GRing_Okay:

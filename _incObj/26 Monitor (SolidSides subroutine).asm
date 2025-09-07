@@ -42,12 +42,12 @@ loc_A4DC:
 
 loc_A4E2:
 		moveq	#1,d1
-		rts	
+		rts
 ; ===========================================================================
 
 loc_A4E6:
 		moveq	#0,d1
-		rts	
+		rts
 ; ===========================================================================
 
 loc_A4EA:
@@ -62,5 +62,5 @@ loc_A4EA:
 		cmp.w	d2,d1
 		bhs.s	loc_A4E2
 		moveq	#-1,d1
-		rts	
+		rts
 ; End of function Mon_SolidSides

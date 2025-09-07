@@ -74,7 +74,7 @@ Gird_ChgMove:
 		move.w	(a1)+,gird_time(a0)
 		addq.b	#8,gird_set(a0)	; use next settings
 		move.w	#7,gird_delay(a0)
-		rts	
+		rts
 ; ===========================================================================
 .settings:	;   x-speed, y-speed, duration
 		dc.w   $100,	 0,   $60,     0 ; right

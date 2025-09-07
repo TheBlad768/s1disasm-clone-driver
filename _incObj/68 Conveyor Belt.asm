@@ -33,7 +33,7 @@ Conv_Main:	; Routine 0
 Conv_Action:	; Routine 2
 		bsr.s	.movesonic
 		out_of_range.s	.delete
-		rts	
+		rts
 
 .delete:
 		jmp	(DeleteObject).l
@@ -61,4 +61,4 @@ Conv_Action:	; Routine 2
 		add.w	d0,obX(a1)
 
 .notonconveyor:
-		rts	
+		rts

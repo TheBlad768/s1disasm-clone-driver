@@ -27,4 +27,4 @@ Poi_Slower:	; Routine 2
 		bpl.w	DeleteObject	; if not, delete
 		bsr.w	SpeedToPos
 		addi.w	#$18,obVelY(a0)	; reduce object speed
-		rts	
+		rts

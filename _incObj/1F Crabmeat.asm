@@ -44,7 +44,7 @@ Crab_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 
 .floornotfound:
-		rts	
+		rts
 ; ===========================================================================
 
 Crab_Action:	; Routine 2
@@ -81,7 +81,7 @@ Crab_Action:	; Routine 2
 
 .dontmove:
 .noflip:
-		rts	
+		rts
 ; ===========================================================================
 
 .fire:
@@ -107,7 +107,7 @@ Crab_Action:	; Routine 2
 		move.w	#$100,obVelX(a1)
 
 .failright:
-		rts	
+		rts
 ; ===========================================================================
 
 .walkonfloor:
@@ -128,7 +128,7 @@ loc_9640:
 		blt.s	loc_966E
 		cmpi.w	#$C,d1
 		bge.s	loc_966E
-		rts	
+		rts
 ; ===========================================================================
 
 loc_9654:
@@ -138,7 +138,7 @@ loc_9654:
 		bsr.w	Crab_SetAni
 		addq.b	#3,d0
 		move.b	d0,obAnim(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_966E:
@@ -147,7 +147,7 @@ loc_966E:
 		move.w	#0,obVelX(a0)
 		bsr.w	Crab_SetAni
 		move.b	d0,obAnim(a0)
-		rts	
+		rts
 ; ---------------------------------------------------------------------------
 ; Subroutine to set the correct animation for a Crabmeat
 ; ---------------------------------------------------------------------------
@@ -167,7 +167,7 @@ Crab_SetAni:
 		moveq	#2,d0
 
 locret_96A2:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_96A4:
@@ -179,14 +179,14 @@ loc_96A4:
 		moveq	#1,d0
 
 locret_96B6:
-		rts	
+		rts
 ; End of function Crab_SetAni
 
 ; ===========================================================================
 
 Crab_Delete:	; Routine 4
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Sub-object - missile that the Crabmeat throws
@@ -220,7 +220,7 @@ Crab_BallMove:	; Routine 8
 		bra.w	DisplaySprite
 	else
 		blo.s	.delete		; if yes, branch
-		rts	
+		rts
 
 .delete:
 		bra.w	DeleteObject

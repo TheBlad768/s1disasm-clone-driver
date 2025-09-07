@@ -81,7 +81,7 @@ Circ_Types:
 		move.w	d1,obX(a0)
 		add.w	circ_origY(a0),d2
 		move.w	d2,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .type04:
@@ -108,4 +108,4 @@ Circ_Types:
 		move.w	d1,obX(a0)
 		add.w	circ_origY(a0),d2
 		move.w	d2,obY(a0)
-		rts	
+		rts

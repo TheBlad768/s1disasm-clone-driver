@@ -48,7 +48,7 @@ Invis_Solid:	; Routine 2
 		jmp	(DisplaySprite).l	; if yes, display the object
 
 .nodisplay:
-		rts	
+		rts
 
 .delete:
 		jmp	(DeleteObject).l

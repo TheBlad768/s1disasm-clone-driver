@@ -30,7 +30,7 @@ CalcSqrt:
 		dbf	d2,loc_2C80
 		lsr.w	#1,d0
 		movem.l	(sp)+,d1-d2
-		rts	
+		rts
 ; ===========================================================================
 
 	loc_2C9A:
@@ -38,5 +38,5 @@ CalcSqrt:
 		dbf	d2,loc_2C80
 		lsr.w	#1,d0
 		movem.l	(sp)+,d1-d2
-		rts	
+		rts
 ; End of function CalcSqrt

@@ -25,4 +25,4 @@ WSnd_PlaySnd:	; Routine 2
 
 WSnd_ChkDel:
 		out_of_range.w	DeleteObject
-		rts	
+		rts

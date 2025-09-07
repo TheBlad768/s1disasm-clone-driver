@@ -104,7 +104,7 @@ LWall_Solid:	; Routine 2
 		out_of_range.s	.chkgone
 
 .moving:
-		rts	
+		rts
 ; ===========================================================================
 
 .chkgone:
@@ -113,7 +113,7 @@ LWall_Solid:	; Routine 2
 		move.b	obRespawnNo(a0),d0
 		bclr	#7,2(a2,d0.w)
 		move.b	#8,obRoutine(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 LWall_Move:	; Routine 6

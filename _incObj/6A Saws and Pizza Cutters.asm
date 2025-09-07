@@ -47,7 +47,7 @@ Saw_Action:	; Routine 2
 ; ===========================================================================
 
 .type00:
-		rts			; doesn't move
+		rts		; doesn't move
 ; ===========================================================================
 
 .type01:
@@ -79,7 +79,7 @@ Saw_Action:	; Routine 2
 		jsr	(QueueSound2).l		; play saw sound
 
 .nosound01:
-		rts	
+		rts
 ; ===========================================================================
 
 .type02:
@@ -110,7 +110,7 @@ Saw_Action:	; Routine 2
 		jsr	(QueueSound2).l		; play saw sound
 
 .nosound02:
-		rts	
+		rts
 ; ===========================================================================
 
 .type03:
@@ -140,7 +140,7 @@ Saw_Action:	; Routine 2
 		addq.l	#4,sp
 
 .nosaw03y:
-		rts	
+		rts
 ; ===========================================================================
 
 .here03:
@@ -152,7 +152,7 @@ Saw_Action:	; Routine 2
 		bchg	#0,obFrame(a0)
 
 .sameframe03:
-		rts	
+		rts
 ; ===========================================================================
 
 .type04:
@@ -180,7 +180,7 @@ Saw_Action:	; Routine 2
 		addq.l	#4,sp
 
 .nosaw04y:
-		rts	
+		rts
 ; ===========================================================================
 
 .here04:
@@ -192,4 +192,4 @@ Saw_Action:	; Routine 2
 		bchg	#0,obFrame(a0)
 
 .sameframe04:
-		rts	
+		rts

@@ -45,7 +45,7 @@ Brick_Action:	; Routine 2
 		if Revision=0
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
-		rts	
+		rts
 		else
 			out_of_range.w	DeleteObject
 			bra.w	DisplaySprite
@@ -59,7 +59,7 @@ Brick_TypeIndex:dc.w Brick_Type00-Brick_TypeIndex
 ; ===========================================================================
 
 Brick_Type00:
-		rts	
+		rts
 ; ===========================================================================
 
 Brick_Type02:
@@ -85,7 +85,7 @@ loc_E8A8:
 		move.w	brick_origY(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)	; update the block's position to make it wobble
-		rts	
+		rts
 ; ===========================================================================
 
 Brick_Type03:
@@ -109,7 +109,7 @@ Brick_Type03:
 		move.b	#0,obSubtype(a0)
 
 locret_E8EE:
-		rts	
+		rts
 ; ===========================================================================
 
 Brick_Type04:
@@ -119,4 +119,4 @@ Brick_Type04:
 		move.w	brick_origY(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)	; make the block wobble
-		rts	
+		rts

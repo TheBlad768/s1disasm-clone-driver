@@ -149,7 +149,7 @@ Drown_ShowNumber:
 		move.b	#id_Drown_AirLeft,obRoutine(a0) ; goto Drown_AirLeft next
 
 .nonumber:
-		rts	
+		rts
 ; ===========================================================================
 Drown_WobbleData:
 		if Revision=0
@@ -245,14 +245,14 @@ Drown_Countdown:; Routine $A
 		move.w	#0,obInertia(a0)
 		move.b	#1,(f_nobgscroll).w
 		movea.l	(sp)+,a0
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_13F86:
 		subq.w	#1,objoff_2C(a0)
 		bne.s	.loc_13F94
 		move.b	#6,(v_player+obRoutine).w
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_13F94:
@@ -335,4 +335,4 @@ Drown_Countdown:; Routine $A
 		clr.w	objoff_36(a0)
 
 .nocountdown:
-		rts	
+		rts

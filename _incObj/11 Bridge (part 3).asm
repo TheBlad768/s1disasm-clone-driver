@@ -15,7 +15,7 @@ Bri_MoveSonic:
 		move.b	obHeight(a1),d1
 		sub.w	d1,d0
 		move.w	d0,obY(a1)	; change Sonic's position on y-axis
-		rts	
+		rts
 ; End of function Bri_MoveSonic
 
 
@@ -89,7 +89,7 @@ loc_76A4:
 		dbf	d2,loc_76A4
 
 locret_76CA:
-		rts	
+		rts
 ; End of function Bri_Bend
 
 ; ===========================================================================
@@ -106,7 +106,7 @@ Obj11_BendData2:binclude	"misc/ghzbend2.bin"
 
 Bri_ChkDel:
 		out_of_range.w	.deletebridge
-		rts	
+		rts
 ; ===========================================================================
 
 .deletebridge:
@@ -131,14 +131,14 @@ Bri_ChkDel:
 
 .delparent:
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Bri_Delete:	; Routine 6, 8
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Bri_Display:	; Routine $A
 		bsr.w	DisplaySprite
-		rts	
+		rts

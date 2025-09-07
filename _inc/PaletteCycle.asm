@@ -53,7 +53,7 @@ PCycGHZ_Go:
 		move.l	4(a0,d0.w),(a1)	; copy palette data to RAM
 
 PCycGHZ_Skip:
-		rts	
+		rts
 ; End of function PalCycle_GHZ
 
 
@@ -122,7 +122,7 @@ loc_1A0A:
 		move.w	4(a0,d0.w),(a1)
 
 PCycLZ_Skip2:
-		rts	
+		rts
 ; End of function PalCycle_LZ
 
 ; ===========================================================================
@@ -130,7 +130,7 @@ PCycLZ_Seq:	dc.b 1,	0, 0, 1, 0, 0, 1, 0
 ; ===========================================================================
 
 PalCycle_MZ:
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -157,7 +157,7 @@ loc_1A60:
 		move.l	2(a0,d0.w),4(a1)
 
 locret_1A80:
-		rts	
+		rts
 ; End of function PalCycle_SLZ
 
 
@@ -184,7 +184,7 @@ PalCycle_SYZ:
 		move.w	2(a0,d1.w),4(a1)
 
 locret_1AC6:
-		rts	
+		rts
 ; End of function PalCycle_SYZ
 
 
@@ -262,5 +262,5 @@ loc_1B52:
 		move.w	4(a0,d0.w),(a1)
 
 locret_1B64:
-		rts	
+		rts
 ; End of function PalCycle_SBZ

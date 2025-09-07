@@ -56,7 +56,7 @@ BossFire_Action:	; Routine 2
 		; DisplaySprite has been moved to avoid a display-after-free bug.
 		jmp	(DisplaySprite).l
 	else
-		rts	
+		rts
 	endif
 ; ===========================================================================
 
@@ -83,7 +83,7 @@ BossFire_Drop:
 		addq.b	#2,ob2ndRout(a0)
 
 locret_18780:
-		rts	
+		rts
 ; ===========================================================================
 
 BossFire_MakeFlame:
@@ -112,7 +112,7 @@ BossFire_Loop:
 
 loc_187CA:
 		addq.b	#2,ob2ndRout(a0)
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -126,7 +126,7 @@ BossFire_Duplicate2:
 		move.w	#$67,obSubtype(a1)
 
 locret_187EE:
-		rts	
+		rts
 ; End of function BossFire_Duplicate2
 
 ; ===========================================================================
@@ -150,17 +150,17 @@ BossFire_Duplicate:
 
 loc_1881E:
 		move.w	obX(a0),objoff_30(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18826:
 		addq.b	#2,ob2ndRout(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1882C:
 		addq.b	#2,obRoutine(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 BossFire_FallEdge:
@@ -189,7 +189,7 @@ loc_18856:
 		subq.b	#2,ob2ndRout(a0)
 
 locret_1887E:
-		rts	
+		rts
 ; ===========================================================================
 
 BossFire_Delete2:

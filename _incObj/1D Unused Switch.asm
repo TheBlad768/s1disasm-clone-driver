@@ -38,12 +38,12 @@ Swi_Action:	; Routine 2
 Swi_ChkDel:
 		bsr.w	DisplaySprite
 		out_of_range.w	Swi_Delete
-		rts	
+		rts
 ; ===========================================================================
 
 Swi_Delete:	; Routine 4
 		bsr.w	DeleteObject
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to check if Sonic touches the object
@@ -72,10 +72,10 @@ Swi_ChkTouch:
 		cmpi.w	#-$10,d0
 		blo.s	Swi_NoTouch
 		moveq	#-1,d0		; Sonic has touched it
-		rts	
+		rts
 ; ===========================================================================
 
 Swi_NoTouch:
 		moveq	#0,d0		; Sonic hasn't touched it
-		rts	
+		rts
 ; End of function Swi_ChkTouch

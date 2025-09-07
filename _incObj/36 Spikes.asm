@@ -108,7 +108,7 @@ loc_CF20:
 Spik_Display:
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject,spik_origX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Spik_Type0x:
@@ -124,7 +124,7 @@ Spik_TypeIndex:	dc.w Spik_Type00-Spik_TypeIndex
 ; ===========================================================================
 
 Spik_Type00:
-		rts			; don't move the object
+		rts		; don't move the object
 ; ===========================================================================
 
 Spik_Type01:
@@ -133,7 +133,7 @@ Spik_Type01:
 		move.b	objoff_34(a0),d0
 		add.w	spik_origY(a0),d0
 		move.w	d0,obY(a0)	; move the object vertically
-		rts	
+		rts
 ; ===========================================================================
 
 Spik_Type02:
@@ -142,7 +142,7 @@ Spik_Type02:
 		move.b	objoff_34(a0),d0
 		add.w	spik_origX(a0),d0
 		move.w	d0,obX(a0)	; move the object horizontally
-		rts	
+		rts
 ; ===========================================================================
 
 Spik_Wait:
@@ -177,4 +177,4 @@ loc_CFC6:
 		move.w	#60,objoff_38(a0)	; set time delay to 1 second
 
 locret_CFE6:
-		rts	
+		rts

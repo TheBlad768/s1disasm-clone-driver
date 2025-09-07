@@ -89,7 +89,7 @@ loc_82FC:
 		move.b	#6,obRoutine(a0) ; run "Ledge_Display" routine
 
 locret_8308:
-		rts	
+		rts
 ; ===========================================================================
 
 Ledge_TimeZero:
@@ -97,9 +97,9 @@ Ledge_TimeZero:
 		bsr.w	DisplaySprite
 		tst.b	obRender(a0)
 		bpl.s	Ledge_Delete
-		rts	
+		rts
 ; ===========================================================================
 
 Ledge_Delete:	; Routine 8
 		bsr.w	DeleteObject
-		rts	
+		rts

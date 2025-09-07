@@ -51,7 +51,7 @@ Bonus_Main:	; Routine 0
 
 .chkdel:
 		out_of_range.s	.delete
-		rts	
+		rts
 
 .delete:
 		jmp	(DeleteObject).l

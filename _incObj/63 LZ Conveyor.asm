@@ -135,7 +135,7 @@ loc_124AA:
 		dbf	d1,LCon_Loop
 
 		addq.l	#4,sp
-		rts	
+		rts
 ; ===========================================================================
 
 loc_124B2:	; Routine 2
@@ -216,7 +216,7 @@ loc_12552:
 
 loc_1256A:
 		bsr.w	SpeedToPos
-		rts	
+		rts
 ; End of function sub_12502
 
 
@@ -258,7 +258,7 @@ loc_125AE:
 		swap	d0
 		move.w	d0,obX+2(a0)
 		clr.w	obY+2(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_125C2:
@@ -276,7 +276,7 @@ loc_125D4:
 		swap	d1
 		move.w	d1,obY+2(a0)
 		clr.w	obX+2(a0)
-		rts	
+		rts
 ; End of function LCon_ChangeDir
 
 ; ===========================================================================

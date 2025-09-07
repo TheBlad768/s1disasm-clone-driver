@@ -19,7 +19,7 @@ FFree_Loop:
 		dbf	d0,FFree_Loop	; repeat $5F times
 
 FFree_Found:
-		rts	
+		rts
 
 ; End of function FindFreeObj
 
@@ -49,6 +49,6 @@ NFree_Loop:
 		dbf	d0,NFree_Loop
 
 NFree_Found:
-		rts	
+		rts
 
 ; End of function FindNextFreeObj

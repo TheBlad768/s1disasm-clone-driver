@@ -47,7 +47,7 @@ FFloor_MakeBlock:
 
 FFloor_ExitMake:
 		addq.b	#2,obRoutine(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 FFloor_ChkBreak:; Routine 2

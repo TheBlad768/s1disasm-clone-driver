@@ -8,7 +8,7 @@
 MoveSonicInDemo:
 		tst.w	(f_demo).w	; is demo mode on?
 		bne.s	MDemo_On	; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 ; This is an unused subroutine for recording a demo
@@ -24,14 +24,14 @@ DemoRecorder:
 		addq.b	#1,1(a1)
 		cmpi.b	#$FF,1(a1)
 		beq.s	.next
-		rts	
+		rts
 
 .next:
 		move.b	d0,2(a1)
 		move.b	#0,3(a1)
 		addq.w	#2,(v_btnpushtime1).w
 		andi.w	#$3FF,(v_btnpushtime1).w
-		rts	
+		rts
 ; ===========================================================================
 
 MDemo_On:
@@ -81,7 +81,7 @@ MDemo_On:
 		addq.w	#2,(v_btnpushtime1).w
 
 .end:
-		rts	
+		rts
 ; End of function MoveSonicInDemo
 
 ; ===========================================================================

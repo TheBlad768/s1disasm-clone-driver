@@ -29,7 +29,7 @@ Roll_Main:	; Routine 0
 		move.b	#$10,obActWid(a0)
 
 locret_E052:
-		rts	
+		rts
 ; ===========================================================================
 
 Roll_Action:	; Routine 2
@@ -79,7 +79,7 @@ Roll_RollChk:
 
 loc_E0D2:
 		addq.l	#4,sp
-		rts	
+		rts
 ; ===========================================================================
 
 Roll_RollNoChk:
@@ -92,12 +92,12 @@ Roll_RollNoChk:
 		move.b	#$8E,obColType(a0)
 
 locret_E0F6:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_E0F8:
 		addq.b	#2,ob2ndRout(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Roll_ChkJump:
@@ -109,7 +109,7 @@ Roll_ChkJump:
 		cmpi.w	#$C,d1
 		bge.s	Roll_Jump
 		add.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Roll_Jump:
@@ -119,7 +119,7 @@ Roll_Jump:
 		move.w	#-$600,obVelY(a0)	; move Roller vertically
 
 locret_E12E:
-		rts	
+		rts
 ; ===========================================================================
 
 Roll_MatchFloor:
@@ -134,7 +134,7 @@ Roll_MatchFloor:
 		move.w	#0,obVelY(a0)
 
 locret_E150:
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -154,5 +154,5 @@ Roll_Stop:
 		bset	#7,objoff_32(a0)
 
 locret_E188:
-		rts	
+		rts
 ; End of function Roll_Stop

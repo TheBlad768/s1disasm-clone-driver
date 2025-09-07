@@ -107,5 +107,5 @@ Kos_SeparateRLE2:
 
 Kos_Done:
 		addq.l	#2,sp	; restore stack pointer
-		rts	
+		rts
 ; End of function KosDec
