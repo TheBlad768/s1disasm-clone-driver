@@ -40,7 +40,7 @@ FindNearestTile:
 
 .blanktile:
 		movea.l	d1,a1
-		rts	
+		rts
 ; ===========================================================================
 
 .specialtile:
@@ -64,5 +64,5 @@ FindNearestTile:
 		andi.w	#$1E,d0
 		add.w	d0,d1
 		movea.l	d1,a1
-		rts	
+		rts
 ; End of function FindNearestTile

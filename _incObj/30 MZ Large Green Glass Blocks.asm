@@ -130,7 +130,7 @@ Glass_TypeIndex:dc.w Glass_Type00-Glass_TypeIndex
 ; ===========================================================================
 
 Glass_Type00:
-		rts	
+		rts
 ; ===========================================================================
 
 Glass_Type01:
@@ -239,4 +239,4 @@ loc_B5EE:
 		move.w	objoff_30(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)
-		rts	
+		rts

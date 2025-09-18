@@ -172,7 +172,7 @@ Debug_ChgItem:
 		move.b	(v_debugitem).w,d0
 		lsl.w	#3,d0
 		move.b	4(a2,d0.w),obSubtype(a1)
-		rts	
+		rts
 ; ===========================================================================
 
 .backtonormal:
@@ -199,7 +199,7 @@ Debug_ChgItem:
 		bset	#1,(v_player+obStatus).w
 
 .stayindebug:
-		rts	
+		rts
 ; End of function Debug_Control
 
 
@@ -213,5 +213,5 @@ Debug_ShowItem:
 		move.l	(a2,d0.w),obMap(a0) ; load mappings for item
 		move.w	6(a2,d0.w),obGfx(a0) ; load VRAM setting for item
 		move.b	5(a2,d0.w),obFrame(a0) ; load frame number for item
-		rts	
+		rts
 ; End of function Debug_ShowItem

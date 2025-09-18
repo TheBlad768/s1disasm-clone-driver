@@ -32,7 +32,7 @@ Hog_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 
 .floornotfound:
-		rts	
+		rts
 ; ===========================================================================
 
 Hog_Action:	; Routine 2

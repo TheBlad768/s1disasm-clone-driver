@@ -249,7 +249,7 @@ UpdateMusic:
 ; loc_71C44:
 DoStartZ80:
 		startZ80
-		rts	
+		rts
 ; End of function UpdateMusic
 
 
@@ -299,7 +299,7 @@ DACUpdateTrack:
 		move.b	d0,(z80_ram+zDAC_Sample).l
 ; locret_71CAA:
 .locret:
-		rts	
+		rts
 ; ===========================================================================
 ; loc_71CAC:
 .timpani:
@@ -309,7 +309,7 @@ DACUpdateTrack:
 		; use this value from then on.
 		move.b	d0,(z80_ram+zTimpani_Pitch).l
 		move.b	#$83,(z80_ram+zDAC_Sample).l	; Use timpani
-		rts	
+		rts
 ; End of function DACUpdateTrack
 
 ; ===========================================================================
@@ -390,7 +390,7 @@ FMSetFreq:
 		lea	FMFrequencies(pc),a0
 		move.w	(a0,d5.w),d6
 		move.w	d6,SMPS_Track.Freq(a5)		; Store new frequency
-		rts	
+		rts
 ; End of function FMSetFreq
 
 
@@ -411,7 +411,7 @@ SetDuration:
 .donemult:
 		move.b	d0,SMPS_Track.SavedDuration(a5)		; Save duration
 		move.b	d0,SMPS_Track.DurationTimeout(a5)	; Save duration timeout
-		rts	
+		rts
 ; End of function SetDuration
 
 ; ===========================================================================
@@ -442,7 +442,7 @@ FinishTrackUpdate:
 		clr.w	SMPS_Track.ModulationVal(a5)		; Reset frequency change
 ; locret_71D9C:
 .locret:
-		rts	
+		rts
 ; End of function FinishTrackUpdate
 
 
@@ -459,7 +459,7 @@ NoteTimeoutUpdate:
 		bmi.w	.psgnoteoff				; If yes, branch
 		jsr	FMNoteOff(pc)
 		addq.w	#4,sp					; Do not return to caller
-		rts	
+		rts
 ; ===========================================================================
 ; loc_71DBE:
 .psgnoteoff:
@@ -467,7 +467,7 @@ NoteTimeoutUpdate:
 		addq.w	#4,sp		; Do not return to caller
 ; locret_71DC4:
 .locret:
-		rts	
+		rts
 ; End of function NoteTimeoutUpdate
 
 
@@ -481,13 +481,13 @@ DoModulation:
 		tst.b	SMPS_Track.ModulationWait(a5)		; Has modulation wait expired?
 		beq.s	.waitdone				; If yes, branch
 		subq.b	#1,SMPS_Track.ModulationWait(a5)	; Update wait timeout
-		rts	
+		rts
 ; ===========================================================================
 ; loc_71DDA:
 .waitdone:
 		subq.b	#1,SMPS_Track.ModulationSpeed(a5)	; Update speed
 		beq.s	.updatemodulation			; If it expired, want to update modulation
-		rts	
+		rts
 ; ===========================================================================
 ; loc_71DE2:
 .updatemodulation:
@@ -497,7 +497,7 @@ DoModulation:
 		bne.s	.calcfreq				; If nonzero, branch
 		move.b	3(a0),SMPS_Track.ModulationSteps(a5)	; Restore from modulation data
 		neg.b	SMPS_Track.ModulationDelta(a5)		; Negate modulation delta
-		rts	
+		rts
 ; ===========================================================================
 ; loc_71DFE:
 .calcfreq:
@@ -510,7 +510,7 @@ DoModulation:
 		subq.w	#4,sp					; In this case, we want to return to caller after all
 ; locret_71E16:
 .locret:
-		rts	
+		rts
 ; End of function DoModulation
 
 
@@ -538,12 +538,12 @@ FMUpdateFreq:
 		jsr	WriteFMIorII(pc)	; (It would be better if this were a jmp)
 ; locret_71E48:
 locret_71E48:
-		rts	
+		rts
 ; ===========================================================================
 ; loc_71E4A:
 FMSetRest:
 		bset	#1,SMPS_Track.PlaybackControl(a5)	; Set 'track at rest' bit
-		rts	
+		rts
 ; End of function FMPrepareNote
 
 ; ===========================================================================
@@ -665,7 +665,7 @@ CycleSoundQueue:
 		_move.b	d3,SMPS_RAM.v_sndprio(a6)	; Set new sound priority
 ; locret_71F4A:
 .locret:
-		rts	
+		rts
 ; End of function CycleSoundQueue
 
 
@@ -708,7 +708,7 @@ PlaySoundID:
 		bls.s	Sound_E0toE4		; Branch if yes
 ; locret_71F8C:
 .locret:
-		rts	
+		rts
 ; ===========================================================================
 
 Sound_E0toE4:
@@ -744,7 +744,7 @@ PlaySegaSound:
 		dbf	d1,.busyloop_outer
 
 		addq.w	#4,sp	; Tamper return value so we don't return to caller
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Play music track $81-$9F
@@ -944,7 +944,7 @@ Sound_PlayBGM:
 ; loc_721B6:
 .locdblret:
 		addq.w	#4,sp	; Tamper with return value to not return to caller
-		rts	
+		rts
 ; ===========================================================================
 ; byte_721BA:
 FMDACInitBytes:	dc.b 6,	0, 1, 2, 4, 5, 6	; first byte is for DAC; then notice the 0, 1, 2 then 4, 5, 6; this is the gap between parts I and II for YM2612 port writes
@@ -1063,12 +1063,12 @@ Sound_PlaySFX:
 		bset	#2,SMPS_RAM.v_spcsfx_psg3_track.PlaybackControl(a6)	; Set 'SFX is overriding' bit
 ; locret_722C4:
 .locret:
-		rts	
+		rts
 ; ===========================================================================
 ; loc_722C6:
 .clear_sndprio:
 		_clr.b	SMPS_RAM.v_sndprio(a6)	; Clear priority
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; RAM addresses for FM and PSG channel variables used by the SFX
@@ -1176,7 +1176,7 @@ Sound_PlaySpecial:
 		move.b	d4,(psg_input).l
 ; locret_723C6:
 .locret:
-		rts	
+		rts
 ; End of function PlaySoundID
 
 ; ===========================================================================
@@ -1291,7 +1291,7 @@ StopSFX:
 		adda.w	#SMPS_Track.len,a5
 		dbf	d7,.trackloop
 
-		rts	
+		rts
 ; End of function StopSFX
 
 
@@ -1340,7 +1340,7 @@ StopSpecialSFX:
 		move.b	SMPS_Track.PSGNoise(a5),(psg_input).l	; Set noise type
 ; locret_724E4:
 .fadedpsg:
-		rts	
+		rts
 ; End of function StopSpecialSFX
 
 ; ===========================================================================
@@ -1355,7 +1355,7 @@ FadeOutMusic:
 		move.b	#$28,SMPS_RAM.v_fadeout_counter(a6)		; Set fadeout counter
 		clr.b	SMPS_RAM.v_music_dac_track.PlaybackControl(a6)	; Stop DAC track
 		clr.b	SMPS_RAM.f_speedup(a6)				; Disable speed shoes tempo
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -1364,7 +1364,7 @@ DoFadeOut:
 		move.b	SMPS_RAM.v_fadeout_delay(a6),d0	; Has fadeout delay expired?
 		beq.s	.continuefade			; Branch if yes
 		subq.b	#1,SMPS_RAM.v_fadeout_delay(a6)
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72510:
 .continuefade:
@@ -1410,7 +1410,7 @@ DoFadeOut:
 		adda.w	#SMPS_Track.len,a5
 		dbf	d7,.psgloop
 
-		rts	
+		rts
 ; End of function DoFadeOut
 
 
@@ -1444,7 +1444,7 @@ FMSilenceAll:
 		subi.b	#$F,d0		; Move to TL operator 1 of next channel
 		dbf	d4,.channelloop
 
-		rts	
+		rts
 ; End of function FMSilenceAll
 
 ; ===========================================================================
@@ -1555,7 +1555,7 @@ TempoWait:
 		adda.w	d0,a0	; Advance to next track
 		dbf	d1,.tempoloop
 
-		rts	
+		rts
 ; End of function TempoWait
 
 ; ===========================================================================
@@ -1569,14 +1569,14 @@ SpeedUpMusic:
 		move.b	SMPS_RAM.v_speeduptempo(a6),SMPS_RAM.v_main_tempo(a6)
 		move.b	SMPS_RAM.v_speeduptempo(a6),SMPS_RAM.v_main_tempo_timeout(a6)
 		move.b	#$80,SMPS_RAM.f_speedup(a6)
-		rts	
+		rts
 ; ===========================================================================
 ; loc_7263E:
 .speedup_1up:
 		move.b	SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_speeduptempo(a6),SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_main_tempo(a6)
 		move.b	SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_speeduptempo(a6),SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_main_tempo_timeout(a6)
 		move.b	#$80,SMPS_RAM.v_1up_ram_copy+SMPS_RAM.f_speedup(a6)
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Change music back to normal speed
@@ -1588,14 +1588,14 @@ SlowDownMusic:
 		move.b	SMPS_RAM.v_tempo_mod(a6),SMPS_RAM.v_main_tempo(a6)
 		move.b	SMPS_RAM.v_tempo_mod(a6),SMPS_RAM.v_main_tempo_timeout(a6)
 		clr.b	SMPS_RAM.f_speedup(a6)
-		rts	
+		rts
 ; ===========================================================================
 ; loc_7266A:
 .slowdown_1up:
 		move.b	SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_tempo_mod(a6),SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_main_tempo(a6)
 		move.b	SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_tempo_mod(a6),SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_main_tempo_timeout(a6)
 		clr.b	SMPS_RAM.v_1up_ram_copy+SMPS_RAM.f_speedup(a6)
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -1604,7 +1604,7 @@ DoFadeIn:
 		tst.b	SMPS_RAM.v_fadein_delay(a6)	; Has fadein delay expired?
 		beq.s	.continuefade			; Branch if yes
 		subq.b	#1,SMPS_RAM.v_fadein_delay(a6)
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72688:
 .continuefade:
@@ -1641,13 +1641,13 @@ DoFadeIn:
 .nextpsg:
 		adda.w	#SMPS_Track.len,a5
 		dbf	d7,.psgloop
-		rts	
+		rts
 ; ===========================================================================
 ; loc_726D6:
 .fadedone:
 		bclr	#2,SMPS_RAM.v_music_dac_track.PlaybackControl(a6)	; Clear 'SFX overriding' bit
 		clr.b	SMPS_RAM.f_fadein_flag(a6)				; Stop fadein
-		rts	
+		rts
 ; End of function DoFadeIn
 
 ; ===========================================================================
@@ -1664,7 +1664,7 @@ FMNoteOn:
 ; ===========================================================================
 ; locret_726FC:
 .locret:
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -1682,7 +1682,7 @@ SendFMNoteOff:
 ; ===========================================================================
 
 locret_72714:
-		rts	
+		rts
 ; End of function FMNoteOff
 
 ; ===========================================================================
@@ -1694,7 +1694,7 @@ WriteFMIorIIMain:
 ; ===========================================================================
 ; locret_72720:
 .locret:
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -1729,7 +1729,7 @@ WriteFMI:
 		bne.s	.waitloop	; Loop if so
 
 		move.b	d1,(ym2612_d0).l
-		rts	
+		rts
 ; End of function WriteFMI
 
 ; ===========================================================================
@@ -1757,7 +1757,7 @@ WriteFMII:
 		bne.s	.waitloop	; Loop if so
 
 		move.b	d1,(ym2612_d1).l
-		rts	
+		rts
 ; End of function WriteFMII
 
 ; ===========================================================================
@@ -1911,14 +1911,14 @@ PSGUpdateFreq:
 		move.b	d6,(psg_input).l
 ; locret_7291E:
 .locret:
-		rts	
+		rts
 ; End of function PSGUpdateFreq
 
 ; ===========================================================================
 ; loc_72920:
 PSGSetRest:
 		bset	#1,SMPS_Track.PlaybackControl(a5)	; Set 'track at rest' bit
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -1969,7 +1969,7 @@ PSGSendVolume:
 		move.b	d6,(psg_input).l
 
 locret_7298A:
-		rts	
+		rts
 ; ===========================================================================
 ; loc_7298C: PSGCheckNoteFill:
 PSGCheckNoteTimeout:
@@ -1977,14 +1977,14 @@ PSGCheckNoteTimeout:
 		beq.s	PSGSendVolume				; Branch if not
 		tst.b	SMPS_Track.NoteTimeout(a5)		; Has note timeout expired?
 		bne.s	PSGSendVolume				; Branch if not
-		rts	
+		rts
 ; End of function SetPSGVolume
 
 ; ===========================================================================
 ; loc_7299A: FlutterDone:
 VolEnvHold:
 		subq.b	#1,SMPS_Track.VolEnvIndex(a5)	; Decrement volume envelope index
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -2009,7 +2009,7 @@ SendPSGNoteOff:
 	endif
 
 locret_729B4:
-		rts	
+		rts
 ; End of function PSGNoteOff
 
 
@@ -2022,7 +2022,7 @@ PSGSilenceAll:
 		move.b	#$BF,(a0)	; Silence PSG 2
 		move.b	#$DF,(a0)	; Silence PSG 3
 		move.b	#$FF,(a0)	; Silence noise channel
-		rts	
+		rts
 ; End of function PSGSilenceAll
 
 ; ===========================================================================
@@ -2138,17 +2138,17 @@ cfPanningAMSFMS:
 ; ===========================================================================
 
 locret_72AEA:
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72AEC: cfAlterNotes:
 cfDetune:
 		move.b	(a4)+,SMPS_Track.Detune(a5)	; Set detune value
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72AF2: cfUnknown1:
 cfSetCommunication:
 		move.b	(a4)+,SMPS_RAM.v_communication_byte(a6)	; Set otherwise unused communication byte to parameter
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72AF8:
 cfJumpReturn:
@@ -2159,7 +2159,7 @@ cfJumpReturn:
 		addq.w	#2,a4				; Skip jump target address from gosub flag
 		addq.b	#4,d0				; Actually 'pop' value
 		move.b	d0,SMPS_Track.StackPointer(a5)	; Set new stack pointer
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72B14:
 cfFadeInToPrevious:
@@ -2213,12 +2213,12 @@ cfFadeInToPrevious:
 		clr.b	SMPS_RAM.f_1up_playing(a6)
 		startZ80
 		addq.w	#8,sp		; Tamper return value so we don't return to caller
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72B9E:
 cfSetTempoDivider:
 		move.b	(a4)+,SMPS_Track.TempoDivider(a5)	; Set tempo divider on current track
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72BA4: cfSetVolume:
 cfChangeFMVolume:
@@ -2229,25 +2229,25 @@ cfChangeFMVolume:
 ; loc_72BAE: cfPreventAttack:
 cfHoldNote:
 		bset	#4,SMPS_Track.PlaybackControl(a5)	; Set 'do not attack next note' bit
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72BB4: cfNoteFill
 cfNoteTimeout:
 		move.b	(a4),SMPS_Track.NoteTimeout(a5)		; Note fill timeout
 		move.b	(a4)+,SMPS_Track.NoteTimeoutMaster(a5)	; Note fill master
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72BBE: cfAddKey:
 cfChangeTransposition:
 		move.b	(a4)+,d0			; Get parameter
 		add.b	d0,SMPS_Track.Transpose(a5)	; Add to transpose value
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72BC6:
 cfSetTempo:
 		move.b	(a4),SMPS_RAM.v_main_tempo(a6)		; Set main tempo
 		move.b	(a4)+,SMPS_RAM.v_main_tempo_timeout(a6)	; And reset timeout (!)
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72BD0: cfSetTempoMod:
 cfSetTempoDividerAll:
@@ -2261,18 +2261,18 @@ cfSetTempoDividerAll:
 		adda.w	d1,a0
 		dbf	d2,.trackloop
 
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72BE6: cfChangeVolume:
 cfChangePSGVolume:
 		move.b	(a4)+,d0			; Get volume change
 		add.b	d0,SMPS_Track.Volume(a5)	; Apply it
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72BEE:
 cfClearPush:
 		clr.b	SMPS_RAM.f_push_playing(a6)	; Allow push sound to be played once more
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72BF4:
 cfStopSpecialFM4:
@@ -2299,7 +2299,7 @@ cfStopSpecialFM4:
 ; loc_72C22:
 .locexit:
 		addq.w	#8,sp	; Tamper with return value so we don't return to caller
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72C26:
 cfSetVoice:
@@ -2364,7 +2364,7 @@ SetVoice:
 		jsr	WriteFMIorII(pc)		; (It would be better if this were a jmp)
 
 locret_72CAA:
-		rts	
+		rts
 ; End of function SetVoice
 
 ; ===========================================================================
@@ -2426,7 +2426,7 @@ SendVoiceTL:
 		dbf	d5,.sendtlloop
 ; locret_72D16:
 .locret:
-		rts	
+		rts
 ; End of function SendVoiceTL
 
 ; ===========================================================================
@@ -2472,12 +2472,12 @@ cfModulation:
 		lsr.b	#1,d0					; ... divided by 2...
 		move.b	d0,SMPS_Track.ModulationSteps(a5)	; ... before being stored
 		clr.w	SMPS_Track.ModulationVal(a5)		; Total accumulated modulation frequency change
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72D52:
 cfEnableModulation:
 		bset	#3,SMPS_Track.PlaybackControl(a5)	; Turn on modulation
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72D58:
 cfStopTrack:
@@ -2554,7 +2554,7 @@ cfStopTrack:
 ; loc_72E02:
 .locexit:
 		addq.w	#8,sp	; Tamper with return value so we don't go back to caller
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72E06:
 cfSetPSGNoise:
@@ -2565,17 +2565,17 @@ cfSetPSGNoise:
 		move.b	-1(a4),(psg_input).l			; Set tone
 ; locret_72E1E:
 .locret:
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72E20:
 cfDisableModulation:
 		bclr	#3,SMPS_Track.PlaybackControl(a5)	; Disable modulation
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72E26:
 cfSetPSGTone:
 		move.b	(a4)+,SMPS_Track.VoiceIndex(a5)	; Set current PSG tone
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72E2C:
 cfJumpTo:
@@ -2584,7 +2584,7 @@ cfJumpTo:
 		move.b	(a4)+,d0	; Low byte of offset
 		adda.w	d0,a4		; Add to current position
 		subq.w	#1,a4		; Put back one byte
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72E38:
 cfRepeatAtPos:
@@ -2599,7 +2599,7 @@ cfRepeatAtPos:
 		subq.b	#1,SMPS_Track.LoopCounters(a5,d0.w)	; Decrease loop's repeat count
 		bne.s	cfJumpTo				; If nonzero, branch to target
 		addq.w	#2,a4					; Skip target address
-		rts	
+		rts
 ; ===========================================================================
 ; loc_72E52:
 cfJumpToGosub:

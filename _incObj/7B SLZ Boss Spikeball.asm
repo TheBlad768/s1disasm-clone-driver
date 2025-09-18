@@ -79,7 +79,7 @@ loc_18DAE:
 ; ===========================================================================
 
 locret_18DC4:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18DC6:	; Routine 4
@@ -142,7 +142,7 @@ loc_18E48:
 		bne.s	loc_18E7A
 		move.w	#$20,obSubtype(a0)
 		move.b	#8,obRoutine(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18E7A:
@@ -162,7 +162,7 @@ loc_18E96:
 		move.b	obDelayAni(a0),obTimeFrame(a0)
 
 locret_18EA8:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18EAA:	; Routine 6
@@ -327,7 +327,7 @@ BossSpikeball_Explode:	; Routine 8
 		clr.b	obRoutine(a0)
 		cmpi.w	#$20,obSubtype(a0)
 		beq.s	BossSpikeball_MakeFrag
-		rts	
+		rts
 ; ===========================================================================
 
 BossSpikeball_MakeFrag:
@@ -355,7 +355,7 @@ BossSpikeball_Loop:
 loc_1909A:
 		dbf	d1,BossSpikeball_Loop	; repeat sequence 3 more times
 
-		rts	
+		rts
 ; ===========================================================================
 BossSpikeball_FragSpeed:
 		dc.w -$100, -$340	; horizontal, vertical
@@ -375,4 +375,4 @@ BossSpikeball_MoveFrag:	; Routine $A
 		move.b	d0,obFrame(a0)
 		tst.b	obRender(a0)
 		bpl.w	BossStarLight_Delete
-		rts	
+		rts

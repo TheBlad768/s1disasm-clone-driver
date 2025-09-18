@@ -47,7 +47,7 @@ Gar_MakeFire:	; Routine 2
 		move.b	obStatus(a0),obStatus(a1)
 
 .nofire:
-		rts	
+		rts
 ; ===========================================================================
 
 Gar_FireBall:	; Routine 4
@@ -89,7 +89,7 @@ Gar_AniFire:	; Routine 6
 	else
 		bmi.w	DeleteObject	; delete if the fireball hits a wall
 	endif
-		rts	
+		rts
 
 .isright:
 		moveq	#8,d3
@@ -100,7 +100,7 @@ Gar_AniFire:	; Routine 6
 	else
 		bmi.w	DeleteObject
 	endif
-		rts	
+		rts
 
 	if FixBugs
 		; Avoid returning to Gargoyle to prevent display-and-delete

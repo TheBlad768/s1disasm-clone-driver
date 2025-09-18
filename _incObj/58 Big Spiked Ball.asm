@@ -55,7 +55,7 @@ BBall_Move:	; Routine 2
 ; ===========================================================================
 
 .type00:
-		rts	
+		rts
 ; ===========================================================================
 
 .type01:
@@ -71,7 +71,7 @@ BBall_Move:	; Routine 2
 		move.w	bball_origX(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obX(a0)	; move object horizontally
-		rts	
+		rts
 ; ===========================================================================
 
 .type02:
@@ -87,7 +87,7 @@ BBall_Move:	; Routine 2
 		move.w	bball_origY(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)	; move object vertically
-		rts	
+		rts
 ; ===========================================================================
 
 .type03:
@@ -108,4 +108,4 @@ BBall_Move:	; Routine 2
 		add.w	d3,d5
 		move.w	d4,obY(a0)	; move object circularly
 		move.w	d5,obX(a0)
-		rts	
+		rts

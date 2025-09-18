@@ -46,7 +46,7 @@ Sonic_Control:	; Routine 2
 		beq.s	.nodebug	; if not, branch
 		move.w	#1,(v_debuguse).w ; change Sonic into a ring/item
 		clr.b	(f_lockctrl).w
-		rts	
+		rts
 ; ===========================================================================
 
 .nodebug:
@@ -84,7 +84,7 @@ Sonic_Control:	; Routine 2
 .ignoreobjcoll:
 		bsr.w	Sonic_Loops
 		bsr.w	Sonic_LoadGfx
-		rts	
+		rts
 ; ===========================================================================
 ; Obj01_Modes:
 Sonic_Modes:	dc.w Sonic_MdNormal-Sonic_Modes
@@ -159,7 +159,7 @@ Sonic_Display:
 		jmp	(QueueSound1).l	; run music at normal speed
 
 .exit:
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to record Sonic's previous positions for invincibility stars
@@ -175,7 +175,7 @@ Sonic_RecordPosition:
 		move.w	obX(a0),(a1)+
 		move.w	obY(a0),(a1)+
 		addq.b	#4,(v_trackbyte).w
-		rts	
+		rts
 ; End of function Sonic_RecordPosition
 
 ; ---------------------------------------------------------------------------
@@ -190,7 +190,7 @@ Sonic_Water:
 		beq.s	.islabyrinth	; if yes, branch
 
 .exit:
-		rts	
+		rts
 ; ===========================================================================
 
 ; Obj01_InWater:
@@ -250,7 +250,7 @@ Sonic_MdNormal:
 		jsr	(SpeedToPos).l
 		bsr.w	Sonic_AnglePos
 		bsr.w	Sonic_SlopeRepel
-		rts	
+		rts
 ; ===========================================================================
 
 ; Obj01_MdJump:
@@ -266,7 +266,7 @@ Sonic_MdJump:
 .notunderwater:
 		bsr.w	Sonic_JumpAngle
 		bsr.w	Sonic_Floor
-		rts	
+		rts
 ; ===========================================================================
 
 ; Obj01_MdRoll:
@@ -278,7 +278,7 @@ Sonic_MdRoll:
 		jsr	(SpeedToPos).l
 		bsr.w	Sonic_AnglePos
 		bsr.w	Sonic_SlopeRepel
-		rts	
+		rts
 ; ===========================================================================
 
 ; Obj01_MdJump2:
@@ -294,7 +294,7 @@ Sonic_MdJump2:
 .notunderwater:
 		bsr.w	Sonic_JumpAngle
 		bsr.w	Sonic_Floor
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to make Sonic walk/run
@@ -468,26 +468,26 @@ loc_13024:
 		add.w	d1,obVelX(a0)
 		bset	#5,obStatus(a0)
 		move.w	#0,obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13060:
 		sub.w	d1,obVelY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13066:
 		sub.w	d1,obVelX(a0)
 		bset	#5,obStatus(a0)
 		move.w	#0,obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13078:
 		add.w	d1,obVelY(a0)
 
 locret_1307C:
-		rts	
+		rts
 ; End of function Sonic_Move
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
@@ -514,7 +514,7 @@ loc_1309A:
 loc_130A6:
 		move.w	d0,obInertia(a0)
 		move.b	#id_Walk,obAnim(a0) ; use walking animation
-		rts	
+		rts
 ; ===========================================================================
 
 loc_130B2:
@@ -536,7 +536,7 @@ loc_130BA:
 		jsr	(QueueSound2).l	; play stopping sound
 
 locret_130E8:
-		rts	
+		rts
 ; End of function Sonic_MoveLeft
 
 
@@ -560,7 +560,7 @@ loc_13104:
 loc_1310C:
 		move.w	d0,obInertia(a0)
 		move.b	#id_Walk,obAnim(a0) ; use walking animation
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13118:
@@ -582,7 +582,7 @@ loc_13120:
 		jsr	(QueueSound2).l	; play stopping sound
 
 locret_1314E:
-		rts	
+		rts
 ; End of function Sonic_MoveRight
 
 ; ---------------------------------------------------------------------------
@@ -676,7 +676,7 @@ Sonic_RollLeft:
 loc_1320A:
 		bset	#0,obStatus(a0)
 		move.b	#id_Roll,obAnim(a0) ; use "rolling" animation
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13218:
@@ -686,7 +686,7 @@ loc_13218:
 
 loc_13220:
 		move.w	d0,obInertia(a0)
-		rts	
+		rts
 ; End of function Sonic_RollLeft
 
 
@@ -698,7 +698,7 @@ Sonic_RollRight:
 		bmi.s	loc_1323A
 		bclr	#0,obStatus(a0)
 		move.b	#id_Roll,obAnim(a0) ; use "rolling" animation
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1323A:
@@ -708,7 +708,7 @@ loc_1323A:
 
 loc_13242:
 		move.w	d0,obInertia(a0)
-		rts	
+		rts
 ; End of function Sonic_RollRight
 
 ; ---------------------------------------------------------------------------
@@ -770,7 +770,7 @@ loc_132A4:
 
 loc_132C0:
 		move.w	d0,obVelX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_132C6:
@@ -782,7 +782,7 @@ loc_132CE:
 		move.w	d0,obVelX(a0)
 
 locret_132D2:
-		rts	
+		rts
 ; End of function Sonic_JumpDirection
 
 ; ===========================================================================
@@ -804,7 +804,7 @@ Sonic_SquashUnused:
 		move.b	#id_Warp3,obAnim(a0) ; use "warping" animation
 
 .return:
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to prevent Sonic leaving the boundaries of a level
@@ -850,7 +850,7 @@ Sonic_LevelBound:
 		addi.w	#224,d0
 		cmp.w	obY(a0),d0	; has Sonic touched the bottom boundary?
 		blt.s	.bottom		; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 ; Boundary_Bottom
@@ -862,7 +862,7 @@ Sonic_LevelBound:
 		clr.b	(v_lastlamp).w	; clear lamppost counter
 		move.w	#1,(f_restart).w ; restart the level
 		move.w	#(id_LZ<<8)+3,(v_zone).w ; set level to SBZ3 (LZ4)
-		rts	
+		rts
 ; ===========================================================================
 
 ; Boundary_Sides
@@ -899,14 +899,14 @@ Sonic_Roll:
 
 ; Obj01_NoRoll
 .noroll:
-		rts	
+		rts
 ; ===========================================================================
 
 ; Obj01_ChkRoll
 Sonic_ChkRoll:
 		btst	#2,obStatus(a0)	; is Sonic already rolling?
 		beq.s	.roll		; if not, branch
-		rts	
+		rts
 ; ===========================================================================
 
 ; Obj01_DoRoll
@@ -923,7 +923,7 @@ Sonic_ChkRoll:
 		move.w	#$200,obInertia(a0) ; set inertia if 0
 
 .ismoving:
-		rts	
+		rts
 ; End of function Sonic_Roll
 
 ; ---------------------------------------------------------------------------
@@ -981,7 +981,7 @@ Sonic_Jump:
 
 .rolljump:
 		bset	#4,obStatus(a0)	; set roll-jump flag.
-		rts	
+		rts
 ; End of function Sonic_Jump
 
 ; ---------------------------------------------------------------------------
@@ -1008,7 +1008,7 @@ Sonic_JumpHeight:
 		move.w	d1,obVelY(a0)
 
 .return:
-		rts	
+		rts
 
 .capyvel:
 		cmpi.w	#-$FC0,obVelY(a0)
@@ -1016,7 +1016,7 @@ Sonic_JumpHeight:
 		move.w	#-$FC0,obVelY(a0)
 
 .return2:
-		rts	
+		rts
 ; End of function Sonic_JumpHeight
 
 ; ---------------------------------------------------------------------------
@@ -1043,14 +1043,14 @@ Sonic_SlopeResist:
 		add.w	d0,obInertia(a0) ; change Sonic's inertia
 
 locret_13502:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13504:
 		add.w	d0,obInertia(a0)
 
 locret_13508:
-		rts	
+		rts
 ; End of function Sonic_SlopeResist
 
 ; ---------------------------------------------------------------------------
@@ -1077,7 +1077,7 @@ Sonic_RollRepel:
 
 loc_13534:
 		add.w	d0,obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1353A:
@@ -1089,7 +1089,7 @@ loc_13540:
 		add.w	d0,obInertia(a0)
 
 locret_13544:
-		rts	
+		rts
 ; End of function Sonic_RollRepel
 
 ; ---------------------------------------------------------------------------
@@ -1121,12 +1121,12 @@ loc_1356A:
 		move.w	#$1E,objoff_3E(a0)
 
 locret_13580:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13582:
 		subq.w	#1,objoff_3E(a0)
-		rts	
+		rts
 ; End of function Sonic_SlopeRepel
 
 ; ---------------------------------------------------------------------------
@@ -1156,7 +1156,7 @@ Sonic_JumpAngle:
 		move.b	d0,obAngle(a0)
 
 .return:
-		rts	
+		rts
 ; End of function Sonic_JumpAngle
 
 ; ---------------------------------------------------------------------------
@@ -1227,7 +1227,7 @@ loc_1361E:
 loc_1364E:
 		move.w	#0,obVelY(a0)
 		move.w	obVelX(a0),obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1365C:
@@ -1243,7 +1243,7 @@ loc_13670:
 		neg.w	obInertia(a0)
 
 locret_1367E:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13680:
@@ -1253,7 +1253,7 @@ loc_13680:
 		sub.w	d1,obX(a0)
 		move.w	#0,obVelX(a0)
 		move.w	obVelY(a0),obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1369A:
@@ -1266,7 +1266,7 @@ loc_1369A:
 		move.w	#0,obVelY(a0)
 
 locret_136B2:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_136B4:
@@ -1283,7 +1283,7 @@ loc_136B4:
 		move.w	obVelX(a0),obInertia(a0)
 
 locret_136E0:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_136E2:
@@ -1310,7 +1310,7 @@ loc_13706:
 		andi.b	#$40,d0
 		bne.s	loc_13726
 		move.w	#0,obVelY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13726:
@@ -1322,7 +1322,7 @@ loc_13726:
 		neg.w	obInertia(a0)
 
 locret_1373C:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1373E:
@@ -1332,7 +1332,7 @@ loc_1373E:
 		add.w	d1,obX(a0)
 		move.w	#0,obVelX(a0)
 		move.w	obVelY(a0),obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13758:
@@ -1345,7 +1345,7 @@ loc_13758:
 		move.w	#0,obVelY(a0)
 
 locret_13770:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_13772:
@@ -1362,7 +1362,7 @@ loc_13772:
 		move.w	obVelX(a0),obInertia(a0)
 
 locret_1379E:
-		rts	
+		rts
 ; End of function Sonic_Floor
 
 ; ---------------------------------------------------------------------------
@@ -1394,7 +1394,7 @@ Sonic_ResetOnFloor:
 .notball:
 		move.b	#0,objoff_3C(a0)	; clear jump flag.
 		move.w	#0,(v_itembonus).w	; clear enemy score chain.
-		rts	
+		rts
 ; End of function Sonic_ResetOnFloor
 
 ; ---------------------------------------------------------------------------
@@ -1452,7 +1452,7 @@ Sonic_HurtStop:
 		move.w	#$78,objoff_30(a0)
 
 locret_13860:
-		rts	
+		rts
 ; End of function Sonic_HurtStop
 
 ; ---------------------------------------------------------------------------
@@ -1508,7 +1508,7 @@ loc_138D4:
 ; ===========================================================================
 
 locret_13900:
-		rts	
+		rts
 ; End of function GameOver
 
 ; ---------------------------------------------------------------------------
@@ -1524,7 +1524,7 @@ Sonic_ResetLevel:; Routine 8
 		move.w	#1,(f_restart).w ; restart the level
 
 .return:
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to make Sonic run around loops (GHZ/SLZ)
@@ -1559,7 +1559,7 @@ Sonic_Loops:
 		cmp.b	(v_256loop2).w,d1
 		beq.s	.chkifinair
 		bclr	#6,obRender(a0) ; return Sonic to high plane
-		rts	
+		rts
 ; ===========================================================================
 
 .chkifinair:
@@ -1567,7 +1567,7 @@ Sonic_Loops:
 		beq.s	.chkifleft	; if not, branch
 
 		bclr	#6,obRender(a0)	; return Sonic to high plane
-		rts	
+		rts
 ; ===========================================================================
 
 .chkifleft:
@@ -1576,7 +1576,7 @@ Sonic_Loops:
 		bhs.s	.chkifright
 
 		bclr	#6,obRender(a0)	; return Sonic to high plane
-		rts	
+		rts
 ; ===========================================================================
 
 .chkifright:
@@ -1584,7 +1584,7 @@ Sonic_Loops:
 		blo.s	.chkangle1
 
 		bset	#6,obRender(a0)	; send Sonic to low plane
-		rts	
+		rts
 ; ===========================================================================
 
 .chkangle1:
@@ -1596,7 +1596,7 @@ Sonic_Loops:
 		cmpi.b	#$80,d1		; is Sonic upside-down?
 		bhi.s	.done		; if yes, branch
 		bset	#6,obRender(a0)	; send Sonic to low plane
-		rts	
+		rts
 ; ===========================================================================
 
 .chkangle2:
@@ -1607,7 +1607,7 @@ Sonic_Loops:
 
 .noloops:
 .done:
-		rts	
+		rts
 ; End of function Sonic_Loops
 
 ; ---------------------------------------------------------------------------
@@ -1655,7 +1655,7 @@ Sonic_Animate:
 
 ; SAnim_Delay:
 .delay:
-		rts	
+		rts
 ; ===========================================================================
 
 ; SAnim_End_FF:
@@ -1686,7 +1686,7 @@ Sonic_Animate:
 
 ; SAnim_End:
 .end:
-		rts	
+		rts
 ; ===========================================================================
 
 ; SAnim_WalkRun:
@@ -1743,7 +1743,7 @@ Sonic_Animate:
 		move.b	d2,obTimeFrame(a0) ; modify frame duration
 		bsr.w	.loadframe
 		add.b	d3,obFrame(a0)	; modify frame number
-		rts	
+		rts
 ; ===========================================================================
 
 ; SAnim_RollJump:
@@ -1847,6 +1847,6 @@ Sonic_LoadGfx:
 		dbf	d1,.readentry	; repeat for number of entries
 
 .nochange:
-		rts	
+		rts
 
 ; End of function Sonic_LoadGfx

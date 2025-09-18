@@ -11,7 +11,7 @@ Signpost:
 		bsr.w	AnimateSprite
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 Sign_Index:	dc.w Sign_Main-Sign_Index
 		dc.w Sign_Touch-Sign_Index
@@ -45,7 +45,7 @@ Sign_Touch:	; Routine 2
 		addq.b	#2,obRoutine(a0)
 
 .notouch:
-		rts	
+		rts
 ; ===========================================================================
 
 Sign_Spin:	; Routine 4
@@ -85,7 +85,7 @@ Sign_Spin:	; Routine 4
 		move.b	#8,obActWid(a1)
 
 .fail:
-		rts	
+		rts
 ; ===========================================================================
 Sign_SparkPos:	dc.b -$18,-$10		; x-position, y-position
 		dc.b	8,   8
@@ -169,7 +169,7 @@ GotThroughAct:
 		jsr	(QueueSound2).l	; play "Sonic got through" music
 
 locret_ECEE:
-		rts	
+		rts
 ; End of function GotThroughAct
 
 ; ===========================================================================
@@ -178,4 +178,4 @@ TimeBonuses:	dc.w 5000, 5000, 1000, 500, 400, 400, 300, 300,	200, 200
 ; ===========================================================================
 
 Sign_Exit:	; Routine 8
-		rts	
+		rts

@@ -67,4 +67,4 @@ EEgg_Wait:	; Routine 6
 		move.b	#2,obRoutine(a0) ; goto EEgg_Animate next
 
 .nochg:
-		rts	
+		rts

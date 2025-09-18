@@ -19,6 +19,6 @@ ObjectFall:
 		add.l	d0,d3
 		move.l	d2,obX(a0)
 		move.l	d3,obY(a0)
-		rts	
+		rts
 
 ; End of function ObjectFall

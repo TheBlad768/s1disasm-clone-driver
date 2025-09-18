@@ -86,13 +86,13 @@ But_Display:
 	else
 		bsr.w	DisplaySprite
 		out_of_range.w	But_Delete
-		rts	
+		rts
 	endif
 ; ===========================================================================
 
 But_Delete:
 		bsr.w	DeleteObject
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -122,7 +122,7 @@ loc_BE4E:
 		moveq	#0,d0
 
 locret_BE5A:
-		rts	
+		rts
 ; ===========================================================================
 But_MZData:	dc.b $10, $10
 ; ===========================================================================
@@ -168,5 +168,5 @@ loc_BE9A:
 loc_BE9E:
 		move.w	(sp)+,d3
 		moveq	#1,d0
-		rts	
+		rts
 ; End of function But_MZBlock

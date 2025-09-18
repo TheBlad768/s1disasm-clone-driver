@@ -20,7 +20,7 @@ cat_parent = objoff_3C		; address of parent object
 ; ===========================================================================
 
 locret_16950:
-		rts	
+		rts
 ; ===========================================================================
 
 Cat_Main:	; Routine 0
@@ -127,7 +127,7 @@ Cat_ChkGone:
 
 .delete:
 		move.b	#$A,obRoutine(a0)	; goto Cat_Delete next
-		rts	
+		rts
 ; ===========================================================================
 
 Cat_Delete:	; Routine $A
@@ -140,7 +140,7 @@ Cat_Index2:	dc.w .wait-Cat_Index2
 .wait:
 		subq.b	#1,objoff_2A(a0)
 		bmi.s	.move
-		rts	
+		rts
 ; ===========================================================================
 
 .move:
@@ -207,7 +207,7 @@ loc_16B02:
 		move.b	d1,objoff_2C(a0,d0.w)
 
 .notmoving:
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_16B5E:
@@ -219,7 +219,7 @@ loc_16B02:
 			clr.w	obVelX(a0)
 			clr.w	obInertia(a0)
 		endif
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_16B70:
@@ -249,7 +249,7 @@ loc_16B02:
 		endif
 		addq.b	#1,cat_parent(a0)
 		andi.b	#$F,cat_parent(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Cat_BodySeg2:	; Routine 6

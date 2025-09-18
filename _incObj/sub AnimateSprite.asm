@@ -39,7 +39,7 @@ Anim_Next:
 		addq.b	#1,obAniFrame(a0) ; next frame number
 
 Anim_Wait:
-		rts	
+		rts
 ; ===========================================================================
 
 Anim_End_FF:
@@ -82,5 +82,5 @@ Anim_End_FA:
 		addq.b	#2,ob2ndRout(a0) ; jump to next routine
 
 Anim_End:
-		rts	
+		rts
 ; End of function AnimateSprite

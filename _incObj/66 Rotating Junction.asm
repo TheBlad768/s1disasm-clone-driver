@@ -154,7 +154,7 @@ Jun_ChkSwitch:
 		move.b	d0,obFrame(a0)	; update frame
 
 .nochange:
-		rts	
+		rts
 ; End of function Jun_ChkSwitch
 
 
@@ -175,7 +175,7 @@ Jun_ChgPos:
 		ext.w	d0
 		add.w	obY(a0),d0
 		move.w	d0,obY(a1)
-		rts	
+		rts
 
 
 .data:		dc.b -$20,    0, -$1E,   $E ; disc x-pos, Sonic x-pos, disc y-pos, Sonic y-pos

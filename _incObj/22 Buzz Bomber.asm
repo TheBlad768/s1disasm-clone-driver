@@ -54,7 +54,7 @@ Buzz_Action:	; Routine 2
 		neg.w	obVelX(a0)	; move Buzz Bomber to the left
 
 .noflip:
-		rts	
+		rts
 ; ===========================================================================
 
 .fire:
@@ -86,7 +86,7 @@ Buzz_Action:	; Routine 2
 		move.b	#2,obAnim(a0)	; use "firing" animation
 
 .fail:
-		rts	
+		rts
 ; ===========================================================================
 
 .chknearsonic:
@@ -121,9 +121,9 @@ Buzz_Action:	; Routine 2
 		move.b	#0,obAnim(a0)	; use "hovering" animation
 
 .keepgoing:
-		rts	
+		rts
 ; ===========================================================================
 
 Buzz_Delete:	; Routine 4
 		bsr.w	DeleteObject
-		rts	
+		rts

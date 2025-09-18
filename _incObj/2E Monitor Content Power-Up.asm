@@ -36,7 +36,7 @@ Pow_Move:	; Routine 2
 		bpl.w	Pow_Checks	; if not, branch
 		bsr.w	SpeedToPos
 		addi.w	#$18,obVelY(a0)	; reduce object speed
-		rts	
+		rts
 ; ===========================================================================
 
 Pow_Checks:
@@ -47,7 +47,7 @@ Pow_ChkEggman:
 		move.b	obAnim(a0),d0
 		cmpi.b	#1,d0		; does monitor contain Eggman?
 		bne.s	Pow_ChkSonic
-		rts			; Eggman monitor does nothing
+		rts		; Eggman monitor does nothing
 ; ===========================================================================
 
 Pow_ChkSonic:
@@ -109,7 +109,7 @@ Pow_ChkInvinc:
 ; ===========================================================================
 
 Pow_NoMusic:
-		rts	
+		rts
 ; ===========================================================================
 
 Pow_ChkRings:
@@ -138,10 +138,10 @@ Pow_ChkS:
 		nop	
 
 Pow_ChkEnd:
-		rts			; 'S' and goggles monitors do nothing
+		rts		; 'S' and goggles monitors do nothing
 ; ===========================================================================
 
 Pow_Delete:	; Routine 4
 		subq.w	#1,obTimeFrame(a0)
 		bmi.w	DeleteObject	; delete after half a second
-		rts	
+		rts

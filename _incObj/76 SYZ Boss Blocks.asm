@@ -43,7 +43,7 @@ BossBlock_MakeBlock:
 		dbf	d6,BossBlock_Loop	; repeat sequence 9 more times
 
 BossBlock_ExitLoop:
-		rts	
+		rts
 ; ===========================================================================
 
 BossBlock_Action:	; Routine 2

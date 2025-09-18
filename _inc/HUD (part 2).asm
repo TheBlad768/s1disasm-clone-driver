@@ -73,7 +73,7 @@ loc_1C9D6:
 		addi.l	#$400000,d0
 		dbf	d6,Hud_TimeLoop
 
-		rts	
+		rts
 ; End of function Hud_Secs
 
 ; ---------------------------------------------------------------------------
@@ -131,7 +131,7 @@ loc_1CA30:
 loc_1CA5A:
 		dbf	d6,Hud_BonusLoop ; repeat 3 more times
 
-		rts	
+		rts
 ; ===========================================================================
 
 Hud_ClrBonus:
@@ -198,7 +198,7 @@ loc_1CABC:
 		addi.l	#$400000,d0
 		dbf	d6,Hud_LivesLoop ; repeat 1 more time
 
-		rts	
+		rts
 ; ===========================================================================
 
 Hud_ClrLives:

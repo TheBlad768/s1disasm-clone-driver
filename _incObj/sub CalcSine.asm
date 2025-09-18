@@ -19,7 +19,7 @@ CalcSine:
 		move.w	Sine_Data(pc,d0.w),d1
 		subi.w	#$80,d0
 		move.w	Sine_Data(pc,d0.w),d0
-		rts	
+		rts
 ; End of function CalcSine
 
 ; ===========================================================================

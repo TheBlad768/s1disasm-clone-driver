@@ -59,7 +59,7 @@ GBall_MakeBall:
 		move.b	#1,obFrame(a1)
 		move.b	#5,obPriority(a1)
 		move.b	#$81,obColType(a1) ; make object hurt Sonic
-		rts	
+		rts
 ; ===========================================================================
 
 GBall_PosData:	dc.b 0,	$10, $20, $30, $40, $60	; y-position data for links and giant ball
@@ -131,7 +131,7 @@ loc_17C3C:
 		move.b	#0,obRoutine(a0)
 
 locret_17C66:
-		rts	
+		rts
 ; End of function sub_17C2A
 
 ; ===========================================================================

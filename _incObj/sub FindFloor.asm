@@ -30,7 +30,7 @@ FindFloor:
 		bsr.w	FindFloor2	; try tile below the nearest
 		sub.w	a3,d2
 		addi.w	#$10,d1		; return distance to floor
-		rts	
+		rts
 ; ===========================================================================
 
 .issolid:
@@ -76,7 +76,7 @@ FindFloor:
 		add.w	d1,d0
 		move.w	#$F,d1
 		sub.w	d0,d1		; return distance to floor
-		rts	
+		rts
 ; ===========================================================================
 
 .negfloor:
@@ -90,7 +90,7 @@ FindFloor:
 		bsr.w	FindFloor2	; try tile above the nearest
 		add.w	a3,d2
 		subi.w	#$10,d1		; return distance to floor
-		rts	
+		rts
 ; End of function FindFloor
 
 
@@ -111,7 +111,7 @@ FindFloor2:
 		move.w	d2,d0
 		andi.w	#$F,d0
 		sub.w	d0,d1
-		rts	
+		rts
 ; ===========================================================================
 
 .issolid:
@@ -155,7 +155,7 @@ FindFloor2:
 		add.w	d1,d0
 		move.w	#$F,d1
 		sub.w	d0,d1
-		rts	
+		rts
 ; ===========================================================================
 
 .negfloor:
@@ -164,5 +164,5 @@ FindFloor2:
 		add.w	d1,d0
 		bpl.w	.isblank2
 		not.w	d1
-		rts	
+		rts
 ; End of function FindFloor2

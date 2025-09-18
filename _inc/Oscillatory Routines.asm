@@ -14,7 +14,7 @@ OscillateNumInit:
 .loop:
 		move.w	(a2)+,(a1)+	; copy baseline values to RAM
 		dbf	d1,.loop
-		rts	
+		rts
 
 
 ; ===========================================================================
@@ -80,7 +80,7 @@ OscillateNumDo:
 		move.w	d3,(v_oscillate).w
 
 .end:
-		rts	
+		rts
 ; End of function OscillateNumDo
 
 ; ===========================================================================

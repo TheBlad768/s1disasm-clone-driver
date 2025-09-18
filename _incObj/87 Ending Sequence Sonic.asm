@@ -23,7 +23,7 @@ ESon_Main:	; Routine 0
 		beq.s	ESon_Main2	; if yes, branch
 		addi.b	#$10,ob2ndRout(a0) ; else, skip emerald sequence
 		move.w	#216,eson_time(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 ESon_Main2:
@@ -45,7 +45,7 @@ ESon_MakeEmeralds:
 		move.b	#id_EndChaos,(v_endemeralds).w ; load chaos emeralds objects
 
 ESon_Wait:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj87_LookUp:	; Routine 6
@@ -56,7 +56,7 @@ Obj87_LookUp:	; Routine 6
 		addq.b	#2,ob2ndRout(a0)
 
 locret_5480:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj87_ClrObjRam:
@@ -75,7 +75,7 @@ Obj87_ClrLoop:
 		move.w	#60,eson_time(a0)
 
 ESon_Wait2:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj87_MakeLogo:	; Routine $C
@@ -87,7 +87,7 @@ Obj87_MakeLogo:	; Routine $C
 		move.b	#id_EndSTH,(v_endlogo).w ; load "SONIC THE HEDGEHOG" object
 
 ESon_Wait3:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj87_Animate:	; Rountine 4, $A, $E, $12
@@ -111,4 +111,4 @@ Obj87_Leap:	; Routine $10
 ; ===========================================================================
 
 ESon_Wait4:
-		rts	
+		rts

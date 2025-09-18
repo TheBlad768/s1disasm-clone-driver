@@ -84,7 +84,7 @@ CSI_ChkDel:	; Routine 6
 		bne.s	CSI_Animate
 		tst.w	(v_player+obVelX).w ; is Sonic running?
 		bne.s	CSI_Delete	; if yes, goto delete
-		rts	
+		rts
 
 CSI_Animate:
 		move.b	(v_vbla_byte).w,d0

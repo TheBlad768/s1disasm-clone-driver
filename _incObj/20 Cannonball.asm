@@ -82,5 +82,5 @@ Cbal_Display:
 	if FixBugs
 		bra.w	DisplaySprite
 	else
-		rts	
+		rts
 	endif

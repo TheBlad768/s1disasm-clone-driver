@@ -32,7 +32,7 @@ Mon_Main:	; Routine 0
 		beq.s	.notbroken	; if not, branch
 		move.b	#8,obRoutine(a0) ; run "Mon_Display" routine
 		move.b	#$B,obFrame(a0)	; use broken monitor frame
-		rts	
+		rts
 ; ===========================================================================
 
 .notbroken:
@@ -135,7 +135,7 @@ Mon_Animate:	; Routine 6
 Mon_Display:	; Routine 8
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Mon_BreakOpen:	; Routine 4

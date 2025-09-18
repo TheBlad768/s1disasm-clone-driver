@@ -79,7 +79,7 @@ HUD_Update:
 		bsr.w	Hud_TimeRingBonus
 
 .finish:
-		rts	
+		rts
 ; ===========================================================================
 
 TimeOver:
@@ -88,7 +88,7 @@ TimeOver:
 		movea.l	a0,a2
 		bsr.w	KillSonic
 		move.b	#1,(f_timeover).w
-		rts	
+		rts
 ; ===========================================================================
 
 HudDebug:
@@ -128,7 +128,7 @@ HudDebug:
 		bsr.w	Hud_TimeRingBonus
 
 .finish:
-		rts	
+		rts
 ; End of function HUD_Update
 
 ; ---------------------------------------------------------------------------
@@ -177,7 +177,7 @@ loc_1C852:
 loc_1C858:
 		dbf	d2,loc_1C842
 
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C85E:
@@ -238,7 +238,7 @@ loc_1C8B2:
 		swap	d1
 		dbf	d6,HudDb_XYLoop	; repeat 7 more times
 
-		rts	
+		rts
 ; End of function HudDb_XY2
 
 ; ---------------------------------------------------------------------------
@@ -313,6 +313,6 @@ loc_1C92C:
 		addi.l	#$400000,d0
 		dbf	d6,Hud_ScoreLoop
 
-		rts	
+		rts
 
 ; End of function Hud_Score

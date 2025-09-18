@@ -143,7 +143,7 @@ SBall_Move:	; Routine 2
 		move.w	d4,obY(a1)
 		move.w	d5,obX(a1)
 		dbf	d6,.loop
-		rts	
+		rts
 ; ===========================================================================
 
 .chkdel:
@@ -165,7 +165,7 @@ SBall_Move:	; Routine 2
 		bsr.w	DeleteChild
 		dbf	d2,.deleteloop ; delete all pieces of chain
 
-		rts	
+		rts
 ; ===========================================================================
 
 SBall_Display:	; Routine 4
