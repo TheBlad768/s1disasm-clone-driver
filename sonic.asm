@@ -10,6 +10,7 @@
 	cpu 68000
 
 MSUMode	= 0	; if 1, enable MSU
+OptimiseStopZ80	= 2	; if 1, remove stopZ80 and startZ80, if 2, use only for controllers (no effect on sound driver)
 
 EnableSRAM	  = 0	; change to 1 to enable SRAM
 BackupSRAM	  = 1
@@ -522,7 +523,11 @@ VBla_10:
 VBla_08:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
+
 		tst.b	(f_wtr_state).w
 		bne.s	.waterabove
 
@@ -580,7 +585,11 @@ Demo_Time:
 VBla_0A:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
+
 		writeCRAM	v_palette,0
 		writeVRAM	v_spritetablebuffer,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
@@ -604,7 +613,11 @@ VBla_0A:
 VBla_0C:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
+
 		tst.b	(f_wtr_state).w
 		bne.s	.waterabove
 
@@ -652,7 +665,11 @@ VBla_12:
 VBla_16:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
+
 		writeCRAM	v_palette,0
 		writeVRAM	v_spritetablebuffer,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
@@ -676,7 +693,11 @@ VBla_16:
 sub_106E:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
+
 		tst.b	(f_wtr_state).w ; is water above top of screen?
 		bne.s	.waterabove	; if yes, branch
 		writeCRAM	v_palette,0
@@ -768,10 +789,13 @@ loc_119E:
 JoypadInit:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		moveq	#$40,d0
 		move.b	d0,(z80_port_1_control+1).l	; init port 1 (joypad 1)
 		move.b	d0,(z80_port_2_control+1).l	; init port 2 (joypad 2)
 		move.b	d0,(z80_expansion_control+1).l	; init port 3 (expansion/extra)
+		startZ802
 		startZ80
 		rts
 ; End of function JoypadInit
