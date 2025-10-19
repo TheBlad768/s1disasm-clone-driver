@@ -2734,10 +2734,87 @@ LevSel_ChgLine:
 ; ---------------------------------------------------------------------------
 ; Level select menu text
 ; ---------------------------------------------------------------------------
-LevelMenuText:	if Revision=0
-		incbin	"misc\Level Select Text.bin"
+lstxt macro textline
+	i:   = 1
+	len: = strlen(\textline)
+	if len<>24
+		inform 2, "line length must be exactly 24 characters"
+	endif
+
+	while (i<=len)
+		char:	substr i,i,\textline
+		i: = i+1
+
+		if     "\char"=' '
+			dc.b	$FF
+		elseif ("\char">='0')&("\char"<='9')
+			dc.b	$00+"\char"-'0'
+		elseif "\char"='$'
+			dc.b	$0A
+		elseif "\char"='-'
+			dc.b	$0B
+		elseif "\char"='='
+			dc.b	$0C
+		elseif "\char"=">"
+			dc.b	$0D
+		;elseif "\char"=">"
+		;	dc.b	$0E
+		elseif "\char"='Y'
+			dc.b	$0F
+		elseif "\char"='Z'
+			dc.b	$10
+		elseif ("\char">='A')&("\char"<='X')
+			dc.b	$11+"\char"-'A'
 		else
-		incbin	"misc\Level Select Text (JP1).bin"
+			inform 2, "illegal char \char"
+		endif
+	endw
+	endm
+
+LevelMenuText:	if Revision=0
+		lstxt "GREEN HILL ZONE  STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "LABYRINTH ZONE   STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "MARBLE ZONE      STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "STAR LIGHT ZONE  STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "SPRING YARD ZONE STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "SCRAP BRAIN ZONE STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "FINAL ZONE              "
+		lstxt "SPECIAL STAGE           "
+		lstxt "SOUND SELECT            "
+		else
+		lstxt "GREEN HILL ZONE  STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "MARBLE ZONE      STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "SPRING YARD ZONE STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "LABYRINTH ZONE   STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "STAR LIGHT ZONE  STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "SCRAP BRAIN ZONE STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "FINAL ZONE              "
+		lstxt "SPECIAL STAGE           "
+		lstxt "SOUND SELECT            "
 		endc
 		even
 ; ---------------------------------------------------------------------------
