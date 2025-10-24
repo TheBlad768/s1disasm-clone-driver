@@ -58,11 +58,13 @@ Shi_Stars:	; Routine 4
 		subq.b	#1,d1
 		bra.s	.trail
 ; ===========================================================================
-		lsl.b	#4,d1
+
+.trail_unused:	;	unused older trailing code that makes a much shorter trail
+		lsl.b	#4,d1		; multiply animation number by 16
 		addq.b	#4,d1
 		sub.b	d1,d0
 		move.b	objoff_30(a0),d1
-		sub.b	d1,d0
+		sub.b	d1,d0		; use earlier tracking data to create trail
 		addq.b	#4,d1
 		andi.b	#$F,d1
 		move.b	d1,objoff_30(a0)
