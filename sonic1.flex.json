@@ -11,17 +11,17 @@
                     "name": "Title Screen - Sonic",
                     "palettes": [
                         {
-                            "path": "palette\\Title Screen.bin",
+                            "path": "palette/Title Screen.bin",
                             "length": 3
                         }
                     ],
                     "art": {
-                        "path": "artnem\\Title Screen Sonic.nem",
+                        "path": "artnem/Title Screen Sonic.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "_maps\\Title Screen Sonic.asm",
+                        "path": "_maps/Title Screen Sonic.asm",
                         "label": ""
                     },
                     "dplcs": {
