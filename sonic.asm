@@ -5449,7 +5449,7 @@ BuildSprites:
 ; ===========================================================================
 
 	.screenCoords:
-		move.w	$A(a0),d2	; special variable for screen Y
+		move.w	obScreenY(a0),d2	; special variable for screen Y
 		move.w	obX(a0),d3
 		bra.s	.drawObject
 ; ===========================================================================
@@ -6067,7 +6067,7 @@ ResumeMusic:
 
 .over12:
 		move.w	#30,(v_air).w	; reset air to 30 seconds
-		clr.b	(v_sonicbubbles+$32).w
+		clr.b	(v_sonicbubbles+objoff_32).w
 		rts
 ; End of function ResumeMusic
 
