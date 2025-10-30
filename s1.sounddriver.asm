@@ -336,7 +336,7 @@ DAC_sample_rate:
 		dc.b timpaniLoopCounter(0.95)
 		dc.b $FF, $FF
 		even
-;7250
+
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71CCA:
