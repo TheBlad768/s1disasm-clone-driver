@@ -5438,7 +5438,7 @@ BuildSprites:
 
 	.assumeHeight:
 		move.w	obY(a0),d2
-		sub.w	obMap(a1),d2
+		sub.w	4(a1),d2
 		addi.w	#$80,d2
 		cmpi.w	#$60,d2
 		blo.s	.skipObject
