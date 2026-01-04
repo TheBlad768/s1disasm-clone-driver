@@ -36,10 +36,10 @@ Cat_Main:	; Routine 0
 		move.l	#Map_Cat,obMap(a0)
 		move.w	#$22B0,obGfx(a0)
 		cmpi.b	#id_SBZ,(v_zone).w ; if level is SBZ, branch
-		beq.s	@isscrapbrain
+		beq.s	.isscrapbrain
 		move.w	#$24FF,obGfx(a0) ; MZ specific code
 
-	@isscrapbrain:
+	.isscrapbrain:
 		andi.b	#3,obRender(a0)
 		ori.b	#4,obRender(a0)
 		move.b	obRender(a0),obStatus(a0)
@@ -49,10 +49,10 @@ Cat_Main:	; Routine 0
 		move.w	obX(a0),d2
 		moveq	#$C,d5
 		btst	#0,obStatus(a0)
-		beq.s	@noflip
+		beq.s	.noflip
 		neg.w	d5
 
-	@noflip:
+	.noflip:
 		move.b	#4,d6
 		moveq	#0,d3
 		moveq	#4,d4
@@ -62,7 +62,7 @@ Cat_Main:	; Routine 0
 Cat_Loop:
 		jsr	(FindNextFreeObj).l
 		if Revision=0
-		bne.s	@fail
+		bne.s	.fail
 		else
 			bne.w	Cat_ChkGone
 		endc
@@ -85,7 +85,7 @@ Cat_Loop:
 		addq.b	#4,d4
 		movea.l	a1,a2
 
-	@fail:
+	.fail:
 		dbf	d1,Cat_Loop	; repeat sequence 2 more times
 
 		move.b	#7,$2A(a0)
@@ -99,22 +99,22 @@ Cat_Head:	; Routine 2
 		move.w	Cat_Index2(pc,d0.w),d1
 		jsr	Cat_Index2(pc,d1.w)
 		move.b	$2B(a0),d1
-		bpl.s	@display
+		bpl.s	.display
 		lea	(Ani_Cat).l,a1
 		move.b	obAngle(a0),d0
 		andi.w	#$7F,d0
 		addq.b	#4,obAngle(a0)
 		move.b	(a1,d0.w),d0
-		bpl.s	@animate
+		bpl.s	.animate
 		bclr	#7,$2B(a0)
-		bra.s	@display
+		bra.s	.display
 
-	@animate:
+	.animate:
 		andi.b	#$10,d1
 		add.b	d1,d0
 		move.b	d0,obFrame(a0)
 
-	@display:
+	.display:
 		out_of_range.w	Cat_ChkGone
 		jmp	(DisplaySprite).l
 
@@ -122,10 +122,10 @@ Cat_Head:	; Routine 2
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
 		move.b	obRespawnNo(a0),d0
-		beq.s	@delete
+		beq.s	.delete
 		bclr	#7,2(a2,d0.w)
 
-	@delete:
+	.delete:
 		move.b	#$A,obRoutine(a0)	; goto Cat_Delete next
 		rts	
 ; ===========================================================================
@@ -133,17 +133,17 @@ Cat_Head:	; Routine 2
 Cat_Delete:	; Routine $A
 		jmp	(DeleteObject).l
 ; ===========================================================================
-Cat_Index2:	dc.w @wait-Cat_Index2
+Cat_Index2:	dc.w .wait-Cat_Index2
 		dc.w loc_16B02-Cat_Index2
 ; ===========================================================================
 
-@wait:
+.wait:
 		subq.b	#1,$2A(a0)
-		bmi.s	@move
+		bmi.s	.move
 		rts	
 ; ===========================================================================
 
-@move:
+.move:
 		addq.b	#2,ob2ndRout(a0)
 		move.b	#$10,$2A(a0)
 		move.w	#-$C0,obVelX(a0)
@@ -158,22 +158,22 @@ loc_16AFC:
 
 loc_16B02:
 		subq.b	#1,$2A(a0)
-		bmi.s	@loc_16B5E
+		bmi.s	.loc_16B5E
 		if Revision=0
 		move.l	obX(a0),-(sp)
 		move.l	obX(a0),d2
 		else
 			tst.w	obVelX(a0)
-			beq.s	@notmoving
+			beq.s	.notmoving
 			move.l	obX(a0),d2
 			move.l	d2,d3
 		endc
 		move.w	obVelX(a0),d0
 		btst	#0,obStatus(a0)
-		beq.s	@noflip
+		beq.s	.noflip
 		neg.w	d0
 
-	@noflip:
+	.noflip:
 		ext.l	d0
 		asl.l	#8,d0
 		add.l	d0,d2
@@ -182,22 +182,22 @@ loc_16B02:
 		jsr	(ObjFloorDist).l
 		move.l	(sp)+,d2
 		cmpi.w	#-8,d1
-		blt.s	@loc_16B70
+		blt.s	.loc_16B70
 		cmpi.w	#$C,d1
-		bge.s	@loc_16B70
+		bge.s	.loc_16B70
 		add.w	d1,obY(a0)
 		swap	d2
 		cmp.w	obX(a0),d2
-		beq.s	@notmoving
+		beq.s	.notmoving
 		else
 			swap	d3
 			cmp.w	obX(a0),d3
-			beq.s	@notmoving
+			beq.s	.notmoving
 			jsr	(ObjFloorDist).l
 			cmpi.w	#-8,d1
-			blt.s	@loc_16B70
+			blt.s	.loc_16B70
 			cmpi.w	#$C,d1
-			bge.s	@loc_16B70
+			bge.s	.loc_16B70
 			add.w	d1,obY(a0)
 		endc
 		moveq	#0,d0
@@ -206,11 +206,11 @@ loc_16B02:
 		andi.b	#$F,cat_parent(a0)
 		move.b	d1,$2C(a0,d0.w)
 
-	@notmoving:
+	.notmoving:
 		rts	
 ; ===========================================================================
 
-@loc_16B5E:
+.loc_16B5E:
 		subq.b	#2,ob2ndRout(a0)
 		move.b	#7,$2A(a0)
 		if Revision=0
@@ -222,7 +222,7 @@ loc_16B02:
 		rts	
 ; ===========================================================================
 
-@loc_16B70:
+.loc_16B70:
 		if Revision=0
 		move.l	d2,obX(a0)
 		bchg	#0,obStatus(a0)
@@ -235,15 +235,15 @@ loc_16B02:
 			move.b	cat_parent(a0),d0
 			move.b	#$80,$2C(a0,d0.w)
 			neg.w	obX+2(a0)
-			beq.s	@loc_1730A
+			beq.s	.loc_1730A
 			btst	#0,obStatus(a0)
-			beq.s	@loc_1730A
+			beq.s	.loc_1730A
 			subq.w	#1,obX(a0)
 			addq.b	#1,cat_parent(a0)
 			moveq	#0,d0
 			move.b	cat_parent(a0),d0
 			clr.b	$2C(a0,d0.w)
-	@loc_1730A:
+	.loc_1730A:
 			bchg	#0,obStatus(a0)
 			move.b	obStatus(a0),obRender(a0)
 		endc

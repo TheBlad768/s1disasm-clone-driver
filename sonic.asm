@@ -21,7 +21,8 @@ AddressSRAM:	equ 3	; 0 = odd+even; 2 = even only; 3 = odd only
 Revision:	equ 1
 
 ZoneCount:	equ 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
-
+	pusho            ; save current options
+    opt l.            ; use "." as local label symbol
 ; ===========================================================================
 
 StartOfRom:
@@ -300,10 +301,10 @@ CheckSumCheck:
 		move.l	(a1),d0
 		moveq	#0,d1
 
-	@loop:
+	.loop:
 		add.w	(a0)+,d1
 		cmp.l	a0,d0
-		bhs.s	@loop
+		bhs.s	.loop
 		movea.l	#Checksum,a1	; read the checksum
 		cmp.w	(a1),d1		; compare checksum in header to ROM
 		bne.w	CheckSumError	; if they don't match, branch
@@ -312,9 +313,9 @@ CheckSumCheck:
 		lea	($FFFFFE00).w,a6
 		moveq	#0,d7
 		move.w	#$7F,d6
-	@clearRAM:
+	.clearRAM:
 		move.l	d7,(a6)+
-		dbf	d6,@clearRAM	; clear RAM ($FE00-$FFFF)
+		dbf	d6,.clearRAM	; clear RAM ($FE00-$FFFF)
 
 		move.b	(z80_version).l,d0
 		andi.b	#$C0,d0
@@ -325,9 +326,9 @@ GameInit:
 		lea	($FF0000).l,a6
 		moveq	#0,d7
 		move.w	#$3F7F,d6
-	@clearRAM:
+	.clearRAM:
 		move.l	d7,(a6)+
-		dbf	d6,@clearRAM	; clear RAM ($0000-$FDFF)
+		dbf	d6,.clearRAM	; clear RAM ($0000-$FDFF)
 
 		bsr.w	VDPSetupGame
 		bsr.w	SoundDriverLoad
@@ -370,12 +371,12 @@ CheckSumError:
 		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
 		moveq	#$3F,d7
 
-	@fillred:
+	.fillred:
 		move.w	#cRed,(vdp_data_port).l ; fill palette with red
-		dbf	d7,@fillred	; repeat $3F more times
+		dbf	d7,.fillred	; repeat $3F more times
 
-	@endlessloop:
-		bra.s	@endlessloop
+	.endlessloop:
+		bra.s	.endlessloop
 ; ===========================================================================
 
 BusError:
@@ -461,9 +462,9 @@ ShowErrorMessage:
 		locVRAM	$F800
 		lea	(Art_Text).l,a0
 		move.w	#$27F,d1
-	@loadgfx:
+	.loadgfx:
 		move.w	(a0)+,(a6)
-		dbf	d1,@loadgfx
+		dbf	d1,.loadgfx
 
 		moveq	#0,d0		; clear d0
 		move.b	(v_errortype).w,d0 ; load error code
@@ -472,33 +473,33 @@ ShowErrorMessage:
 		locVRAM	(vram_fg+$604)
 		moveq	#$12,d1		; number of characters (minus 1)
 
-	@showchars:
+	.showchars:
 		moveq	#0,d0
 		move.b	(a0)+,d0
 		addi.w	#$790,d0
 		move.w	d0,(a6)
-		dbf	d1,@showchars	; repeat for number of characters
+		dbf	d1,.showchars	; repeat for number of characters
 		rts	
 ; End of function ShowErrorMessage
 
 ; ===========================================================================
-ErrorText:	dc.w @exception-ErrorText, @bus-ErrorText
-		dc.w @address-ErrorText, @illinstruct-ErrorText
-		dc.w @zerodivide-ErrorText, @chkinstruct-ErrorText
-		dc.w @trapv-ErrorText, @privilege-ErrorText
-		dc.w @trace-ErrorText, @line1010-ErrorText
-		dc.w @line1111-ErrorText
-@exception:	dc.b "ERROR EXCEPTION    "
-@bus:		dc.b "BUS ERROR          "
-@address:	dc.b "ADDRESS ERROR      "
-@illinstruct:	dc.b "ILLEGAL INSTRUCTION"
-@zerodivide:	dc.b "@ERO DIVIDE        "
-@chkinstruct:	dc.b "CHK INSTRUCTION    "
-@trapv:		dc.b "TRAPV INSTRUCTION  "
-@privilege:	dc.b "PRIVILEGE VIOLATION"
-@trace:		dc.b "TRACE              "
-@line1010:	dc.b "LINE 1010 EMULATOR "
-@line1111:	dc.b "LINE 1111 EMULATOR "
+ErrorText:	dc.w .exception-ErrorText, .bus-ErrorText
+		dc.w .address-ErrorText, .illinstruct-ErrorText
+		dc.w .zerodivide-ErrorText, .chkinstruct-ErrorText
+		dc.w .trapv-ErrorText, .privilege-ErrorText
+		dc.w .trace-ErrorText, .line1010-ErrorText
+		dc.w .line1111-ErrorText
+.exception:	dc.b "ERROR EXCEPTION    "
+.bus:		dc.b "BUS ERROR          "
+.address:	dc.b "ADDRESS ERROR      "
+.illinstruct:	dc.b "ILLEGAL INSTRUCTION"
+.zerodivide:	dc.b "@ERO DIVIDE        "
+.chkinstruct:	dc.b "CHK INSTRUCTION    "
+.trapv:		dc.b "TRAPV INSTRUCTION  "
+.privilege:	dc.b "PRIVILEGE VIOLATION"
+.trace:		dc.b "TRACE              "
+.line1010:	dc.b "LINE 1010 EMULATOR "
+.line1111:	dc.b "LINE 1111 EMULATOR "
 		even
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
@@ -508,10 +509,10 @@ ShowErrorValue:
 		move.w	#$7CA,(a6)	; display "$" symbol
 		moveq	#7,d2
 
-	@loop:
+	.loop:
 		rol.l	#4,d0
-		bsr.s	@shownumber	; display 8 numbers
-		dbf	d2,@loop
+		bsr.s	.shownumber	; display 8 numbers
+		dbf	d2,.loop
 		rts	
 ; End of function ShowErrorValue
 
@@ -519,14 +520,14 @@ ShowErrorValue:
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
-@shownumber:
+.shownumber:
 		move.w	d0,d1
 		andi.w	#$F,d1
 		cmpi.w	#$A,d1
-		blo.s	@chars0to9
+		blo.s	.chars0to9
 		addq.w	#7,d1		; add 7 for characters A-F
 
-	@chars0to9:
+	.chars0to9:
 		addi.w	#$7C0,d1
 		move.w	d1,(a6)
 		rts	
@@ -561,13 +562,13 @@ VBlank:
 		move.l	#$40000010,(vdp_control_port).l
 		move.l	(v_scrposy_vdp).w,(vdp_data_port).l ; send screen y-axis pos. to VSRAM
 		btst	#6,(v_megadrive).w ; is Megadrive PAL?
-		beq.s	@notPAL		; if not, branch
+		beq.s	.notPAL		; if not, branch
 
 		move.w	#$700,d0
-	@waitPAL:
-		dbf	d0,@waitPAL ; wait here in a loop doing nothing for a while...
+	.waitPAL:
+		dbf	d0,.waitPAL ; wait here in a loop doing nothing for a while...
 
-	@notPAL:
+	.notPAL:
 		move.b	(v_vbla_routine).w,d0
 		move.b	#0,(v_vbla_routine).w
 		move.w	#1,(f_hbla_pal).w
@@ -594,36 +595,36 @@ VBla_Index:	dc.w VBla_00-VBla_Index, VBla_02-VBla_Index
 
 VBla_00:
 		cmpi.b	#$80+id_Level,(v_gamemode).w
-		beq.s	@islevel
+		beq.s	.islevel
 		cmpi.b	#id_Level,(v_gamemode).w ; is game on a level?
 		bne.w	VBla_Music	; if not, branch
 
-	@islevel:
+	.islevel:
 		cmpi.b	#id_LZ,(v_zone).w ; is level LZ ?
 		bne.w	VBla_Music	; if not, branch
 
 		move.w	(vdp_control_port).l,d0
 		btst	#6,(v_megadrive).w ; is Megadrive PAL?
-		beq.s	@notPAL		; if not, branch
+		beq.s	.notPAL		; if not, branch
 
 		move.w	#$700,d0
-	@waitPAL:
-		dbf	d0,@waitPAL
+	.waitPAL:
+		dbf	d0,.waitPAL
 
-	@notPAL:
+	.notPAL:
 		move.w	#1,(f_hbla_pal).w ; set HBlank flag
 		stopZ80
 		waitZ80
 		tst.b	(f_wtr_state).w	; is water above top of screen?
-		bne.s	@waterabove 	; if yes, branch
+		bne.s	.waterabove 	; if yes, branch
 
 		writeCRAM	v_pal_dry,$80,0
-		bra.s	@waterbelow
+		bra.s	.waterbelow
 
-@waterabove:
+.waterabove:
 		writeCRAM	v_pal_water,$80,0
 
-	@waterbelow:
+	.waterbelow:
 		move.w	(v_hbla_hreg).w,(a5)
 		startZ80
 		bra.w	VBla_Music
@@ -634,10 +635,10 @@ VBla_02:
 
 VBla_14:
 		tst.w	(v_generictimer).w
-		beq.w	@end
+		beq.w	.end
 		subq.w	#1,(v_generictimer).w
 
-	@end:
+	.end:
 		rts	
 ; ===========================================================================
 
@@ -646,10 +647,10 @@ VBla_04:
 		bsr.w	LoadTilesAsYouMove_BGOnly
 		bsr.w	sub_1642
 		tst.w	(v_generictimer).w
-		beq.w	@end
+		beq.w	.end
 		subq.w	#1,(v_generictimer).w
 
-	@end:
+	.end:
 		rts	
 ; ===========================================================================
 
@@ -667,26 +668,26 @@ VBla_08:
 		waitZ80
 		bsr.w	ReadJoypads
 		tst.b	(f_wtr_state).w
-		bne.s	@waterabove
+		bne.s	.waterabove
 
 		writeCRAM	v_pal_dry,$80,0
-		bra.s	@waterbelow
+		bra.s	.waterbelow
 
-@waterabove:
+.waterabove:
 		writeCRAM	v_pal_water,$80,0
 
-	@waterbelow:
+	.waterbelow:
 		move.w	(v_hbla_hreg).w,(a5)
 
 		writeVRAM	v_hscrolltablebuffer,$380,vram_hscroll
 		writeVRAM	v_spritetablebuffer,$280,vram_sprites
 		tst.b	(f_sonframechg).w ; has Sonic's sprite changed?
-		beq.s	@nochg		; if not, branch
+		beq.s	.nochg		; if not, branch
 
 		writeVRAM	v_sgfx_buffer,$2E0,vram_sonic ; load new Sonic gfx
 		move.b	#0,(f_sonframechg).w
 
-	@nochg:
+	.nochg:
 		startZ80
 		movem.l	(v_screenposx).w,d0-d7
 		movem.l	d0-d7,(v_screenposx_dup).w
@@ -711,10 +712,10 @@ Demo_Time:
 		jsr	(HUD_Update).l
 		bsr.w	ProcessDPLC2
 		tst.w	(v_generictimer).w ; is there time left on the demo?
-		beq.w	@end		; if not, branch
+		beq.w	.end		; if not, branch
 		subq.w	#1,(v_generictimer).w ; subtract 1 from time left
 
-	@end:
+	.end:
 		rts	
 ; End of function Demo_Time
 
@@ -730,17 +731,17 @@ VBla_0A:
 		startZ80
 		bsr.w	PalCycle_SS
 		tst.b	(f_sonframechg).w ; has Sonic's sprite changed?
-		beq.s	@nochg		; if not, branch
+		beq.s	.nochg		; if not, branch
 
 		writeVRAM	v_sgfx_buffer,$2E0,vram_sonic ; load new Sonic gfx
 		move.b	#0,(f_sonframechg).w
 
-	@nochg:
+	.nochg:
 		tst.w	(v_generictimer).w	; is there time left on the demo?
-		beq.w	@end	; if not, return
+		beq.w	.end	; if not, return
 		subq.w	#1,(v_generictimer).w	; subtract 1 from time left in demo
 
-	@end:
+	.end:
 		rts	
 ; ===========================================================================
 
@@ -749,24 +750,24 @@ VBla_0C:
 		waitZ80
 		bsr.w	ReadJoypads
 		tst.b	(f_wtr_state).w
-		bne.s	@waterabove
+		bne.s	.waterabove
 
 		writeCRAM	v_pal_dry,$80,0
-		bra.s	@waterbelow
+		bra.s	.waterbelow
 
-@waterabove:
+.waterabove:
 		writeCRAM	v_pal_water,$80,0
 
-	@waterbelow:
+	.waterbelow:
 		move.w	(v_hbla_hreg).w,(a5)
 		writeVRAM	v_hscrolltablebuffer,$380,vram_hscroll
 		writeVRAM	v_spritetablebuffer,$280,vram_sprites
 		tst.b	(f_sonframechg).w
-		beq.s	@nochg
+		beq.s	.nochg
 		writeVRAM	v_sgfx_buffer,$2E0,vram_sonic
 		move.b	#0,(f_sonframechg).w
 
-	@nochg:
+	.nochg:
 		startZ80
 		movem.l	(v_screenposx).w,d0-d7
 		movem.l	d0-d7,(v_screenposx_dup).w
@@ -801,16 +802,16 @@ VBla_16:
 		writeVRAM	v_hscrolltablebuffer,$380,vram_hscroll
 		startZ80
 		tst.b	(f_sonframechg).w
-		beq.s	@nochg
+		beq.s	.nochg
 		writeVRAM	v_sgfx_buffer,$2E0,vram_sonic
 		move.b	#0,(f_sonframechg).w
 
-	@nochg:
+	.nochg:
 		tst.w	(v_generictimer).w
-		beq.w	@end
+		beq.w	.end
 		subq.w	#1,(v_generictimer).w
 
-	@end:
+	.end:
 		rts	
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
@@ -821,14 +822,14 @@ sub_106E:
 		waitZ80
 		bsr.w	ReadJoypads
 		tst.b	(f_wtr_state).w ; is water above top of screen?
-		bne.s	@waterabove	; if yes, branch
+		bne.s	.waterabove	; if yes, branch
 		writeCRAM	v_pal_dry,$80,0
-		bra.s	@waterbelow
+		bra.s	.waterbelow
 
-	@waterabove:
+	.waterabove:
 		writeCRAM	v_pal_water,$80,0
 
-	@waterbelow:
+	.waterbelow:
 		writeVRAM	v_spritetablebuffer,$280,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,$380,vram_hscroll
 		startZ80
@@ -845,7 +846,7 @@ sub_106E:
 HBlank:
 		disable_ints
 		tst.w	(f_hbla_pal).w	; is palette set to change?
-		beq.s	@nochg		; if not, branch
+		beq.s	.nochg		; if not, branch
 		move.w	#0,(f_hbla_pal).w
 		movem.l	a0-a1,-(sp)
 		lea	(vdp_data_port).l,a1
@@ -888,7 +889,7 @@ HBlank:
 		tst.b	($FFFFF64F).w
 		bne.s	loc_119E
 
-	@nochg:
+	.nochg:
 		rte	
 ; ===========================================================================
 
@@ -928,10 +929,10 @@ JoypadInit:
 ReadJoypads:
 		lea	(v_jpadhold1).w,a0 ; address where joypad states are written
 		lea	($A10003).l,a1	; first joypad port
-		bsr.s	@read		; do the first joypad
+		bsr.s	.read		; do the first joypad
 		addq.w	#2,a1		; do the second joypad
 
-	@read:
+	.read:
 		move.b	#0,(a1)
 		nop	
 		nop	
@@ -963,9 +964,9 @@ VDPSetupGame:
 		lea	(VDPSetupArray).l,a2
 		moveq	#$12,d7
 
-	@setreg:
+	.setreg:
 		move.w	(a2)+,(a0)
-		dbf	d7,@setreg	; set the VDP registers
+		dbf	d7,.setreg	; set the VDP registers
 
 		move.w	(VDPSetupArray+2).l,d0
 		move.w	d0,(v_vdp_buffer1).w
@@ -974,19 +975,19 @@ VDPSetupGame:
 		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
 		move.w	#$3F,d7
 
-	@clrCRAM:
+	.clrCRAM:
 		move.w	d0,(a1)
-		dbf	d7,@clrCRAM	; clear the CRAM
+		dbf	d7,.clrCRAM	; clear the CRAM
 
 		clr.l	(v_scrposy_vdp).w
 		clr.l	(v_scrposx_vdp).w
 		move.l	d1,-(sp)
 		fillVRAM	0,$FFFF,0
 
-	@waitforDMA:
+	.waitforDMA:
 		move.w	(a5),d1
 		btst	#1,d1		; is DMA (fillVRAM) still running?
-		bne.s	@waitforDMA	; if yes, branch
+		bne.s	.waitforDMA	; if yes, branch
 
 		move.w	#$8F02,(a5)	; set VDP increment size
 		move.l	(sp)+,d1
@@ -1024,18 +1025,18 @@ VDPSetupArray:	dc.w $8004		; 8-colour mode
 ClearScreen:
 		fillVRAM	0,$FFF,vram_fg ; clear foreground namespace
 
-	@wait1:
+	.wait1:
 		move.w	(a5),d1
 		btst	#1,d1
-		bne.s	@wait1
+		bne.s	.wait1
 
 		move.w	#$8F02,(a5)
 		fillVRAM	0,$FFF,vram_bg ; clear background namespace
 
-	@wait2:
+	.wait2:
 		move.w	(a5),d1
 		btst	#1,d1
-		bne.s	@wait2
+		bne.s	.wait2
 
 		move.w	#$8F02,(a5)
 		if Revision=0
@@ -1050,17 +1051,17 @@ ClearScreen:
 		moveq	#0,d0
 		move.w	#($280/4),d1	; This should be ($280/4)-1, leading to a slight bug (first bit of v_pal_water is cleared)
 
-	@clearsprites:
+	.clearsprites:
 		move.l	d0,(a1)+
-		dbf	d1,@clearsprites ; clear sprite table (in RAM)
+		dbf	d1,.clearsprites ; clear sprite table (in RAM)
 
 		lea	(v_hscrolltablebuffer).w,a1
 		moveq	#0,d0
 		move.w	#($400/4),d1	; This should be ($400/4)-1, leading to a slight bug (first bit of the Sonic object's RAM is cleared)
 
-	@clearhscroll:
+	.clearhscroll:
 		move.l	d0,(a1)+
-		dbf	d1,@clearhscroll ; clear hscroll table (in RAM)
+		dbf	d1,.clearhscroll ; clear hscroll table (in RAM)
 		rts	
 ; End of function ClearScreen
 
@@ -1142,23 +1143,23 @@ AddPLC:
 		lea	(a1,d0.w),a1		; jump to relevant PLC
 		lea	(v_plc_buffer).w,a2 ; PLC buffer space
 
-	@findspace:
+	.findspace:
 		tst.l	(a2)		; is space available in RAM?
-		beq.s	@copytoRAM	; if yes, branch
+		beq.s	.copytoRAM	; if yes, branch
 		addq.w	#6,a2		; if not, try next space
-		bra.s	@findspace
+		bra.s	.findspace
 ; ===========================================================================
 
-@copytoRAM:
+.copytoRAM:
 		move.w	(a1)+,d0	; get length of PLC
-		bmi.s	@skip
+		bmi.s	.skip
 
-	@loop:
+	.loop:
 		move.l	(a1)+,(a2)+
 		move.w	(a1)+,(a2)+	; copy PLC to RAM
-		dbf	d0,@loop	; repeat for length of PLC
+		dbf	d0,.loop	; repeat for length of PLC
 
-	@skip:
+	.skip:
 		movem.l	(sp)+,a1-a2 ; a1=object
 		rts	
 ; End of function AddPLC
@@ -1186,14 +1187,14 @@ NewPLC:
 		bsr.s	ClearPLC	; erase any data in PLC buffer space
 		lea	(v_plc_buffer).w,a2
 		move.w	(a1)+,d0	; get length of PLC
-		bmi.s	@skip		; if it's negative, skip the next loop
+		bmi.s	.skip		; if it's negative, skip the next loop
 
-	@loop:
+	.loop:
 		move.l	(a1)+,(a2)+
 		move.w	(a1)+,(a2)+	; copy PLC to RAM
-		dbf	d0,@loop		; repeat for length of PLC
+		dbf	d0,.loop		; repeat for length of PLC
 
-	@skip:
+	.skip:
 		movem.l	(sp)+,a1-a2
 		rts	
 ; End of function NewPLC
@@ -1211,9 +1212,9 @@ ClearPLC:
 		lea	(v_plc_buffer).w,a2 ; PLC buffer space in RAM
 		moveq	#$1F,d0	; bytesToLcnt(v_plc_buffer_end-v_plc_buffer)
 
-	@loop:
+	.loop:
 		clr.l	(a2)+
-		dbf	d0,@loop
+		dbf	d0,.loop
 		rts	
 ; End of function ClearPLC
 
@@ -1404,18 +1405,18 @@ PalFadeIn_Alt:				; start position and size are already set
 		moveq	#cBlack,d1
 		move.b	(v_pfade_size).w,d0
 
-	@fill:
+	.fill:
 		move.w	d1,(a0)+
-		dbf	d0,@fill 	; fill palette with black
+		dbf	d0,.fill 	; fill palette with black
 
 		move.w	#$15,d4
 
-	@mainloop:
+	.mainloop:
 		move.b	#$12,(v_vbla_routine).w
 		bsr.w	WaitForVBla
 		bsr.s	FadeIn_FromBlack
 		bsr.w	RunPLC
-		dbf	d4,@mainloop
+		dbf	d4,.mainloop
 		rts	
 ; End of function PaletteFadeIn
 
@@ -1432,12 +1433,12 @@ FadeIn_FromBlack:
 		adda.w	d0,a1
 		move.b	(v_pfade_size).w,d0
 
-	@addcolour:
+	.addcolour:
 		bsr.s	FadeIn_AddColour ; increase colour
-		dbf	d0,@addcolour	; repeat for size of palette
+		dbf	d0,.addcolour	; repeat for size of palette
 
 		cmpi.b	#id_LZ,(v_zone).w	; is level Labyrinth?
-		bne.s	@exit		; if not, branch
+		bne.s	.exit		; if not, branch
 
 		moveq	#0,d0
 		lea	(v_pal_water).w,a0
@@ -1447,11 +1448,11 @@ FadeIn_FromBlack:
 		adda.w	d0,a1
 		move.b	(v_pfade_size).w,d0
 
-	@addcolour2:
+	.addcolour2:
 		bsr.s	FadeIn_AddColour ; increase colour again
-		dbf	d0,@addcolour2 ; repeat
+		dbf	d0,.addcolour2 ; repeat
 
-@exit:
+.exit:
 		rts	
 ; End of function FadeIn_FromBlack
 
@@ -1460,34 +1461,34 @@ FadeIn_FromBlack:
 
 
 FadeIn_AddColour:
-@addblue:
+.addblue:
 		move.w	(a1)+,d2
 		move.w	(a0),d3
 		cmp.w	d2,d3		; is colour already at threshold level?
-		beq.s	@next		; if yes, branch
+		beq.s	.next		; if yes, branch
 		move.w	d3,d1
 		addi.w	#$200,d1	; increase blue value
 		cmp.w	d2,d1		; has blue reached threshold level?
-		bhi.s	@addgreen	; if yes, branch
+		bhi.s	.addgreen	; if yes, branch
 		move.w	d1,(a0)+	; update palette
 		rts	
 ; ===========================================================================
 
-@addgreen:
+.addgreen:
 		move.w	d3,d1
 		addi.w	#$20,d1		; increase green value
 		cmp.w	d2,d1
-		bhi.s	@addred
+		bhi.s	.addred
 		move.w	d1,(a0)+	; update palette
 		rts	
 ; ===========================================================================
 
-@addred:
+.addred:
 		addq.w	#2,(a0)+	; increase red value
 		rts	
 ; ===========================================================================
 
-@next:
+.next:
 		addq.w	#2,a0		; next colour
 		rts	
 ; End of function FadeIn_AddColour
@@ -1505,12 +1506,12 @@ PaletteFadeOut:
 		move.w	#$003F,(v_pfade_start).w ; start position = 0; size = $40
 		move.w	#$15,d4
 
-	@mainloop:
+	.mainloop:
 		move.b	#$12,(v_vbla_routine).w
 		bsr.w	WaitForVBla
 		bsr.s	FadeOut_ToBlack
 		bsr.w	RunPLC
-		dbf	d4,@mainloop
+		dbf	d4,.mainloop
 		rts	
 ; End of function PaletteFadeOut
 
@@ -1525,9 +1526,9 @@ FadeOut_ToBlack:
 		adda.w	d0,a0
 		move.b	(v_pfade_size).w,d0
 
-	@decolour:
+	.decolour:
 		bsr.s	FadeOut_DecColour ; decrease colour
-		dbf	d0,@decolour	; repeat for size of palette
+		dbf	d0,.decolour	; repeat for size of palette
 
 		moveq	#0,d0
 		lea	(v_pal_water).w,a0
@@ -1535,9 +1536,9 @@ FadeOut_ToBlack:
 		adda.w	d0,a0
 		move.b	(v_pfade_size).w,d0
 
-	@decolour2:
+	.decolour2:
 		bsr.s	FadeOut_DecColour
-		dbf	d0,@decolour2
+		dbf	d0,.decolour2
 		rts	
 ; End of function FadeOut_ToBlack
 
@@ -1546,33 +1547,33 @@ FadeOut_ToBlack:
 
 
 FadeOut_DecColour:
-@dered:
+.dered:
 		move.w	(a0),d2
-		beq.s	@next
+		beq.s	.next
 		move.w	d2,d1
 		andi.w	#$E,d1
-		beq.s	@degreen
+		beq.s	.degreen
 		subq.w	#2,(a0)+	; decrease red value
 		rts	
 ; ===========================================================================
 
-@degreen:
+.degreen:
 		move.w	d2,d1
 		andi.w	#$E0,d1
-		beq.s	@deblue
+		beq.s	.deblue
 		subi.w	#$20,(a0)+	; decrease green value
 		rts	
 ; ===========================================================================
 
-@deblue:
+.deblue:
 		move.w	d2,d1
 		andi.w	#$E00,d1
-		beq.s	@next
+		beq.s	.next
 		subi.w	#$200,(a0)+	; decrease blue value
 		rts	
 ; ===========================================================================
 
-@next:
+.next:
 		addq.w	#2,a0
 		rts	
 ; End of function FadeOut_DecColour
@@ -1593,18 +1594,18 @@ PaletteWhiteIn:
 		move.w	#cWhite,d1
 		move.b	(v_pfade_size).w,d0
 
-	@fill:
+	.fill:
 		move.w	d1,(a0)+
-		dbf	d0,@fill 	; fill palette with white
+		dbf	d0,.fill 	; fill palette with white
 
 		move.w	#$15,d4
 
-	@mainloop:
+	.mainloop:
 		move.b	#$12,(v_vbla_routine).w
 		bsr.w	WaitForVBla
 		bsr.s	WhiteIn_FromWhite
 		bsr.w	RunPLC
-		dbf	d4,@mainloop
+		dbf	d4,.mainloop
 		rts	
 ; End of function PaletteWhiteIn
 
@@ -1621,12 +1622,12 @@ WhiteIn_FromWhite:
 		adda.w	d0,a1
 		move.b	(v_pfade_size).w,d0
 
-	@decolour:
+	.decolour:
 		bsr.s	WhiteIn_DecColour ; decrease colour
-		dbf	d0,@decolour	; repeat for size of palette
+		dbf	d0,.decolour	; repeat for size of palette
 
 		cmpi.b	#id_LZ,(v_zone).w	; is level Labyrinth?
-		bne.s	@exit		; if not, branch
+		bne.s	.exit		; if not, branch
 		moveq	#0,d0
 		lea	(v_pal_water).w,a0
 		lea	(v_pal_water_dup).w,a1
@@ -1635,11 +1636,11 @@ WhiteIn_FromWhite:
 		adda.w	d0,a1
 		move.b	(v_pfade_size).w,d0
 
-	@decolour2:
+	.decolour2:
 		bsr.s	WhiteIn_DecColour
-		dbf	d0,@decolour2
+		dbf	d0,.decolour2
 
-	@exit:
+	.exit:
 		rts	
 ; End of function WhiteIn_FromWhite
 
@@ -1648,36 +1649,36 @@ WhiteIn_FromWhite:
 
 
 WhiteIn_DecColour:
-@deblue:
+.deblue:
 		move.w	(a1)+,d2
 		move.w	(a0),d3
 		cmp.w	d2,d3
-		beq.s	@next
+		beq.s	.next
 		move.w	d3,d1
 		subi.w	#$200,d1	; decrease blue value
-		blo.s	@degreen
+		blo.s	.degreen
 		cmp.w	d2,d1
-		blo.s	@degreen
+		blo.s	.degreen
 		move.w	d1,(a0)+
 		rts	
 ; ===========================================================================
 
-@degreen:
+.degreen:
 		move.w	d3,d1
 		subi.w	#$20,d1		; decrease green value
-		blo.s	@dered
+		blo.s	.dered
 		cmp.w	d2,d1
-		blo.s	@dered
+		blo.s	.dered
 		move.w	d1,(a0)+
 		rts	
 ; ===========================================================================
 
-@dered:
+.dered:
 		subq.w	#2,(a0)+	; decrease red value
 		rts	
 ; ===========================================================================
 
-@next:
+.next:
 		addq.w	#2,a0
 		rts	
 ; End of function WhiteIn_DecColour
@@ -1693,12 +1694,12 @@ PaletteWhiteOut:
 		move.w	#$003F,(v_pfade_start).w ; start position = 0; size = $40
 		move.w	#$15,d4
 
-	@mainloop:
+	.mainloop:
 		move.b	#$12,(v_vbla_routine).w
 		bsr.w	WaitForVBla
 		bsr.s	WhiteOut_ToWhite
 		bsr.w	RunPLC
-		dbf	d4,@mainloop
+		dbf	d4,.mainloop
 		rts	
 ; End of function PaletteWhiteOut
 
@@ -1713,9 +1714,9 @@ WhiteOut_ToWhite:
 		adda.w	d0,a0
 		move.b	(v_pfade_size).w,d0
 
-	@addcolour:
+	.addcolour:
 		bsr.s	WhiteOut_AddColour
-		dbf	d0,@addcolour
+		dbf	d0,.addcolour
 
 		moveq	#0,d0
 		lea	(v_pal_water).w,a0
@@ -1723,9 +1724,9 @@ WhiteOut_ToWhite:
 		adda.w	d0,a0
 		move.b	(v_pfade_size).w,d0
 
-	@addcolour2:
+	.addcolour2:
 		bsr.s	WhiteOut_AddColour
-		dbf	d0,@addcolour2
+		dbf	d0,.addcolour2
 		rts	
 ; End of function WhiteOut_ToWhite
 
@@ -1734,37 +1735,37 @@ WhiteOut_ToWhite:
 
 
 WhiteOut_AddColour:
-@addred:
+.addred:
 		move.w	(a0),d2
 		cmpi.w	#cWhite,d2
-		beq.s	@next
+		beq.s	.next
 		move.w	d2,d1
 		andi.w	#$E,d1
 		cmpi.w	#cRed,d1
-		beq.s	@addgreen
+		beq.s	.addgreen
 		addq.w	#2,(a0)+	; increase red value
 		rts	
 ; ===========================================================================
 
-@addgreen:
+.addgreen:
 		move.w	d2,d1
 		andi.w	#$E0,d1
 		cmpi.w	#cGreen,d1
-		beq.s	@addblue
+		beq.s	.addblue
 		addi.w	#$20,(a0)+	; increase green value
 		rts	
 ; ===========================================================================
 
-@addblue:
+.addblue:
 		move.w	d2,d1
 		andi.w	#$E00,d1
 		cmpi.w	#cBlue,d1
-		beq.s	@next
+		beq.s	.next
 		addi.w	#$200,(a0)+	; increase blue value
 		rts	
 ; ===========================================================================
 
-@next:
+.next:
 		addq.w	#2,a0
 		rts	
 ; End of function WhiteOut_AddColour
@@ -1890,9 +1891,9 @@ PalLoad1:
 		adda.w	#v_pal_dry_dup-v_pal_dry,a3		; skip to "main" RAM address
 		move.w	(a1)+,d7	; get length of palette data
 
-	@loop:
+	.loop:
 		move.l	(a2)+,(a3)+	; move data to RAM
-		dbf	d7,@loop
+		dbf	d7,.loop
 		rts	
 ; End of function PalLoad1
 
@@ -1908,9 +1909,9 @@ PalLoad2:
 		movea.w	(a1)+,a3	; get target RAM address
 		move.w	(a1)+,d7	; get length of palette
 
-	@loop:
+	.loop:
 		move.l	(a2)+,(a3)+	; move data to RAM
-		dbf	d7,@loop
+		dbf	d7,.loop
 		rts	
 ; End of function PalLoad2
 
@@ -1930,9 +1931,9 @@ PalLoad3_Water:
 		suba.w	#v_pal_dry-v_pal_water,a3		; skip to "main" RAM address
 		move.w	(a1)+,d7	; get length of palette data
 
-	@loop:
+	.loop:
 		move.l	(a2)+,(a3)+	; move data to RAM
-		dbf	d7,@loop
+		dbf	d7,.loop
 		rts	
 ; End of function PalLoad3_Water
 
@@ -1949,9 +1950,9 @@ PalLoad4_Water:
 		suba.w	#v_pal_dry-v_pal_water_dup,a3
 		move.w	(a1)+,d7	; get length of palette data
 
-	@loop:
+	.loop:
 		move.l	(a2)+,(a3)+	; move data to RAM
-		dbf	d7,@loop
+		dbf	d7,.loop
 		rts	
 ; End of function PalLoad4_Water
 
@@ -1993,9 +1994,9 @@ Pal_Ending:	incbin	"palette\Ending.bin"
 WaitForVBla:
 		enable_ints
 
-	@wait:
+	.wait:
 		tst.b	(v_vbla_routine).w ; has VBlank routine finished?
-		bne.s	@wait		; if not, branch
+		bne.s	.wait		; if not, branch
 		rts	
 ; End of function WaitForVBla
 
@@ -2042,11 +2043,11 @@ GM_Sega:
 		if Revision=0
 		else
 			tst.b   (v_megadrive).w	; is console Japanese?
-			bmi.s   @loadpal
+			bmi.s   .loadpal
 			copyTilemap	$FF0A40,$C53A,2,1 ; hide "TM" with a white rectangle
 		endc
 
-	@loadpal:
+	.loadpal:
 		moveq	#palid_SegaBG,d0
 		bsr.w	PalLoad2	; load Sega logo palette
 		move.w	#-$A,(v_pcyc_num).w
@@ -2218,12 +2219,12 @@ GM_Title:
 		if Revision=0
 		else
 			tst.b   (v_megadrive).w	; is console Japanese?
-			bpl.s   @isjap		; if yes, branch
+			bpl.s   .isjap		; if yes, branch
 		endc
 
 		move.b	#id_PSBTM,(v_titletm).w ; load "TM" object
 		move.b	#3,(v_titletm+obFrame).w
-	@isjap:
+	.isjap:
 		move.b	#id_PSBTM,(v_ttlsonichide).w ; load object which hides part of Sonic
 		move.b	#2,(v_ttlsonichide+obFrame).w
 		jsr	(ExecuteObjects).l
@@ -3285,24 +3286,24 @@ SyncEnd:
 
 SignpostArtLoad:
 		tst.w	(v_debuguse).w	; is debug mode being used?
-		bne.w	@exit		; if yes, branch
+		bne.w	.exit		; if yes, branch
 		cmpi.b	#2,(v_act).w	; is act number 02 (act 3)?
-		beq.s	@exit		; if yes, branch
+		beq.s	.exit		; if yes, branch
 
 		move.w	(v_screenposx).w,d0
 		move.w	(v_limitright2).w,d1
 		subi.w	#$100,d1
 		cmp.w	d1,d0		; has Sonic reached the edge of the level?
-		blt.s	@exit		; if not, branch
+		blt.s	.exit		; if not, branch
 		tst.b	(f_timecount).w
-		beq.s	@exit
+		beq.s	.exit
 		cmp.w	(v_limitleft2).w,d1
-		beq.s	@exit
+		beq.s	.exit
 		move.w	d1,(v_limitleft2).w ; move left boundary to current screen position
 		moveq	#plcid_Signpost,d0
 		bra.w	NewPLC		; load signpost patterns
 
-	@exit:
+	.exit:
 		rts	
 ; End of function SignpostArtLoad
 
@@ -4932,7 +4933,7 @@ DrawBlocks_LR_2:
 		move.l	#$800000,d7	; Delta between rows of tiles
 		move.l	d0,d1
 
-	@loop:
+	.loop:
 		movem.l	d4-d5,-(sp)
 		bsr.w	GetBlockData
 		move.l	d1,d0
@@ -4941,7 +4942,7 @@ DrawBlocks_LR_2:
 		andi.b	#$7F,d1		; Wrap around row
 		movem.l	(sp)+,d4-d5
 		addi.w	#16,d5		; Move X coordinate one block ahead
-		dbf	d6,@loop
+		dbf	d6,.loop
 		rts
 ; End of function DrawBlocks_LR
 
@@ -4951,7 +4952,7 @@ DrawBlocks_LR_3:
 		move.l	#$800000,d7
 		move.l	d0,d1
 
-	@loop:
+	.loop:
 		movem.l	d4-d5,-(sp)
 		bsr.w	GetBlockData_2
 		move.l	d1,d0
@@ -4960,7 +4961,7 @@ DrawBlocks_LR_3:
 		andi.b	#$7F,d1
 		movem.l	(sp)+,d4-d5
 		addi.w	#16,d5
-		dbf	d6,@loop
+		dbf	d6,.loop
 		rts	
 ; End of function DrawBlocks_LR_3
 		endc
@@ -4978,7 +4979,7 @@ DrawBlocks_TB_2:
 		move.l	#$800000,d7	; Delta between rows of tiles
 		move.l	d0,d1
 
-	@loop:
+	.loop:
 		movem.l	d4-d5,-(sp)
 		bsr.w	GetBlockData
 		move.l	d1,d0
@@ -4987,7 +4988,7 @@ DrawBlocks_TB_2:
 		andi.w	#$FFF,d1	; Wrap around plane
 		movem.l	(sp)+,d4-d5
 		addi.w	#16,d4		; Move X coordinate one block ahead
-		dbf	d6,@loop
+		dbf	d6,.loop
 		rts	
 ; End of function DrawBlocks_TB_2
 
@@ -5244,7 +5245,7 @@ DrawChunks:
 		moveq	#-16,d4
 		moveq	#((224+16+16)/16)-1,d6
 
-	@loop:
+	.loop:
 		movem.l	d4-d6,-(sp)
 		moveq	#0,d5
 		move.w	d4,d1
@@ -5255,7 +5256,7 @@ DrawChunks:
 		bsr.w	DrawBlocks_LR_2
 		movem.l	(sp)+,d4-d6
 		addi.w	#16,d4
-		dbf	d6,@loop
+		dbf	d6,.loop
 		rts	
 ; End of function DrawChunks
 
@@ -5359,28 +5360,28 @@ LevelDataLoad:
 		move.w	(a2),d0
 		andi.w	#$FF,d0
 		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; is level SBZ3 (LZ4) ?
-		bne.s	@notSBZ3	; if not, branch
+		bne.s	.notSBZ3	; if not, branch
 		moveq	#palid_SBZ3,d0	; use SB3 palette
 
-	@notSBZ3:
+	.notSBZ3:
 		cmpi.w	#(id_SBZ<<8)+1,(v_zone).w ; is level SBZ2?
-		beq.s	@isSBZorFZ	; if yes, branch
+		beq.s	.isSBZorFZ	; if yes, branch
 		cmpi.w	#(id_SBZ<<8)+2,(v_zone).w ; is level FZ?
-		bne.s	@normalpal	; if not, branch
+		bne.s	.normalpal	; if not, branch
 
-	@isSBZorFZ:
+	.isSBZorFZ:
 		moveq	#palid_SBZ2,d0	; use SBZ2/FZ palette
 
-	@normalpal:
+	.normalpal:
 		bsr.w	PalLoad1	; load palette (based on d0)
 		movea.l	(sp)+,a2
 		addq.w	#4,a2		; read number for 2nd PLC
 		moveq	#0,d0
 		move.b	(a2),d0
-		beq.s	@skipPLC	; if 2nd PLC is 0 (i.e. the ending sequence), branch
+		beq.s	.skipPLC	; if 2nd PLC is 0 (i.e. the ending sequence), branch
 		bsr.w	AddPLC		; load pattern load cues
 
-	@skipPLC:
+	.skipPLC:
 		rts	
 ; End of function LevelDataLoad
 
@@ -6378,21 +6379,21 @@ BuildSprites:
 		lea	(v_spritequeue).w,a4
 		moveq	#7,d7
 
-	@priorityLoop:
+	.priorityLoop:
 		tst.w	(a4)	; are there objects left to draw?
-		beq.w	@nextPriority	; if not, branch
+		beq.w	.nextPriority	; if not, branch
 		moveq	#2,d6
 
-	@objectLoop:
+	.objectLoop:
 		movea.w	(a4,d6.w),a0	; load object ID
 		tst.b	(a0)		; if null, branch
-		beq.w	@skipObject
+		beq.w	.skipObject
 		bclr	#7,obRender(a0)		; set as not visible
 
 		move.b	obRender(a0),d0
 		move.b	d0,d4
 		andi.w	#$C,d0		; get drawing coordinates
-		beq.s	@screenCoords	; branch if 0 (screen coordinates)
+		beq.s	.screenCoords	; branch if 0 (screen coordinates)
 		movea.l	BldSpr_ScrPos(pc,d0.w),a1
 	; check object bounds
 		moveq	#0,d0
@@ -6401,79 +6402,79 @@ BuildSprites:
 		sub.w	(a1),d3
 		move.w	d3,d1
 		add.w	d0,d1
-		bmi.w	@skipObject	; left edge out of bounds
+		bmi.w	.skipObject	; left edge out of bounds
 		move.w	d3,d1
 		sub.w	d0,d1
 		cmpi.w	#320,d1
-		bge.s	@skipObject	; right edge out of bounds
+		bge.s	.skipObject	; right edge out of bounds
 		addi.w	#128,d3		; VDP sprites start at 128px
 
 		btst	#4,d4		; is assume height flag on?
-		beq.s	@assumeHeight	; if yes, branch
+		beq.s	.assumeHeight	; if yes, branch
 		moveq	#0,d0
 		move.b	obHeight(a0),d0
 		move.w	obY(a0),d2
 		sub.w	4(a1),d2
 		move.w	d2,d1
 		add.w	d0,d1
-		bmi.s	@skipObject	; top edge out of bounds
+		bmi.s	.skipObject	; top edge out of bounds
 		move.w	d2,d1
 		sub.w	d0,d1
 		cmpi.w	#224,d1
-		bge.s	@skipObject
+		bge.s	.skipObject
 		addi.w	#128,d2		; VDP sprites start at 128px
-		bra.s	@drawObject
+		bra.s	.drawObject
 ; ===========================================================================
 
-	@screenCoords:
+	.screenCoords:
 		move.w	$A(a0),d2	; special variable for screen Y
 		move.w	obX(a0),d3
-		bra.s	@drawObject
+		bra.s	.drawObject
 ; ===========================================================================
 
-	@assumeHeight:
+	.assumeHeight:
 		move.w	obY(a0),d2
 		sub.w	obMap(a1),d2
 		addi.w	#$80,d2
 		cmpi.w	#$60,d2
-		blo.s	@skipObject
+		blo.s	.skipObject
 		cmpi.w	#$180,d2
-		bhs.s	@skipObject
+		bhs.s	.skipObject
 
-	@drawObject:
+	.drawObject:
 		movea.l	obMap(a0),a1
 		moveq	#0,d1
 		btst	#5,d4		; is static mappings flag on?
-		bne.s	@drawFrame	; if yes, branch
+		bne.s	.drawFrame	; if yes, branch
 		move.b	obFrame(a0),d1
 		add.b	d1,d1
 		adda.w	(a1,d1.w),a1	; get mappings frame address
 		move.b	(a1)+,d1	; number of sprite pieces
 		subq.b	#1,d1
-		bmi.s	@setVisible
+		bmi.s	.setVisible
 
-	@drawFrame:
+	.drawFrame:
 		bsr.w	BuildSpr_Draw	; write data from sprite pieces to buffer
 
-	@setVisible:
+	.setVisible:
 		bset	#7,obRender(a0)		; set object as visible
 
-	@skipObject:
+	.skipObject:
 		addq.w	#2,d6
 		subq.w	#2,(a4)			; number of objects left
-		bne.w	@objectLoop
+		bne.w	.objectLoop
 
-	@nextPriority:
+	.nextPriority:
 		lea	$80(a4),a4
-		dbf	d7,@priorityLoop
+		dbf	d7,.priorityLoop
 		move.b	d5,(v_spritecount).w
 		cmpi.b	#$50,d5
-		beq.s	@spriteLimit
+		beq.s	.spriteLimit
 		move.l	#0,(a2)
 		rts	
 ; ===========================================================================
 
-	@spriteLimit:
+	.spriteLimit:
 		move.b	#0,-5(a2)	; set last sprite link
 		rts	
 ; End of function BuildSprites
@@ -6496,7 +6497,7 @@ BuildSpr_Draw:
 
 BuildSpr_Normal:
 		cmpi.b	#$50,d5		; check sprite limit
-		beq.s	@return
+		beq.s	.return
 		move.b	(a1)+,d0	; get y-offset
 		ext.w	d0
 		add.w	d2,d0		; add y-position
@@ -6513,14 +6514,14 @@ BuildSpr_Normal:
 		ext.w	d0
 		add.w	d3,d0		; add x-position
 		andi.w	#$1FF,d0	; keep within 512px
-		bne.s	@writeX
+		bne.s	.writeX
 		addq.w	#1,d0
 
-	@writeX:
+	.writeX:
 		move.w	d0,(a2)+	; write to buffer
 		dbf	d1,BuildSpr_Normal	; process next sprite piece
 
-	@return:
+	.return:
 		rts	
 ; End of function BuildSpr_Normal
 
@@ -6530,9 +6531,9 @@ BuildSpr_FlipX:
 		btst	#1,d4		; is object also y-flipped?
 		bne.w	BuildSpr_FlipXY	; if yes, branch
 
-	@loop:
+	.loop:
 		cmpi.b	#$50,d5		; check sprite limit
-		beq.s	@return
+		beq.s	.return
 		move.b	(a1)+,d0	; y position
 		ext.w	d0
 		add.w	d2,d0
@@ -6556,20 +6557,20 @@ BuildSpr_FlipX:
 		sub.w	d4,d0
 		add.w	d3,d0
 		andi.w	#$1FF,d0	; keep within 512px
-		bne.s	@writeX
+		bne.s	.writeX
 		addq.w	#1,d0
 
-	@writeX:
+	.writeX:
 		move.w	d0,(a2)+	; write to buffer
-		dbf	d1,@loop		; process next sprite piece
+		dbf	d1,.loop		; process next sprite piece
 
-	@return:
+	.return:
 		rts	
 ; ===========================================================================
 
 BuildSpr_FlipY:
 		cmpi.b	#$50,d5		; check sprite limit
-		beq.s	@return
+		beq.s	.return
 		move.b	(a1)+,d0	; get y-offset
 		move.b	(a1),d4		; get size
 		ext.w	d0
@@ -6593,20 +6594,20 @@ BuildSpr_FlipY:
 		ext.w	d0
 		add.w	d3,d0
 		andi.w	#$1FF,d0
-		bne.s	@writeX
+		bne.s	.writeX
 		addq.w	#1,d0
 
-	@writeX:
+	.writeX:
 		move.w	d0,(a2)+	; write to buffer
 		dbf	d1,BuildSpr_FlipY	; process next sprite piece
 
-	@return:
+	.return:
 		rts	
 ; ===========================================================================
 
 BuildSpr_FlipXY:
 		cmpi.b	#$50,d5		; check sprite limit
-		beq.s	@return
+		beq.s	.return
 		move.b	(a1)+,d0	; calculated flipped y
 		move.b	(a1),d4
 		ext.w	d0
@@ -6636,14 +6637,14 @@ BuildSpr_FlipXY:
 		sub.w	d4,d0
 		add.w	d3,d0
 		andi.w	#$1FF,d0
-		bne.s	@writeX
+		bne.s	.writeX
 		addq.w	#1,d0
 
-	@writeX:
+	.writeX:
 		move.w	d0,(a2)+	; write to buffer
 		dbf	d1,BuildSpr_FlipXY	; process next sprite piece
 
-	@return:
+	.return:
 		rts	
 
 		include	"_incObj\sub ChkObjectVisible.asm"
@@ -7208,28 +7209,28 @@ locret_13302:
 
 ResumeMusic:
 		cmpi.w	#12,(v_air).w	; more than 12 seconds of air left?
-		bhi.s	@over12		; if yes, branch
+		bhi.s	.over12		; if yes, branch
 		move.w	#bgm_LZ,d0	; play LZ music
 		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; check if level is 0103 (SBZ3)
-		bne.s	@notsbz
+		bne.s	.notsbz
 		move.w	#bgm_SBZ,d0	; play SBZ music
 
-	@notsbz:
+	.notsbz:
 		if Revision=0
 		else
 			tst.b	(v_invinc).w ; is Sonic invincible?
-			beq.s	@notinvinc ; if not, branch
+			beq.s	.notinvinc ; if not, branch
 			move.w	#bgm_Invincible,d0
-	@notinvinc:
+	.notinvinc:
 			tst.b	(f_lockscreen).w ; is Sonic at a boss?
-			beq.s	@playselected ; if not, branch
+			beq.s	.playselected ; if not, branch
 			move.w	#bgm_Boss,d0
-	@playselected:
+	.playselected:
 		endc
 
 		jsr	(PlaySound).l
 
-	@over12:
+	.over12:
 		move.w	#30,(v_air).w	; reset air to 30 seconds
 		clr.b	(v_sonicbubbles+$32).w
 		rts	
@@ -7280,87 +7281,87 @@ ConvertCollisionArray:
 
 		move.w	#$100-1,d3		; Number of blocks in collision data
 
-	@blockLoop:
+	.blockLoop:
 		moveq	#16,d5			; Start on the 16th bit (the leftmost pixel)
 
 		move.w	#16-1,d2		; Width of a block in pixels
 
-	@columnLoop:
+	.columnLoop:
 		moveq	#0,d4
 
 		move.w	#16-1,d1		; Height of a block in pixels
 
-	@rowLoop:
+	.rowLoop:
 		move.w	(a1)+,d0		; Get row of collision bits
 		lsr.l	d5,d0			; Push the selected bit of this row into the 'eXtend' flag
 		addx.w	d4,d4			; Shift d4 to the left, and insert the selected bit into bit 0
-		dbf	d1,@rowLoop		; Loop for each row of pixels in a block
+		dbf	d1,.rowLoop		; Loop for each row of pixels in a block
 
 		move.w	d4,(a2)+		; Store column of collision bits
 		suba.w	#2*16,a1		; Back to the start of the block
 		subq.w	#1,d5			; Get next bit in the row
-		dbf	d2,@columnLoop		; Loop for each column of pixels in a block
+		dbf	d2,.columnLoop		; Loop for each column of pixels in a block
 
 		adda.w	#2*16,a1		; Next block
-		dbf	d3,@blockLoop		; Loop for each block in the raw collision block data
+		dbf	d3,.blockLoop		; Loop for each block in the raw collision block data
 
 		; This then converts the collision data into the final collision arrays
 		lea	(ConvRowColBlocks).l,a1
 		lea	(CollArray2).l,a2	; Convert the row-converted collision block data into final rotated collision array
-		bsr.s	@convertArray
+		bsr.s	.convertArray
 		lea	(RawColBlocks).l,a1
 		lea	(CollArray1).l,a2	; Convert the raw collision block data into final normal collision array
 
 
-	@convertArray:
+	.convertArray:
 		move.w	#$1000-1,d3		; Size of the collision array
 
-	@processLoop:
+	.processLoop:
 		moveq	#0,d2
 		move.w	#$F,d1
 		move.w	(a1)+,d0		; Get current column of collision pixels
-		beq.s	@noCollision		; Branch if there's no collision in this column
-		bmi.s	@topPixelSolid		; Branch if top pixel of collision is solid
+		beq.s	.noCollision		; Branch if there's no collision in this column
+		bmi.s	.topPixelSolid		; Branch if top pixel of collision is solid
 
 	; Here we count, starting from the bottom, how many pixels tall
 	; the collision in this column is.
-	@processColumnLoop1:
+	.processColumnLoop1:
 		lsr.w	#1,d0
-		bhs.s	@pixelNotSolid1
+		bhs.s	.pixelNotSolid1
 		addq.b	#1,d2
 
-	@pixelNotSolid1:
-		dbf	d1,@processColumnLoop1
+	.pixelNotSolid1:
+		dbf	d1,.processColumnLoop1
 
-		bra.s	@columnProcessed
+		bra.s	.columnProcessed
 ; ===========================================================================
 
-	@topPixelSolid:
+	.topPixelSolid:
 		cmpi.w	#$FFFF,d0		; Is entire column solid?
-		beq.s	@entireColumnSolid	; Branch if so
+		beq.s	.entireColumnSolid	; Branch if so
 
 	; Here we count, starting from the top, how many pixels tall
 	; the collision in this column is (the resulting number is negative).
-	@processColumnLoop2:
+	.processColumnLoop2:
 		lsl.w	#1,d0
-		bhs.s	@pixelNotSolid2
+		bhs.s	.pixelNotSolid2
 		subq.b	#1,d2
 
-	@pixelNotSolid2:
-		dbf	d1,@processColumnLoop2
+	.pixelNotSolid2:
+		dbf	d1,.processColumnLoop2
 
-		bra.s	@columnProcessed
+		bra.s	.columnProcessed
 ; ===========================================================================
 
-	@entireColumnSolid:
+	.entireColumnSolid:
 		move.w	#$10,d0
 
-	@noCollision:
+	.noCollision:
 		move.w	d0,d2
 
-	@columnProcessed:
+	.columnProcessed:
 		move.b	d2,(a2)+		; Store column collision height
-		dbf	d3,@processLoop
+		dbf	d3,.processLoop
 
 		rts	
 
@@ -8518,14 +8519,14 @@ AddPoints:
 		add.l	d0,(a3)		; add d0*10 to the score
 		move.l	#999999,d1
 		cmp.l	(a3),d1		; is score below 999999?
-		bhi.w	@belowmax	; if yes, branch
+		bhi.w	.belowmax	; if yes, branch
 		move.l	d1,(a3)		; reset score to 999999
 		move.l	d1,(a2)
 
-	@belowmax:
+	.belowmax:
 		move.l	(a3),d0
 		cmp.l	(a2),d0
-		blo.w	@locret_1C6B6
+		blo.w	.locret_1C6B6
 		move.l	d0,(a2)
 
 		else
@@ -8534,24 +8535,24 @@ AddPoints:
 			add.l   d0,(a3)
 			move.l  #999999,d1
 			cmp.l   (a3),d1 ; is score below 999999?
-			bhi.s   @belowmax ; if yes, branch
+			bhi.s   .belowmax ; if yes, branch
 			move.l  d1,(a3) ; reset score to 999999
-		@belowmax:
+		.belowmax:
 			move.l  (a3),d0
 			cmp.l   (v_scorelife).w,d0 ; has Sonic got 50000+ points?
-			blo.s   @noextralife ; if not, branch
+			blo.s   .noextralife ; if not, branch
 
 			addi.l  #5000,(v_scorelife).w ; increase requirement by 50000
 			tst.b   (v_megadrive).w
-			bmi.s   @noextralife ; branch if Mega Drive is Japanese
+			bmi.s   .noextralife ; branch if Mega Drive is Japanese
 			addq.b  #1,(v_lives).w ; give extra life
 			addq.b  #1,(f_lifecount).w
 			move.w	#bgm_ExtraLife,d0
 			jmp	(PlaySound).l
 		endc
 
-@locret_1C6B6:
-@noextralife:
+.locret_1C6B6:
+.noextralife:
 		rts	
 ; End of function AddPoints
 
@@ -9397,6 +9398,7 @@ SoundDriver:	include "s1.sounddriver.asm"
 
 ; end of 'ROM'
 		even
+		popo
 EndOfRom:
 
 

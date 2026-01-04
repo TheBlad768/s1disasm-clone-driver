@@ -30,30 +30,30 @@ Burro_Main:	; Routine 0
 Burro_Action:	; Routine 2
 		moveq	#0,d0
 		move.b	ob2ndRout(a0),d0
-		move.w	@index(pc,d0.w),d1
-		jsr	@index(pc,d1.w)
+		move.w	.index(pc,d0.w),d1
+		jsr	.index(pc,d1.w)
 		lea	(Ani_Burro).l,a1
 		bsr.w	AnimateSprite
 		bra.w	RememberState
 ; ===========================================================================
-@index:		dc.w @changedir-@index
-		dc.w Burro_Move-@index
-		dc.w Burro_Jump-@index
-		dc.w Burro_ChkSonic-@index
+.index:		dc.w .changedir-.index
+		dc.w Burro_Move-.index
+		dc.w Burro_Jump-.index
+		dc.w Burro_ChkSonic-.index
 ; ===========================================================================
 
-@changedir:
+.changedir:
 		subq.w	#1,burro_timedelay(a0)
-		bpl.s	@nochg
+		bpl.s	.nochg
 		addq.b	#2,ob2ndRout(a0)
 		move.w	#255,burro_timedelay(a0)
 		move.w	#$80,obVelX(a0)
 		move.b	#1,obAnim(a0)
 		bchg	#0,obStatus(a0)	; change direction the Burrobot is facing
-		beq.s	@nochg
+		beq.s	.nochg
 		neg.w	obVelX(a0)	; change direction the Burrobot is moving
 
-	@nochg:
+	.nochg:
 		rts	
 ; ===========================================================================
 

@@ -105,31 +105,31 @@ Obj11_BendData2:incbin	"misc\ghzbend2.bin"
 ; ===========================================================================
 
 Bri_ChkDel:
-		out_of_range.w	@deletebridge
+		out_of_range.w	.deletebridge
 		rts	
 ; ===========================================================================
 
-@deletebridge:
+.deletebridge:
 		moveq	#0,d2
 		lea	obSubtype(a0),a2 ; load bridge length
 		move.b	(a2)+,d2	; move bridge length to d2
 		subq.b	#1,d2		; subtract 1
-		bcs.s	@delparent
+		bcs.s	.delparent
 
-	@loop:
+	.loop:
 		moveq	#0,d0
 		move.b	(a2)+,d0
 		lsl.w	#6,d0
 		addi.l	#v_objspace&$FFFFFF,d0
 		movea.l	d0,a1
 		cmp.w	a0,d0
-		beq.s	@skipdel
+		beq.s	.skipdel
 		bsr.w	DeleteChild
 
-	@skipdel:
-		dbf	d2,@loop ; repeat d2 times (bridge length)
+	.skipdel:
+		dbf	d2,.loop ; repeat d2 times (bridge length)
 
-@delparent:
+.delparent:
 		bsr.w	DeleteObject
 		rts	
 ; ===========================================================================

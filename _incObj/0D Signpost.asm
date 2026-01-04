@@ -35,31 +35,31 @@ Sign_Main:	; Routine 0
 Sign_Touch:	; Routine 2
 		move.w	(v_player+obX).w,d0
 		sub.w	obX(a0),d0
-		bcs.s	@notouch
+		bcs.s	.notouch
 		cmpi.w	#$20,d0		; is Sonic within $20 pixels of the signpost?
-		bcc.s	@notouch	; if not, branch
+		bcc.s	.notouch	; if not, branch
 		move.w	#sfx_Signpost,d0
 		jsr	(PlaySound).l	; play signpost sound
 		clr.b	(f_timecount).w	; stop time counter
 		move.w	(v_limitright2).w,(v_limitleft2).w ; lock screen position
 		addq.b	#2,obRoutine(a0)
 
-	@notouch:
+	.notouch:
 		rts	
 ; ===========================================================================
 
 Sign_Spin:	; Routine 4
 		subq.w	#1,spintime(a0)	; subtract 1 from spin time
-		bpl.s	@chksparkle	; if time remains, branch
+		bpl.s	.chksparkle	; if time remains, branch
 		move.w	#60,spintime(a0) ; set spin cycle time to 1 second
 		addq.b	#1,obAnim(a0)	; next spin cycle
 		cmpi.b	#3,obAnim(a0)	; have 3 spin cycles completed?
-		bne.s	@chksparkle	; if not, branch
+		bne.s	.chksparkle	; if not, branch
 		addq.b	#2,obRoutine(a0)
 
-	@chksparkle:
+	.chksparkle:
 		subq.w	#1,sparkletime(a0) ; subtract 1 from time delay
-		bpl.s	@fail		; if time remains, branch
+		bpl.s	.fail		; if time remains, branch
 		move.w	#$B,sparkletime(a0) ; set time between sparkles to $B frames
 		moveq	#0,d0
 		move.b	sparkle_id(a0),d0 ; get sparkle id
@@ -67,7 +67,7 @@ Sign_Spin:	; Routine 4
 		andi.b	#$E,sparkle_id(a0)
 		lea	Sign_SparkPos(pc,d0.w),a2 ; load sparkle position data
 		bsr.w	FindFreeObj
-		bne.s	@fail
+		bne.s	.fail
 		move.b	#id_Rings,0(a1)	; load rings object
 		move.b	#id_Ring_Sparkle,obRoutine(a1) ; jump to ring sparkle subroutine
 		move.b	(a2)+,d0
@@ -84,7 +84,7 @@ Sign_Spin:	; Routine 4
 		move.b	#2,obPriority(a1)
 		move.b	#8,obActWid(a1)
 
-	@fail:
+	.fail:
 		rts	
 ; ===========================================================================
 Sign_SparkPos:	dc.b -$18,-$10		; x-position, y-position
@@ -144,10 +144,10 @@ GotThroughAct:
 		divu.w	#15,d0		; divide by 15
 		moveq	#$14,d1
 		cmp.w	d1,d0		; is time 5 minutes or higher?
-		bcs.s	@hastimebonus	; if not, branch
+		bcs.s	.hastimebonus	; if not, branch
 		move.w	d1,d0		; use minimum time bonus (0)
 
-	@hastimebonus:
+	.hastimebonus:
 		add.w	d0,d0
 		move.w	TimeBonuses(pc,d0.w),(v_timebonus).w ; set time bonus
 		move.w	(v_rings).w,d0	; load number of rings

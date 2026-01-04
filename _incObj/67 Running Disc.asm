@@ -28,11 +28,11 @@ Disc_Main:	; Routine 0
 		move.b	#$48,$38(a0)
 		move.b	obSubtype(a0),d1 ; get object type
 		andi.b	#$F,d1		; read only the 2nd digit
-		beq.s	@typeis0	; branch if 0
+		beq.s	.typeis0	; branch if 0
 		move.b	#$10,$34(a0)
 		move.b	#$38,$38(a0)
 
-	@typeis0:
+	.typeis0:
 		move.b	obSubtype(a0),d1 ; get object type
 		andi.b	#$F0,d1		; read only the 1st digit
 		ext.w	d1
@@ -152,8 +152,8 @@ Disc_MoveSpot:
 ; ===========================================================================
 
 Disc_ChkDel:
-		out_of_range.s	@delete,disc_origX(a0)
+		out_of_range.s	.delete,disc_origX(a0)
 		jmp	(DisplaySprite).l
 
-	@delete:
+	.delete:
 		jmp	(DeleteObject).l
