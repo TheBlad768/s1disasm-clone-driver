@@ -58,6 +58,7 @@ function M.get_os_name()
         ['^cygwin']     = 'Windows',
         ['bsd$']        = 'BSD',
         ['sunos']       = 'Solaris',
+        ['android']     = 'Android',
     }
     
     local arch_patterns = {
