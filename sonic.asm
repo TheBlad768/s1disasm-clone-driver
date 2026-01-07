@@ -599,14 +599,25 @@ VBla_Exit:
 		movem.l	(sp)+,d0-a6
 		rte	
 ; ===========================================================================
-VBla_Index:	dc.w VBla_00-VBla_Index, VBla_02-VBla_Index
-		dc.w VBla_04-VBla_Index, VBla_06-VBla_Index
-		dc.w VBla_08-VBla_Index, VBla_0A-VBla_Index
-		dc.w VBla_0C-VBla_Index, VBla_0E-VBla_Index
-		dc.w VBla_10-VBla_Index, VBla_12-VBla_Index
-		dc.w VBla_14-VBla_Index, VBla_16-VBla_Index
-		dc.w VBla_0C-VBla_Index
+VBla_Index:	dc.w VBla_00-VBla_Index	; (lag frame)
+		dc.w VBla_02-VBla_Index	; Sega Screen
+		dc.w VBla_04-VBla_Index	; Title Screen, Credits
+		dc.w VBla_06-VBla_Index	; (unused)
+		dc.w VBla_08-VBla_Index	; Levels
+		dc.w VBla_0A-VBla_Index	; Special Stage
+		dc.w VBla_0C-VBla_Index	; Title Cards
+		dc.w VBla_0E-VBla_Index	; (unused)
+		dc.w VBla_10-VBla_Index	; Paused
+		dc.w VBla_12-VBla_Index	; Palette Fade
+		dc.w VBla_14-VBla_Index	; Sega Screen PCM
+		dc.w VBla_16-VBla_Index	; Continue Screen
+		dc.w VBla_18-VBla_Index	; Ending Sequence
 ; ===========================================================================
+
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 00 - Lag frame (VBlank occured before call to WaitForVBla)
+; ---------------------------------------------------------------------------
 
 ; loc_B88:
 VBla_00:
@@ -644,43 +655,68 @@ VBla_00:
 		move.w	(v_hbla_hreg).w,(a5)
 		startZ80
 		bra.w	VBla_Music
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 02 - Sega Screen
+; ---------------------------------------------------------------------------
 
 ; loc_C32:
 VBla_02:
-		bsr.w	sub_106E
+		bsr.w	VBla_StandardTransfers
+		; fall-through
+
+; ---------------------------------------------------------------------------
+; VBlank 14 - Sega Screen while the PCM sample is playing
+; ---------------------------------------------------------------------------
 
 VBla_14:
 		tst.w	(v_generictimer).w
 		beq.w	.end
 		subq.w	#1,(v_generictimer).w
-
 .end:
 		rts
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 04 - Title Screen, Level Select, Credits, "Try Again" screen
+; ---------------------------------------------------------------------------
 
 ; loc_C44:
 VBla_04:
-		bsr.w	sub_106E
+		bsr.w	VBla_StandardTransfers
 		bsr.w	LoadTilesAsYouMove_BGOnly
-		bsr.w	sub_1642
+		bsr.w	ProcessDPLC_9Tiles
 		tst.w	(v_generictimer).w
 		beq.w	.end
 		subq.w	#1,(v_generictimer).w
-
 .end:
 		rts
-; ===========================================================================
 
-; loc_C5E
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 06 - Unused
+; ---------------------------------------------------------------------------
+
+; loc_C5E:
 VBla_06:
-		bsr.w	sub_106E
+		bsr.w	VBla_StandardTransfers
 		rts
-; ===========================================================================
 
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 10 - While game is paused
+; ---------------------------------------------------------------------------
+
+; loc_C64:
 VBla_10:
 		cmpi.b	#id_Special,(v_gamemode).w ; is game on special stage?
 		beq.w	VBla_0A		; if yes, branch
+		; fall-through...
+
+; ---------------------------------------------------------------------------
+; VBlank 08 - Levels
+; ---------------------------------------------------------------------------
 
 ; loc_C6E:
 VBla_08:
@@ -713,33 +749,45 @@ VBla_08:
 		movem.l	d0-d7,(v_screenposx_dup).w
 		movem.l	(v_fg_scroll_flags).w,d0-d1
 		movem.l	d0-d1,(v_fg_scroll_flags_dup).w
-		cmpi.b	#96,(v_hbla_line).w
-		bhs.s	Demo_Time
-		move.b	#1,(f_doupdatesinhblank).w
-		addq.l	#4,sp
-		bra.w	VBla_Exit
 
+		; The following code handles an awkward visual glitch for the LZ water surface.
+		; If the surface is near the top of the screen (within 96 pixels), the VDP would not have
+		; enough time to do all the transfers in VBla_UpdateScreen before the palette needs to get
+		; changed for the water. Without this special check, the water surface would violently flicker
+		; whenever it's near the top of the screen. It's a rather dirty workaround, but it works.
+		cmpi.b	#96,(v_hbla_line).w		; is LZ water surface within 96 pixels of the top of the screen?
+		bhs.s	VBla_UpdateScreen		; if not, do screen updates now
+		move.b	#1,(f_doupdatesinhblank).w	; otherwise, we don't have enough time to do them now before HBlank hits, defer updates to then
+		addq.l	#4,sp				; skip return address (i.e. postpone updating the sound driver as well)
+		bra.w	VBla_Exit			; go straight back to to the VBlank exit
+
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to run a demo for an amount of time
+; Subroutine to update various screen elements during interrupts.
+; Also deducts the generic timer that controls the length of a Demo.
 ; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
-Demo_Time:
-		bsr.w	LoadTilesAsYouMove
-		jsr	(AnimateLevelGfx).l
-		jsr	(HUD_Update).l
-		bsr.w	ProcessDPLC2
-		tst.w	(v_generictimer).w ; is there time left on the demo?
-		beq.w	.end		; if not, branch
-		subq.w	#1,(v_generictimer).w ; subtract 1 from time left
+; Demo_Time:
+VBla_UpdateScreen:
+		bsr.w	LoadTilesAsYouMove	; update level tiles while screen is moving
+		jsr	(AnimateLevelGfx).l	; updated animated tiles
+		jsr	(HUD_Update).l		; update HUD data
+		bsr.w	ProcessDPLC_3Tiles	; run a bit of PLC decompression
 
+		tst.w	(v_generictimer).w	; is there time left in the generic timer left?
+		beq.w	.end			; if not, branch
+		subq.w	#1,(v_generictimer).w	; subtract 1 from time left
 .end:
 		rts
-; End of function Demo_Time
+; End of function VBla_UpdateScreen
 
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 0A - Special Stages
+; ---------------------------------------------------------------------------
 
 VBla_0A:
 		stopZ80
@@ -760,12 +808,16 @@ VBla_0A:
 		tst.w	(v_generictimer).w	; is there time left on the demo?
 		beq.w	.end	; if not, return
 		subq.w	#1,(v_generictimer).w	; subtract 1 from time left in demo
-
 .end:
 		rts
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 0C & 18 - While title cards are displayed (Levels and SS Results)
+; ---------------------------------------------------------------------------
 
 VBla_0C:
+VBla_18:
 		stopZ80
 		waitZ80
 		bsr.w	ReadJoypads
@@ -796,22 +848,35 @@ VBla_0C:
 		bsr.w	LoadTilesAsYouMove
 		jsr	(AnimateLevelGfx).l
 		jsr	(HUD_Update).l
-		bsr.w	sub_1642
+		bsr.w	ProcessDPLC_9Tiles
 		rts
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 0E - Unused
+; ---------------------------------------------------------------------------
 
 VBla_0E:
-		bsr.w	sub_106E
+		bsr.w	VBla_StandardTransfers
 		addq.b	#1,(v_vbla_0e_counter).w ; Unused besides this one write...
 		move.b	#$E,(v_vbla_routine).w
 		rts
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 12 - During palette fades
+; ---------------------------------------------------------------------------
 
 VBla_12:
-		bsr.w	sub_106E
+		bsr.w	VBla_StandardTransfers
 		move.w	(v_hbla_hreg).w,(a5)
-		bra.w	sub_1642
+		bra.w	ProcessDPLC_9Tiles
+		
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; VBlank 16 - Continue Screen
+; ---------------------------------------------------------------------------
 
 VBla_16:
 		stopZ80
@@ -834,30 +899,38 @@ VBla_16:
 .end:
 		rts
 
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to perform standard VRAM transfers (palette, sprites, H-scroll)
+; ---------------------------------------------------------------------------
+
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
-sub_106E:
+; sub_106E:
+VBla_StandardTransfers:
 		stopZ80
 		waitZ80
 		bsr.w	ReadJoypads
-		tst.b	(f_wtr_state).w ; is water above top of screen?
-		bne.s	.waterabove	; if yes, branch
-		writeCRAM	v_palette,0
-		bra.s	.waterbelow
 
-.waterabove:
-		writeCRAM	v_palette_water,0
+		tst.b	(f_wtr_state).w			; is the screen completely underwater?
+		bne.s	.underwater			; if yes, branch
+		writeCRAM	v_palette,0		; write full regular palette buffer to CRAM
+		bra.s	.rest
 
-.waterbelow:
+.underwater:
+		writeCRAM	v_palette_water,0	; write full water palette buffer to CRAM
+
+.rest:
 		writeVRAM	v_spritetablebuffer,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
 		startZ80
 		rts
-; End of function sub_106E
+; End of function VBla_StandardTransfers
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Horizontal interrupt
+; Horizontal interrupt (exclusively used for the LZ water palette effect)
 ; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
@@ -865,63 +938,38 @@ sub_106E:
 
 HBlank:
 		disable_ints
-		tst.w	(f_hbla_pal).w	; is palette set to change?
-		beq.s	.nochg		; if not, branch
-		move.w	#0,(f_hbla_pal).w
+		tst.w	(f_hbla_pal).w		; is palette set to change?
+		beq.s	.nochg			; if not, branch
+		move.w	#0,(f_hbla_pal).w	; clear palette change flag
+
 		movem.l	a0-a1,-(sp)
 		lea	(vdp_data_port).l,a1
-		lea	(v_palette_water).w,a0 ; get palette from RAM
-		move.l	#$C0000000,4(a1) ; set VDP to CRAM write
-		move.l	(a0)+,(a1)	; move palette to CRAM
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.l	(a0)+,(a1)
-		move.w	#$8A00+223,4(a1) ; reset HBlank register
+		lea	(v_palette_water).w,a0	; get water palette from RAM
+		move.l	#$C0000000,4(a1)	; set VDP to CRAM write
+		rept (4*$10)/2			; overwrite full palette (4 rows, 2 colors per move)
+			move.l	(a0)+,(a1)	; move water palette to CRAM
+		endr
+		move.w	#$8A00+223,4(a1)	; reset horizontal interrupt counter
 		movem.l	(sp)+,a0-a1
-		tst.b	(f_doupdatesinhblank).w
-		bne.s	loc_119E
+
+		tst.b	(f_doupdatesinhblank).w	; was frame update delayed by water surface being near the top of the screen?
+		bne.s	.delayed_transfer	; if yes, resume transfer now
 
 .nochg:
 		rte	
 ; ===========================================================================
 
-loc_119E:
-		clr.b	(f_doupdatesinhblank).w
+; loc_119E:
+.delayed_transfer:
+		clr.b	(f_doupdatesinhblank).w	; clear delayed updates flag
 		movem.l	d0-a6,-(sp)
-		bsr.w	Demo_Time
-		jsr	(UpdateMusic).l
+		bsr.w	VBla_UpdateScreen	; do all the screen updates that were skipped during VBlank now
+		jsr	(UpdateMusic).l		; update the sound driver
 		movem.l	(sp)+,d0-a6
 		rte	
 ; End of function HBlank
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to initialise joypads
 ; ---------------------------------------------------------------------------
@@ -1255,31 +1303,36 @@ Rplc_Exit:
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to decompress and dump a specified number of Nemesis-compressed
+; PLC tiles from the PLC process list to VRAM. These are called from VBlank,
+; probably done to smooth out level loading because of how slow Nemesis is.
+; ---------------------------------------------------------------------------
 
-sub_1642:
+; sub_1642:
+ProcessDPLC_9Tiles:
 		tst.w	(v_plc_patternsleft).w
 		beq.w	locret_16DA
-		move.w	#9,(v_plc_framepatternsleft).w
+		move.w	#9,(v_plc_framepatternsleft).w	; process 9 Nemesis-compressed tiles
 		moveq	#0,d0
 		move.w	(v_plc_buffer+4).w,d0
 		addi.w	#$120,(v_plc_buffer+4).w
-		bra.s	loc_1676
-; End of function sub_1642
+		bra.s	ProcessDPLC
+; ===========================================================================
 
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
-; sub_165E:
-ProcessDPLC2:
+; sub_165E: ProcessDPLC2:
+ProcessDPLC_3Tiles:
 		tst.w	(v_plc_patternsleft).w
 		beq.s	locret_16DA
-		move.w	#3,(v_plc_framepatternsleft).w
+		move.w	#3,(v_plc_framepatternsleft).w	; process 3 Nemesis-compressed tiles
 		moveq	#0,d0
 		move.w	(v_plc_buffer+4).w,d0
 		addi.w	#$60,(v_plc_buffer+4).w
+; ---------------------------------------------------------------------------
 
-loc_1676:
+; loc_1676:
+ProcessDPLC:
 		lea	(vdp_control_port).l,a4
 		lsl.l	#2,d0
 		lsr.w	#2,d0
@@ -1339,7 +1392,7 @@ loc_16E2:
 	endif
 
 		rts
-; End of function ProcessDPLC2
+; End of function ProcessDPLC
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to execute the pattern load cue
@@ -2006,22 +2059,25 @@ Pal_Ending:	bincludePalette	"palette/Ending.bin"
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
+; DelayProgram:
 WaitForVBla:
-		enable_ints
+		enable_ints		; enable interrupts so vertical interrupts can occur
 
 .wait:
 		tst.b	(v_vbla_routine).w ; has VBlank routine finished?
-		bne.s	.wait		; if not, branch
-		rts
+		bne.s	.wait		; if not, loop until it has
+		rts			; resume normal operation
 ; End of function WaitForVBla
+; ===========================================================================
 
 		include	"_incObj/sub RandomNumber.asm"
 		include	"_incObj/sub CalcSine.asm"
 		if Revision=0
-		include	"_incObj/sub CalcSqrt.asm"
+			include	"_incObj/sub CalcSqrt.asm"
 		endif
 		include	"_incObj/sub CalcAngle.asm"
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Sega screen
 ; ---------------------------------------------------------------------------
