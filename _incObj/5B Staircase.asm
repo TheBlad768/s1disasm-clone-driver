@@ -25,23 +25,23 @@ Stair_Main:	; Routine 0
 		moveq	#$38,d3
 		moveq	#1,d4
 		btst	#0,obStatus(a0)	; is object flipped?
-		beq.s	@notflipped	; if not, branch
+		beq.s	.notflipped	; if not, branch
 		moveq	#$3B,d3
 		moveq	#-1,d4
 
-	@notflipped:
+	.notflipped:
 		move.w	obX(a0),d2
 		movea.l	a0,a1
 		moveq	#3,d1
-		bra.s	@makeblocks
+		bra.s	.makeblocks
 ; ===========================================================================
 
-@loop:
+.loop:
 		bsr.w	FindNextFreeObj
-		bne.w	@fail
+		bne.w	.fail
 		move.b	#4,obRoutine(a1)
 
-@makeblocks:
+.makeblocks:
 		move.b	#id_Staircase,0(a1) ; load another block object
 		move.l	#Map_Stair,obMap(a1)
 		move.w	#$4000,obGfx(a1)
@@ -57,9 +57,9 @@ Stair_Main:	; Routine 0
 		move.b	d3,$37(a1)
 		move.l	a0,stair_parent(a1)
 		add.b	d4,d3
-		dbf	d1,@loop	; repeat sequence 3 times
+		dbf	d1,.loop	; repeat sequence 3 times
 
-	@fail:
+	.fail:
 
 Stair_Move:	; Routine 2
 		moveq	#0,d0

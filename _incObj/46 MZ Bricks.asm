@@ -28,7 +28,7 @@ Brick_Main:	; Routine 0
 
 Brick_Action:	; Routine 2
 		tst.b	obRender(a0)
-		bpl.s	@chkdel
+		bpl.s	.chkdel
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object type
 		andi.w	#7,d0		; read only the 1st digit
@@ -41,7 +41,7 @@ Brick_Action:	; Routine 2
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 
-	@chkdel:
+	.chkdel:
 		if Revision=0
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject

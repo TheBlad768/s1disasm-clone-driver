@@ -7,11 +7,11 @@
 
 DeformLayers:
 		tst.b	(f_nobgscroll).w
-		beq.s	@bgscroll
+		beq.s	.bgscroll
 		rts	
 ; ===========================================================================
 
-	@bgscroll:
+	.bgscroll:
 		clr.w	(v_fg_scroll_flags).w
 		clr.w	(v_bg1_scroll_flags).w
 		clr.w	(v_bg2_scroll_flags).w

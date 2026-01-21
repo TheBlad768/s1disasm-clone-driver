@@ -29,21 +29,21 @@ Elec_Main:	; Routine 0
 Elec_Shock:	; Routine 2
 		move.w	(v_framecount).w,d0
 		and.w	elec_freq(a0),d0 ; is it time to zap?
-		bne.s	@animate	; if not, branch
+		bne.s	.animate	; if not, branch
 
 		move.b	#1,obAnim(a0)	; run "zap" animation
 		tst.b	obRender(a0)
-		bpl.s	@animate
+		bpl.s	.animate
 		move.w	#sfx_Electric,d0
 		jsr	(PlaySound_Special).l	; play electricity sound
 
-	@animate:
+	.animate:
 		lea	(Ani_Elec).l,a1
 		jsr	(AnimateSprite).l
 		move.b	#0,obColType(a0)
 		cmpi.b	#4,obFrame(a0)	; is 4th frame displayed?
-		bne.s	@display	; if not, branch
+		bne.s	.display	; if not, branch
 		move.b	#$A4,obColType(a0) ; if yes, make object hurt Sonic
 
-	@display:
+	.display:
 		bra.w	RememberState

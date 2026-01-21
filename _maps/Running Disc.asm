@@ -4,7 +4,7 @@
 ; part of the level tiles.)
 ; ---------------------------------------------------------------------------
 Map_Disc_internal:
-		dc.w @spot-Map_Disc_internal
-@spot:		dc.b 1
+		dc.w .spot-Map_Disc_internal
+.spot:		dc.b 1
 		dc.b $F8, 5, 0,	0, $F8
 		even

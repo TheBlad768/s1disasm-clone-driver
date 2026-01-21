@@ -43,28 +43,28 @@ EEgg_Juggle:	; Routine 4
 		addq.b	#2,obRoutine(a0)
 		moveq	#2,d0
 		btst	#0,obAnim(a0)
-		beq.s	@noflip
+		beq.s	.noflip
 		neg.w	d0
 
-	@noflip:
+	.noflip:
 		lea	(v_eggmanchaos).w,a1 ; get RAM address for emeralds
 		moveq	#5,d1
 
-@emeraldloop:
+.emeraldloop:
 		move.b	d0,$3E(a1)
 		move.w	d0,d2
 		asl.w	#3,d2
 		add.b	d2,obAngle(a1)
 		lea	$40(a1),a1
-		dbf	d1,@emeraldloop
+		dbf	d1,.emeraldloop
 		addq.b	#1,obFrame(a0)
 		move.w	#112,eegg_time(a0)
 
 EEgg_Wait:	; Routine 6
 		subq.w	#1,eegg_time(a0) ; decrement timer
-		bpl.s	@nochg		; branch if time remains
+		bpl.s	.nochg		; branch if time remains
 		bchg	#0,obAnim(a0)
 		move.b	#2,obRoutine(a0) ; goto EEgg_Animate next
 
-	@nochg:
+	.nochg:
 		rts	

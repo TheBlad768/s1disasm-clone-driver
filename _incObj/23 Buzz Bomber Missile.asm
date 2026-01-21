@@ -60,7 +60,7 @@ Msl_ChkCancel:
 
 Msl_FromBuzz:	; Routine 4
 		btst	#7,obStatus(a0)
-		bne.s	@explode
+		bne.s	.explode
 		move.b	#$87,obColType(a0)
 		move.b	#1,obAnim(a0)
 		bsr.w	SpeedToPos
@@ -74,7 +74,7 @@ Msl_FromBuzz:	; Routine 4
 		rts	
 ; ===========================================================================
 
-	@explode:
+	.explode:
 		move.b	#id_MissileDissolve,0(a0) ; change object to an explosion (Obj24)
 		move.b	#0,obRoutine(a0)
 		bra.w	MissileDissolve

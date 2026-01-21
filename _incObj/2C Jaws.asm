@@ -36,13 +36,13 @@ Jaws_Main:	; Routine 0
 
 Jaws_Turn:	; Routine 2
 		subq.w	#1,jaws_timecount(a0) ; subtract 1 from turn delay time
-		bpl.s	@animate	; if time remains, branch
+		bpl.s	.animate	; if time remains, branch
 		move.w	jaws_timedelay(a0),jaws_timecount(a0) ; reset turn delay time
 		neg.w	obVelX(a0)	; change speed direction
 		bchg	#0,obStatus(a0)	; change Jaws facing direction
 		move.b	#1,obNextAni(a0) ; reset animation
 
-	@animate:
+	.animate:
 		lea	(Ani_Jaws).l,a1
 		bsr.w	AnimateSprite
 		bsr.w	SpeedToPos
