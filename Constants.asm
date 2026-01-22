@@ -69,6 +69,8 @@ vram_bg:	equ $E000	; background namespace
 vram_sonic:	equ $F000	; Sonic graphics
 vram_sprites:	equ $F800	; sprite table
 vram_hscroll:	equ $FC00	; horizontal scroll table
+tile_size:	equ 8*8/2
+plane_size_64x32:	equ 64*32*2
 
 ; Game modes
 id_Sega:	equ ptr_GM_Sega-GameModeArray	; $00
@@ -120,6 +122,8 @@ bitL:		equ 2
 bitDn:		equ 1
 bitUp:		equ 0
 
+object_size_bits:	equ 6
+object_size:	equ 1<<object_size_bits ; 64
 ; Object variables
 obRender:	equ 1	; bitfield for x/y flip, display mode
 obGfx:		equ 2	; palette line & VRAM setting (2 bytes)
@@ -137,6 +141,7 @@ obActWid:	equ $19	; action width
 obFrame:	equ $1A	; current frame displayed
 obAniFrame:	equ $1B	; current frame in animation script
 obAnim:		equ $1C	; current animation
+obPrevAni:
 obNextAni:	equ $1D	; next animation
 obTimeFrame:	equ $1E	; time to next frame
 obDelayAni:	equ $1F	; time to delay animation
