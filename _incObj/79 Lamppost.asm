@@ -43,7 +43,7 @@ Lamp_Main:	; Routine 0
 		bset	#0,2(a2,d0.w)
 		move.b	#4,obRoutine(a0) ; goto Lamp_Finish next
 		move.b	#3,obFrame(a0)	; use red lamppost frame
-		rts	
+		rts
 ; ===========================================================================
 
 Lamp_Blue:	; Routine 2
@@ -105,11 +105,11 @@ Lamp_Blue:	; Routine 2
 		bset	#0,2(a2,d0.w)
 
 .donothing:
-		rts	
+		rts
 ; ===========================================================================
 
 Lamp_Finish:	; Routine 4
-		rts	
+		rts
 ; ===========================================================================
 
 Lamp_Twirl:	; Routine 6
@@ -130,7 +130,7 @@ Lamp_Twirl:	; Routine 6
 		swap	d0
 		add.w	lamp_origY(a0),d0
 		move.w	d0,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to store information when you hit a lamppost
@@ -157,7 +157,7 @@ Lamp_StoreInfo:
 		move.w	(v_waterpos2).w,(v_lamp_wtrpos).w 	; water height
 		move.b	(v_wtr_routine).w,(v_lamp_wtrrout).w	; rountine counter for water
 		move.b	(f_wtr_state).w,(v_lamp_wtrstat).w 	; water direction
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to load stored info when you start a level from a lamppost
@@ -204,4 +204,4 @@ Lamp_LoadInfo:
 		move.w	d0,(v_limitleft2).w
 
 locret_170F6:
-		rts	
+		rts

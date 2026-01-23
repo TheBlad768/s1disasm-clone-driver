@@ -22,13 +22,13 @@ Shi_Main:	; Routine 0
 		tst.b	obAnim(a0)	; is object a shield?
 		bne.s	.stars		; if not, branch
 		move.w	#make_art_tile(ArtTile_Shield,0,0),obGfx(a0)	; shield specific code
-		rts	
+		rts
 ; ===========================================================================
 
 .stars:
 		addq.b	#2,obRoutine(a0) ; goto Shi_Stars next
 		move.w	#make_art_tile(ArtTile_Invincibility,0,0),obGfx(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Shi_Shield:	; Routine 2
@@ -44,7 +44,7 @@ Shi_Shield:	; Routine 2
 		jmp	(DisplaySprite).l
 
 .remove:
-		rts	
+		rts
 
 .delete:
 		jmp	(DeleteObject).l
@@ -58,11 +58,13 @@ Shi_Stars:	; Routine 4
 		subq.b	#1,d1
 		bra.s	.trail
 ; ===========================================================================
-		lsl.b	#4,d1
+
+.trail_unused:	;	unused older trailing code that makes a much shorter trail
+		lsl.b	#4,d1		; multiply animation number by 16
 		addq.b	#4,d1
 		sub.b	d1,d0
 		move.b	objoff_30(a0),d1
-		sub.b	d1,d0
+		sub.b	d1,d0		; use earlier tracking data to create trail
 		addq.b	#4,d1
 		andi.b	#$F,d1
 		move.b	d1,objoff_30(a0)

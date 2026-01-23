@@ -172,7 +172,7 @@ LevSz_LoadScrollBlockSize:
 		lea	(v_scroll_block_1_size).w,a2
 		move.l	(a1)+,(a2)+
 		move.l	(a1)+,(a2)+
-		rts	
+		rts
 ; End of function LevelSizeLoad
 
 ; ===========================================================================
@@ -254,18 +254,18 @@ BgScroll_GHZ:
 BgScroll_LZ:
 		asr.l	#1,d0
 		move.w	d0,(v_bgscreenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_MZ:
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SLZ:
 		asr.l	#1,d0
 		addi.w	#$C0,d0
 		move.w	d0,(v_bgscreenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SYZ:
@@ -276,7 +276,7 @@ BgScroll_SYZ:
 		asr.l	#8,d0
 		move.w	d0,(v_bgscreenposy).w
 		move.w	d0,(v_bg2screenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SBZ:
@@ -284,13 +284,13 @@ BgScroll_SBZ:
 		asl.l	#1,d0
 		asr.l	#8,d0
 		move.w	d0,(v_bgscreenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_End:
 		move.w	#$1E,(v_bgscreenposy).w
 		move.w	#$1E,(v_bg2screenposy).w
-		rts	
+		rts
 ; ===========================================================================
 		move.w	#$A8,(v_bgscreenposx).w
 		move.w	#$1E,(v_bgscreenposy).w

@@ -75,7 +75,7 @@ Obj09_Display:
 		add.w	(v_ssrotate).w,d0
 		move.w	d0,(v_ssangle).w
 		jsr	(Sonic_Animate).l
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -133,12 +133,12 @@ loc_1BAA8:
 		sub.l	d1,obX(a0)
 		sub.l	d0,obY(a0)
 		move.w	#0,obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BAF2:
 		movem.l	(sp)+,d0-d1
-		rts	
+		rts
 ; End of function Obj09_Move
 
 
@@ -159,7 +159,7 @@ loc_1BB06:
 
 loc_1BB14:
 		move.w	d0,obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BB1A:
@@ -169,7 +169,7 @@ loc_1BB1A:
 
 loc_1BB22:
 		move.w	d0,obInertia(a0)
-		rts	
+		rts
 ; End of function Obj09_MoveLeft
 
 
@@ -199,7 +199,7 @@ loc_1BB50:
 		move.w	d0,obInertia(a0)
 
 locret_1BB54:
-		rts	
+		rts
 ; End of function Obj09_MoveRight
 
 
@@ -226,7 +226,7 @@ Obj09_Jump:
 		jsr	(QueueSound2).l	; play jumping sound
 
 Obj09_NoJump:
-		rts	
+		rts
 ; End of function Obj09_Jump
 
 
@@ -234,7 +234,7 @@ Obj09_NoJump:
 
 
 nullsub_2:
-		rts	
+		rts
 ; End of function nullsub_2
 
 ; ===========================================================================
@@ -250,7 +250,7 @@ nullsub_2:
 		move.w	d1,obVelY(a0)
 
 locret_1BBB4:
-		rts	
+		rts
 ; ---------------------------------------------------------------------------
 ; Subroutine to fix the camera on Sonic's position (special stage)
 ; ---------------------------------------------------------------------------
@@ -275,7 +275,7 @@ loc_1BBCE:
 		sub.w	d0,(v_screenposy).w
 
 locret_1BBDE:
-		rts	
+		rts
 ; End of function SS_FixCamera
 
 ; ===========================================================================
@@ -347,7 +347,7 @@ Obj09_Fall:
 		sub.l	d1,d2
 		moveq	#0,d1
 		move.w	d1,obVelY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BCB0:
@@ -364,7 +364,7 @@ loc_1BCC6:
 		asr.l	#8,d1
 		move.w	d0,obVelX(a0)
 		move.w	d1,obVelY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BCD4:
@@ -373,7 +373,7 @@ loc_1BCD4:
 		move.w	d0,obVelX(a0)
 		move.w	d1,obVelY(a0)
 		bset	#1,obStatus(a0)
-		rts	
+		rts
 ; End of function Obj09_Fall
 
 
@@ -408,7 +408,7 @@ sub_1BCE8:
 		move.b	(a1)+,d4
 		bsr.s	sub_1BD30
 		tst.b	d5
-		rts	
+		rts
 ; End of function sub_1BCE8
 
 
@@ -425,14 +425,14 @@ sub_1BD30:
 		bhs.s	loc_1BD46
 
 locret_1BD44:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BD46:
 		move.b	d4,objoff_30(a0)
 		move.l	a1,objoff_32(a0)
 		moveq	#-1,d5
-		rts	
+		rts
 ; End of function sub_1BD30
 
 
@@ -457,7 +457,7 @@ Obj09_ChkItems:
 		tst.b	objoff_3A(a0)
 		bne.w	Obj09_MakeGhostSolid
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_ChkCont:
@@ -480,7 +480,7 @@ Obj09_GetCont:
 
 Obj09_NoCont:
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_Chk1Up:
@@ -497,7 +497,7 @@ Obj09_Get1Up:
 		move.w	#bgm_ExtraLife,d0
 		jsr	(QueueSound1).l	; play extra life music
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_ChkEmer:
@@ -524,7 +524,7 @@ Obj09_NoEmer:
 		move.w	#bgm_Emerald,d0
 		jsr	(QueueSound2).l ; play emerald music
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_ChkGhost:
@@ -541,7 +541,7 @@ Obj09_ChkGhostTag:
 
 Obj09_NoGhost:
 		moveq	#-1,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_MakeGhostSolid:
@@ -567,7 +567,7 @@ Obj09_NoReplace:
 Obj09_GhostNotSolid:
 		clr.b	objoff_3A(a0)
 		moveq	#0,d4
-		rts	
+		rts
 ; End of function Obj09_ChkItems
 
 
@@ -587,7 +587,7 @@ loc_1BEA0:
 		move.b	#0,objoff_37(a0)
 
 locret_1BEAC:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_ChkBumper:
@@ -632,7 +632,7 @@ Obj09_GOAL:
 		addq.b	#2,obRoutine(a0) ; run routine "Obj09_ExitStage"
 		move.w	#sfx_SSGoal,d0
 		jsr	(QueueSound2).l	; play "GOAL" sound
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_UPblock:
@@ -722,5 +722,5 @@ Obj09_GlassSnd:
 ; ===========================================================================
 
 Obj09_NoGlass:
-		rts	
+		rts
 ; End of function Obj09_ChkItems2

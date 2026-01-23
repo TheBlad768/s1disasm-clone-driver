@@ -110,7 +110,7 @@ Ring_Animate:	; Routine 2
 		move.b	(v_ani1_frame).w,obFrame(a0) ; set frame
 		bsr.w	DisplaySprite
 		out_of_range.s	Ring_Delete,objoff_32(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Ring_Collect:	; Routine 4

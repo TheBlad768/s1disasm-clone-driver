@@ -73,7 +73,7 @@ Msl_ChkCancel:
 	else
 		beq.s	Msl_Delete	; if yes, branch
 	endif
-		rts	
+		rts
 ; End of function Msl_ChkCancel
 
 ; ===========================================================================
@@ -103,7 +103,7 @@ Msl_FromBuzz:	; Routine 4
 		bsr.w	AnimateSprite
 		bra.w	DisplaySprite
 	else
-		rts	
+		rts
 	endif
 ; ===========================================================================
 
@@ -115,7 +115,7 @@ Msl_FromBuzz:	; Routine 4
 
 Msl_Delete:	; Routine 6
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Msl_FromNewt:	; Routine 8
@@ -127,4 +127,4 @@ Msl_Animate2:
 		lea	(Ani_Missile).l,a1
 		bsr.w	AnimateSprite
 		bsr.w	DisplaySprite
-		rts	
+		rts

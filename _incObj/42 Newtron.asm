@@ -61,7 +61,7 @@ Newt_Action:	; Routine 2
 
 .outofrange:
 .istype00:
-		rts	
+		rts
 ; ===========================================================================
 
 .type00:
@@ -74,7 +74,7 @@ Newt_Action:	; Routine 2
 		bclr	#0,obStatus(a0)
 
 .sonicisright2:
-		rts	
+		rts
 ; ===========================================================================
 
 .fall:
@@ -104,7 +104,7 @@ Newt_Action:	; Routine 2
 		neg.w	obVelX(a0)
 
 .keepfalling:
-		rts	
+		rts
 ; ===========================================================================
 
 .matchfloor:
@@ -115,17 +115,17 @@ Newt_Action:	; Routine 2
 		cmpi.w	#$C,d1
 		bge.s	.nextroutine
 		add.w	d1,obY(a0)	; match newtron's position with floor
-		rts	
+		rts
 ; ===========================================================================
 
 .nextroutine:
 		addq.b	#2,ob2ndRout(a0) ; goto .speed next
-		rts	
+		rts
 ; ===========================================================================
 
 .speed:
 		bsr.w	SpeedToPos
-		rts	
+		rts
 ; ===========================================================================
 
 .type01:
@@ -158,7 +158,7 @@ Newt_Action:	; Routine 2
 		move.b	#1,obSubtype(a1)
 
 .fail:
-		rts	
+		rts
 ; ===========================================================================
 
 Newt_Delete:	; Routine 4

@@ -163,7 +163,7 @@ CStom_ChkDel:
 		; the same frame or else cause a null-pointer dereference.
 		bra.w	DisplaySprite
 	else
-		rts	
+		rts
 	endif
 ; ===========================================================================
 
@@ -236,7 +236,7 @@ CStom_Restart:
 		move.b	objoff_32(a0),d0
 		add.w	objoff_30(a0),d0
 		move.w	d0,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 CStom_Type01:

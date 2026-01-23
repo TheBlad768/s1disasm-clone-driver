@@ -10,7 +10,7 @@
 ; PlaySound:
 QueueSound1:
 		move.b	d0,(v_snddriver_ram.v_soundqueue0).w
-		rts	
+		rts
 ; End of function QueueSound1
 
 ; ---------------------------------------------------------------------------
@@ -22,7 +22,7 @@ QueueSound1:
 ; PlaySound_Special:
 QueueSound2:
 		move.b	d0,(v_snddriver_ram.v_soundqueue1).w
-		rts	
+		rts
 ; End of function QueueSound2
 
 ; ===========================================================================
@@ -34,4 +34,4 @@ QueueSound2:
 ; PlaySound_Unused:
 QueueSound3:
 		move.b	d0,(v_snddriver_ram.v_soundqueue2).w
-		rts	
+		rts

@@ -383,7 +383,7 @@ loc_93C4:
 		move.w	objoff_34(a0),obVelY(a0)
 
 locret_93EA:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_93EC:
@@ -394,7 +394,7 @@ loc_93EC:
 		bclr	#0,obRender(a0)
 
 locret_9402:
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -403,5 +403,5 @@ sub_9404:
 		move.w	(v_player+obX).w,d0
 		sub.w	obX(a0),d0
 		subi.w	#$B8,d0
-		rts	
+		rts
 ; End of function sub_9404

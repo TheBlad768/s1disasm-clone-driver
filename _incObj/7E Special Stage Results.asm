@@ -26,7 +26,7 @@ ssr_mainX = objoff_30		; position for card to display on
 SSR_ChkPLC:	; Routine 0
 		tst.l	(v_plc_buffer).w ; are the pattern load cues empty?
 		beq.s	SSR_Main	; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 SSR_Main:
@@ -83,7 +83,7 @@ loc_C85A:
 ; ===========================================================================
 
 locret_C86A:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_C86C:
@@ -128,7 +128,7 @@ loc_C8C4:
 		addq.b	#4,obRoutine(a0) ; goto "SSR_Continue" routine
 
 locret_C8EA:
-		rts	
+		rts
 ; ===========================================================================
 
 SSR_Exit:	; Routine $A, $12

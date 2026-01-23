@@ -39,7 +39,7 @@ sonicAniFrame = objoff_32		; Sonic's current animation number
 		bne.s	.smash		; if yes, branch
 
 .notspinning:
-		rts	
+		rts
 ; ===========================================================================
 
 .smash:

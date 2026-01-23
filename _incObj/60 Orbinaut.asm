@@ -79,7 +79,7 @@ Orb_Main:	; Routine 0
 		neg.w	obVelX(a0)	; move orbinaut to the right
 
 .noflip2:
-		rts	
+		rts
 ; ===========================================================================
 
 Orb_ChkSonic:	; Routine 2

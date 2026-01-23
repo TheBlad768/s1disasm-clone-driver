@@ -47,14 +47,14 @@ Flash_Collect:
 		clr.b	(v_shield).w	; remove shield
 
 locret_9F76:
-		rts	
+		rts
 ; ===========================================================================
 
 Flash_End:
 		addq.b	#2,obRoutine(a0)
 		move.w	#0,(v_player).w ; remove Sonic object
 		addq.l	#4,sp
-		rts	
+		rts
 ; End of function Flash_Collect
 
 ; ===========================================================================

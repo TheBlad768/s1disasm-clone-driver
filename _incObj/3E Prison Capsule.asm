@@ -50,7 +50,7 @@ Pri_Main:	; Routine 0
 		move.b	#8,obColProp(a0)
 
 .not02:
-		rts	
+		rts
 ; ===========================================================================
 
 Pri_BodyMain:	; Routine 2
@@ -72,7 +72,7 @@ Pri_BodyMain:	; Routine 2
 
 .open:
 		move.b	#2,obFrame(a0)	; use frame number 2 (destroyed prison)
-		rts	
+		rts
 ; ===========================================================================
 
 Pri_Switched:	; Routine 4
@@ -99,7 +99,7 @@ Pri_Switched:	; Routine 4
 		bset	#1,(v_player+obStatus).w
 
 .open2:
-		rts	
+		rts
 ; ===========================================================================
 
 Pri_Explosion:	; Routine 6, 8, $A
@@ -124,7 +124,7 @@ Pri_Explosion:	; Routine 6, 8, $A
 .noexplosion:
 		subq.w	#1,obTimeFrame(a0)
 		beq.s	.makeanimal
-		rts	
+		rts
 ; ===========================================================================
 
 .makeanimal:
@@ -150,7 +150,7 @@ Pri_Explosion:	; Routine 6, 8, $A
 		dbf	d6,.loop	; repeat 7 more times
 
 .fail:
-		rts	
+		rts
 ; ===========================================================================
 
 Pri_Animals:	; Routine $C
@@ -180,7 +180,7 @@ Pri_Animals:	; Routine $C
 		move.w	#180,obTimeFrame(a0)
 
 .wait:
-		rts	
+		rts
 ; ===========================================================================
 
 Pri_EndAct:	; Routine $E
@@ -207,4 +207,4 @@ Pri_EndAct:	; Routine $E
 		jmp	(DeleteObject).l
 
 .found:
-		rts	
+		rts

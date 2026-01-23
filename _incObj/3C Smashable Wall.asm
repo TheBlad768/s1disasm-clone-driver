@@ -36,7 +36,7 @@ Smash_Solid:	; Routine 2
 		bne.s	.chkroll	; if yes, branch
 
 .donothing:
-		rts	
+		rts
 ; ===========================================================================
 
 .chkroll:
@@ -72,4 +72,4 @@ Smash_FragMove:	; Routine 4
 		bsr.w	DisplaySprite
 		tst.b	obRender(a0)
 		bpl.w	DeleteObject
-		rts	
+		rts

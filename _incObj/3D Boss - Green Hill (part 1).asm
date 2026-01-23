@@ -113,7 +113,7 @@ loc_1783C:
 		move.b	#$F,obColType(a0)
 
 locret_1784A:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1784C:
@@ -121,4 +121,4 @@ loc_1784C:
 		bsr.w	AddPoints
 		move.b	#8,ob2ndRout(a0)
 		move.w	#$B3,objoff_3C(a0)
-		rts	
+		rts

@@ -208,11 +208,11 @@ BgScroll_GHZ:
 BgScroll_LZ:
 		asr.l	#1,d0
 		move.w	d0,(v_bgscreenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_MZ:
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SLZ:
@@ -220,7 +220,7 @@ BgScroll_SLZ:
 		addi.w	#$C0,d0
 		move.w	d0,(v_bgscreenposy).w
 		clr.l	(v_bgscreenposx).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SYZ:
@@ -232,7 +232,7 @@ BgScroll_SYZ:
 		addq.w	#1,d0
 		move.w	d0,(v_bgscreenposy).w
 		clr.l	(v_bgscreenposx).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SBZ:
@@ -240,7 +240,7 @@ BgScroll_SBZ:
 		asr.w	#3,d0
 		addq.w	#1,d0
 		move.w	d0,(v_bgscreenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_End:

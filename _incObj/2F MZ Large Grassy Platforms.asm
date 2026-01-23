@@ -110,7 +110,7 @@ LGrass_TypeIndex:dc.w LGrass_Type00-LGrass_TypeIndex
 ; ===========================================================================
 
 LGrass_Type00:
-		rts			; type 00 platform doesn't move
+		rts		; type 00 platform doesn't move
 ; ===========================================================================
 
 LGrass_Type01:
@@ -145,7 +145,7 @@ loc_AFF2:
 		move.w	lgrass_origY(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)	; update position on y-axis
-		rts	
+		rts
 ; ===========================================================================
 
 LGrass_Type05:
@@ -206,7 +206,7 @@ loc_B086:
 		dbf	d2,loc_B086
 
 locret_B09A:
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -222,7 +222,7 @@ sub_B09C:
 		lsr.w	#object_size_bits,d0
 		andi.w	#$7F,d0
 		move.b	d0,(a2)
-		rts	
+		rts
 ; End of function sub_B09C
 
 ; ===========================================================================
@@ -239,7 +239,7 @@ loc_B0C6:
 		; This has been moved to prevent a display-after-free bug.
 		bra.w	DisplaySprite
 	else
-		rts	
+		rts
 	endif
 ; ===========================================================================
 
@@ -270,7 +270,7 @@ locret_B116:
 		; This has been moved to prevent a display-after-free bug.
 		bra.w	DisplaySprite
 	else
-		rts	
+		rts
 	endif
 ; ===========================================================================
 ; ---------------------------------------------------------------------------

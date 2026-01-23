@@ -8,7 +8,7 @@
 DeformLayers:
 		tst.b	(f_nobgscroll).w
 		beq.s	.bgscroll
-		rts	
+		rts
 ; ===========================================================================
 
 	.bgscroll:
@@ -671,13 +671,13 @@ ScrollHoriz:
 		bpl.s	.scrollRight
 
 		bset	#2,(v_fg_scroll_flags).w ; screen moves backward
-		rts	
+		rts
 
 	.scrollRight:
 		bset	#3,(v_fg_scroll_flags).w ; screen moves forward
 
 	.return:
-		rts	
+		rts
 ; End of function ScrollHoriz
 
 
@@ -692,7 +692,7 @@ MoveScreenHoriz:
 		subi.w	#16,d0		; is distance more than 160px?
 		bcc.s	SH_AheadOfMid	; if yes, branch
 		clr.w	(v_scrshiftx).w
-		rts	
+		rts
 ; ===========================================================================
 
 SH_AheadOfMid:
@@ -712,7 +712,7 @@ SH_SetScreen:
 		asl.w	#8,d1
 		move.w	d0,(v_screenposx).w ; set new screen position
 		move.w	d1,(v_scrshiftx).w ; set distance for screen movement
-		rts	
+		rts
 ; ===========================================================================
 
 SH_BehindMid:
@@ -770,7 +770,7 @@ loc_664A:
 
 loc_6656:
 		clr.w	(v_scrshifty).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_665C:
@@ -884,14 +884,14 @@ loc_6724:
 		sub.w	d4,d0
 		bpl.s	.scrollBottom
 		bset	#0,(v_fg_scroll_flags).w
-		rts	
+		rts
 ; ===========================================================================
 
 	.scrollBottom:
 		bset	#1,(v_fg_scroll_flags).w
 
 	.return:
-		rts	
+		rts
 ; End of function ScrollVertical
 
 

@@ -32,7 +32,7 @@ PSB_Main:	; Routine 0
 		move.w	#$F8,obScreenY(a0)
 
 PSB_Exit:	; Routine 4
-		rts	
+		rts
 ; ===========================================================================
 
 PSB_PrsStart:	; Routine 2

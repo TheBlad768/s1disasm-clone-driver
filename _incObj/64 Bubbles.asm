@@ -213,7 +213,7 @@ Bub_BblMaker:	; Routine $A
 		move.w	(v_waterpos1).w,d0
 		cmp.w	obY(a0),d0
 		blo.w	DisplaySprite
-		rts	
+		rts
 ; ===========================================================================
 ; bubble production sequence
 
@@ -243,9 +243,9 @@ Bub_ChkSonic:
 		cmp.w	d0,d1
 		blo.s	.loc_12998
 		moveq	#1,d0
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_12998:
 		moveq	#0,d0
-		rts	
+		rts

@@ -22,4 +22,4 @@ RandomNumber:
 		move.w	d0,d1
 		swap	d1
 		move.l	d1,(v_random).w
-		rts	
+		rts

@@ -1,11 +1,36 @@
 {
     "Flex": 2,
     "name": "Sonic 1",
-    "node": "da472ab9-f363-45e6-8ee3-a83fd70d6d9c",
+    "node": "dd2839bc-94ec-493e-bf08-a51f4897ec2c",
     "objects": [
         {
             "name": "Common",
             "children": [
+                {
+                    "format": "Sonic 1.js",
+                    "name": "Title Screen - Sonic",
+                    "palettes": [
+                        {
+                            "path": "palette/Title Screen.bin",
+                            "length": 3
+                        }
+                    ],
+                    "art": {
+                        "path": "artnem/Title Screen Sonic.nem",
+                        "compression": "Nemesis",
+                        "offset": 0
+                    },
+                    "mappings": {
+                        "path": "_maps/Title Screen Sonic.asm",
+                        "label": ""
+                    },
+                    "dplcs": {
+                        "enabled": false,
+                        "path": "",
+                        "label": ""
+                    },
+                    "uuid": "dd2839bc-94ec-493e-bf08-a51f4897ec2c"
+                },
                 {
                     "name": "Sonic",
                     "palettes": [

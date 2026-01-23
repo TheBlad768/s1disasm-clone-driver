@@ -94,14 +94,14 @@ Hel_RotateSpikes:
 		move.b	#$84,obColType(a0) ; make object harmful
 
 locret_7DA6:
-		rts	
+		rts
 ; End of function Hel_RotateSpikes
 
 ; ===========================================================================
 
 Hel_ChkDel:
 		out_of_range.w	Hel_DelAll
-		rts	
+		rts
 ; ===========================================================================
 
 Hel_DelAll:
@@ -122,7 +122,7 @@ Hel_DelLoop:
 
 Hel_Delete:	; Routine 6
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Hel_Display:	; Routine 8

@@ -45,7 +45,7 @@ loc_146A:
 		move.w	#$10,d6	; set initial shift value
 		bsr.s	NemDec_ProcessCompressedData
 		movem.l	(sp)+,d0-a1/a3-a5
-		rts	
+		rts
 ; End of function NemDec
 
 ; ---------------------------------------------------------------------------
@@ -133,7 +133,7 @@ NemPCD_WriteRowToVDP:
 		subq.w	#1,a5
 		move.w	a5,d4	; have all the 8-pixel rows been written?
 		bne.s	NemPCD_NewRow	; if not, branch
-		rts		; otherwise the decompression is finished
+		rts	; otherwise the decompression is finished
 ; ===========================================================================
 NemPCD_WriteRowToVDP_XOR:
 		eor.l	d4,d2	; XOR the previous row by the current row
@@ -141,7 +141,7 @@ NemPCD_WriteRowToVDP_XOR:
 		subq.w	#1,a5
 		move.w	a5,d4
 		bne.s	NemPCD_NewRow
-		rts	
+		rts
 ; ===========================================================================
 
 NemPCD_WriteRowToRAM:
@@ -149,7 +149,7 @@ NemPCD_WriteRowToRAM:
 		subq.w	#1,a5
 		move.w	a5,d4
 		bne.s	NemPCD_NewRow
-		rts	
+		rts
 ; ===========================================================================
 NemPCD_WriteRowToRAM_XOR:
 		eor.l	d4,d2
@@ -157,7 +157,7 @@ NemPCD_WriteRowToRAM_XOR:
 		subq.w	#1,a5
 		move.w	a5,d4
 		bne.s	NemPCD_NewRow
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 ; ---------------------------------------------------------------------------

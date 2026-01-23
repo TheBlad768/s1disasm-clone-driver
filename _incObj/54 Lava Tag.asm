@@ -33,4 +33,4 @@ LTag_ChkDel:	; Routine 2
 		bmi.w	DeleteObject
 		cmpi.w	#$280,d0
 		bhi.w	DeleteObject
-		rts	
+		rts
