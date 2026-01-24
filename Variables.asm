@@ -1,10 +1,12 @@
 ; Variables (v) and Flags (f)
 
-    obj (-($FFFF0000&$80000000)<<1)|$FFFF0000 ; This is what ramaddr() in AS does, this makes this work in ASM68K
+    obj (-($FF0000&$80000000)<<1)|$FF0000 ; This is what ramaddr() in AS does, this makes this work in ASM68K
     ;obj acts like phase, objend acts like dephase
-
 v_256x256:		ds.b	$52*$200	; 256x256 tile mappings ($52 chunks)
 v_256x256_end:
+	objend
+
+    obj (-($FFFFA400&$80000000)<<1)|$FFFFA400 ; This is what ramaddr() in AS does, this makes this work in ASM68K
 
 v_lvllayout:		ds.b	$400		; level and background layouts
 v_lvllayout_end:
