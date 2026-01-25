@@ -1,6 +1,6 @@
 ; Variables (v) and Flags (f)
 
-    obj (-($FFFF0000&$80000000)<<1)|$FFFF0000 ; This is what ramaddr() in AS does, this makes this work in ASM68K, "obj" is also the ASM68K equivilent of "phase"
+    obj $FFFF0000 ;"obj" is the ASM68K equivilent of "phase"
 v_256x256:		ds.b	$52*$200	; 256x256 tile mappings ($52 chunks)
 v_256x256_end:
 
@@ -171,7 +171,7 @@ v_1up_ram_copy:		equ v_spcsfx_track_ram_end
 ; =================================================================================
 ; From here on, no longer relative to sound driver RAM
 ; =================================================================================
-    obj (-($FFFFF5C0&$80000000)<<1)|$FFFFF5C0
+    obj $FFFFF5C0
 
         ds.b $40    ;unused
 
@@ -518,7 +518,7 @@ v_ram_end:
  ;   endc
 	objend
 
-    obj (-(v_objstate&$80000000)<<1)|v_objstate
+    obj v_objstate
 v_regbuffer:	ds.b	$40	; stores registers d0-a7 during an error event
 v_spbuffer:	ds.l	1	; stores most recent sp address
 v_errortype:	ds.b	1	; error type
