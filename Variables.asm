@@ -1,11 +1,8 @@
 ; Variables (v) and Flags (f)
 
-    obj (-($FF0000&$80000000)<<1)|$FF0000 ; This is what ramaddr() in AS does, this makes this work in ASM68K, "obj" is also the ASM68K equivilent of "phase"
+    obj (-($FFFF0000&$80000000)<<1)|$FFFF0000 ; This is what ramaddr() in AS does, this makes this work in ASM68K, "obj" is also the ASM68K equivilent of "phase"
 v_256x256:		ds.b	$52*$200	; 256x256 tile mappings ($52 chunks)
 v_256x256_end:
-	objend ; acts like "dephase"
-
-    obj (-($FFFFA400&$80000000)<<1)|$FFFFA400 ; functions like "phase ramaddr($FFFFA400)"
 
 v_lvllayout:		ds.b	$400		; level and background layouts
 v_lvllayout_end:
@@ -25,7 +22,7 @@ v_hscrolltablebuffer_end:
 v_hscrolltablebuffer_end_padded:
 
 v_objspace:		ds.b	object_size*$80	; object variable space ($40 bytes per object)
-    objend
+    objend	; acts like "dephase"
 ; Title screen objects
 v_sonicteam	= v_objspace+$80	; object variable space for the "SONIC TEAM PRESENTS" text ($40 bytes)
 v_titlesonic	= v_objspace+$40	; object variable space for Sonic in the title screen ($40 bytes)
