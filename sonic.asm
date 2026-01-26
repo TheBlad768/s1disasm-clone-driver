@@ -23,6 +23,7 @@ ZoneCount	  = 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
 FixBugs		  = 0	; change to 1 to enable bugfixes
 
 zeroOffsetOptimization = 0	; if 1, makes a handful of zero-offset instructions smaller
+paddingOptimization = 0		; if 1, removes about 3 KB of various superfluous padding
 
 	include "MacroSetup.asm"
 	include	"Constants.asm"
@@ -7510,21 +7511,28 @@ Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 		include	"_inc/LevelHeaders.asm"
 		include	"_inc/Pattern Load Cues.asm"
 
-		align	$200
-		if Revision=0
+		; Nem_SegaLogo has a whole bunch of padding before it that differs between revisions.
+		; For rev00, it starts at $1DC00, which amounts to $200 bytes.
+		; From a technical standpoint, this padding serves no purpose.
+		try_padding_to	$1DC00
+		if Revision<>0
+			; Exclusively in rev01/rev02, Nem_SegaLogo starts at $1E700,
+			; which amounts to an additional $300 bytes of padding.
+			try_padding_to	$1E700
+		endif
+
+	if Revision=0
 Nem_SegaLogo:	binclude	"artnem/Sega Logo.nem"	; large Sega logo
 		even
 Eni_SegaLogo:	binclude	"tilemaps/Sega Logo.eni" ; large Sega logo (mappings)
 		even
-		else
-		rept $300
-			dc.b	$FF
-		endm
+	else
 Nem_SegaLogo:	binclude	"artnem/Sega Logo (JP1).nem" ; large Sega logo
-			even
+		even
 Eni_SegaLogo:	binclude	"tilemaps/Sega Logo (JP1).eni" ; large Sega logo (mappings)
-			even
-		endif
+		even
+	endif
+
 Eni_Title:	binclude	"tilemaps/Title Screen.eni" ; title screen foreground (mappings)
 		even
 Nem_TitleFg:	binclude	"artnem/Title Screen Foreground.nem"
@@ -7941,15 +7949,11 @@ Nem_CreditText:	binclude	"artnem/Ending - Credits.nem"
 Nem_EndStH:	binclude	"artnem/Ending - StH Logo.nem"
 		even
 
-		if Revision=0
-		rept $104
-		dc.b $FF			; why?
-		endm
-		else
-		rept $40
-		dc.b $FF
-		endm
-		endif
+		; AngleMap starts at $62900 in all revisions, which amounts
+		; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
+		; From a technical standpoint, this padding serves no purpose.
+		try_padding_to	$62900
+
 ; ---------------------------------------------------------------------------
 ; Collision data
 ; ---------------------------------------------------------------------------
@@ -8144,7 +8148,10 @@ byte_6A320:	dc.b 0,	0, 0, 0
 Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 		even
 
-		align	$100
+		; ObjPos_Index starts at $6B000 in all revisions, which amounts
+		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
+		; From a technical standpoint, this padding serves no purpose.
+		try_padding_to	$6B000
 
 ; ---------------------------------------------------------------------------
 ; Sprite locations index
@@ -8300,15 +8307,10 @@ ObjPos_End:	binclude	"objpos/ending.bin"
 		even
 ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
-		if Revision=0
-		rept $62A
-		dc.b $FF
-		endm
-		else
-		rept $63C
-		dc.b $FF
-		endm
-		endif
+		; SoundDriver starts at $71990 in all revisions, which amounts
+		; to $62A bytes of padding for rev00 and $63C for rev01/rev02.
+		; From a technical standpoint, this padding serves no purpose.
+		try_padding_to	$71990
 
 SoundDriver:	include "s1.sounddriver.asm"
 
