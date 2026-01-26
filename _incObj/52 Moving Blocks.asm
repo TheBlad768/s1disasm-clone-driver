@@ -69,7 +69,7 @@ MBlock_StandOn:	; Routine 4
 	if FixBugs
 		; MBlock_Move manipulates the stack pointer, potentially
 		; resulting in a crash. To avoid this, don't store data on
-		; the stack. We can use obejct scratch RAM instead.
+		; the stack. We can use object scratch RAM instead.
 		move.w	obX(a0),objoff_38(a0)
 	else
 		move.w	obX(a0),-(sp)
