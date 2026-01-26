@@ -21,8 +21,7 @@ AddressSRAM:	equ 3	; 0 = odd+even; 2 = even only; 3 = odd only
 Revision:	equ 1
 
 ZoneCount:	equ 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
-	pusho            ; save current options
-    opt l.            ; use "." as local label symbol
+
 ; ===========================================================================
 
 StartOfRom:
@@ -9398,7 +9397,6 @@ SoundDriver:	include "s1.sounddriver.asm"
 
 ; end of 'ROM'
 		even
-		popo
 EndOfRom:
 
 
