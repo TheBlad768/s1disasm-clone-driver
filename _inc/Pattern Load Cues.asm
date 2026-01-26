@@ -41,9 +41,9 @@ ptr_PLC_EggmanSBZ2:	dc.w PLC_EggmanSBZ2-ArtLoadCues
 ptr_PLC_FZBoss:		dc.w PLC_FZBoss-ArtLoadCues
 
 plcm:	macro gfx,vram
-	dc.l gfx
-	dc.w (vram)*$20
-	endm
+		dc.l gfx
+		dc.w (vram)*$20
+		endm
 
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - standard block 1

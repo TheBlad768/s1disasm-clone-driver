@@ -164,16 +164,16 @@ StartLocArray:	include	"_inc/Start Location Array - Levels.asm"
 
 LoopTileNums:
 
-; 		loop	loop	tunnel	tunnel
+; 			loop	loop	tunnel	tunnel
 
-	dc.b	$B5,	$7F,	$1F,	$20	; Green Hill
-	dc.b	$7F,	$7F,	$7F,	$7F	; Labyrinth
-	dc.b	$7F,	$7F,	$7F,	$7F	; Marble
-	dc.b	$AA,	$B4,	$7F,	$7F	; Star Light
-	dc.b	$7F,	$7F,	$7F,	$7F	; Spring Yard
-	dc.b	$7F,	$7F,	$7F,	$7F	; Scrap Brain
-	zonewarning LoopTileNums,4
-	dc.b	$7F,	$7F,	$7F,	$7F	; Ending (Green Hill)
+		dc.b	$B5,	$7F,	$1F,	$20	; Green Hill
+		dc.b	$7F,	$7F,	$7F,	$7F	; Labyrinth
+		dc.b	$7F,	$7F,	$7F,	$7F	; Marble
+		dc.b	$AA,	$B4,	$7F,	$7F	; Star Light
+		dc.b	$7F,	$7F,	$7F,	$7F	; Spring Yard
+		dc.b	$7F,	$7F,	$7F,	$7F	; Scrap Brain
+		zonewarning LoopTileNums,4
+		dc.b	$7F,	$7F,	$7F,	$7F	; Ending (Green Hill)
 
 		even
 

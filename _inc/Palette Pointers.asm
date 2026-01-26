@@ -3,9 +3,9 @@
 ; ---------------------------------------------------------------------------
 
 palp:	macro desinationPaletteLine,sourceAddress
-	dc.l sourceAddress
-	dc.w v_palette+desinationPaletteLine*$10*2,(sourceAddress_end-sourceAddress)/4-1
-	endm
+		dc.l sourceAddress
+		dc.w v_palette+desinationPaletteLine*$10*2,(sourceAddress_end-sourceAddress)/4-1
+		endm
 
 PalPointers:
 

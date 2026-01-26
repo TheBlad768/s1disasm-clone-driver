@@ -115,27 +115,27 @@ loc_E0:
 		dc.b "(C)SEGA 1991.APR" ; Copyright holder and release date (generally year)
 		dc.b "SONIC THE               HEDGEHOG                " ; Domestic name
 		dc.b "SONIC THE               HEDGEHOG                " ; International name
-		if Revision=0
+	if Revision=0
 		dc.b "GM 00001009-00"   ; Serial/version number (Rev 0)
-		else
-			dc.b "GM 00004049-01" ; Serial/version number (Rev non-0)
-		endif
+	else
+		dc.b "GM 00004049-01" ; Serial/version number (Rev non-0)
+	endif
 Checksum:
-		if Revision=0
+	if Revision=0
 		dc.w $264A	; Hardcoded to make it easier to check for ROM correctness
-		else
+	else
 		dc.w $AFC7
-		endif
+	endif
 		dc.b "J               " ; I/O support
 		dc.l StartOfRom		; Start address of ROM
 RomEndLoc:	dc.l EndOfRom-1		; End address of ROM
 		dc.l $FF0000		; Start address of RAM
 		dc.l $FFFFFF		; End address of RAM
-		if EnableSRAM=1
+	if EnableSRAM=1
 		dc.b $52, $41, $A0+(BackupSRAM<<6)+(AddressSRAM<<3), $20 ; SRAM support
-		else
+	else
 		dc.l $20202020
-		endif
+	endif
 		dc.l $20202020		; SRAM start ($200001)
 		dc.l $20202020		; SRAM end ($20xxxx)
 		dc.b "                                                    " ; Notes (unused, anything can be put in this space, but it has to be 52 bytes.)
@@ -1088,13 +1088,13 @@ ClearScreen:
 		fillVRAM	0, vram_fg, vram_fg+plane_size_64x32 ; clear foreground namespace
 		fillVRAM	0, vram_bg, vram_bg+plane_size_64x32 ; clear background namespace
 
-		if Revision=0
+	if Revision=0
 		move.l	#0,(v_scrposy_vdp).w
 		move.l	#0,(v_scrposx_vdp).w
-		else
+	else
 		clr.l	(v_scrposy_vdp).w
 		clr.l	(v_scrposx_vdp).w
-		endif
+	endif
 
 	if FixBugs
 		clearRAM v_spritetablebuffer,v_spritetablebuffer_end
@@ -1384,9 +1384,9 @@ loc_16E2:
 		; than a bug: treating the 16th entry as a dummy that
 		; should never be occupied makes this code unnecessary.
 		; Still, the overhead of this code is minimal.
-	if (v_plc_buffer_only_end-v_plc_buffer-6)&2
-		move.w	6(a0),(a0)
-	endif
+		if (v_plc_buffer_only_end-v_plc_buffer-6)&2
+			move.w	6(a0),(a0)
+		endif
 
 		clr.l	(v_plc_buffer_only_end-6).w
 	endif
@@ -2072,9 +2072,9 @@ WaitForVBla:
 
 		include	"_incObj/sub RandomNumber.asm"
 		include	"_incObj/sub CalcSine.asm"
-		if Revision=0
-			include	"_incObj/sub CalcSqrt.asm"
-		endif
+	if Revision=0
+		include	"_incObj/sub CalcSqrt.asm"
+	endif
 		include	"_incObj/sub CalcAngle.asm"
 
 ; ===========================================================================
@@ -2108,11 +2108,11 @@ GM_Sega:
 		copyTilemap	v_256x256&$FFFFFF,vram_bg+$510,24,8
 		copyTilemap	(v_256x256+24*8*2)&$FFFFFF,vram_fg,40,28
 
-		if Revision<>0
-			tst.b	(v_megadrive).w	; is console Japanese?
-			bmi.s	.loadpal
-			copyTilemap	(v_256x256+$A40)&$FFFFFF,vram_fg+$53A,3,2 ; hide "TM" with a white rectangle
-		endif
+	if Revision<>0
+		tst.b	(v_megadrive).w	; is console Japanese?
+		bmi.s	.loadpal
+		copyTilemap	(v_256x256+$A40)&$FFFFFF,vram_fg+$53A,3,2 ; hide "TM" with a white rectangle
+	endif
 
 .loadpal:
 		moveq	#palid_SegaBG,d0
@@ -2267,10 +2267,10 @@ Tit_LoadText:
 		move.b	#id_PSBTM,(v_pressstart).w ; load "PRESS START BUTTON" object
 		;clr.b	(v_pressstart+obRoutine).w ; The 'Mega Games 10' version of Sonic 1 added this line, to fix the 'PRESS START BUTTON' object not appearing
 
-		if Revision<>0
-			tst.b	(v_megadrive).w	; is console Japanese?
-			bpl.s	.isjap		; if yes, branch
-		endif
+	if Revision<>0
+		tst.b	(v_megadrive).w	; is console Japanese?
+		bpl.s	.isjap		; if yes, branch
+	endif
 
 		move.b	#id_PSBTM,(v_titletm).w ; load "TM" object
 		move.b	#3,(v_titletm+obFrame).w
@@ -2449,9 +2449,9 @@ LevSel_Level_SS:
 		move.w	d0,(v_rings).w	; clear rings
 		move.l	d0,(v_time).w	; clear time
 		move.l	d0,(v_score).w	; clear score
-		if Revision<>0
-			move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
-		endif
+	if Revision<>0
+		move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
+	endif
 		rts
 ; ===========================================================================
 
@@ -2471,9 +2471,9 @@ PlayLevel:
 		move.l	d0,(v_emldlist).w ; clear emeralds
 		move.l	d0,(v_emldlist+4).w ; clear emeralds
 		move.b	d0,(v_continues).w ; clear continues
-		if Revision<>0
-			move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
-		endif
+	if Revision<>0
+		move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
+	endif
 		move.b	#bgm_Fade,d0
 		bsr.w	QueueSound2 ; fade out music
 		rts
@@ -2481,7 +2481,8 @@ PlayLevel:
 ; ---------------------------------------------------------------------------
 ; Level select - level pointers
 ; ---------------------------------------------------------------------------
-LevSel_Ptrs:	if Revision=0
+LevSel_Ptrs:
+	if Revision=0
 		; old level order
 		dc.b id_GHZ, 0
 		dc.b id_GHZ, 1
@@ -2502,7 +2503,7 @@ LevSel_Ptrs:	if Revision=0
 		dc.b id_SBZ, 1
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
-		else
+	else
 		; correct level order
 		dc.b id_GHZ, 0
 		dc.b id_GHZ, 1
@@ -2523,18 +2524,19 @@ LevSel_Ptrs:	if Revision=0
 		dc.b id_SBZ, 1
 		dc.b id_LZ, 3
 		dc.b id_SBZ, 2
-		endif
+	endif
 		dc.b id_SS, 0		; Special Stage
 		dc.w $8000		; Sound Test
 		even
 ; ---------------------------------------------------------------------------
 ; Level select codes
 ; ---------------------------------------------------------------------------
-LevSelCode_J:	if Revision=0
+LevSelCode_J:
+	if Revision=0
 		dc.b btnUp,btnDn,btnL,btnR,0,$FF
-		else
+	else
 		dc.b btnUp,btnDn,btnDn,btnDn,btnL,btnR,0,$FF
-		endif
+	endif
 		even
 
 LevSelCode_US:	dc.b btnUp,btnDn,btnL,btnR,0,$FF
@@ -2595,9 +2597,9 @@ Demo_Level:
 		move.w	d0,(v_rings).w	; clear rings
 		move.l	d0,(v_time).w	; clear time
 		move.l	d0,(v_score).w	; clear score
-		if Revision<>0
-			move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
-		endif
+	if Revision<>0
+		move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
+	endif
 		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -3098,10 +3100,10 @@ Level_MainLoop:
 		bsr.w	MoveSonicInDemo
 		bsr.w	LZWaterFeatures
 		jsr	(ExecuteObjects).l
-		if Revision<>0
-			tst.w	(f_restart).w
-			bne	GM_Level
-		endif
+	if Revision<>0
+		tst.w	(f_restart).w
+		bne	GM_Level
+	endif
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.s	Level_DoScroll	; if yes, branch
 		cmpi.b	#6,(v_player+obRoutine).w ; has Sonic just died?
@@ -3121,10 +3123,10 @@ Level_SkipScroll:
 
 		cmpi.b	#id_Demo,(v_gamemode).w
 		beq.s	Level_ChkDemo	; if mode is 8 (demo), branch
-		if Revision=0
+	if Revision=0
 		tst.w	(f_restart).w	; is the level set to restart?
 		bne.w	GM_Level	; if yes, branch
-		endif
+	endif
 		cmpi.b	#id_Level,(v_gamemode).w
 		beq.w	Level_MainLoop	; if mode is $C (level), branch
 		rts
@@ -3379,11 +3381,11 @@ SS_ChkEnd:
 		beq.w	SS_MainLoop	; if yes, branch
 
 		tst.w	(f_demo).w	; is demo mode on?
-		if Revision=0
+	if Revision=0
 		bne.w	SS_ToSegaScreen	; if yes, branch
-		else
+	else
 		bne.w	SS_ToLevel
-		endif
+	endif
 		move.b	#id_Level,(v_gamemode).w ; set screen mode to $0C (level)
 		cmpi.w	#(id_SBZ<<8)+3,(v_zone).w ; is level number higher than FZ?
 		blo.s	SS_Finish	; if not, branch
@@ -3462,11 +3464,12 @@ SS_ToSegaScreen:
 		move.b	#id_Sega,(v_gamemode).w ; goto Sega screen
 		rts
 
-		if Revision<>0
-SS_ToLevel:	cmpi.b	#id_Level,(v_gamemode).w
+	if Revision<>0
+SS_ToLevel:
+		cmpi.b	#id_Level,(v_gamemode).w
 		beq.s	SS_ToSegaScreen
 		rts
-		endif
+	endif
 
 ; ---------------------------------------------------------------------------
 ; Special stage background loading subroutine
@@ -4323,15 +4326,15 @@ Demo_EndSBZ2:	binclude	"demodata/Ending - SBZ2.bin"
 Demo_EndGHZ2:	binclude	"demodata/Ending - GHZ2.bin"
 		even
 
-		if Revision=0
+	if Revision=0
 		include	"_inc/LevelSizeLoad & BgScrollSpeed.asm"
 		include	"_inc/DeformLayers.asm"
 		include	"_inc/Level Drawing.asm"
-		else
+	else
 		include	"_inc/LevelSizeLoad & BgScrollSpeed (JP1).asm"
 		include	"_inc/DeformLayers (JP1).asm"
 		include	"_inc/Level Drawing (JP1).asm"
-		endif
+	endif
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to load basic level data
@@ -4956,11 +4959,14 @@ Map_Missile:	include	"_maps/Buzz Bomber Missile.asm"
 		include	"_incObj/7C Ring Flash.asm"
 
 		include	"_anim/Rings.asm"
-		if Revision=0
-Map_Ring:	include	"_maps/Rings.asm"
-		else
-Map_Ring:		include	"_maps/Rings (JP1).asm"
-		endif
+
+Map_Ring:
+	if Revision=0
+		include	"_maps/Rings.asm"
+	else
+		include	"_maps/Rings (JP1).asm"
+	endif
+
 Map_GRing:	include	"_maps/Giant Ring.asm"
 Map_Flash:	include	"_maps/Ring Flash.asm"
 		include	"_incObj/26 Monitor.asm"
@@ -5757,9 +5763,9 @@ OPL_ClrList:
 
 	if FixBugs
 		; Clear the last word, since the above loop only does longwords.
-	if (v_objstate_end-v_objstate-2)&2
-		clr.w	(a2)+
-	endif
+		if (v_objstate_end-v_objstate-2)&2
+			clr.w	(a2)+
+		endif
 	endif
 
 		lea	(v_objstate).w,a2
@@ -6090,16 +6096,16 @@ ResumeMusic:
 		move.w	#bgm_SBZ,d0	; play SBZ music
 
 .notsbz:
-		if Revision<>0
-			tst.b	(v_invinc).w ; is Sonic invincible?
-			beq.s	.notinvinc ; if not, branch
-			move.w	#bgm_Invincible,d0
+	if Revision<>0
+		tst.b	(v_invinc).w ; is Sonic invincible?
+		beq.s	.notinvinc ; if not, branch
+		move.w	#bgm_Invincible,d0
 .notinvinc:
-			tst.b	(f_lockscreen).w ; is Sonic at a boss?
-			beq.s	.playselected ; if not, branch
-			move.w	#bgm_Boss,d0
+		tst.b	(f_lockscreen).w ; is Sonic at a boss?
+		beq.s	.playselected ; if not, branch
+		move.w	#bgm_Boss,d0
 .playselected:
-		endif
+	endif
 
 		jsr	(QueueSound1).l
 
@@ -7394,7 +7400,7 @@ Map_HUD:	include	"_maps/HUD.asm"
 AddPoints:
 		move.b	#1,(f_scorecount).w ; set score counter to update
 
-		if Revision=0
+	if Revision=0
 		lea	(v_scorecopy).w,a2
 		lea	(v_score).w,a3
 		add.l	d0,(a3)		; add d0*10 to the score
@@ -7410,27 +7416,27 @@ AddPoints:
 		blo.w	.locret_1C6B6
 		move.l	d0,(a2)
 
-		else
+	else
 
-			lea	(v_score).w,a3
-			add.l	d0,(a3)
-			move.l	#999999,d1
-			cmp.l	(a3),d1 ; is score below 999999?
-			bhi.s	.belowmax ; if yes, branch
-			move.l	d1,(a3) ; reset score to 999999
+		lea	(v_score).w,a3
+		add.l	d0,(a3)
+		move.l	#999999,d1
+		cmp.l	(a3),d1 ; is score below 999999?
+		bhi.s	.belowmax ; if yes, branch
+		move.l	d1,(a3) ; reset score to 999999
 .belowmax:
-			move.l	(a3),d0
-			cmp.l	(v_scorelife).w,d0 ; has Sonic got 50000+ points?
-			blo.s	.noextralife ; if not, branch
+		move.l	(a3),d0
+		cmp.l	(v_scorelife).w,d0 ; has Sonic got 50000+ points?
+		blo.s	.noextralife ; if not, branch
 
-			addi.l	#5000,(v_scorelife).w ; increase requirement by 50000
-			tst.b	(v_megadrive).w
-			bmi.s	.noextralife ; branch if Mega Drive is Japanese
-			addq.b	#1,(v_lives).w ; give extra life
-			addq.b	#1,(f_lifecount).w
-			move.w	#bgm_ExtraLife,d0
-			jmp	(QueueSound1).l
-		endif
+		addi.l	#5000,(v_scorelife).w ; increase requirement by 50000
+		tst.b	(v_megadrive).w
+		bmi.s	.noextralife ; branch if Mega Drive is Japanese
+		addq.b	#1,(v_lives).w ; give extra life
+		addq.b	#1,(f_lifecount).w
+		move.w	#bgm_ExtraLife,d0
+		jmp	(QueueSound1).l
+	endif
 
 .locret_1C6B6:
 .noextralife:
@@ -7543,17 +7549,19 @@ Art_Sonic:	binclude	"artunc/Sonic.bin"	; Sonic
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------
-		if Revision=0
+	if Revision=0
 Nem_Smoke:	binclude	"artnem/Unused - Smoke.nem"
 		even
 Nem_SyzSparkle:	binclude	"artnem/Unused - SYZ Sparkles.nem"
 		even
-		endif
+	endif
+
 Nem_Shield:	binclude	"artnem/Shield.nem"
 		even
 Nem_Stars:	binclude	"artnem/Invincibility Stars.nem"
 		even
-		if Revision=0
+
+	if Revision=0
 Nem_LzSonic:	binclude	"artnem/Unused - LZ Sonic.nem" ; Sonic holding his breath
 		even
 Nem_UnkFire:	binclude	"artnem/Unused - Fireball.nem" ; unused fireball
@@ -7562,7 +7570,7 @@ Nem_Warp:	binclude	"artnem/Unused - SStage Flash.nem" ; entry to special stage f
 		even
 Nem_Goggle:	binclude	"artnem/Unused - Goggles.nem" ; unused goggles
 		even
-		endif
+	endif
 
 Map_SSWalls:	include	"_maps/SS Walls.asm"
 
@@ -7864,12 +7872,14 @@ Blk16_MZ:	binclude	"map16/MZ.eni"
 		even
 Nem_MZ:		binclude	"artnem/8x8 - MZ.nem"	; MZ primary patterns
 		even
-Blk256_MZ:	if Revision=0
+Blk256_MZ:
+	if Revision=0
 		binclude	"map256/MZ.kos"
-		else
-		binclude	"map256/MZ (JP1).kos"
-		endif
 		even
+	else
+		binclude	"map256/MZ (JP1).kos"
+		even
+	endif
 Blk16_SLZ:	binclude	"map16/SLZ.eni"
 		even
 Nem_SLZ:	binclude	"artnem/8x8 - SLZ.nem"	; SLZ primary patterns
@@ -7886,12 +7896,14 @@ Blk16_SBZ:	binclude	"map16/SBZ.eni"
 		even
 Nem_SBZ:	binclude	"artnem/8x8 - SBZ.nem"	; SBZ primary patterns
 		even
-Blk256_SBZ:	if Revision=0
+Blk256_SBZ:
+	if Revision=0
 		binclude	"map256/SBZ.kos"
-		else
-		binclude	"map256/SBZ (JP1).kos"
-		endif
 		even
+	else
+		binclude	"map256/SBZ (JP1).kos"
+		even
+	endif
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - bosses and ending sequence
 ; ---------------------------------------------------------------------------
@@ -7915,10 +7927,11 @@ Nem_EndSonic:	binclude	"artnem/Ending - Sonic.nem"
 		even
 Nem_TryAgain:	binclude	"artnem/Ending - Try Again.nem"
 		even
-Nem_EndEggman:	if Revision=0
+	if Revision=0
+Nem_EndEggman:
 		binclude	"artnem/Unused - Eggman Ending.nem"
-		endif
 		even
+	endif
 Kos_EndFlowers:	binclude	"artkos/Flowers at Ending.kos" ; ending sequence animated flowers
 		even
 Nem_EndFlower:	binclude	"artnem/Ending - Flowers.nem"
@@ -7969,16 +7982,19 @@ SS_3:		binclude	"sslayout/3.eni"
 		even
 SS_4:		binclude	"sslayout/4.eni"
 		even
-		if Revision=0
+	if Revision=0
 SS_5:		binclude	"sslayout/5.eni"
 		even
 SS_6:		binclude	"sslayout/6.eni"
-		else
-SS_5:		binclude	"sslayout/5 (JP1).eni"
-			even
-SS_6:		binclude	"sslayout/6 (JP1).eni"
-		endif
 		even
+	else
+		; SS 5 and 6 had broken objects outside the accessible layout;
+		; rev01 removes those - remaining layouts stay unchanged.
+SS_5:		binclude	"sslayout/5 (JP1).eni"
+		even
+SS_6:		binclude	"sslayout/6 (JP1).eni"
+		even
+	endif
 ; ---------------------------------------------------------------------------
 ; Animated uncompressed graphics
 ; ---------------------------------------------------------------------------
@@ -8094,11 +8110,12 @@ byte_69B84:	dc.b 0,	0, 0, 0
 
 Level_SYZ1:	binclude	"levels/syz1.bin"
 		even
-Level_SYZbg:	if Revision=0
+Level_SYZbg:
+	if Revision=0
 		binclude	"levels/syzbg.bin"
-		else
+	else
 		binclude	"levels/syzbg (JP1).bin"
-		endif
+	endif
 		even
 byte_69C7E:	dc.b 0,	0, 0, 0
 Level_SYZ2:	binclude	"levels/syz2.bin"
@@ -8185,26 +8202,32 @@ ObjPos_GHZ1:	binclude	"objpos/ghz1.bin"
 		even
 ObjPos_GHZ2:	binclude	"objpos/ghz2.bin"
 		even
-ObjPos_GHZ3:	if Revision=0
+ObjPos_GHZ3:
+	if Revision=0
 		binclude	"objpos/ghz3.bin"
-		else
+		even
+	else
 		binclude	"objpos/ghz3 (JP1).bin"
-		endif
 		even
-ObjPos_LZ1:	if Revision=0
+	endif
+ObjPos_LZ1:
+	if Revision=0
 		binclude	"objpos/lz1.bin"
-		else
-		binclude	"objpos/lz1 (JP1).bin"
-		endif
 		even
+	else
+		binclude	"objpos/lz1 (JP1).bin"
+		even
+	endif
 ObjPos_LZ2:	binclude	"objpos/lz2.bin"
 		even
-ObjPos_LZ3:	if Revision=0
+ObjPos_LZ3:
+	if Revision=0
 		binclude	"objpos/lz3.bin"
-		else
-		binclude	"objpos/lz3 (JP1).bin"
-		endif
 		even
+	else
+		binclude	"objpos/lz3 (JP1).bin"
+		even
+	endif
 ObjPos_SBZ3:	binclude	"objpos/sbz3.bin"
 		even
 ObjPos_LZ1pf1:	binclude	"objpos/lz1pf1.bin"
@@ -8219,12 +8242,14 @@ ObjPos_LZ3pf1:	binclude	"objpos/lz3pf1.bin"
 		even
 ObjPos_LZ3pf2:	binclude	"objpos/lz3pf2.bin"
 		even
-ObjPos_MZ1:	if Revision=0
+ObjPos_MZ1:
+	if Revision=0
 		binclude	"objpos/mz1.bin"
-		else
-		binclude	"objpos/mz1 (JP1).bin"
-		endif
 		even
+	else
+		binclude	"objpos/mz1 (JP1).bin"
+		even
+	endif
 ObjPos_MZ2:	binclude	"objpos/mz2.bin"
 		even
 ObjPos_MZ3:	binclude	"objpos/mz3.bin"
@@ -8239,18 +8264,22 @@ ObjPos_SYZ1:	binclude	"objpos/syz1.bin"
 		even
 ObjPos_SYZ2:	binclude	"objpos/syz2.bin"
 		even
-ObjPos_SYZ3:	if Revision=0
+ObjPos_SYZ3:
+	if Revision=0
 		binclude	"objpos/syz3.bin"
-		else
+		even
+	else
 		binclude	"objpos/syz3 (JP1).bin"
-		endif
 		even
-ObjPos_SBZ1:	if Revision=0
+	endif
+ObjPos_SBZ1:
+	if Revision=0
 		binclude	"objpos/sbz1.bin"
-		else
-		binclude	"objpos/sbz1 (JP1).bin"
-		endif
 		even
+	else
+		binclude	"objpos/sbz1 (JP1).bin"
+		even
+	endif
 ObjPos_SBZ2:	binclude	"objpos/sbz2.bin"
 		even
 ObjPos_FZ:	binclude	"objpos/fz.bin"

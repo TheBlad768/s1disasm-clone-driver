@@ -62,9 +62,9 @@ fillVRAM:	macro byte,start,end
 
 clearRAM:	macro startAddress,endAddress
 	if "endAddress"<>""
-.length := (endAddress)-(startAddress)
+		.length: := (endAddress)-(startAddress)
 	else
-.length := startAddress_end-startAddress
+		.length: := startAddress_end-startAddress
 	endif
 		lea	(startAddress).w,a1
 		moveq	#0,d0
@@ -109,7 +109,7 @@ stopZ80:	macro
 ; ---------------------------------------------------------------------------
 
 waitZ80:	macro
-.wait:	btst	#0,(z80_bus_request).l
+.wait:		btst	#0,(z80_bus_request).l
 		bne.s	.wait
 		endm
 
@@ -259,11 +259,11 @@ jmi:		macro loc
 ; ---------------------------------------------------------------------------
 
 out_of_range:	macro exit,pos
-		if ("pos"<>"")
+	if ("pos"<>"")
 		move.w	pos,d0		; get object position (if specified as not obX)
-		else
+	else
 		move.w	obX(a0),d0	; get object position
-		endif
+	endif
 		andi.w	#$FF80,d0	; round down to nearest $80
 		move.w	(v_screenposx).w,d1 ; get screen position
 		subi.w	#128,d1
@@ -294,9 +294,9 @@ gotoROM:	macro
 
 zonewarning:	macro loc,elementsize
 ._end:
-		if (._end-loc)-(ZoneCount*elementsize)<>0
+	if (._end-loc)-(ZoneCount*elementsize)<>0
 		warning "Size of loc (\{(._end-loc)/elementsize}) does not match ZoneCount (\{ZoneCount})."
-		endif
+	endif
 		endm
 
 ; ---------------------------------------------------------------------------
