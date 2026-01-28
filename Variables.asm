@@ -2,7 +2,7 @@
 
 ; Variables (v) and Flags (f)
 
-    obj $FFFF0000 ;"obj" is the ASM68K equivilent of "phase"
+    obj $FFFF0000 ;"obj" is the ASM68K equivalent of "phase"
 v_256x256:		ds.b	$52*$200	; 256x256 tile mappings ($52 chunks)
 v_256x256_end:
 
