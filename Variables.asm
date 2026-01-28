@@ -1,3 +1,5 @@
+	include "s1.sounddriver.ram.asm"
+
 ; Variables (v) and Flags (f)
 
     obj $FFFF0000 ;"obj" is the ASM68K equivilent of "phase"
@@ -22,7 +24,7 @@ v_hscrolltablebuffer_end:
 v_hscrolltablebuffer_end_padded:
 
 v_objspace:		ds.b	object_size*$80	; object variable space ($40 bytes per object)
-    objend	; acts like "dephase"
+
 ; Title screen objects
 v_sonicteam	= v_objspace+$80	; object variable space for the "SONIC TEAM PRESENTS" text ($40 bytes)
 v_titlesonic	= v_objspace+$40	; object variable space for Sonic in the title screen ($40 bytes)
@@ -90,90 +92,8 @@ v_endeggman	= v_objspace+$80	; object variable space for Eggman after the credit
 v_tryagain	= v_objspace+$C0	; object variable space for the "TRY AGAIN" text ($40 bytes)
 v_eggmanchaos	= v_objspace+$800	; object variable space for the emeralds juggled by Eggman ($180 bytes)
 
-v_snddriver_ram:	equ $FFFFF000 ; start of RAM for the sound driver data ($5C0 bytes)
-
-; =================================================================================
-; From here on, until otherwise stated, all offsets are relative to v_snddriver_ram
-; =================================================================================
-v_startofvariables:	equ $000
-v_sndprio:		equ $000	; sound priority (priority of new music/SFX must be higher or equal to this value or it won't play; bit 7 of priority being set prevents this value from changing)
-v_main_tempo_timeout:	equ $001	; Counts down to zero; when zero, resets to next value and delays song by 1 frame
-v_main_tempo:		equ $002	; Used for music only
-f_pausemusic:		equ $003	; flag set to stop music when paused
-v_fadeout_counter:	equ $004
-
-v_fadeout_delay:	equ $006
-v_communication_byte:	equ $007	; used in Ristar to sync with a boss' attacks; unused here
-f_updating_dac:		equ $008	; $80 if updating DAC, $00 otherwise
-v_sound_id:		equ $009	; sound or music copied from below
-v_soundqueue0:		equ $00A	; sound or music to play
-v_soundqueue1:		equ $00B	; special sound to play
-v_soundqueue2:		equ $00C	; unused sound to play
-
-f_voice_selector:	equ $00E	; $00 = use music voice pointer; $40 = use special voice pointer; $80 = use track voice pointer
-
-v_voice_ptr:		equ $018	; voice data pointer (4 bytes)
-
-v_special_voice_ptr:	equ $020	; voice data pointer for special SFX ($D0-$DF) (4 bytes)
-
-f_fadein_flag:		equ $024	; Flag for fade in
-v_fadein_delay:		equ $025
-v_fadein_counter:	equ $026	; Timer for fade in/out
-f_1up_playing:		equ $027	; flag indicating 1-up song is playing
-v_tempo_mod:		equ $028	; music - tempo modifier
-v_speeduptempo:		equ $029	; music - tempo modifier with speed shoes
-f_speedup:		equ $02A	; flag indicating whether speed shoes tempo is on ($80) or off ($00)
-v_ring_speaker:		equ $02B	; which speaker the "ring" sound is played in (00 = right; 01 = left)
-f_push_playing:		equ $02C	; if set, prevents further push sounds from playing
-
-v_music_track_ram:	equ $040	; Start of music RAM
-
-v_music_fmdac_tracks:	equ v_music_track_ram+TrackSz*0
-v_music_dac_track:	equ v_music_fmdac_tracks+TrackSz*0
-v_music_fm_tracks:	equ v_music_fmdac_tracks+TrackSz*1
-v_music_fm1_track:	equ v_music_fm_tracks+TrackSz*0
-v_music_fm2_track:	equ v_music_fm_tracks+TrackSz*1
-v_music_fm3_track:	equ v_music_fm_tracks+TrackSz*2
-v_music_fm4_track:	equ v_music_fm_tracks+TrackSz*3
-v_music_fm5_track:	equ v_music_fm_tracks+TrackSz*4
-v_music_fm6_track:	equ v_music_fm_tracks+TrackSz*5
-v_music_fm_tracks_end:	equ v_music_fm_tracks+TrackSz*6
-v_music_fmdac_tracks_end:	equ v_music_fm_tracks_end
-v_music_psg_tracks:	equ v_music_fmdac_tracks_end
-v_music_psg1_track:	equ v_music_psg_tracks+TrackSz*0
-v_music_psg2_track:	equ v_music_psg_tracks+TrackSz*1
-v_music_psg3_track:	equ v_music_psg_tracks+TrackSz*2
-v_music_psg_tracks_end:	equ v_music_psg_tracks+TrackSz*3
-v_music_track_ram_end:	equ v_music_psg_tracks_end
-
-v_sfx_track_ram:	equ v_music_track_ram_end	; Start of SFX RAM, straight after the end of music RAM
-
-v_sfx_fm_tracks:	equ v_sfx_track_ram+TrackSz*0
-v_sfx_fm3_track:	equ v_sfx_fm_tracks+TrackSz*0
-v_sfx_fm4_track:	equ v_sfx_fm_tracks+TrackSz*1
-v_sfx_fm5_track:	equ v_sfx_fm_tracks+TrackSz*2
-v_sfx_fm_tracks_end:	equ v_sfx_fm_tracks+TrackSz*3
-v_sfx_psg_tracks:	equ v_sfx_fm_tracks_end
-v_sfx_psg1_track:	equ v_sfx_psg_tracks+TrackSz*0
-v_sfx_psg2_track:	equ v_sfx_psg_tracks+TrackSz*1
-v_sfx_psg3_track:	equ v_sfx_psg_tracks+TrackSz*2
-v_sfx_psg_tracks_end:	equ v_sfx_psg_tracks+TrackSz*3
-v_sfx_track_ram_end:	equ v_sfx_psg_tracks_end
-
-v_spcsfx_track_ram:	equ v_sfx_track_ram_end	; Start of special SFX RAM, straight after the end of SFX RAM
-
-v_spcsfx_fm4_track:	equ v_spcsfx_track_ram+TrackSz*0
-v_spcsfx_psg3_track:	equ v_spcsfx_track_ram+TrackSz*1
-v_spcsfx_track_ram_end:	equ v_spcsfx_track_ram+TrackSz*2
-
-v_1up_ram_copy:		equ v_spcsfx_track_ram_end
-
-; =================================================================================
-; From here on, no longer relative to sound driver RAM
-; =================================================================================
-    obj $FFFFF5C0
-
-        ds.b $40    ;unused
+v_snddriver_ram:	ds.b	$5C0		; sound driver state
+        		ds.b	$40    		; unused
 
 v_gamemode:		ds.b	1		; game mode (00=Sega; 04=Title; 08=Demo; 0C=Level; 10=SS; 14=Cont; 18=End; 1C=Credit; +8C=PreLevel)
 			ds.b	1		; unused
@@ -364,22 +284,16 @@ v_levelvariables_end:
 
 v_spritetablebuffer:	ds.b	$280		; sprite table (last $80 bytes are overwritten by v_palette_water_fading)
 v_spritetablebuffer_end:
-v_palette_water_fading:
-v_pal_water_dup:	equ v_spritetablebuffer_end-$80 ; duplicate underwater palette, used for transitions ($80 bytes)
-
-v_palette_water:
-v_pal_water:	ds.b	$80 ;equ $FFFFFA80	; main underwater palette ($80 bytes)
-
-v_palette:
-v_pal_dry:	ds.b	$80; equ $FFFFFB00	; main palette ($80 bytes)
-
-v_palette_fading:
-v_pal_dry_dup:	ds.b	$80; equ $FFFFFB80	; duplicate palette, used for transitions ($80 bytes)
-
-v_objstate:	ds.b	$C0; equ $FFFFFC00	; object state list ($200 bytes)
+v_palette_water_fading = v_spritetablebuffer_end-$80	; duplicate underwater palette, used for transitions ($80 bytes)
+v_palette_water:	ds.b	$80		; main underwater palette
+v_palette_water_end:
+v_palette:		ds.b	$80		; main palette
+v_palette_end:
+v_palette_fading:	ds.b	$80		; duplicate palette, used for transitions
+v_palette_fading_end:
+v_objstate:		ds.b	$C0		; object state list
 v_objstate_end:
 			ds.b	$140		; stack
-
 v_systemstack:
 v_crossresetram:				; RAM beyond this point is only cleared on a cold-boot
 			ds.b	2		; unused
@@ -513,9 +427,9 @@ f_debugmode:		ds.w	1		; debug mode flag
 v_init:			ds.l	1		; 'init' text string
 v_ram_end:
 
-;    if * > 0	; Don't declare more space than the RAM can contain!
-;	fatal "The RAM variable declarations are too large by $\{*} bytes."
- ;   endc
+	if *>0	; Don't declare more space than the RAM can contain!
+		inform 2, "The RAM variable declarations are too large."
+	endc
 	objend
 
     obj v_objstate
