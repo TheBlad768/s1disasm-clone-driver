@@ -24,7 +24,7 @@ Revision:	equ 1
 ZoneCount:	equ 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
 
 ; FIXME: Currently only affects `s1.sounddriver.asm`
-FixBugs:	equ 1	; change to 1 to enable bugfixes
+FixBugs:	equ 0	; change to 1 to enable bugfixes
 
 ; ===========================================================================
 
