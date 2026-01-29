@@ -17,12 +17,16 @@ Pal_Index:
 	paletteIndexEntry	Pal_Title,			v_palette_line_1
 	paletteIndexEntry	Pal_LevelSel,		v_palette_line_1
 	paletteIndexEntry	Pal_Sonic,			v_palette_line_1
+	
+Pal_Levels:
 	paletteIndexEntry	Pal_GHZ, 			v_palette_line_2
 	paletteIndexEntry	Pal_LZ, 			v_palette_line_2
 	paletteIndexEntry	Pal_MZ, 			v_palette_line_2
 	paletteIndexEntry	Pal_SLZ,			v_palette_line_2
 	paletteIndexEntry	Pal_SYZ,			v_palette_line_2
 	paletteIndexEntry	Pal_SBZ1, 			v_palette_line_2
+	zonewarning Pal_Levels,8
+
 	paletteIndexEntry	Pal_Special, 		v_palette_line_1
 	paletteIndexEntry	Pal_LZWater, 		v_palette_line_1
 	paletteIndexEntry	Pal_SBZ3, 			v_palette_line_2
