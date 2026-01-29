@@ -7,6 +7,7 @@
 
 ; ===========================================================================
 
+	include "MacroSetup.asm"
 	include	"Constants.asm"
 	include	"Variables.asm"
 	include	"Macros.asm"
@@ -21,6 +22,9 @@ AddressSRAM:	equ 3	; 0 = odd+even; 2 = even only; 3 = odd only
 Revision:	equ 1
 
 ZoneCount:	equ 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
+
+; FIXME: Currently only affects `s1.sounddriver.asm`
+FixBugs:	equ 1	; change to 1 to enable bugfixes
 
 ; ===========================================================================
 
@@ -1075,7 +1079,7 @@ SoundDriverLoad:
 		nop	
 		stopZ80
 		resetZ80
-		lea	(Kos_Z80).l,a0	; load sound driver
+		lea	(DACDriver).l,a0	; load sound driver
 		lea	(z80_ram).l,a1	; target Z80 RAM
 		bsr.w	KosDec		; decompress
 		resetZ80a
@@ -9193,7 +9197,10 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 		endc
 		;dcb.b ($10000-(*%$10000))-(EndOfRom-SoundDriver),$FF
 
+		pusho
+		opt oz+
 SoundDriver:	include "s1.sounddriver.asm"
+		popo
 
 ; end of 'ROM'
 		even
