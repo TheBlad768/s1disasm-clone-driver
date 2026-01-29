@@ -1947,7 +1947,7 @@ Pal_Sega2:	binclude	"palette/Sega2.bin"
 
 
 PalLoad_Fade:
-		lea	(PalPointers).l,a1
+		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
@@ -1966,7 +1966,7 @@ PalLoad_Fade:
 
 
 PalLoad:
-		lea	(PalPointers).l,a1
+		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
@@ -1987,7 +1987,7 @@ PalLoad:
 
 
 PalLoad_Fade_Water:
-		lea	(PalPointers).l,a1
+		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
@@ -2006,7 +2006,7 @@ PalLoad_Fade_Water:
 
 
 PalLoad_Water:
-		lea	(PalPointers).l,a1
+		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
@@ -2022,36 +2022,32 @@ PalLoad_Water:
 
 ; ===========================================================================
 
-		include	"_inc/Palette Pointers.asm"
+		include	"_inc/Palette Index.asm"
 
 ; ---------------------------------------------------------------------------
 ; Palette data
 ; ---------------------------------------------------------------------------
-bincludePalette macro path,{INTLABEL},{GLOBALSYMBOLS}
-__LABEL__:	binclude	path
-__LABEL___end:
-	endm
 
-Pal_SegaBG:	bincludePalette	"palette/Sega Background.bin"
-Pal_Title:	bincludePalette	"palette/Title Screen.bin"
-Pal_LevelSel:	bincludePalette	"palette/Level Select.bin"
-Pal_Sonic:	bincludePalette	"palette/Sonic.bin"
-Pal_GHZ:	bincludePalette	"palette/Green Hill Zone.bin"
-Pal_LZ:		bincludePalette	"palette/Labyrinth Zone.bin"
-Pal_LZWater:	bincludePalette	"palette/Labyrinth Zone Underwater.bin"
-Pal_MZ:		bincludePalette	"palette/Marble Zone.bin"
-Pal_SLZ:	bincludePalette	"palette/Star Light Zone.bin"
-Pal_SYZ:	bincludePalette	"palette/Spring Yard Zone.bin"
-Pal_SBZ1:	bincludePalette	"palette/SBZ Act 1.bin"
-Pal_SBZ2:	bincludePalette	"palette/SBZ Act 2.bin"
-Pal_Special:	bincludePalette	"palette/Special Stage.bin"
-Pal_SBZ3:	bincludePalette	"palette/SBZ Act 3.bin"
-Pal_SBZ3Water:	bincludePalette	"palette/SBZ Act 3 Underwater.bin"
-Pal_LZSonWater:	bincludePalette	"palette/Sonic - LZ Underwater.bin"
-Pal_SBZ3SonWat:	bincludePalette	"palette/Sonic - SBZ3 Underwater.bin"
-Pal_SSResult:	bincludePalette	"palette/Special Stage Results.bin"
-Pal_Continue:	bincludePalette	"palette/Special Stage Continue Bonus.bin"
-Pal_Ending:	bincludePalette	"palette/Ending.bin"
+Pal_SegaBG:		bincludeEndMarker	"palette/Sega Background.bin"
+Pal_Title:		bincludeEndMarker	"palette/Title Screen.bin"
+Pal_LevelSel:	bincludeEndMarker	"palette/Level Select.bin"
+Pal_Sonic:		bincludeEndMarker	"palette/Sonic.bin"
+Pal_GHZ:		bincludeEndMarker	"palette/Green Hill Zone.bin"
+Pal_LZ:			bincludeEndMarker	"palette/Labyrinth Zone.bin"
+Pal_LZWater:	bincludeEndMarker	"palette/Labyrinth Zone Underwater.bin"
+Pal_MZ:			bincludeEndMarker	"palette/Marble Zone.bin"
+Pal_SLZ:		bincludeEndMarker	"palette/Star Light Zone.bin"
+Pal_SYZ:		bincludeEndMarker	"palette/Spring Yard Zone.bin"
+Pal_SBZ1:		bincludeEndMarker	"palette/SBZ Act 1.bin"
+Pal_SBZ2:		bincludeEndMarker	"palette/SBZ Act 2.bin"
+Pal_Special:	bincludeEndMarker	"palette/Special Stage.bin"
+Pal_SBZ3:		bincludeEndMarker	"palette/SBZ Act 3.bin"
+Pal_SBZ3Water:	bincludeEndMarker	"palette/SBZ Act 3 Underwater.bin"
+Pal_LZSonWater:	bincludeEndMarker	"palette/Sonic - LZ Underwater.bin"
+Pal_SBZ3SonWat:	bincludeEndMarker	"palette/Sonic - SBZ3 Underwater.bin"
+Pal_SSResult:	bincludeEndMarker	"palette/Special Stage Results.bin"
+Pal_Continue:	bincludeEndMarker	"palette/Special Stage Continue Bonus.bin"
+Pal_Ending:		bincludeEndMarker	"palette/Ending.bin"
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to wait for VBlank routines to complete

@@ -306,6 +306,21 @@ zonewarning:	macro loc,elementsize
 make_art_tile function addr,pal,pri,((pri&1)<<15)|((pal&3)<<13)|addr
 
 ; ---------------------------------------------------------------------------
+; Macro to binclude something with an end marker
+; ---------------------------------------------------------------------------
+
+bincludeEndMarker macro path,{INTLABEL},{GLOBALSYMBOLS}
+__LABEL__:	binclude	path
+__LABEL___end:
+	endm
+
+; ---------------------------------------------------------------------------
+; define an ID for something in a pointer table
+; ---------------------------------------------------------------------------
+
+id function ptr,((ptr-offset)/ptrsize+idstart)
+
+; ---------------------------------------------------------------------------
 ; sprite mappings and DPLCs macros
 ; ---------------------------------------------------------------------------
 
