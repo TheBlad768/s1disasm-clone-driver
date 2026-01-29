@@ -8,6 +8,7 @@ ptr_paletteLabel:
 	dc.l paletteLabel
 	dc.w paletteRAMaddress,(paletteLabel_end-paletteLabel)/4-1
 	endm
+; ---------------------------------------------------------------------------
 
 Pal_Index:
 	; FORMAT:			Palette label,		RAM location
