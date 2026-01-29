@@ -107,7 +107,7 @@ loc_19202:
 		jsr	(PlaySound_Special).l	; play boss damage sound
 
 loc_1923A:
-		lea	(v_pal_dry+$22).w,a1
+		lea	(v_palette+$22).w,a1
 		moveq	#0,d0
 		tst.w	(a1)
 		bne.s	loc_19248

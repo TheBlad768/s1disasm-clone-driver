@@ -69,6 +69,8 @@ vram_bg:	equ $E000	; background namespace
 vram_sonic:	equ $F000	; Sonic graphics
 vram_sprites:	equ $F800	; sprite table
 vram_hscroll:	equ $FC00	; horizontal scroll table
+tile_size:	equ 8*8/2
+plane_size_64x32:	equ 64*32*2
 
 ; Game modes
 id_Sega:	equ ptr_GM_Sega-GameModeArray	; $00
@@ -138,6 +140,7 @@ obFrame:	equ $1A	; current frame displayed
 obAniFrame:	equ $1B	; current frame in animation script
 obAnim:		equ $1C	; current animation
 obNextAni:	equ $1D	; next animation
+obPrevAni:	equ	obNextAni
 obTimeFrame:	equ $1E	; time to next frame
 obDelayAni:	equ $1F	; time to delay animation
 obColType:	equ $20	; collision response type
@@ -155,6 +158,34 @@ flashtime:	equ $30	; time between flashes after getting hit
 invtime:	equ $32	; time left for invincibility
 shoetime:	equ $34	; time left for speed shoes
 standonobject:	equ $3D	; object Sonic stands on
+
+; Miscellaneous object scratch-RAM
+objoff_25:	equ $25
+objoff_26:	equ $26
+objoff_29:	equ $29
+objoff_2A:	equ $2A
+objoff_2B:	equ $2B
+objoff_2C:	equ $2C
+objoff_2E:	equ $2E
+objoff_2F:	equ $2F
+objoff_30:	equ $30
+objoff_32:	equ $32
+objoff_33:	equ $33
+objoff_34:	equ $34
+objoff_35:	equ $35
+objoff_36:	equ $36
+objoff_37:	equ $37
+objoff_38:	equ $38
+objoff_39:	equ $39
+objoff_3A:	equ $3A
+objoff_3B:	equ $3B
+objoff_3C:	equ $3C
+objoff_3D:	equ $3D
+objoff_3E:	equ $3E
+objoff_3F:	equ $3F
+
+object_size_bits:	equ 6
+object_size:	equ 1<<object_size_bits ; 64
 
 ; Object variables (Sonic 2 disassembly nomenclature)
 render_flags:	equ 1	; bitfield for x/y flip, display mode

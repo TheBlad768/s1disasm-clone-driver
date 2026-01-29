@@ -617,11 +617,11 @@ VBla_00:
 		tst.b	(f_wtr_state).w	; is water above top of screen?
 		bne.s	.waterabove 	; if yes, branch
 
-		writeCRAM	v_pal_dry,$80,0
+		writeCRAM	v_palette,$80,0
 		bra.s	.waterbelow
 
 .waterabove:
-		writeCRAM	v_pal_water,$80,0
+		writeCRAM	v_palette_water,$80,0
 
 	.waterbelow:
 		move.w	(v_hbla_hreg).w,(a5)
@@ -669,11 +669,11 @@ VBla_08:
 		tst.b	(f_wtr_state).w
 		bne.s	.waterabove
 
-		writeCRAM	v_pal_dry,$80,0
+		writeCRAM	v_palette,$80,0
 		bra.s	.waterbelow
 
 .waterabove:
-		writeCRAM	v_pal_water,$80,0
+		writeCRAM	v_palette_water,$80,0
 
 	.waterbelow:
 		move.w	(v_hbla_hreg).w,(a5)
@@ -724,7 +724,7 @@ VBla_0A:
 		stopZ80
 		waitZ80
 		bsr.w	ReadJoypads
-		writeCRAM	v_pal_dry,$80,0
+		writeCRAM	v_palette,$80,0
 		writeVRAM	v_spritetablebuffer,$280,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,$380,vram_hscroll
 		startZ80
@@ -751,11 +751,11 @@ VBla_0C:
 		tst.b	(f_wtr_state).w
 		bne.s	.waterabove
 
-		writeCRAM	v_pal_dry,$80,0
+		writeCRAM	v_palette,$80,0
 		bra.s	.waterbelow
 
 .waterabove:
-		writeCRAM	v_pal_water,$80,0
+		writeCRAM	v_palette_water,$80,0
 
 	.waterbelow:
 		move.w	(v_hbla_hreg).w,(a5)
@@ -796,7 +796,7 @@ VBla_16:
 		stopZ80
 		waitZ80
 		bsr.w	ReadJoypads
-		writeCRAM	v_pal_dry,$80,0
+		writeCRAM	v_palette,$80,0
 		writeVRAM	v_spritetablebuffer,$280,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,$380,vram_hscroll
 		startZ80
@@ -822,11 +822,11 @@ sub_106E:
 		bsr.w	ReadJoypads
 		tst.b	(f_wtr_state).w ; is water above top of screen?
 		bne.s	.waterabove	; if yes, branch
-		writeCRAM	v_pal_dry,$80,0
+		writeCRAM	v_palette,$80,0
 		bra.s	.waterbelow
 
 	.waterabove:
-		writeCRAM	v_pal_water,$80,0
+		writeCRAM	v_palette_water,$80,0
 
 	.waterbelow:
 		writeVRAM	v_spritetablebuffer,$280,vram_sprites
@@ -849,7 +849,7 @@ HBlank:
 		move.w	#0,(f_hbla_pal).w
 		movem.l	a0-a1,-(sp)
 		lea	(vdp_data_port).l,a1
-		lea	(v_pal_water).w,a0 ; get palette from RAM
+		lea	(v_palette_water).w,a0 ; get palette from RAM
 		move.l	#$C0000000,4(a1) ; set VDP to CRAM write
 		move.l	(a0)+,(a1)	; move palette to CRAM
 		move.l	(a0)+,(a1)
@@ -1048,7 +1048,7 @@ ClearScreen:
 
 		lea	(v_spritetablebuffer).w,a1
 		moveq	#0,d0
-		move.w	#($280/4),d1	; This should be ($280/4)-1, leading to a slight bug (first bit of v_pal_water is cleared)
+		move.w	#($280/4),d1	; This should be ($280/4)-1, leading to a slight bug (first bit of v_palette_water is cleared)
 
 	.clearsprites:
 		move.l	d0,(a1)+
@@ -1398,7 +1398,7 @@ PaletteFadeIn:
 
 PalFadeIn_Alt:				; start position and size are already set
 		moveq	#0,d0
-		lea	(v_pal_dry).w,a0
+		lea	(v_palette).w,a0
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		moveq	#cBlack,d1
@@ -1425,8 +1425,8 @@ PalFadeIn_Alt:				; start position and size are already set
 
 FadeIn_FromBlack:
 		moveq	#0,d0
-		lea	(v_pal_dry).w,a0
-		lea	(v_pal_dry_dup).w,a1
+		lea	(v_palette).w,a0
+		lea	(v_palette_fading).w,a1
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		adda.w	d0,a1
@@ -1440,8 +1440,8 @@ FadeIn_FromBlack:
 		bne.s	.exit		; if not, branch
 
 		moveq	#0,d0
-		lea	(v_pal_water).w,a0
-		lea	(v_pal_water_dup).w,a1
+		lea	(v_palette_water).w,a0
+		lea	(v_palette_water_fading).w,a1
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		adda.w	d0,a1
@@ -1520,7 +1520,7 @@ PaletteFadeOut:
 
 FadeOut_ToBlack:
 		moveq	#0,d0
-		lea	(v_pal_dry).w,a0
+		lea	(v_palette).w,a0
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		move.b	(v_pfade_size).w,d0
@@ -1530,7 +1530,7 @@ FadeOut_ToBlack:
 		dbf	d0,.decolour	; repeat for size of palette
 
 		moveq	#0,d0
-		lea	(v_pal_water).w,a0
+		lea	(v_palette_water).w,a0
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		move.b	(v_pfade_size).w,d0
@@ -1587,7 +1587,7 @@ FadeOut_DecColour:
 PaletteWhiteIn:
 		move.w	#$003F,(v_pfade_start).w ; start position = 0; size = $40
 		moveq	#0,d0
-		lea	(v_pal_dry).w,a0
+		lea	(v_palette).w,a0
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		move.w	#cWhite,d1
@@ -1614,8 +1614,8 @@ PaletteWhiteIn:
 
 WhiteIn_FromWhite:
 		moveq	#0,d0
-		lea	(v_pal_dry).w,a0
-		lea	(v_pal_dry_dup).w,a1
+		lea	(v_palette).w,a0
+		lea	(v_palette_fading).w,a1
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		adda.w	d0,a1
@@ -1628,8 +1628,8 @@ WhiteIn_FromWhite:
 		cmpi.b	#id_LZ,(v_zone).w	; is level Labyrinth?
 		bne.s	.exit		; if not, branch
 		moveq	#0,d0
-		lea	(v_pal_water).w,a0
-		lea	(v_pal_water_dup).w,a1
+		lea	(v_palette_water).w,a0
+		lea	(v_palette_water_fading).w,a1
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		adda.w	d0,a1
@@ -1708,7 +1708,7 @@ PaletteWhiteOut:
 
 WhiteOut_ToWhite:
 		moveq	#0,d0
-		lea	(v_pal_dry).w,a0
+		lea	(v_palette).w,a0
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		move.b	(v_pfade_size).w,d0
@@ -1718,7 +1718,7 @@ WhiteOut_ToWhite:
 		dbf	d0,.addcolour
 
 		moveq	#0,d0
-		lea	(v_pal_water).w,a0
+		lea	(v_palette_water).w,a0
 		move.b	(v_pfade_start).w,d0
 		adda.w	d0,a0
 		move.b	(v_pfade_size).w,d0
@@ -1779,7 +1779,7 @@ WhiteOut_AddColour:
 PalCycle_Sega:
 		tst.b	(v_pcyc_time+1).w
 		bne.s	loc_206A
-		lea	(v_pal_dry+$20).w,a1
+		lea	(v_palette+$20).w,a1
 		lea	(Pal_Sega1).l,a0
 		moveq	#5,d1
 		move.w	(v_pcyc_num).w,d0
@@ -1842,11 +1842,11 @@ loc_2088:
 		move.w	d0,(v_pcyc_num).w
 		lea	(Pal_Sega2).l,a0
 		lea	(a0,d0.w),a0
-		lea	(v_pal_dry+$04).w,a1
+		lea	(v_palette+$04).w,a1
 		move.l	(a0)+,(a1)+
 		move.l	(a0)+,(a1)+
 		move.w	(a0)+,(a1)
-		lea	(v_pal_dry+$20).w,a1
+		lea	(v_palette+$20).w,a1
 		moveq	#0,d0
 		moveq	#$2C,d1
 
@@ -1887,7 +1887,7 @@ PalLoad1:
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
 		movea.w	(a1)+,a3	; get target RAM address
-		adda.w	#v_pal_dry_dup-v_pal_dry,a3		; skip to "main" RAM address
+		adda.w	#v_palette_fading-v_palette,a3		; skip to "main" RAM address
 		move.w	(a1)+,d7	; get length of palette data
 
 	.loop:
@@ -1927,7 +1927,7 @@ PalLoad3_Water:
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
 		movea.w	(a1)+,a3	; get target RAM address
-		suba.w	#v_pal_dry-v_pal_water,a3		; skip to "main" RAM address
+		suba.w	#v_palette-v_palette_water,a3		; skip to "main" RAM address
 		move.w	(a1)+,d7	; get length of palette data
 
 	.loop:
@@ -1946,7 +1946,7 @@ PalLoad4_Water:
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
 		movea.w	(a1)+,a3	; get target RAM address
-		suba.w	#v_pal_dry-v_pal_water_dup,a3
+		suba.w	#v_palette-v_palette_water_fading,a3
 		move.w	(a1)+,d7	; get length of palette data
 
 	.loop:
@@ -2125,7 +2125,7 @@ GM_Title:
 
 		copyTilemap	$FF0000,$C000,$27,$1B
 
-		lea	(v_pal_dry_dup).w,a1
+		lea	(v_palette_fading).w,a1
 		moveq	#cBlack,d0
 		move.w	#$1F,d1
 
@@ -2171,7 +2171,7 @@ GM_Title:
 		move.w	#0,d0
 		bsr.w	EniDec
 		lea	(Blk256_GHZ).l,a0 ; load GHZ 256x256 mappings
-		lea	(v_256x256).l,a1
+		lea	(v_256x256&$FFFFFF).l,a1
 		bsr.w	KosDec
 		bsr.w	LevelLayoutLoad
 		bsr.w	PaletteFadeOut
@@ -3636,7 +3636,7 @@ loc_4992:
 		bmi.s	loc_49E8
 		lea	(Pal_SSCyc1).l,a1
 		adda.w	d0,a1
-		lea	(v_pal_dry+$4E).w,a2
+		lea	(v_palette+$4E).w,a2
 		move.l	(a1)+,(a2)+
 		move.l	(a1)+,(a2)+
 		move.l	(a1)+,(a2)+
@@ -3658,18 +3658,18 @@ loc_49F4:
 		andi.w	#$7F,d0
 		bclr	#0,d0
 		beq.s	loc_4A18
-		lea	(v_pal_dry+$6E).w,a2
+		lea	(v_palette+$6E).w,a2
 		move.l	(a1),(a2)+
 		move.l	4(a1),(a2)+
 		move.l	8(a1),(a2)+
 
 loc_4A18:
 		adda.w	#$C,a1
-		lea	(v_pal_dry+$5A).w,a2
+		lea	(v_palette+$5A).w,a2
 		cmpi.w	#$A,d0
 		blo.s	loc_4A2E
 		subi.w	#$A,d0
-		lea	(v_pal_dry+$7A).w,a2
+		lea	(v_palette+$7A).w,a2
 
 loc_4A2E:
 		move.w	d0,d1
@@ -4177,7 +4177,7 @@ GM_Credits:
 		lea	(Nem_CreditText).l,a0 ; load credits alphabet patterns
 		bsr.w	NemDec
 
-		lea	(v_pal_dry_dup).w,a1
+		lea	(v_palette_fading).w,a1
 		moveq	#0,d0
 		move.w	#$1F,d1
 	Cred_ClrPal:
@@ -4305,7 +4305,7 @@ TryAgainEnd:
 		moveq	#plcid_TryAgain,d0
 		bsr.w	QuickPLC	; load "TRY AGAIN" or "END" patterns
 
-		lea	(v_pal_dry_dup).w,a1
+		lea	(v_palette_fading).w,a1
 		moveq	#0,d0
 		move.w	#$1F,d1
 	TryAg_ClrPal:
@@ -4314,7 +4314,7 @@ TryAgainEnd:
 
 		moveq	#palid_Ending,d0
 		bsr.w	PalLoad1	; load ending palette
-		clr.w	(v_pal_dry_dup+$40).w
+		clr.w	(v_palette_fading+$40).w
 		move.b	#id_EndEggman,(v_endeggman).w ; load Eggman object
 		jsr	(ExecuteObjects).l
 		jsr	(BuildSprites).l
@@ -5352,7 +5352,7 @@ LevelDataLoad:
 		move.w	#0,d0
 		bsr.w	EniDec
 		movea.l	(a2)+,a0
-		lea	(v_256x256).l,a1 ; RAM address for 256x256 mappings
+		lea	(v_256x256&$FFFFFF).l,a1 ; RAM address for 256x256 mappings
 		bsr.w	KosDec
 		bsr.w	LevelLayoutLoad
 		move.w	(a2)+,d0
@@ -6994,207 +6994,7 @@ Map_Bub:	include	"_maps\Bubbles.asm"
 		include	"_anim\Waterfalls.asm"
 Map_WFall	include	"_maps\Waterfalls.asm"
 
-; ===========================================================================
-; ---------------------------------------------------------------------------
-; Object 01 - Sonic
-; ---------------------------------------------------------------------------
-
-SonicPlayer:
-		tst.w	(v_debuguse).w	; is debug mode being used?
-		beq.s	Sonic_Normal	; if not, branch
-		jmp	(DebugMode).l
-; ===========================================================================
-
-Sonic_Normal:
-		moveq	#0,d0
-		move.b	obRoutine(a0),d0
-		move.w	Sonic_Index(pc,d0.w),d1
-		jmp	Sonic_Index(pc,d1.w)
-; ===========================================================================
-Sonic_Index:	dc.w Sonic_Main-Sonic_Index
-		dc.w Sonic_Control-Sonic_Index
-		dc.w Sonic_Hurt-Sonic_Index
-		dc.w Sonic_Death-Sonic_Index
-		dc.w Sonic_ResetLevel-Sonic_Index
-; ===========================================================================
-
-Sonic_Main:	; Routine 0
-		addq.b	#2,obRoutine(a0)
-		move.b	#$13,obHeight(a0)
-		move.b	#9,obWidth(a0)
-		move.l	#Map_Sonic,obMap(a0)
-		move.w	#$780,obGfx(a0)
-		move.b	#2,obPriority(a0)
-		move.b	#$18,obActWid(a0)
-		move.b	#4,obRender(a0)
-		move.w	#$600,(v_sonspeedmax).w ; Sonic's top speed
-		move.w	#$C,(v_sonspeedacc).w ; Sonic's acceleration
-		move.w	#$80,(v_sonspeeddec).w ; Sonic's deceleration
-
-Sonic_Control:	; Routine 2
-		tst.w	(f_debugmode).w	; is debug cheat enabled?
-		beq.s	loc_12C58	; if not, branch
-		btst	#bitB,(v_jpadpress1).w ; is button B pressed?
-		beq.s	loc_12C58	; if not, branch
-		move.w	#1,(v_debuguse).w ; change Sonic into a ring/item
-		clr.b	(f_lockctrl).w
-		rts	
-; ===========================================================================
-
-loc_12C58:
-		tst.b	(f_lockctrl).w	; are controls locked?
-		bne.s	loc_12C64	; if yes, branch
-		move.w	(v_jpadhold1).w,(v_jpadhold2).w ; enable joypad control
-
-loc_12C64:
-		btst	#0,(f_playerctrl).w ; are controls locked?
-		bne.s	loc_12C7E	; if yes, branch
-		moveq	#0,d0
-		move.b	obStatus(a0),d0
-		andi.w	#6,d0
-		move.w	Sonic_Modes(pc,d0.w),d1
-		jsr	Sonic_Modes(pc,d1.w)
-
-loc_12C7E:
-		bsr.s	Sonic_Display
-		bsr.w	Sonic_RecordPosition
-		bsr.w	Sonic_Water
-		move.b	(v_anglebuffer).w,$36(a0)
-		move.b	($FFFFF76A).w,$37(a0)
-		tst.b	(f_wtunnelmode).w
-		beq.s	loc_12CA6
-		tst.b	obAnim(a0)
-		bne.s	loc_12CA6
-		move.b	obNextAni(a0),obAnim(a0)
-
-loc_12CA6:
-		bsr.w	Sonic_Animate
-		tst.b	(f_playerctrl).w
-		bmi.s	loc_12CB6
-		jsr	(ReactToItem).l
-
-loc_12CB6:
-		bsr.w	Sonic_Loops
-		bsr.w	Sonic_LoadGfx
-		rts	
-; ===========================================================================
-Sonic_Modes:	dc.w Sonic_MdNormal-Sonic_Modes
-		dc.w Sonic_MdJump-Sonic_Modes
-		dc.w Sonic_MdRoll-Sonic_Modes
-		dc.w Sonic_MdJump2-Sonic_Modes
-; ---------------------------------------------------------------------------
-; Music to play after invincibility wears off
-; ---------------------------------------------------------------------------
-MusicList2:
-		dc.b bgm_GHZ
-		dc.b bgm_LZ
-		dc.b bgm_MZ
-		dc.b bgm_SLZ
-		dc.b bgm_SYZ
-		dc.b bgm_SBZ
-		zonewarning MusicList2,1
-		; The ending doesn't get an entry
-		even
-
-		include	"_incObj\Sonic Display.asm"
-		include	"_incObj\Sonic RecordPosition.asm"
-		include	"_incObj\Sonic Water.asm"
-
-; ===========================================================================
-; ---------------------------------------------------------------------------
-; Modes for controlling Sonic
-; ---------------------------------------------------------------------------
-
-Sonic_MdNormal:
-		bsr.w	Sonic_Jump
-		bsr.w	Sonic_SlopeResist
-		bsr.w	Sonic_Move
-		bsr.w	Sonic_Roll
-		bsr.w	Sonic_LevelBound
-		jsr	(SpeedToPos).l
-		bsr.w	Sonic_AnglePos
-		bsr.w	Sonic_SlopeRepel
-		rts	
-; ===========================================================================
-
-Sonic_MdJump:
-		bsr.w	Sonic_JumpHeight
-		bsr.w	Sonic_JumpDirection
-		bsr.w	Sonic_LevelBound
-		jsr	(ObjectFall).l
-		btst	#6,obStatus(a0)
-		beq.s	loc_12E5C
-		subi.w	#$28,obVelY(a0)
-
-loc_12E5C:
-		bsr.w	Sonic_JumpAngle
-		bsr.w	Sonic_Floor
-		rts	
-; ===========================================================================
-
-Sonic_MdRoll:
-		bsr.w	Sonic_Jump
-		bsr.w	Sonic_RollRepel
-		bsr.w	Sonic_RollSpeed
-		bsr.w	Sonic_LevelBound
-		jsr	(SpeedToPos).l
-		bsr.w	Sonic_AnglePos
-		bsr.w	Sonic_SlopeRepel
-		rts	
-; ===========================================================================
-
-Sonic_MdJump2:
-		bsr.w	Sonic_JumpHeight
-		bsr.w	Sonic_JumpDirection
-		bsr.w	Sonic_LevelBound
-		jsr	(ObjectFall).l
-		btst	#6,obStatus(a0)
-		beq.s	loc_12EA6
-		subi.w	#$28,obVelY(a0)
-
-loc_12EA6:
-		bsr.w	Sonic_JumpAngle
-		bsr.w	Sonic_Floor
-		rts	
-
-		include	"_incObj\Sonic Move.asm"
-		include	"_incObj\Sonic RollSpeed.asm"
-		include	"_incObj\Sonic JumpDirection.asm"
-
-; ===========================================================================
-; ---------------------------------------------------------------------------
-; Unused subroutine to squash Sonic
-; ---------------------------------------------------------------------------
-		move.b	obAngle(a0),d0
-		addi.b	#$20,d0
-		andi.b	#$C0,d0
-		bne.s	locret_13302
-		bsr.w	Sonic_DontRunOnWalls
-		tst.w	d1
-		bpl.s	locret_13302
-		move.w	#0,obInertia(a0) ; stop Sonic moving
-		move.w	#0,obVelX(a0)
-		move.w	#0,obVelY(a0)
-		move.b	#id_Warp3,obAnim(a0) ; use "warping" animation
-
-locret_13302:
-		rts	
-
-		include	"_incObj\Sonic LevelBound.asm"
-		include	"_incObj\Sonic Roll.asm"
-		include	"_incObj\Sonic Jump.asm"
-		include	"_incObj\Sonic JumpHeight.asm"
-		include	"_incObj\Sonic SlopeResist.asm"
-		include	"_incObj\Sonic RollRepel.asm"
-		include	"_incObj\Sonic SlopeRepel.asm"
-		include	"_incObj\Sonic JumpAngle.asm"
-		include	"_incObj\Sonic Floor.asm"
-		include	"_incObj\Sonic ResetOnFloor.asm"
-		include	"_incObj\Sonic (part 2).asm"
-		include	"_incObj\Sonic Loops.asm"
-		include	"_incObj\Sonic Animate.asm"
-		include	"_anim\Sonic.asm"
-		include	"_incObj\Sonic LoadGfx.asm"
+		include	"_incObj\01 Sonic.asm"
 
 		include	"_incObj\0A Drowning Countdown.asm"
 
