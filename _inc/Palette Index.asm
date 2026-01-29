@@ -2,35 +2,36 @@
 ; Palette index
 ; ---------------------------------------------------------------------------
 
-paletteIndexEntry:	macro paletteLabel,paletteRAMaddress,paletteSize,{GLOBALSYMBOLS}
+paletteIndexEntry:	macro paletteLabel,paletteRAMaddress,{GLOBALSYMBOLS}
 
 ptr_paletteLabel:
 	dc.l paletteLabel
-	dc.w paletteRAMaddress,(paletteSize)/2-1
+	dc.w paletteRAMaddress,(paletteLabel_end-paletteLabel)/4-1
 	endm
 
 Pal_Index:
-	; FORMAT:			Palette label,		RAM location,		Amount of colors in palette
-	paletteIndexEntry	Pal_SegaBG, 		v_palette_line_1,	16*4
-	paletteIndexEntry	Pal_Title,			v_palette_line_1,	16*4
-	paletteIndexEntry	Pal_LevelSel,		v_palette_line_1, 	16*4
-	paletteIndexEntry	Pal_Sonic,			v_palette_line_1,	16
-	paletteIndexEntry	Pal_GHZ, 			v_palette_line_2,	16*3
-	paletteIndexEntry	Pal_LZ, 			v_palette_line_2,	16*3
-	paletteIndexEntry	Pal_MZ, 			v_palette_line_2,	16*3
-	paletteIndexEntry	Pal_SLZ,			v_palette_line_2,	16*3
-	paletteIndexEntry	Pal_SYZ,			v_palette_line_2,	16*3
-	paletteIndexEntry	Pal_SBZ1, 			v_palette_line_2,	16*3
-	paletteIndexEntry	Pal_Special, 		v_palette_line_1,	16*4
-	paletteIndexEntry	Pal_LZWater, 		v_palette_line_1,	16*4
-	paletteIndexEntry	Pal_SBZ3, 			v_palette_line_2,	16*3
-	paletteIndexEntry	Pal_SBZ3Water, 		v_palette_line_1,	16*4
-	paletteIndexEntry	Pal_SBZ2, 			v_palette_line_2,	16*3
-	paletteIndexEntry	Pal_LZSonWater,		v_palette_line_1,	16
-	paletteIndexEntry	Pal_SBZ3SonWat,		v_palette_line_1,	16
-	paletteIndexEntry	Pal_SSResult, 		v_palette_line_1,	16*4
-	paletteIndexEntry	Pal_Continue, 		v_palette_line_1,	16*2
-	paletteIndexEntry	Pal_Ending, 		v_palette_line_1,	16*4
+	; FORMAT:			Palette label,		RAM location
+	; Palette size is calculated dynamically using an end marker made by bincludeEndMarker
+	paletteIndexEntry	Pal_SegaBG, 		v_palette_line_1
+	paletteIndexEntry	Pal_Title,			v_palette_line_1
+	paletteIndexEntry	Pal_LevelSel,		v_palette_line_1
+	paletteIndexEntry	Pal_Sonic,			v_palette_line_1
+	paletteIndexEntry	Pal_GHZ, 			v_palette_line_2
+	paletteIndexEntry	Pal_LZ, 			v_palette_line_2
+	paletteIndexEntry	Pal_MZ, 			v_palette_line_2
+	paletteIndexEntry	Pal_SLZ,			v_palette_line_2
+	paletteIndexEntry	Pal_SYZ,			v_palette_line_2
+	paletteIndexEntry	Pal_SBZ1, 			v_palette_line_2
+	paletteIndexEntry	Pal_Special, 		v_palette_line_1
+	paletteIndexEntry	Pal_LZWater, 		v_palette_line_1
+	paletteIndexEntry	Pal_SBZ3, 			v_palette_line_2
+	paletteIndexEntry	Pal_SBZ3Water, 		v_palette_line_1
+	paletteIndexEntry	Pal_SBZ2, 			v_palette_line_2
+	paletteIndexEntry	Pal_LZSonWater,		v_palette_line_1
+	paletteIndexEntry	Pal_SBZ3SonWat,		v_palette_line_1
+	paletteIndexEntry	Pal_SSResult, 		v_palette_line_1
+	paletteIndexEntry	Pal_Continue, 		v_palette_line_1
+	paletteIndexEntry	Pal_Ending, 		v_palette_line_1
 	even
 
 ; ---------------------------------------------------------------------------
