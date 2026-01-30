@@ -11,24 +11,24 @@ HUD_Update:
 		beq.s	.chkrings	; if not, branch
 
 		clr.b	(f_scorecount).w
-		locVRAM	$DC80,d0	; set VRAM address
+		locVRAM	(ArtTile_HUD+$1A)*tile_size,d0	; set VRAM address
 		move.l	(v_score).w,d1	; load score
 		bsr.w	Hud_Score
 
-	.chkrings:
+.chkrings:
 		tst.b	(f_ringcount).w	; does the ring counter need updating?
 		beq.s	.chktime	; if not, branch
 		bpl.s	.notzero
 		bsr.w	Hud_LoadZero	; reset rings to 0 if Sonic is hit
 
-	.notzero:
+.notzero:
 		clr.b	(f_ringcount).w
-		locVRAM	$DF40,d0	; set VRAM address
+		locVRAM	(ArtTile_HUD+$30)*tile_size,d0	; set VRAM address
 		moveq	#0,d1
 		move.w	(v_rings).w,d1	; load number of rings
 		bsr.w	Hud_Rings
 
-	.chktime:
+.chktime:
 		tst.b	(f_timecount).w	; does the time need updating?
 		beq.s	.chklives	; if not, branch
 		tst.w	(f_pause).w	; is the game paused?
@@ -39,38 +39,38 @@ HUD_Update:
 
 		addq.b	#1,-(a1)	; increment 1/60s counter
 		cmpi.b	#60,(a1)	; check if passed 60
-		bcs.s	.chklives
+		blo.s	.chklives
 		move.b	#0,(a1)
 		addq.b	#1,-(a1)	; increment second counter
 		cmpi.b	#60,(a1)	; check if passed 60
-		bcs.s	.updatetime
+		blo.s	.updatetime
 		move.b	#0,(a1)
 		addq.b	#1,-(a1)	; increment minute counter
 		cmpi.b	#9,(a1)		; check if passed 9
-		bcs.s	.updatetime
+		blo.s	.updatetime
 		move.b	#9,(a1)		; keep as 9
 
-	.updatetime:
-		locVRAM	$DE40,d0
+.updatetime:
+		locVRAM	(ArtTile_HUD+$28)*tile_size,d0
 		moveq	#0,d1
 		move.b	(v_timemin).w,d1 ; load minutes
 		bsr.w	Hud_Mins
-		locVRAM	$DEC0,d0
+		locVRAM	(ArtTile_HUD+$2C)*tile_size,d0
 		moveq	#0,d1
 		move.b	(v_timesec).w,d1 ; load seconds
 		bsr.w	Hud_Secs
 
-	.chklives:
+.chklives:
 		tst.b	(f_lifecount).w ; does the lives counter need updating?
 		beq.s	.chkbonus	; if not, branch
 		clr.b	(f_lifecount).w
 		bsr.w	Hud_Lives
 
-	.chkbonus:
+.chkbonus:
 		tst.b	(f_endactbonus).w ; do time/ring bonus counters need updating?
 		beq.s	.finish		; if not, branch
 		clr.b	(f_endactbonus).w
-		locVRAM	$AE00
+		locVRAM	ArtTile_Bonuses*tile_size
 		moveq	#0,d1
 		move.w	(v_timebonus).w,d1 ; load time bonus
 		bsr.w	Hud_TimeRingBonus
@@ -78,8 +78,8 @@ HUD_Update:
 		move.w	(v_ringbonus).w,d1 ; load ring bonus
 		bsr.w	Hud_TimeRingBonus
 
-	.finish:
-		rts	
+.finish:
+		rts
 ; ===========================================================================
 
 TimeOver:
@@ -88,7 +88,7 @@ TimeOver:
 		movea.l	a0,a2
 		bsr.w	KillSonic
 		move.b	#1,(f_timeover).w
-		rts	
+		rts
 ; ===========================================================================
 
 HudDebug:
@@ -98,15 +98,15 @@ HudDebug:
 		bpl.s	.notzero
 		bsr.w	Hud_LoadZero	; reset rings to 0 if Sonic is hit
 
-	.notzero:
+.notzero:
 		clr.b	(f_ringcount).w
-		locVRAM	$DF40,d0	; set VRAM address
+		locVRAM	(ArtTile_HUD+$30)*tile_size,d0	; set VRAM address
 		moveq	#0,d1
 		move.w	(v_rings).w,d1	; load number of rings
 		bsr.w	Hud_Rings
 
-	.objcounter:
-		locVRAM	$DEC0,d0	; set VRAM address
+.objcounter:
+		locVRAM	(ArtTile_HUD+$2C)*tile_size,d0	; set VRAM address
 		moveq	#0,d1
 		move.b	(v_spritecount).w,d1 ; load "number of objects" counter
 		bsr.w	Hud_Secs
@@ -115,11 +115,11 @@ HudDebug:
 		clr.b	(f_lifecount).w
 		bsr.w	Hud_Lives
 
-	.chkbonus:
+.chkbonus:
 		tst.b	(f_endactbonus).w ; does the ring/time bonus counter need updating?
 		beq.s	.finish		; if not, branch
 		clr.b	(f_endactbonus).w
-		locVRAM	$AE00		; set VRAM address
+		locVRAM	ArtTile_Bonuses*tile_size		; set VRAM address
 		moveq	#0,d1
 		move.w	(v_timebonus).w,d1 ; load time bonus
 		bsr.w	Hud_TimeRingBonus
@@ -127,8 +127,8 @@ HudDebug:
 		move.w	(v_ringbonus).w,d1 ; load ring bonus
 		bsr.w	Hud_TimeRingBonus
 
-	.finish:
-		rts	
+.finish:
+		rts
 ; End of function HUD_Update
 
 ; ---------------------------------------------------------------------------
@@ -139,7 +139,7 @@ HudDebug:
 
 
 Hud_LoadZero:
-		locVRAM	$DF40
+		locVRAM	(ArtTile_HUD+$30)*tile_size
 		lea	Hud_TilesZero(pc),a2
 		move.w	#2,d2
 		bra.s	loc_1C83E
@@ -153,9 +153,9 @@ Hud_LoadZero:
 
 
 Hud_Base:
-		lea	($C00000).l,a6
+		lea	(vdp_data_port).l,a6
 		bsr.w	Hud_Lives
-		locVRAM	$DC40
+		locVRAM	(ArtTile_HUD+$18)*tile_size
 		lea	Hud_TilesBase(pc),a2
 		move.w	#$E,d2
 
@@ -177,7 +177,7 @@ loc_1C852:
 loc_1C858:
 		dbf	d2,loc_1C842
 
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C85E:
@@ -198,7 +198,7 @@ Hud_TilesZero:	dc.b $FF, $FF, 0, 0
 
 
 HudDb_XY:
-		locVRAM	$DC40		; set VRAM address
+		locVRAM	(ArtTile_HUD+$18)*tile_size		; set VRAM address
 		move.w	(v_screenposx).w,d1 ; load camera x-position
 		swap	d1
 		move.w	(v_player+obX).w,d1 ; load Sonic's x-position
@@ -221,7 +221,7 @@ HudDb_XYLoop:
 		move.w	d1,d2
 		andi.w	#$F,d2
 		cmpi.w	#$A,d2
-		bcs.s	loc_1C8B2
+		blo.s	loc_1C8B2
 		addq.w	#7,d2
 
 loc_1C8B2:
@@ -238,7 +238,7 @@ loc_1C8B2:
 		swap	d1
 		dbf	d6,HudDb_XYLoop	; repeat 7 more times
 
-		rts	
+		rts
 ; End of function HudDb_XY2
 
 ; ---------------------------------------------------------------------------
@@ -313,6 +313,6 @@ loc_1C92C:
 		addi.l	#$400000,d0
 		dbf	d6,Hud_ScoreLoop
 
-		rts	
+		rts
 
 ; End of function Hud_Score

@@ -17,3 +17,20 @@ _clr:	macro
 	clr.\0 \_
 	popo
 	endm
+
+_add:	macro
+	; FIXME: Respect zero-offset optimization flag when introduced
+	pusho
+	opt oz-
+	add.\0 \_
+	popo
+	endm
+
+_cmp:	macro
+	; FIXME: Respect zero-offset optimization flag when introduced
+	pusho
+	opt oz-
+	cmp.\0 \_
+	popo
+	endm
+

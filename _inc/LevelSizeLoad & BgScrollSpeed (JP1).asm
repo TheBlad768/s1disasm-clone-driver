@@ -7,10 +7,10 @@
 
 LevelSizeLoad:
 		moveq	#0,d0
-		move.b	d0,($FFFFF740).w
-		move.b	d0,($FFFFF741).w
-		move.b	d0,($FFFFF746).w
-		move.b	d0,($FFFFF748).w
+		move.b	d0,(v_unused7).w
+		move.b	d0,(v_unused8).w
+		move.b	d0,(v_unused9).w
+		move.b	d0,(v_unused10).w
 		move.b	d0,(v_dle_routine).w
 		move.w	(v_zone).w,d0
 		lsl.b	#6,d0
@@ -20,7 +20,7 @@ LevelSizeLoad:
 		add.w	d1,d0
 		lea	LevelSizeArray(pc,d0.w),a0 ; load level boundaries
 		move.w	(a0)+,d0
-		move.w	d0,($FFFFF730).w
+		move.w	d0,(v_unused11).w
 		move.l	(a0)+,d0
 		move.l	d0,(v_limitleft2).w
 		move.l	d0,(v_limitleft1).w
@@ -30,7 +30,7 @@ LevelSizeLoad:
 		move.w	(v_limitleft2).w,d0
 		addi.w	#$240,d0
 		move.w	d0,(v_limitleft3).w
-		move.w	#$1010,($FFFFF74A).w
+		move.w	#$1010,(v_fg_xblock).w ; and v_fg_yblock
 		move.w	(a0)+,d0
 		move.w	d0,(v_lookshift).w
 		bra.w	LevSz_ChkLamp
@@ -39,7 +39,12 @@ LevelSizeLoad:
 ; Level size array
 ; ---------------------------------------------------------------------------
 LevelSizeArray:
-		; GHZ
+		;    |----------------------------------------Unused
+		;    |      |---------------------------------Left boundary
+		;    |      |      |--------------------------Right boundary
+		;    |      |      |      |-------------------Top boundary
+		;    |      |      |      |      |------------Bottom boundary
+		; GHZ|      |      |      |      |      |-----Vertical screen shift (redundant)
 		dc.w $0004, $0000, $24BF, $0000, $0300, $0060
 		dc.w $0004, $0000, $1EBF, $0000, $0300, $0060
 		dc.w $0004, $0000, $2960, $0000, $0300, $0060
@@ -80,7 +85,7 @@ LevelSizeArray:
 ; Ending start location array
 ; ---------------------------------------------------------------------------
 EndingStLocArray:
-		include	"_inc\Start Location Array - Ending.asm"
+		include	"_inc/Start Location Array - Ending.asm"
 
 ; ===========================================================================
 
@@ -116,30 +121,30 @@ LevSz_SonicPos:
 		move.w	d0,(v_player+obY).w ; set Sonic's position on y-axis
 
 SetScreen:
-	LevSz_SkipStartPos:
+LevSz_SkipStartPos:
 		subi.w	#160,d1		; is Sonic more than 160px from left edge?
 		bcc.s	SetScr_WithinLeft ; if yes, branch
 		moveq	#0,d1
 
-	SetScr_WithinLeft:
+SetScr_WithinLeft:
 		move.w	(v_limitright2).w,d2
 		cmp.w	d2,d1		; is Sonic inside the right edge?
-		bcs.s	SetScr_WithinRight ; if yes, branch
+		blo.s	SetScr_WithinRight ; if yes, branch
 		move.w	d2,d1
 
-	SetScr_WithinRight:
+SetScr_WithinRight:
 		move.w	d1,(v_screenposx).w ; set horizontal screen position
 
 		subi.w	#96,d0		; is Sonic within 96px of upper edge?
 		bcc.s	SetScr_WithinTop ; if yes, branch
 		moveq	#0,d0
 
-	SetScr_WithinTop:
+SetScr_WithinTop:
 		cmp.w	(v_limitbtm2).w,d0 ; is Sonic above the bottom edge?
 		blt.s	SetScr_WithinBottom ; if yes, branch
 		move.w	(v_limitbtm2).w,d0
 
-	SetScr_WithinBottom:
+SetScr_WithinBottom:
 		move.w	d0,(v_screenposy).w ; set vertical screen position
 		bsr.w	BgScrollSpeed
 		moveq	#0,d0
@@ -151,7 +156,7 @@ SetScreen:
 ; ---------------------------------------------------------------------------
 ; Sonic start location array
 ; ---------------------------------------------------------------------------
-StartLocArray:	include	"_inc\Start Location Array - Levels.asm"
+StartLocArray:	include	"_inc/Start Location Array - Levels.asm"
 
 ; ---------------------------------------------------------------------------
 ; Which 256x256 tiles contain loops or roll-tunnels
@@ -159,16 +164,16 @@ StartLocArray:	include	"_inc\Start Location Array - Levels.asm"
 
 LoopTileNums:
 
-; 		loop	loop	tunnel	tunnel
+; 			loop	loop	tunnel	tunnel
 
-	dc.b	$B5,	$7F,	$1F,	$20	; Green Hill
-	dc.b	$7F,	$7F,	$7F,	$7F	; Labyrinth
-	dc.b	$7F,	$7F,	$7F,	$7F	; Marble
-	dc.b	$AA,	$B4,	$7F,	$7F	; Star Light
-	dc.b	$7F,	$7F,	$7F,	$7F	; Spring Yard
-	dc.b	$7F,	$7F,	$7F,	$7F	; Scrap Brain
-	zonewarning LoopTileNums,4
-	dc.b	$7F,	$7F,	$7F,	$7F	; Ending (Green Hill)
+		dc.b	$B5,	$7F,	$1F,	$20	; Green Hill
+		dc.b	$7F,	$7F,	$7F,	$7F	; Labyrinth
+		dc.b	$7F,	$7F,	$7F,	$7F	; Marble
+		dc.b	$AA,	$B4,	$7F,	$7F	; Star Light
+		dc.b	$7F,	$7F,	$7F,	$7F	; Spring Yard
+		dc.b	$7F,	$7F,	$7F,	$7F	; Scrap Brain
+		zonewarning LoopTileNums,4
+		dc.b	$7F,	$7F,	$7F,	$7F	; Ending (Green Hill)
 
 		even
 
@@ -209,7 +214,7 @@ BgScroll_GHZ:
 		clr.l	(v_bgscreenposy).w
 		clr.l	(v_bg2screenposy).w
 		clr.l	(v_bg3screenposy).w
-		lea	($FFFFA800).w,a2
+		lea	(v_bgscroll_buffer).w,a2
 		clr.l	(a2)+
 		clr.l	(a2)+
 		clr.l	(a2)+
@@ -219,11 +224,11 @@ BgScroll_GHZ:
 BgScroll_LZ:
 		asr.l	#1,d0
 		move.w	d0,(v_bgscreenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_MZ:
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SLZ:
@@ -231,7 +236,7 @@ BgScroll_SLZ:
 		addi.w	#$C0,d0
 		move.w	d0,(v_bgscreenposy).w
 		clr.l	(v_bgscreenposx).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SYZ:
@@ -243,7 +248,7 @@ BgScroll_SYZ:
 		addq.w	#1,d0
 		move.w	d0,(v_bgscreenposy).w
 		clr.l	(v_bgscreenposx).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SBZ:
@@ -251,7 +256,7 @@ BgScroll_SBZ:
 		asr.w	#3,d0
 		addq.w	#1,d0
 		move.w	d0,(v_bgscreenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_End:
@@ -267,7 +272,7 @@ BgScroll_End:
 		clr.l	(v_bgscreenposy).w
 		clr.l	(v_bg2screenposy).w
 		clr.l	(v_bg3screenposy).w
-		lea	($FFFFA800).w,a2
+		lea	(v_bgscroll_buffer).w,a2
 		clr.l	(a2)+
 		clr.l	(a2)+
 		clr.l	(a2)+

@@ -8,7 +8,7 @@ align:	macro
 	dcb.b (\1-(*%\1))%\1,0
 	else
 	dcb.b (\1-(*%\1))%\1,\2
-	endc
+	endif
 	endm
 
 ; ---------------------------------------------------------------------------
@@ -18,10 +18,10 @@ align:	macro
 
 locVRAM:	macro loc,controlport
 		if (narg=1)
-		move.l	#($40000000+((loc&$3FFF)<<16)+((loc&$C000)>>14)),(vdp_control_port).l
+		move.l	#($40000000+(((\loc)&$3FFF)<<16)+(((\loc)&$C000)>>14)),(vdp_control_port).l
 		else
-		move.l	#($40000000+((loc&$3FFF)<<16)+((loc&$C000)>>14)),\controlport
-		endc
+		move.l	#($40000000+(((\loc)&$3FFF)<<16)+(((\loc)&$C000)>>14)),\controlport
+		endif
 		endm
 
 ; ---------------------------------------------------------------------------
@@ -94,19 +94,19 @@ stopZ80:	macro
 ; ---------------------------------------------------------------------------
 
 waitZ80:	macro
-	.wait:	btst	#0,(z80_bus_request).l
-		bne.s	.wait
+.wait\@:	btst	#0,(z80_bus_request).l
+		bne.s	.wait\@
 		endm
 
 ; ---------------------------------------------------------------------------
 ; reset the Z80
 ; ---------------------------------------------------------------------------
 
-resetZ80:	macro
+deassertZ80Reset:	macro
 		move.w	#$100,(z80_reset).l
 		endm
 
-resetZ80a:	macro
+assertZ80Reset:	macro
 		move.w	#0,(z80_reset).l
 		endm
 
@@ -139,15 +139,15 @@ enable_ints:	macro
 ; ---------------------------------------------------------------------------
 
 jhi:		macro loc
-		bls.s	.nojump
+		bls.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jcc:		macro loc
-		bcs.s	.nojump
+		bcs.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jhs:		macro loc
@@ -155,15 +155,15 @@ jhs:		macro loc
 		endm
 
 jls:		macro loc
-		bhi.s	.nojump
+		bhi.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jcs:		macro loc
-		bcc.s	.nojump
+		bcc.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jlo:		macro loc
@@ -171,51 +171,51 @@ jlo:		macro loc
 		endm
 
 jeq:		macro loc
-		bne.s	.nojump
+		bne.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jne:		macro loc
-		beq.s	.nojump
+		beq.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jgt:		macro loc
-		ble.s	.nojump
+		ble.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jge:		macro loc
-		blt.s	.nojump
+		blt.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jle:		macro loc
-		bgt.s	.nojump
+		bgt.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jlt:		macro loc
-		bge.s	.nojump
+		bge.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jpl:		macro loc
-		bmi.s	.nojump
+		bmi.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 jmi:		macro loc
-		bpl.s	.nojump
+		bpl.s	.nojump\@
 		jmp	loc
-	.nojump:
+	.nojump\@:
 		endm
 
 ; ---------------------------------------------------------------------------
@@ -228,7 +228,7 @@ out_of_range:	macro exit,pos
 		move.w	pos,d0		; get object position (if specified as not obX)
 		else
 		move.w	obX(a0),d0	; get object position
-		endc
+		endif
 		andi.w	#$FF80,d0	; round down to nearest $80
 		move.w	(v_screenposx).w,d1 ; get screen position
 		subi.w	#128,d1
@@ -261,7 +261,7 @@ zonewarning:	macro loc,elementsize
 	.end:
 		if (.end-loc)-(ZoneCount*elementsize)<>0
 		inform 1,"Size of \loc ($%h) does not match ZoneCount ($\#ZoneCount).",(.end-loc)/elementsize
-		endc
+		endif
 		endm
 
 ; ---------------------------------------------------------------------------

@@ -73,7 +73,7 @@ loc_1C9D6:
 		addi.l	#$400000,d0
 		dbf	d6,Hud_TimeLoop
 
-		rts	
+		rts
 ; End of function Hud_Secs
 
 ; ---------------------------------------------------------------------------
@@ -131,7 +131,7 @@ loc_1CA30:
 loc_1CA5A:
 		dbf	d6,Hud_BonusLoop ; repeat 3 more times
 
-		rts	
+		rts
 ; ===========================================================================
 
 Hud_ClrBonus:
@@ -152,7 +152,7 @@ Hud_ClrBonusLoop:
 
 
 Hud_Lives:
-		locVRAM	$FBA0,d0	; set VRAM address
+		locVRAM	(ArtTile_Lives_Counter+9)*tile_size,d0	; set VRAM address
 		moveq	#0,d1
 		move.b	(v_lives).w,d1	; load number of lives
 		lea	(Hud_10).l,a2
@@ -198,7 +198,7 @@ loc_1CABC:
 		addi.l	#$400000,d0
 		dbf	d6,Hud_LivesLoop ; repeat 1 more time
 
-		rts	
+		rts
 ; ===========================================================================
 
 Hud_ClrLives:

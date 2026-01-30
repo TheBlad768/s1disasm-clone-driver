@@ -134,7 +134,7 @@ Sonic_Display:
 	.music:
 		lea	(MusicList2).l,a1
 		move.b	(a1,d0.w),d0
-		jsr	(PlaySound).l	; play normal music
+		jsr	(QueueSound1).l	; play normal music
 
 	.removeinvincible:
 		move.b	#0,(v_invinc).w ; cancel invincibility
@@ -151,7 +151,7 @@ Sonic_Display:
 		move.w	#$80,(v_sonspeeddec).w ; restore Sonic's deceleration
 		move.b	#0,(v_shoes).w	; cancel speed shoes
 		move.w	#bgm_Slowdown,d0
-		jmp	(PlaySound).l	; run music at normal speed
+		jmp	(QueueSound1).l	; run music at normal speed
 
 	.exit:
 		rts
@@ -204,7 +204,7 @@ Sonic_Water:
 		beq.s	.exit		; branch if Sonic stops moving
 		move.b	#id_Splash,(v_splash).w ; load splash object
 		move.w	#sfx_Splash,d0
-		jmp	(PlaySound_Special).l	 ; play splash sound
+		jmp	(QueueSound2).l	 ; play splash sound
 ; ===========================================================================
 
 .abovewater:
@@ -223,7 +223,7 @@ Sonic_Water:
 
 	.belowmaxspeed:
 		move.w	#sfx_Splash,d0
-		jmp	(PlaySound_Special).l	 ; play splash sound
+		jmp	(QueueSound2).l	 ; play splash sound
 ; End of function Sonic_Water
 
 
@@ -523,7 +523,7 @@ loc_130BA:
 		move.b	#id_Stop,obAnim(a0) ; use "stopping" animation
 		bclr	#0,obStatus(a0)
 		move.w	#sfx_Skid,d0
-		jsr	(PlaySound_Special).l	; play stopping sound
+		jsr	(QueueSound2).l	; play stopping sound
 
 locret_130E8:
 		rts
@@ -569,7 +569,7 @@ loc_13120:
 		move.b	#id_Stop,obAnim(a0) ; use "stopping" animation
 		bset	#0,obStatus(a0)
 		move.w	#sfx_Skid,d0
-		jsr	(PlaySound_Special).l	; play stopping sound
+		jsr	(QueueSound2).l	; play stopping sound
 
 locret_1314E:
 		rts
@@ -886,7 +886,7 @@ Sonic_ChkRoll:
 		move.b	#id_Roll,obAnim(a0) ; use "rolling" animation
 		addq.w	#5,obY(a0)
 		move.w	#sfx_Roll,d0
-		jsr	(PlaySound_Special).l	; play rolling sound
+		jsr	(QueueSound2).l	; play rolling sound
 		tst.w	obInertia(a0)
 		bne.s	.ismoving
 		move.w	#$200,obInertia(a0) ; set inertia if 0
@@ -933,7 +933,7 @@ loc_1341C:
 		move.b	#1,$3C(a0)
 		clr.b	$38(a0)
 		move.w	#sfx_Jump,d0
-		jsr	(PlaySound_Special).l	; play jumping sound
+		jsr	(QueueSound2).l	; play jumping sound
 		move.b	#$13,obHeight(a0)
 		move.b	#9,obWidth(a0)
 		btst	#2,obStatus(a0)
@@ -1441,7 +1441,7 @@ GameOver:
 
 loc_138C2:
 		move.w	#bgm_GameOver,d0
-		jsr	(PlaySound).l	; play game over music
+		jsr	(QueueSound1).l	; play game over music
 		moveq	#3,d0
 		jmp	(AddPLC).l	; load game over patterns
 ; ===========================================================================

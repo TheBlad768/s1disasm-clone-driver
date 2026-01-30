@@ -47,11 +47,11 @@ Unpause:
 		move.w	#0,(f_pause).w	; unpause the game
 
 Pause_DoNothing:
-		rts	
+		rts
 ; ===========================================================================
 
 Pause_SlowMo:
 		move.w	#1,(f_pause).w
 		move.b	#$80,(v_snddriver_ram.f_pausemusic).w	; Unpause the music
-		rts	
+		rts
 ; End of function PauseGame

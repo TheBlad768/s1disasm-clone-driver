@@ -8,7 +8,7 @@
 DeformLayers:
 		tst.b	(f_nobgscroll).w
 		beq.s	.bgscroll
-		rts	
+		rts
 ; ===========================================================================
 
 	.bgscroll:
@@ -188,7 +188,7 @@ Deform_LZ:
 		move.w	(v_waterpos1).w,d4
 		move.w	(v_screenposy).w,d5
 	; write normal scroll before meeting water position
-	.normalLoop:
+	.normalLoop:		
 		cmp.w	d4,d5	; is current y >= water y?
 		bge.s	.underwaterLoop	; if yes, branch
 		move.l	d0,(a1)+
@@ -213,22 +213,22 @@ Deform_LZ:
 		rts
 
 Lz_Scroll_Data:
-		dc.b $01,$01,$02,$02,$03,$03,$03,$03,$02,$02,$01,$01,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $FF,$FF,$FE,$FE,$FD,$FD,$FD,$FD,$FE,$FE,$FF,$FF,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $01,$01,$02,$02,$03,$03,$03,$03,$02,$02,$01,$01,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-		dc.b $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+		dc.b   1,  1,  2,  2,  3,  3,  3,  3,  2,  2,  1,  1,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b  -1, -1, -2, -2, -3, -3, -3, -3, -2, -2, -1, -1,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   1,  1,  2,  2,  3,  3,  3,  3,  2,  2,  1,  1,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 ; End of function Deform_LZ
 
 ; ---------------------------------------------------------------------------
@@ -298,7 +298,7 @@ Deform_MZ:
 		move.w	d2,d3
 		asr.w	#1,d3
 		move.w	#4,d1
-	.cloudLoop:
+	.cloudLoop:		
 		move.w	d3,(a1)+
 		swap	d3
 		add.l	d0,d3
@@ -308,21 +308,21 @@ Deform_MZ:
 		move.w	(v_bg3screenposx).w,d0
 		neg.w	d0
 		move.w	#1,d1
-	.mountainLoop:
+	.mountainLoop:		
 		move.w	d0,(a1)+
 		dbf	d1,.mountainLoop
 
 		move.w	(v_bg2screenposx).w,d0
 		neg.w	d0
 		move.w	#8,d1
-	.bushLoop:
+	.bushLoop:		
 		move.w	d0,(a1)+
 		dbf	d1,.bushLoop
 
 		move.w	(v_bgscreenposx).w,d0
 		neg.w	d0
 		move.w	#$F,d1
-	.interiorLoop:
+	.interiorLoop:		
 		move.w	d0,(a1)+
 		dbf	d1,.interiorLoop
 
@@ -331,7 +331,7 @@ Deform_MZ:
 		subi.w	#$200,d0	; subtract 512px (unused 2 chunks)
 		move.w	d0,d2
 		cmpi.w	#$100,d0
-		bcs.s	.limitY
+		blo.s	.limitY
 		move.w	#$100,d0
 	.limitY:
 		andi.w	#$1F0,d0
@@ -370,7 +370,7 @@ Deform_SLZ:
 		moveq	#0,d3
 		move.w	d2,d3
 		move.w	#$1B,d1
-	.starLoop:
+	.starLoop:		
 		move.w	d3,(a1)+
 		swap	d3
 		add.l	d0,d3
@@ -422,7 +422,7 @@ Bg_Scroll_X:
 		jmp	.pixelJump(pc,d2.w)		; skip pixels for first row
 	.blockLoop:
 		move.w	(a2)+,d0
-	.pixelJump:
+	.pixelJump:		
 		move.l	d0,(a1)+
 		move.l	d0,(a1)+
 		move.l	d0,(a1)+
@@ -476,7 +476,7 @@ Deform_SYZ:
 		move.w	d2,d3
 		asr.w	#1,d3
 		move.w	#7,d1
-	.cloudLoop:
+	.cloudLoop:		
 		move.w	d3,(a1)+
 		swap	d3
 		add.l	d0,d3
@@ -486,14 +486,14 @@ Deform_SYZ:
 		move.w	d2,d0
 		asr.w	#3,d0
 		move.w	#4,d1
-	.mountainLoop:
+	.mountainLoop:		
 		move.w	d0,(a1)+
 		dbf	d1,.mountainLoop
 
 		move.w	d2,d0
 		asr.w	#2,d0
 		move.w	#5,d1
-	.buildingLoop:
+	.buildingLoop:		
 		move.w	d0,(a1)+
 		dbf	d1,.buildingLoop
 
@@ -511,7 +511,7 @@ Deform_SYZ:
 		move.w	d2,d3
 		asr.w	#1,d3
 		move.w	#$D,d1
-	.bushLoop:
+	.bushLoop:		
 		move.w	d3,(a1)+
 		swap	d3
 		add.l	d0,d3
@@ -591,7 +591,7 @@ Deform_SBZ:
 		moveq	#0,d3
 		move.w	d2,d3
 		move.w	#3,d1
-	.cloudLoop:
+	.cloudLoop:		
 		move.w	d3,(a1)+
 		swap	d3
 		add.l	d0,d3
@@ -644,7 +644,7 @@ Deform_SBZ2:;loc_68A2:
 		swap	d0
 		move.w	(v_bgscreenposx).w,d0
 		neg.w	d0
-	.loop:
+	.loop:		
 		move.l	d0,(a1)+
 		dbf	d1,.loop
 		rts
@@ -671,13 +671,13 @@ ScrollHoriz:
 		bpl.s	.scrollRight
 
 		bset	#2,(v_fg_scroll_flags).w ; screen moves backward
-		rts	
+		rts
 
 	.scrollRight:
 		bset	#3,(v_fg_scroll_flags).w ; screen moves forward
 
 	.return:
-		rts	
+		rts
 ; End of function ScrollHoriz
 
 
@@ -692,15 +692,15 @@ MoveScreenHoriz:
 		subi.w	#16,d0		; is distance more than 160px?
 		bcc.s	SH_AheadOfMid	; if yes, branch
 		clr.w	(v_scrshiftx).w
-		rts	
+		rts
 ; ===========================================================================
 
 SH_AheadOfMid:
 		cmpi.w	#16,d0		; is Sonic within 16px of middle area?
-		bcs.s	SH_Ahead16	; if yes, branch
+		blo.s	SH_Ahead16	; if yes, branch
 		move.w	#16,d0		; set to 16 if greater
 
-	SH_Ahead16:
+SH_Ahead16:
 		add.w	(v_screenposx).w,d0
 		cmp.w	(v_limitright2).w,d0
 		blt.s	SH_SetScreen
@@ -712,7 +712,7 @@ SH_SetScreen:
 		asl.w	#8,d1
 		move.w	d0,(v_screenposx).w ; set new screen position
 		move.w	d1,(v_scrshiftx).w ; set distance for screen movement
-		rts	
+		rts
 ; ===========================================================================
 
 SH_BehindMid:
@@ -748,7 +748,7 @@ ScrollVertical:
 		beq.s	SV_NotRolling	; if not, branch
 		subq.w	#5,d0
 
-	SV_NotRolling:
+SV_NotRolling:
 		btst	#1,(v_player+obStatus).w ; is Sonic jumping?
 		beq.s	loc_664A	; if not, branch
 
@@ -770,7 +770,7 @@ loc_664A:
 
 loc_6656:
 		clr.w	(v_scrshifty).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_665C:
@@ -782,7 +782,7 @@ loc_665C:
 
 loc_666C:
 		cmpi.w	#$800,d1
-		bcc.s	loc_6696
+		bhs.s	loc_6696
 		move.w	#$600,d1
 		cmpi.w	#6,d0
 		bgt.s	loc_66F6
@@ -884,14 +884,14 @@ loc_6724:
 		sub.w	d4,d0
 		bpl.s	.scrollBottom
 		bset	#0,(v_fg_scroll_flags).w
-		rts	
+		rts
 ; ===========================================================================
 
 	.scrollBottom:
 		bset	#1,(v_fg_scroll_flags).w
 
 	.return:
-		rts	
+		rts
 ; End of function ScrollVertical
 
 

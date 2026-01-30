@@ -373,6 +373,14 @@ boss_fz_x:	equ $2450		; Final Zone
 boss_fz_y:	equ $510
 boss_fz_end:	equ boss_fz_x+$2B0
 
+
+; Tile flags (ASM68K-specific, replaces `make_art_tile` function)
+Tile_Pri:	equ	1<<15
+Tile_Pal0:	equ	0
+Tile_Pal1:	equ	1<<13
+Tile_Pal2:	equ	2<<13
+Tile_Pal3:	equ	3<<13
+
 ; Tile VRAM Locations
 
 ; Shared

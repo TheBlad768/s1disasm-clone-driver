@@ -10,33 +10,33 @@ PaletteCycle:
 		moveq	#0,d0
 		move.b	(v_zone).w,d0	; get level number
 		add.w	d0,d0
-		move.w	PCycle_Index(pc,d0.w),d0
-		jmp	PCycle_Index(pc,d0.w) ; jump to relevant palette routine
+		move.w	PalCycle_Index(pc,d0.w),d0
+		jmp	PalCycle_Index(pc,d0.w) ; jump to relevant palette routine
 ; End of function PaletteCycle
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Palette cycling routines
 ; ---------------------------------------------------------------------------
-PCycle_Index:	dc.w PCycle_GHZ-PCycle_Index
-		dc.w PCycle_LZ-PCycle_Index
-		dc.w PCycle_MZ-PCycle_Index
-		dc.w PalCycle_SLZ-PCycle_Index
-		dc.w PalCycle_SYZ-PCycle_Index
-		dc.w PalCycle_SBZ-PCycle_Index
-		zonewarning PCycle_Index,2
-		dc.w PCycle_GHZ-PCycle_Index	; Ending
+PalCycle_Index:	dc.w PalCycle_GHZ-PalCycle_Index
+		dc.w PalCycle_LZ-PalCycle_Index
+		dc.w PalCycle_MZ-PalCycle_Index
+		dc.w PalCycle_SLZ-PalCycle_Index
+		dc.w PalCycle_SYZ-PalCycle_Index
+		dc.w PalCycle_SBZ-PalCycle_Index
+		zonewarning PalCycle_Index,2
+		dc.w PalCycle_GHZ-PalCycle_Index	; Ending
 
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
-PCycle_Title:
+PalCycle_Title:
 		lea	(Pal_TitleCyc).l,a0
 		bra.s	PCycGHZ_Go
 ; ===========================================================================
 
-PCycle_GHZ:
+PalCycle_GHZ:
 		lea	(Pal_GHZCyc).l,a0
 
 PCycGHZ_Go:
@@ -53,14 +53,14 @@ PCycGHZ_Go:
 		move.l	4(a0,d0.w),(a1)	; copy palette data to RAM
 
 PCycGHZ_Skip:
-		rts	
-; End of function PCycle_GHZ
+		rts
+; End of function PalCycle_GHZ
 
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
-PCycle_LZ:
+PalCycle_LZ:
 ; Waterfalls
 		subq.w	#1,(v_pcyc_time).w ; decrement timer
 		bpl.s	PCycLZ_Skip1	; if time remains, branch
@@ -75,7 +75,7 @@ PCycle_LZ:
 		bne.s	PCycLZ_NotSBZ3
 		lea	(Pal_SBZ3Cyc).l,a0 ; load SBZ3 palette instead
 
-	PCycLZ_NotSBZ3:
+PCycLZ_NotSBZ3:
 		lea	(v_palette+$56).w,a1
 		move.l	(a0,d0.w),(a1)+
 		move.l	4(a0,d0.w),(a1)
@@ -94,12 +94,12 @@ PCycLZ_Skip1:
 		beq.s	PCycLZ_NoRev	; if not, branch
 		neg.w	d1
 
-	PCycLZ_NoRev:
+PCycLZ_NoRev:
 		move.w	(v_pal_buffer).w,d0
 		andi.w	#3,d0
 		add.w	d1,d0
 		cmpi.w	#3,d0
-		bcs.s	loc_1A0A
+		blo.s	loc_1A0A
 		move.w	d0,d1
 		moveq	#0,d0
 		tst.w	d1
@@ -122,15 +122,15 @@ loc_1A0A:
 		move.w	4(a0,d0.w),(a1)
 
 PCycLZ_Skip2:
-		rts	
-; End of function PCycle_LZ
+		rts
+; End of function PalCycle_LZ
 
 ; ===========================================================================
 PCycLZ_Seq:	dc.b 1,	0, 0, 1, 0, 0, 1, 0
 ; ===========================================================================
 
-PCycle_MZ:
-		rts	
+PalCycle_MZ:
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -142,7 +142,7 @@ PalCycle_SLZ:
 		move.w	(v_pcyc_num).w,d0
 		addq.w	#1,d0
 		cmpi.w	#6,d0
-		bcs.s	loc_1A60
+		blo.s	loc_1A60
 		moveq	#0,d0
 
 loc_1A60:
@@ -157,7 +157,7 @@ loc_1A60:
 		move.l	2(a0,d0.w),4(a1)
 
 locret_1A80:
-		rts	
+		rts
 ; End of function PalCycle_SLZ
 
 
@@ -184,7 +184,7 @@ PalCycle_SYZ:
 		move.w	2(a0,d1.w),4(a1)
 
 locret_1AC6:
-		rts	
+		rts
 ; End of function PalCycle_SYZ
 
 
@@ -214,7 +214,7 @@ loc_1AEA:
 		move.b	(a1),d0
 		addq.b	#1,d0
 		cmp.b	(a2)+,d0
-		bcs.s	loc_1AF6
+		blo.s	loc_1AF6
 		moveq	#0,d0
 
 loc_1AF6:
@@ -247,7 +247,7 @@ loc_1B38:
 		andi.w	#3,d0
 		add.w	d1,d0
 		cmpi.w	#3,d0
-		bcs.s	loc_1B52
+		blo.s	loc_1B52
 		move.w	d0,d1
 		moveq	#0,d0
 		tst.w	d1
@@ -262,5 +262,5 @@ loc_1B52:
 		move.w	4(a0,d0.w),(a1)
 
 locret_1B64:
-		rts	
+		rts
 ; End of function PalCycle_SBZ

@@ -136,7 +136,7 @@ EniDec_Done:
 ; loc_17D6:
 .evenbyte:
 		movem.l	(sp)+,d0-d7/a1-a5
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Part of the Enigma decompressor
@@ -211,7 +211,7 @@ EniDec_FetchInlineValue:
 		move.b	(a0)+,d5
 		lsl.w	#8,d5
 		move.b	(a0)+,d5	; get next word
-		rts	
+		rts
 ; ===========================================================================
 ; loc_1856:
 .enoughbits:
@@ -247,5 +247,5 @@ EniDec_FetchByte:
 		asl.w	#8,d5
 		move.b	(a0)+,d5
 .locret:
-		rts	
+		rts
 ; End of function EniDec_FetchByte

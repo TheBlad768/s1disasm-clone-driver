@@ -11,10 +11,10 @@ OscillateNumInit:
 		lea	(.baselines).l,a2
 		moveq	#$20,d1
 
-	.loop:
+.loop:
 		move.w	(a2)+,(a1)+	; copy baseline values to RAM
 		dbf	d1,.loop
-		rts	
+		rts
 
 
 ; ===========================================================================
@@ -43,7 +43,7 @@ OscillateNumInit:
 
 OscillateNumDo:
 		cmpi.b	#6,(v_player+obRoutine).w ; has Sonic just died?
-		bcc.s	.end		; if yes, branch
+		bhs.s	.end		; if yes, branch
 		lea	(v_oscillate).w,a1
 		lea	(.settings).l,a2
 		move.w	(a1)+,d3	; get oscillation direction bitfield
@@ -55,32 +55,32 @@ OscillateNumDo:
 		btst	d1,d3		; check oscillation direction
 		bne.s	.down		; branch if 1
 
-	.up:
+.up:
 		move.w	2(a1),d0	; get current rate
 		add.w	d2,d0		; add frequency
 		move.w	d0,2(a1)
-		add.w	d0,0(a1)	; add rate to value
-		cmp.b	0(a1),d4
+		_add.w	d0,0(a1)	; add rate to value
+		_cmp.b	0(a1),d4
 		bhi.s	.next
 		bset	d1,d3
 		bra.s	.next
 
-	.down:
+.down:
 		move.w	2(a1),d0
 		sub.w	d2,d0
 		move.w	d0,2(a1)
-		add.w	d0,0(a1)
-		cmp.b	0(a1),d4
+		_add.w	d0,0(a1)
+		_cmp.b	0(a1),d4
 		bls.s	.next
 		bclr	d1,d3
 
-	.next:
+.next:
 		addq.w	#4,a1
 		dbf	d1,.loop
 		move.w	d3,(v_oscillate).w
 
 .end:
-		rts	
+		rts
 ; End of function OscillateNumDo
 
 ; ===========================================================================

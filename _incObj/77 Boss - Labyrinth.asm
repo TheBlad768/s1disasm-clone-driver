@@ -96,7 +96,7 @@ loc_17F48:
 		bne.s	loc_17F70
 		move.b	#$20,$3E(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l
+		jsr	(QueueSound2).l
 
 loc_17F70:
 		lea	(v_palette+$22).w,a1
@@ -270,7 +270,7 @@ loc_180F6:
 
 loc_18112:
 		move.w	#bgm_LZ,d0
-		jsr	(PlaySound).l		; play LZ music
+		jsr	(QueueSound1).l		; play LZ music
 		if Revision=0
 		else
 			clr.b	(f_lockscreen).w
