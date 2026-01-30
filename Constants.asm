@@ -29,44 +29,13 @@ ym2612_d0:		equ $A04001
 ym2612_a1:		equ $A04002
 ym2612_d1:		equ $A04003
 
+sram_port:		equ $A130F1
+
 security_addr:		equ $A14000
-
-; Sound driver constants
-TrackPlaybackControl:	equ 0		; All tracks
-TrackVoiceControl:	equ 1		; All tracks
-TrackTempoDivider:	equ 2		; All tracks
-TrackDataPointer:	equ 4		; All tracks (4 bytes)
-TrackTranspose:		equ 8		; FM/PSG only (sometimes written to as a word, to include TrackVolume)
-TrackVolume:		equ 9		; FM/PSG only
-TrackAMSFMSPan:		equ $A		; FM/DAC only
-TrackVoiceIndex:	equ $B		; FM/PSG only
-TrackVolEnvIndex:	equ $C		; PSG only
-TrackStackPointer:	equ $D		; All tracks
-TrackDurationTimeout:	equ $E		; All tracks
-TrackSavedDuration:	equ $F		; All tracks
-TrackSavedDAC:		equ $10		; DAC only
-TrackFreq:		equ $10		; FM/PSG only (2 bytes)
-TrackNoteTimeout:	equ $12		; FM/PSG only
-TrackNoteTimeoutMaster:equ $13		; FM/PSG only
-TrackModulationPtr:	equ $14		; FM/PSG only (4 bytes)
-TrackModulationWait:	equ $18		; FM/PSG only
-TrackModulationSpeed:	equ $19		; FM/PSG only
-TrackModulationDelta:	equ $1A		; FM/PSG only
-TrackModulationSteps:	equ $1B		; FM/PSG only
-TrackModulationVal:	equ $1C		; FM/PSG only (2 bytes)
-TrackDetune:		equ $1E		; FM/PSG only
-TrackPSGNoise:		equ $1F		; PSG only
-TrackFeedbackAlgo:	equ $1F		; FM only
-TrackVoicePtr:		equ $20		; FM SFX only (4 bytes)
-TrackLoopCounters:	equ $24		; All tracks (multiple bytes)
-TrackGoSubStack:	equ TrackSz	; All tracks (multiple bytes. This constant won't get to be used because of an optimisation that just uses TrackSz)
-
-TrackSz:	equ $30
 
 ; VRAM data
 vram_fg:	equ $C000	; foreground namespace
 vram_bg:	equ $E000	; background namespace
-vram_sonic:	equ $F000	; Sonic graphics
 vram_sprites:	equ $F800	; sprite table
 vram_hscroll:	equ $FC00	; horizontal scroll table
 tile_size:	equ 8*8/2
@@ -103,26 +72,27 @@ cAqua:		equ cGreen+cBlue	; colour aqua
 cMagenta:	equ cBlue+cRed		; colour magenta
 
 ; Joypad input
-btnStart:	equ %10000000 ; Start button	($80)
-btnA:		equ %01000000 ; A		($40)
-btnC:		equ %00100000 ; C		($20)
-btnB:		equ %00010000 ; B		($10)
-btnR:		equ %00001000 ; Right		($08)
-btnL:		equ %00000100 ; Left		($04)
-btnDn:		equ %00000010 ; Down		($02)
-btnUp:		equ %00000001 ; Up		($01)
-btnDir:		equ %00001111 ; Any direction	($0F)
-btnABC:		equ %01110000 ; A, B or C	($70)
-bitStart:	equ 7
-bitA:		equ 6
-bitC:		equ 5
-bitB:		equ 4
-bitR:		equ 3
-bitL:		equ 2
-bitDn:		equ 1
 bitUp:		equ 0
+bitDn:		equ 1
+bitL:		equ 2
+bitR:		equ 3
+bitB:		equ 4
+bitC:		equ 5
+bitA:		equ 6
+bitStart:	equ 7
+btnUp:		equ 1<<bitUp			; ($01)
+btnDn:		equ 1<<bitDn			; ($02)
+btnL:		equ 1<<bitL			; ($04)
+btnR:		equ 1<<bitR			; ($08)
+btnB:		equ 1<<bitB			; ($10)
+btnC:		equ 1<<bitC			; ($20)
+btnA:		equ 1<<bitA			; ($40)
+btnStart:	equ 1<<bitStart			; ($80)
+btnDir:		equ btnUp|btnDn|btnL|btnR	; ($0F)
+btnABC:		equ btnA|btnB|btnC		; ($70)
 
 ; Object variables
+obID:		equ 0	; object ID number
 obRender:	equ 1	; bitfield for x/y flip, display mode
 obGfx:		equ 2	; palette line & VRAM setting (2 bytes)
 obMap:		equ 4	; mappings address (4 bytes)
@@ -139,8 +109,7 @@ obActWid:	equ $19	; action width
 obFrame:	equ $1A	; current frame displayed
 obAniFrame:	equ $1B	; current frame in animation script
 obAnim:		equ $1C	; current animation
-obNextAni:	equ $1D	; next animation
-obPrevAni:	equ	obNextAni
+obPrevAni:	equ $1D	; previous animation
 obTimeFrame:	equ $1E	; time to next frame
 obDelayAni:	equ $1F	; time to delay animation
 obColType:	equ $20	; collision response type
@@ -157,6 +126,7 @@ obSolid:	equ ob2ndRout ; solid status flag
 flashtime:	equ $30	; time between flashes after getting hit
 invtime:	equ $32	; time left for invincibility
 shoetime:	equ $34	; time left for speed shoes
+stick_to_convex:equ $38 ; flag set while running on an SBZ gear
 standonobject:	equ $3D	; object Sonic stands on
 
 ; Miscellaneous object scratch-RAM
@@ -185,33 +155,7 @@ objoff_3E:	equ $3E
 objoff_3F:	equ $3F
 
 object_size_bits:	equ 6
-object_size:	equ 1<<object_size_bits ; 64
-
-; Object variables (Sonic 2 disassembly nomenclature)
-render_flags:	equ 1	; bitfield for x/y flip, display mode
-art_tile:	equ 2	; palette line & VRAM setting (2 bytes)
-mappings:	equ 4	; mappings address (4 bytes)
-x_pos:		equ 8	; x-axis position (2-4 bytes)
-y_pos:		equ $C	; y-axis position (2-4 bytes)
-x_vel:		equ $10	; x-axis velocity (2 bytes)
-y_vel:		equ $12	; y-axis velocity (2 bytes)
-y_radius:	equ $16	; height/2
-x_radius:	equ $17	; width/2
-priority:	equ $18	; sprite stack priority -- 0 is front
-width_pixels:	equ $19	; action width
-mapping_frame:	equ $1A	; current frame displayed
-anim_frame:	equ $1B	; current frame in animation script
-anim:		equ $1C	; current animation
-next_anim:	equ $1D	; next animation
-anim_frame_duration: equ $1E ; time to next frame
-collision_flags: equ $20 ; collision response type
-collision_property: equ $21 ; collision extra property
-status:		equ $22	; orientation or mode
-respawn_index:	equ $23	; respawn list index number
-routine:	equ $24	; routine number
-routine_secondary: equ $25 ; secondary routine number
-angle:		equ $26	; angle
-subtype:	equ $28	; object subtype
+object_size:	equ 1<<object_size_bits
 
 ; Animation flags
 afEnd:		equ $FF	; return to beginning of animation
@@ -398,3 +342,249 @@ fr_Float6:	equ $54
 fr_Injury:	equ $55
 fr_GetAir:	equ $56
 fr_WaterSlide:	equ $57
+
+; Boss locations
+; The main values are based on where the camera boundaries mainly lie
+; The end values are where the camera scrolls towards after defeat
+boss_ghz_x:	equ $2960		; Green Hill Zone
+boss_ghz_y:	equ $300
+boss_ghz_end:	equ boss_ghz_x+$160
+
+boss_lz_x:	equ $1DE0		; Labyrinth Zone
+boss_lz_y:	equ $C0
+boss_lz_end:	equ boss_lz_x+$250
+
+boss_mz_x:	equ $1800		; Marble Zone
+boss_mz_y:	equ $210
+boss_mz_end:	equ boss_mz_x+$160
+
+boss_slz_x:	equ $2000		; Star Light Zone
+boss_slz_y:	equ $210
+boss_slz_end:	equ boss_slz_x+$160
+
+boss_syz_x:	equ $2C00		; Spring Yard Zone
+boss_syz_y:	equ $4CC
+boss_syz_end:	equ boss_syz_x+$140
+
+boss_sbz2_x:	equ $2050		; Scrap Brain Zone Act 2 Cutscene
+boss_sbz2_y:	equ $510
+
+boss_fz_x:	equ $2450		; Final Zone
+boss_fz_y:	equ $510
+boss_fz_end:	equ boss_fz_x+$2B0
+
+; Tile VRAM Locations
+
+; Shared
+ArtTile_GHZ_MZ_Swing:		equ $380
+ArtTile_MZ_SYZ_Caterkiller:	equ $4FF
+ArtTile_GHZ_SLZ_Smashable_Wall:	equ $50F
+
+; Green Hill Zone
+ArtTile_GHZ_Flower_4:		equ ArtTile_Level+$340
+ArtTile_GHZ_Edge_Wall:		equ $34C
+ArtTile_GHZ_Flower_Stalk:	equ ArtTile_Level+$358
+ArtTile_GHZ_Big_Flower_1:	equ ArtTile_Level+$35C
+ArtTile_GHZ_Small_Flower:	equ ArtTile_Level+$36C
+ArtTile_GHZ_Waterfall:		equ ArtTile_Level+$378
+ArtTile_GHZ_Flower_3:		equ ArtTile_Level+$380
+ArtTile_GHZ_Bridge:		equ $38E
+ArtTile_GHZ_Big_Flower_2:	equ ArtTile_Level+$390
+ArtTile_GHZ_Spike_Pole:		equ $398
+ArtTile_GHZ_Giant_Ball:		equ $3AA
+ArtTile_GHZ_Purple_Rock:	equ $3D0
+
+; Marble Zone
+ArtTile_MZ_Block:		equ $2B8
+ArtTile_MZ_Animated_Magma:	equ ArtTile_Level+$2D2
+ArtTile_MZ_Animated_Lava:	equ ArtTile_Level+$2E2
+ArtTile_MZ_Torch:		equ ArtTile_Level+$2F2
+ArtTile_MZ_Spike_Stomper:	equ $300
+ArtTile_MZ_Fireball:		equ $345
+ArtTile_MZ_Glass_Pillar:	equ $38E
+ArtTile_MZ_Lava:		equ $3A8
+
+; Spring Yard Zone
+ArtTile_SYZ_Bumper:		equ $380
+ArtTile_SYZ_Big_Spikeball:	equ $396
+ArtTile_SYZ_Spikeball_Chain:	equ $3BA
+
+; Labyrinth Zone
+ArtTile_LZ_Block_1:		equ $1E0
+ArtTile_LZ_Block_2:		equ $1F0
+ArtTile_LZ_Splash:		equ $259
+ArtTile_LZ_Gargoyle:		equ $2E9
+ArtTile_LZ_Water_Surface:	equ $300
+ArtTile_LZ_Spikeball_Chain:	equ $310
+ArtTile_LZ_Flapping_Door:	equ $328
+ArtTile_LZ_Bubbles:		equ $348
+ArtTile_LZ_Moving_Block:	equ $3BC
+ArtTile_LZ_Door:		equ $3C4
+ArtTile_LZ_Harpoon:		equ $3CC
+ArtTile_LZ_Pole:		equ $3DE
+ArtTile_LZ_Push_Block:		equ $3DE
+ArtTile_LZ_Blocks:		equ $3E6
+ArtTile_LZ_Conveyor_Belt:	equ $3F6
+ArtTile_LZ_Sonic_Drowning:	equ $440
+ArtTile_LZ_Rising_Platform:	equ ArtTile_LZ_Blocks+$69
+ArtTile_LZ_Orbinaut:		equ $467
+ArtTile_LZ_Cork:		equ ArtTile_LZ_Blocks+$11A
+
+; Star Light Zone
+ArtTile_SLZ_Seesaw:		equ $374
+ArtTile_SLZ_Fan:		equ $3A0
+ArtTile_SLZ_Pylon:		equ $3CC
+ArtTile_SLZ_Swing:		equ $3DC
+ArtTile_SLZ_Orbinaut:		equ $429
+ArtTile_SLZ_Fireball:		equ $480
+ArtTile_SLZ_Fireball_Launcher:	equ $4D8
+ArtTile_SLZ_Collapsing_Floor:	equ $4E0
+ArtTile_SLZ_Spikeball:		equ $4F0
+
+; Scrap Brain Zone
+ArtTile_SBZ_Caterkiller:	equ $2B0
+ArtTile_SBZ_Moving_Block_Short:	equ $2C0
+ArtTile_SBZ_Door:		equ $2E8
+ArtTile_SBZ_Girder:		equ $2F0
+ArtTile_SBZ_Disc:		equ $344
+ArtTile_SBZ_Junction:		equ $348
+ArtTile_SBZ_Swing:		equ $391
+ArtTile_SBZ_Saw:		equ $3B5
+ArtTile_SBZ_Flamethrower:	equ $3D9
+ArtTile_SBZ_Collapsing_Floor:	equ $3F5
+ArtTile_SBZ_Orbinaut:		equ $429
+ArtTile_SBZ_Smoke_Puff_1:	equ ArtTile_Level+$448
+ArtTile_SBZ_Smoke_Puff_2:	equ ArtTile_Level+$454
+ArtTile_SBZ_Moving_Block_Long:	equ $460
+ArtTile_SBZ_Horizontal_Door:	equ $46F
+ArtTile_SBZ_Electric_Orb:	equ $47E
+ArtTile_SBZ_Trap_Door:		equ $492
+ArtTile_SBZ_Vanishing_Block:	equ $4C3
+ArtTile_SBZ_Spinning_Platform:	equ $4DF
+
+; Final Zone
+ArtTile_FZ_Boss:		equ $300
+ArtTile_FZ_Eggman_Fleeing:	equ $3A0
+ArtTile_FZ_Eggman_No_Vehicle:	equ $470
+
+; General Level Art
+ArtTile_Level:			equ $000
+ArtTile_Ball_Hog:		equ $302
+ArtTile_Bomb:			equ $400
+ArtTile_Crabmeat:		equ $400
+ArtTile_Missile_Disolve:	equ $41C ; Unused
+ArtTile_Buzz_Bomber:		equ $444
+ArtTile_Chopper:		equ $47B
+ArtTile_Yadrin:			equ $47B
+ArtTile_Jaws:			equ $486
+ArtTile_Newtron:		equ $49B
+ArtTile_Burrobot:		equ $4A6
+ArtTile_Basaran:		equ $4B8
+ArtTile_Roller:			equ $4B8
+ArtTile_Moto_Bug:		equ $4F0
+ArtTile_Button:			equ $50F
+ArtTile_Spikes:			equ $51B
+ArtTile_Spring_Horizontal:	equ $523
+ArtTile_Spring_Vertical:	equ $533
+ArtTile_Shield:			equ $541
+ArtTile_Invincibility:		equ $55C
+ArtTile_Game_Over:		equ $55E
+ArtTile_Title_Card:		equ $580
+ArtTile_Animal_1:		equ $580
+ArtTile_Animal_2:		equ $592
+ArtTile_Explosion:		equ $5A0
+ArtTile_Monitor:		equ $680
+ArtTile_HUD:			equ $6CA
+ArtTile_Sonic:			equ $780
+ArtTile_Points:			equ $797
+ArtTile_Lamppost:		equ $7A0
+ArtTile_Ring:			equ $7B2
+ArtTile_Lives_Counter:		equ $7D4
+
+; Eggman
+ArtTile_Eggman:			equ $400
+ArtTile_Eggman_Weapons:		equ $46C
+ArtTile_Eggman_Button:		equ $4A4
+ArtTile_Eggman_Spikeball:	equ $518
+ArtTile_Eggman_Trap_Floor:	equ $518
+ArtTile_Eggman_Exhaust:		equ ArtTile_Eggman+$12A
+
+; End of Level
+ArtTile_Giant_Ring:		equ $400
+ArtTile_Giant_Ring_Flash:	equ $462
+ArtTile_Prison_Capsule:		equ $49D
+ArtTile_Hidden_Points:		equ $4B6
+ArtTile_Warp:			equ $541
+ArtTile_Mini_Sonic:		equ $551
+ArtTile_Bonuses:		equ $570
+ArtTile_Signpost:		equ $680
+
+; Sega Screen
+ArtTile_Sega_Tiles:		equ $000
+
+; Title Screen
+ArtTile_Title_Japanese_Text:	equ $000
+ArtTile_Title_Foreground:	equ $200
+ArtTile_Title_Sonic:		equ $300
+ArtTile_Title_Trademark:	equ $510
+ArtTile_Level_Select_Font:	equ $680
+
+; Continue Screen
+ArtTile_Continue_Sonic:		equ $500
+ArtTile_Continue_Number:	equ $6FC
+
+; Ending
+ArtTile_Ending_Flowers:		equ $3A0
+ArtTile_Ending_Emeralds:	equ $3C5
+ArtTile_Ending_Sonic:		equ $3E1
+ArtTile_Ending_Eggman:		equ $524
+ArtTile_Ending_Rabbit:		equ $553
+ArtTile_Ending_Chicken:		equ $565
+ArtTile_Ending_Penguin:		equ $573
+ArtTile_Ending_Seal:		equ $585
+ArtTile_Ending_Pig:		equ $593
+ArtTile_Ending_Flicky:		equ $5A5
+ArtTile_Ending_Squirrel:	equ $5B3
+ArtTile_Ending_STH:		equ $5C5
+
+; Try Again Screen
+ArtTile_Try_Again_Emeralds:	equ $3C5
+ArtTile_Try_Again_Eggman:	equ $3E1
+
+; Special Stage
+ArtTile_SS_Background_Clouds:	equ $000
+ArtTile_SS_Background_Fish:	equ $051
+ArtTile_SS_Wall:		equ $142
+ArtTile_SS_Plane_1:		equ $200
+ArtTile_SS_Bumper:		equ $23B
+ArtTile_SS_Goal:		equ $251
+ArtTile_SS_Up_Down:		equ $263
+ArtTile_SS_R_Block:		equ $2F0
+ArtTile_SS_Plane_2:		equ $300
+ArtTile_SS_Extra_Life:		equ $370
+ArtTile_SS_Emerald_Sparkle:	equ $3F0
+ArtTile_SS_Plane_3:		equ $400
+ArtTile_SS_Red_White_Block:	equ $470
+ArtTile_SS_Ghost_Block:		equ $4F0
+ArtTile_SS_Plane_4:		equ $500
+ArtTile_SS_W_Block:		equ $570
+ArtTile_SS_Glass:		equ $5F0
+ArtTile_SS_Plane_5:		equ $600
+ArtTile_SS_Plane_6:		equ $700
+ArtTile_SS_Emerald:		equ $770
+ArtTile_SS_Zone_1:		equ $797
+ArtTile_SS_Zone_2:		equ $7A0
+ArtTile_SS_Zone_3:		equ $7A9
+ArtTile_SS_Zone_4:		equ $797
+ArtTile_SS_Zone_5:		equ $7A0
+ArtTile_SS_Zone_6:		equ $7A9
+
+; Special Stage Results
+ArtTile_SS_Results_Emeralds:	equ $541
+
+; Font
+ArtTile_Sonic_Team_Font:	equ $0A6
+ArtTile_Credits_Font:		equ $5A0
+
+; Error Handler
+ArtTile_Error_Handler_Font:	equ $7C0

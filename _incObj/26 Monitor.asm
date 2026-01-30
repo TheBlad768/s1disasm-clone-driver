@@ -122,7 +122,7 @@ loc_A246:
 loc_A25C:
 		btst	#5,obStatus(a0)
 		beq.s	Mon_Animate
-		move.w	#1,obAnim(a1)	; clear obAnim and set obNextAni to 1
+		move.w	#1,obAnim(a1)	; clear obAnim and set obPrevAni to 1
 
 loc_A26A:
 		bclr	#5,obStatus(a0)

@@ -91,7 +91,7 @@ loc_155B8:
 
 loc_155D0:
 		bclr	#5,obStatus(a1)
-		move.b	#1,obNextAni(a1)
+		move.b	#1,obPrevAni(a1)
 		move.b	#1,$38(a1)
 
 loc_155E2:

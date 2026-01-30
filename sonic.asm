@@ -687,7 +687,7 @@ VBla_08:
 		tst.b	(f_sonframechg).w ; has Sonic's sprite changed?
 		beq.s	.nochg		; if not, branch
 
-		writeVRAM	v_sgfx_buffer,$2E0,vram_sonic ; load new Sonic gfx
+		writeVRAM	v_sgfx_buffer,$2E0,ArtTile_Sonic*tile_size ; load new Sonic gfx
 		move.b	#0,(f_sonframechg).w
 
 	.nochg:
@@ -736,7 +736,7 @@ VBla_0A:
 		tst.b	(f_sonframechg).w ; has Sonic's sprite changed?
 		beq.s	.nochg		; if not, branch
 
-		writeVRAM	v_sgfx_buffer,$2E0,vram_sonic ; load new Sonic gfx
+		writeVRAM	v_sgfx_buffer,$2E0,ArtTile_Sonic*tile_size ; load new Sonic gfx
 		move.b	#0,(f_sonframechg).w
 
 	.nochg:
@@ -767,7 +767,7 @@ VBla_0C:
 		writeVRAM	v_spritetablebuffer,$280,vram_sprites
 		tst.b	(f_sonframechg).w
 		beq.s	.nochg
-		writeVRAM	v_sgfx_buffer,$2E0,vram_sonic
+		writeVRAM	v_sgfx_buffer,$2E0,ArtTile_Sonic*tile_size
 		move.b	#0,(f_sonframechg).w
 
 	.nochg:
@@ -806,7 +806,7 @@ VBla_16:
 		startZ80
 		tst.b	(f_sonframechg).w
 		beq.s	.nochg
-		writeVRAM	v_sgfx_buffer,$2E0,vram_sonic
+		writeVRAM	v_sgfx_buffer,$2E0,ArtTile_Sonic*tile_size
 		move.b	#0,(f_sonframechg).w
 
 	.nochg:
