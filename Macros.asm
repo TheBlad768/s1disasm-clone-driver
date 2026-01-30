@@ -263,3 +263,12 @@ zonewarning:	macro loc,elementsize
 		inform 1,"Size of \loc ($%h) does not match ZoneCount ($\#ZoneCount).",(.end-loc)/elementsize
 		endc
 		endm
+
+; ---------------------------------------------------------------------------
+; sprite mappings and DPLCs macros
+; ---------------------------------------------------------------------------
+
+SonicMappingsVer:	equ 1
+SonicDplcVer: 		equ 1
+
+		include	"_maps/MapMacros.asm"

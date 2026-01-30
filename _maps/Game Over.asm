@@ -1,21 +1,30 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - "GAME OVER" and "TIME OVER"
 ; ---------------------------------------------------------------------------
-Map_Over_internal:
-		dc.w byte_CBAC-Map_Over_internal
-		dc.w byte_CBB7-Map_Over_internal
-		dc.w byte_CBC2-Map_Over_internal
-		dc.w byte_CBCD-Map_Over_internal
-byte_CBAC:	dc.b 2			; GAME
-		dc.b $F8, $D, 0, 0, $B8
-		dc.b $F8, $D, 0, 8, $D8
-byte_CBB7:	dc.b 2			; OVER
-		dc.b $F8, $D, 0, $14, 8
-		dc.b $F8, $D, 0, $C, $28
-byte_CBC2:	dc.b 2			; TIME
-		dc.b $F8, 9, 0,	$1C, $C4
-		dc.b $F8, $D, 0, 8, $DC
-byte_CBCD:	dc.b 2			; OVER
-		dc.b $F8, $D, 0, $14, $C
-		dc.b $F8, $D, 0, $C, $2C
-		even
+Map_Over_internal:	mappingsTable
+	mappingsTableEntry.w	.game
+	mappingsTableEntry.w	.over1
+	mappingsTableEntry.w	.time
+	mappingsTableEntry.w	.over2
+
+.game:	spriteHeader	; "GAME" text
+	spritePiece	-$48, -8, 4, 2, 0, 0, 0, 0, 0	; "GA"
+	spritePiece	-$28, -8, 4, 2, 8, 0, 0, 0, 0	; "ME"
+.game_End
+
+.over1:	spriteHeader	; "OVER" text for game over
+	spritePiece	8, -8, 4, 2, $14, 0, 0, 0, 0	; "OV"
+	spritePiece	$28, -8, 4, 2, $C, 0, 0, 0, 0	; "ER"
+.over1_End
+
+.time:	spriteHeader	; "TIME" text
+	spritePiece	-$3C, -8, 3, 2, $1C, 0, 0, 0, 0	; "TI"
+	spritePiece	-$24, -8, 4, 2, 8, 0, 0, 0, 0	; "ME"
+.time_End
+
+.over2:	spriteHeader	; "OVER" text for time over
+	spritePiece	$C, -8, 4, 2, $14, 0, 0, 0, 0	; "OV"
+	spritePiece	$2C, -8, 4, 2, $C, 0, 0, 0, 0	; "ER"
+.over2_End
+
+	even
