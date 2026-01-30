@@ -64,15 +64,6 @@ align0 macro alignment
 	cnop0 0,alignment
     endm
 
-; pad current program counter to given alignment with FFs, but ONLY if possible
-; to preserve bit-perfect assembly without causing headaches down the line
-try_padding_to macro alignment
-	if ((~~paddingOptimization) && (alignment-*>0))
-		org	alignment
-	endif
-    endm
-
-
 ; define the even pseudo-instruction
 even macro
 	if notZ80(MOMCPU)

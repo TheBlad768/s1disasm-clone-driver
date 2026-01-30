@@ -7523,14 +7523,16 @@ Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 		include	"_inc/LevelHeaders.asm"
 		include	"_inc/Pattern Load Cues.asm"
 
-		; Nem_SegaLogo has a whole bunch of padding before it that differs between revisions.
-		; For rev00, it starts at $1DC00, which amounts to $200 bytes.
+		; Nem_SegaLogo has a bunch of padding before it that differs between revisions:
+		; - in rev00, it starts at $1DC00, which amounts to $EE bytes
+		; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
 		; From a technical standpoint, this padding serves no purpose.
-		try_padding_to	$1DC00
-		if Revision<>0
-			; Exclusively in rev01/rev02, Nem_SegaLogo starts at $1E700,
-			; which amounts to an additional $300 bytes of padding.
-			try_padding_to	$1E700
+		if ~~paddingOptimization
+			if Revision=0
+				dc.b	[$EE]$FF
+			else	
+				dc.b	[$48E]$FF
+			endif
 		endif
 
 	if Revision=0
@@ -7964,7 +7966,13 @@ Nem_EndStH:	binclude	"artnem/Ending - StH Logo.nem"
 		; AngleMap starts at $62900 in all revisions, which amounts
 		; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
-		try_padding_to	$62900
+		if ~~paddingOptimization
+			if Revision=0
+				dc.b	[$104]$FF
+			else
+				dc.b	[$40]$FF
+			endif
+		endif
 
 ; ---------------------------------------------------------------------------
 ; Collision data
@@ -8163,8 +8171,14 @@ Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 		; ObjPos_Index starts at $6B000 in all revisions, which amounts
 		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
-		try_padding_to	$6B000
-
+		if ~~paddingOptimization
+			if Revision=0
+				dc.b	[$9C]$FF
+			else
+				dc.b	[$DC]$FF
+			endif
+		endif
+	
 ; ---------------------------------------------------------------------------
 ; Sprite locations index
 ; ---------------------------------------------------------------------------
@@ -8321,8 +8335,16 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
 		; SoundDriver starts at $71990 in all revisions, which amounts
 		; to $62A bytes of padding for rev00 and $63C for rev01/rev02.
+		; It appears to be placed in such a way that the sound driver
+		; ends right on the $80000 mark in the ROM in all revisions.
 		; From a technical standpoint, this padding serves no purpose.
-		try_padding_to	$71990
+		if ~~paddingOptimization
+			if Revision=0
+				dc.b	[$62A]$FF
+			else
+				dc.b	[$63C]$FF
+			endif
+		endif
 
 SoundDriver:	include "s1.sounddriver.asm"
 
