@@ -45,10 +45,10 @@ Debug_Main:	; Routine 0
 		bhi.s	.noreset	; if not, branch
 		move.b	#0,(v_debugitem).w ; back to start of list
 
-	.noreset:
+.noreset:
 		bsr.w	Debug_ShowItem
-		move.b	#12,(v_debugxspeed).w
-		move.b	#1,(v_debugyspeed).w
+		move.b	#12,(v_debugspeedtimer).w
+		move.b	#1,(v_debugspeed).w
 
 Debug_Action:	; Routine 2
 		moveq	#6,d0
@@ -58,7 +58,7 @@ Debug_Action:	; Routine 2
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
 
-	.isntlevel:
+.isntlevel:
 		lea	(DebugList).l,a2
 		add.w	d0,d0
 		adda.w	(a2,d0.w),a2
@@ -80,25 +80,25 @@ Debug_Control:
 		andi.w	#btnDir,d0	; is up/down/left/right held?
 		bne.s	.dirheld	; if yes, branch
 
-		move.b	#12,(v_debugxspeed).w
-		move.b	#15,(v_debugyspeed).w
+		move.b	#12,(v_debugspeedtimer).w
+		move.b	#15,(v_debugspeed).w
 		bra.w	Debug_ChgItem
 ; ===========================================================================
 
 .dirheld:
-		subq.b	#1,(v_debugxspeed).w
+		subq.b	#1,(v_debugspeedtimer).w
 		bne.s	loc_1D01C
-		move.b	#1,(v_debugxspeed).w
-		addq.b	#1,(v_debugyspeed).w
+		move.b	#1,(v_debugspeedtimer).w
+		addq.b	#1,(v_debugspeed).w
 		bne.s	.dirpressed
-		move.b	#-1,(v_debugyspeed).w
+		move.b	#-1,(v_debugspeed).w
 
 .dirpressed:
 		move.b	(v_jpadhold1).w,d4
 
 loc_1D01C:
 		moveq	#0,d1
-		move.b	(v_debugyspeed).w,d1
+		move.b	(v_debugspeed).w,d1
 		addq.w	#1,d1
 		swap	d1
 		asr.l	#4,d1
@@ -115,7 +115,7 @@ loc_1D03C:
 		beq.s	loc_1D052	; if not, branch
 		add.l	d1,d2
 		cmpi.l	#$7FF0000,d2
-		bcs.s	loc_1D052
+		blo.s	loc_1D052
 		move.l	#$7FF0000,d2
 
 loc_1D052:
@@ -153,7 +153,7 @@ Debug_ChgItem:
 		bhi.s	.display
 		move.b	#0,(v_debugitem).w ; loop back to first item
 
-	.display:
+.display:
 		bra.w	Debug_ShowItem
 ; ===========================================================================
 
@@ -164,7 +164,7 @@ Debug_ChgItem:
 		bne.s	.backtonormal
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
-		move.b	4(a0),0(a1)	; create object
+		_move.b	obMap(a0),obID(a1)	; create object
 		move.b	obRender(a0),obRender(a1)
 		move.b	obRender(a0),obStatus(a1)
 		andi.b	#$7F,obStatus(a1)
@@ -172,7 +172,7 @@ Debug_ChgItem:
 		move.b	(v_debugitem).w,d0
 		lsl.w	#3,d0
 		move.b	4(a2,d0.w),obSubtype(a1)
-		rts	
+		rts
 ; ===========================================================================
 
 .backtonormal:
@@ -198,8 +198,8 @@ Debug_ChgItem:
 		bset	#2,(v_player+obStatus).w
 		bset	#1,(v_player+obStatus).w
 
-	.stayindebug:
-		rts	
+.stayindebug:
+		rts
 ; End of function Debug_Control
 
 
@@ -213,5 +213,5 @@ Debug_ShowItem:
 		move.l	(a2,d0.w),obMap(a0) ; load mappings for item
 		move.w	6(a2,d0.w),obGfx(a0) ; load VRAM setting for item
 		move.b	5(a2,d0.w),obFrame(a0) ; load frame number for item
-		rts	
+		rts
 ; End of function Debug_ShowItem

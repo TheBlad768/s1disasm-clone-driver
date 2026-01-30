@@ -7,11 +7,6 @@
 
 ; ===========================================================================
 
-	include "MacroSetup.asm"
-	include	"Constants.asm"
-	include	"Variables.asm"
-	include	"Macros.asm"
-
 EnableSRAM:	equ 0	; change to 1 to enable SRAM
 BackupSRAM:	equ 1
 AddressSRAM:	equ 3	; 0 = odd+even; 2 = even only; 3 = odd only
@@ -25,6 +20,11 @@ ZoneCount:	equ 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
 
 ; FIXME: Currently only affects `s1.sounddriver.asm`
 FixBugs:	equ 0	; change to 1 to enable bugfixes
+
+	include "MacroSetup.asm"
+	include	"Constants.asm"
+	include	"Variables.asm"
+	include	"Macros.asm"
 
 ; ===========================================================================
 
@@ -1231,7 +1231,7 @@ ClearPLC:
 RunPLC:
 		tst.l	(v_plc_buffer).w
 		beq.s	Rplc_Exit
-		tst.w	(f_plc_execute).w
+		tst.w	(v_plc_patternsleft).w
 		bne.s	Rplc_Exit
 		movea.l	(v_plc_buffer).w,a0
 		lea	(NemPCD_WriteRowToVDP).l,a3
@@ -1242,7 +1242,7 @@ RunPLC:
 
 loc_160E:
 		andi.w	#$7FFF,d2
-		move.w	d2,(f_plc_execute).w
+		move.w	d2,(v_plc_patternsleft).w
 		bsr.w	NemDec_BuildCodeTable
 		move.b	(a0)+,d5
 		asl.w	#8,d5
@@ -1250,12 +1250,12 @@ loc_160E:
 		moveq	#$10,d6
 		moveq	#0,d0
 		move.l	a0,(v_plc_buffer).w
-		move.l	a3,(v_ptrnemcode).w
-		move.l	d0,($FFFFF6E4).w
-		move.l	d0,($FFFFF6E8).w
-		move.l	d0,($FFFFF6EC).w
-		move.l	d5,($FFFFF6F0).w
-		move.l	d6,($FFFFF6F4).w
+		move.l	a3,(v_plc_ptrnemcode).w
+		move.l	d0,(v_plc_repeatcount).w
+		move.l	d0,(v_plc_paletteindex).w
+		move.l	d0,(v_plc_previousrow).w
+		move.l	d5,(v_plc_dataword).w
+		move.l	d6,(v_plc_shiftvalue).w
 
 Rplc_Exit:
 		rts	
@@ -1266,7 +1266,7 @@ Rplc_Exit:
 
 
 sub_1642:
-		tst.w	(f_plc_execute).w
+		tst.w	(v_plc_patternsleft).w
 		beq.w	locret_16DA
 		move.w	#9,($FFFFF6FA).w
 		moveq	#0,d0
@@ -1281,7 +1281,7 @@ sub_1642:
 
 ; sub_165E:
 ProcessDPLC2:
-		tst.w	(f_plc_execute).w
+		tst.w	(v_plc_patternsleft).w
 		beq.s	locret_16DA
 		move.w	#3,($FFFFF6FA).w
 		moveq	#0,d0
@@ -1297,7 +1297,7 @@ loc_1676:
 		move.l	d0,(a4)
 		subq.w	#4,a4
 		movea.l	(v_plc_buffer).w,a0
-		movea.l	(v_ptrnemcode).w,a3
+		movea.l	(v_plc_ptrnemcode).w,a3
 		move.l	($FFFFF6E4).w,d0
 		move.l	($FFFFF6E8).w,d1
 		move.l	($FFFFF6EC).w,d2
@@ -1308,12 +1308,12 @@ loc_1676:
 loc_16AA:
 		movea.w	#8,a5
 		bsr.w	NemPCD_NewRow
-		subq.w	#1,(f_plc_execute).w
+		subq.w	#1,(v_plc_patternsleft).w
 		beq.s	loc_16DC
 		subq.w	#1,($FFFFF6FA).w
 		bne.s	loc_16AA
 		move.l	a0,(v_plc_buffer).w
-		move.l	a3,(v_ptrnemcode).w
+		move.l	a3,(v_plc_ptrnemcode).w
 		move.l	d0,($FFFFF6E4).w
 		move.l	d1,($FFFFF6E8).w
 		move.l	d2,($FFFFF6EC).w
