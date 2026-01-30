@@ -7528,10 +7528,9 @@ Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 		; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
 		; From a technical standpoint, this padding serves no purpose.
 		if ~~paddingOptimization
-			if Revision=0
-				dc.b	[$EE]$FF
-			else	
-				dc.b	[$48E]$FF
+			align	$200
+			if Revision<>0
+				dc.b	[$300]$FF
 			endif
 		endif
 
@@ -8172,11 +8171,7 @@ Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
 		if ~~paddingOptimization
-			if Revision=0
-				dc.b	[$9C]$FF
-			else
-				dc.b	[$DC]$FF
-			endif
+			align	$100
 		endif
 	
 ; ---------------------------------------------------------------------------
