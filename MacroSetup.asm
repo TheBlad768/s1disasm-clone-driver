@@ -3,34 +3,65 @@
 ; defined to assemble as they originally did
 
 _move:	macro
-	; FIXME: Respect zero-offset optimization flag when introduced
-	pusho
-	opt oz-
+	if zeroOffsetOptimization=0
+		pusho
+		opt oz-
+	endif
 	move.\0 \_
-	popo
+	if zeroOffsetOptimization=0
+		popo
+	endif
 	endm
 
 _clr:	macro
-	; FIXME: Respect zero-offset optimization flag when introduced
 	pusho
 	opt oz-
 	clr.\0 \_
-	popo
+	if zeroOffsetOptimization=0
+		popo
+	endif
 	endm
 
 _add:	macro
-	; FIXME: Respect zero-offset optimization flag when introduced
-	pusho
-	opt oz-
+	if zeroOffsetOptimization=0
+		pusho
+		opt oz-
+	endif
 	add.\0 \_
-	popo
+	if zeroOffsetOptimization=0
+		popo
+	endif
 	endm
 
 _cmp:	macro
-	; FIXME: Respect zero-offset optimization flag when introduced
-	pusho
-	opt oz-
+	if zeroOffsetOptimization=0
+		pusho
+		opt oz-
+	endif
 	cmp.\0 \_
-	popo
+	if zeroOffsetOptimization=0
+		popo
+	endif
 	endm
 
+_cmpi:	macro
+	if zeroOffsetOptimization=0
+		pusho
+		opt oz-
+	endif
+	cmpi.\0 \_
+	if zeroOffsetOptimization=0
+		popo
+	endif
+	endm
+
+_tst:	macro
+	if zeroOffsetOptimization=0
+		pusho
+		opt oz-
+	endif
+	tst.\0 \_
+	if zeroOffsetOptimization=0
+		popo
+	endif
+	endm

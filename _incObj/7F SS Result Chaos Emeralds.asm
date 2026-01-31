@@ -26,8 +26,8 @@ SSRC_Main:	; Routine 0
 		subq.b	#1,d1		; subtract 1 from d1
 		bcs.w	DeleteObject	; if you have 0 emeralds, branch
 
-	SSRC_Loop:
-		move.b	#id_SSRChaos,0(a1)
+SSRC_Loop:
+		_move.b	#id_SSRChaos,obID(a1)
 		move.w	(a2)+,obX(a1)	; set x-position
 		move.w	#$F0,obScreenY(a1) ; set y-position
 		lea	(v_emldlist).w,a3 ; check which emeralds you have
@@ -37,9 +37,9 @@ SSRC_Main:	; Routine 0
 		addq.b	#1,d2
 		addq.b	#2,obRoutine(a1)
 		move.l	#Map_SSRC,obMap(a1)
-		move.w	#$8541,obGfx(a1)
+		move.w	#ArtTile_SS_Results_Emeralds|Tile_Pri,obGfx(a1)
 		move.b	#0,obRender(a1)
-		lea	$40(a1),a1	; next object
+		lea	object_size(a1),a1	; next object
 		dbf	d1,SSRC_Loop	; loop for d1 number of emeralds
 
 SSRC_Flash:	; Routine 2
@@ -49,5 +49,5 @@ SSRC_Flash:	; Routine 2
 		bne.s	SSRC_Display
 		move.b	obAnim(a0),obFrame(a0) ; load visible frame
 
-	SSRC_Display:
+SSRC_Display:
 		bra.w	DisplaySprite

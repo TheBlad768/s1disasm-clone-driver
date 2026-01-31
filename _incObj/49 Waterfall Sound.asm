@@ -23,6 +23,6 @@ WSnd_PlaySnd:	; Routine 2
 		move.w	#sfx_Waterfall,d0
 		jsr	(QueueSound2).l	; play waterfall sound
 
-	WSnd_ChkDel:
+WSnd_ChkDel:
 		out_of_range.w	DeleteObject
-		rts	
+		rts

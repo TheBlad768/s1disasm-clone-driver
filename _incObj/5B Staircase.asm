@@ -2,6 +2,11 @@
 ; Object 5B - blocks that form a staircase (SLZ)
 ; ---------------------------------------------------------------------------
 
+stair_origX = objoff_30		; original x-axis position
+stair_origY = objoff_32		; original y-axis position
+
+stair_parent = objoff_3C	; address of parent object (4 bytes)
+
 Staircase:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
@@ -14,10 +19,6 @@ Stair_Index:	dc.w Stair_Main-Stair_Index
 		dc.w Stair_Move-Stair_Index
 		dc.w Stair_Solid-Stair_Index
 
-stair_origX:	equ $30		; original x-axis position
-stair_origY:	equ $32		; original y-axis position
-
-stair_parent:	equ $3C		; address of parent object (4 bytes)
 ; ===========================================================================
 
 Stair_Main:	; Routine 0
@@ -29,7 +30,7 @@ Stair_Main:	; Routine 0
 		moveq	#$3B,d3
 		moveq	#-1,d4
 
-	.notflipped:
+.notflipped:
 		move.w	obX(a0),d2
 		movea.l	a0,a1
 		moveq	#3,d1
@@ -42,9 +43,9 @@ Stair_Main:	; Routine 0
 		move.b	#4,obRoutine(a1)
 
 .makeblocks:
-		move.b	#id_Staircase,0(a1) ; load another block object
+		_move.b	#id_Staircase,obID(a1) ; load another block object
 		move.l	#Map_Stair,obMap(a1)
-		move.w	#$4000,obGfx(a1)
+		move.w	#ArtTile_Level|Tile_Pal2,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#3,obPriority(a1)
 		move.b	#$10,obActWid(a1)
@@ -54,12 +55,12 @@ Stair_Main:	; Routine 0
 		move.w	obX(a0),stair_origX(a1)
 		move.w	obY(a1),stair_origY(a1)
 		addi.w	#$20,d2
-		move.b	d3,$37(a1)
+		move.b	d3,objoff_37(a1)
 		move.l	a0,stair_parent(a1)
 		add.b	d4,d3
 		dbf	d1,.loop	; repeat sequence 3 times
 
-	.fail:
+.fail:
 
 Stair_Move:	; Routine 2
 		moveq	#0,d0
@@ -72,7 +73,7 @@ Stair_Move:	; Routine 2
 Stair_Solid:	; Routine 4
 		movea.l	stair_parent(a0),a2
 		moveq	#0,d0
-		move.b	$37(a0),d0
+		move.b	objoff_37(a0),d0
 		move.b	(a2,d0.w),d0
 		add.w	stair_origY(a0),d0
 		move.w	d0,obY(a0)
@@ -85,15 +86,15 @@ Stair_Solid:	; Routine 4
 		bsr.w	SolidObject
 		tst.b	d4
 		bpl.s	loc_10F92
-		move.b	d4,$36(a2)
+		move.b	d4,objoff_36(a2)
 
 loc_10F92:
 		btst	#3,obStatus(a0)
 		beq.s	locret_10FA0
-		move.b	#1,$36(a2)
+		move.b	#1,objoff_36(a2)
 
 locret_10FA0:
-		rts	
+		rts
 ; ===========================================================================
 Stair_TypeIndex:dc.w Stair_Type00-Stair_TypeIndex
 		dc.w Stair_Type01-Stair_TypeIndex
@@ -102,44 +103,44 @@ Stair_TypeIndex:dc.w Stair_Type00-Stair_TypeIndex
 ; ===========================================================================
 
 Stair_Type00:
-		tst.w	$34(a0)
+		tst.w	objoff_34(a0)
 		bne.s	loc_10FC0
-		cmpi.b	#1,$36(a0)
+		cmpi.b	#1,objoff_36(a0)
 		bne.s	locret_10FBE
-		move.w	#$1E,$34(a0)
+		move.w	#$1E,objoff_34(a0)
 
 locret_10FBE:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_10FC0:
-		subq.w	#1,$34(a0)
+		subq.w	#1,objoff_34(a0)
 		bne.s	locret_10FBE
 		addq.b	#1,obSubtype(a0) ; add 1 to type
-		rts	
+		rts
 ; ===========================================================================
 
 Stair_Type02:
-		tst.w	$34(a0)
+		tst.w	objoff_34(a0)
 		bne.s	loc_10FE0
-		tst.b	$36(a0)
+		tst.b	objoff_36(a0)
 		bpl.s	locret_10FDE
-		move.w	#$3C,$34(a0)
+		move.w	#$3C,objoff_34(a0)
 
 locret_10FDE:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_10FE0:
-		subq.w	#1,$34(a0)
+		subq.w	#1,objoff_34(a0)
 		bne.s	loc_10FEC
 		addq.b	#1,obSubtype(a0) ; add 1 to type
-		rts	
+		rts
 ; ===========================================================================
 
 loc_10FEC:
-		lea	$38(a0),a1
-		move.w	$34(a0),d0
+		lea	objoff_38(a0),a1
+		move.w	objoff_34(a0),d0
 		lsr.b	#2,d0
 		andi.b	#1,d0
 		move.b	d0,(a1)+
@@ -149,11 +150,11 @@ loc_10FEC:
 		move.b	d0,(a1)+
 		eori.b	#1,d0
 		move.b	d0,(a1)+
-		rts	
+		rts
 ; ===========================================================================
 
 Stair_Type01:
-		lea	$38(a0),a1
+		lea	objoff_38(a0),a1
 		cmpi.b	#$80,(a1)
 		beq.s	locret_11038
 		addq.b	#1,(a1)
@@ -173,5 +174,5 @@ Stair_Type01:
 		move.b	d1,(a1)+
 
 locret_11038:
-		rts	
-		rts	
+		rts
+		rts

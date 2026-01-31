@@ -10,7 +10,7 @@ Prison:
 		out_of_range.s	.delete
 		jmp	(DisplaySprite).l
 
-	.delete:
+.delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 Pri_Index:	dc.w Pri_Main-Pri_Index
@@ -22,7 +22,7 @@ Pri_Index:	dc.w Pri_Main-Pri_Index
 		dc.w Pri_Animals-Pri_Index
 		dc.w Pri_EndAct-Pri_Index
 
-pri_origY:	equ $30		; original y-axis position
+pri_origY = objoff_30		; original y-axis position
 
 Pri_Var:	dc.b 2,	$20, 4,	0	; routine, width, priority, frame
 		dc.b 4,	$C, 5, 1
@@ -32,7 +32,7 @@ Pri_Var:	dc.b 2,	$20, 4,	0	; routine, width, priority, frame
 
 Pri_Main:	; Routine 0
 		move.l	#Map_Pri,obMap(a0)
-		move.w	#$49D,obGfx(a0)
+		move.w	#ArtTile_Prison_Capsule,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.w	obY(a0),pri_origY(a0)
 		moveq	#0,d0
@@ -49,8 +49,8 @@ Pri_Main:	; Routine 0
 		move.b	#6,obColType(a0)
 		move.b	#8,obColProp(a0)
 
-	.not02:
-		rts	
+.not02:
+		rts
 ; ===========================================================================
 
 Pri_BodyMain:	; Routine 2
@@ -70,9 +70,9 @@ Pri_BodyMain:	; Routine 2
 		bclr	#3,(v_player+obStatus).w
 		bset	#1,(v_player+obStatus).w
 
-	.open:
+.open:
 		move.b	#2,obFrame(a0)	; use frame number 2 (destroyed prison)
-		rts	
+		rts
 ; ===========================================================================
 
 Pri_Switched:	; Routine 4
@@ -98,8 +98,8 @@ Pri_Switched:	; Routine 4
 		bclr	#3,(v_player+obStatus).w
 		bset	#1,(v_player+obStatus).w
 
-	.open2:
-		rts	
+.open2:
+		rts
 ; ===========================================================================
 
 Pri_Explosion:	; Routine 6, 8, $A
@@ -108,7 +108,7 @@ Pri_Explosion:	; Routine 6, 8, $A
 		bne.s	.noexplosion
 		jsr	(FindFreeObj).l
 		bne.s	.noexplosion
-		move.b	#id_ExplosionBomb,0(a1) ; load explosion object
+		_move.b	#id_ExplosionBomb,obID(a1) ; load explosion object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		jsr	(RandomNumber).l
@@ -121,10 +121,10 @@ Pri_Explosion:	; Routine 6, 8, $A
 		lsr.b	#3,d0
 		add.w	d0,obY(a1)
 
-	.noexplosion:
+.noexplosion:
 		subq.w	#1,obTimeFrame(a0)
 		beq.s	.makeanimal
-		rts	
+		rts
 ; ===========================================================================
 
 .makeanimal:
@@ -137,20 +137,20 @@ Pri_Explosion:	; Routine 6, 8, $A
 		move.w	#$9A,d5
 		moveq	#-$1C,d4
 
-	.loop:
+.loop:
 		jsr	(FindFreeObj).l
 		bne.s	.fail
-		move.b	#id_Animals,0(a1) ; load animal object
+		_move.b	#id_Animals,obID(a1) ; load animal object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		add.w	d4,obX(a1)
 		addq.w	#7,d4
-		move.w	d5,$36(a1)
+		move.w	d5,objoff_36(a1)
 		subq.w	#8,d5
 		dbf	d6,.loop	; repeat 7 more times
 
-	.fail:
-		rts	
+.fail:
+		rts
 ; ===========================================================================
 
 Pri_Animals:	; Routine $C
@@ -159,7 +159,7 @@ Pri_Animals:	; Routine $C
 		bne.s	.noanimal
 		jsr	(FindFreeObj).l
 		bne.s	.noanimal
-		move.b	#id_Animals,0(a1) ; load animal object
+		_move.b	#id_Animals,obID(a1) ; load animal object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		jsr	(RandomNumber).l
@@ -169,28 +169,36 @@ Pri_Animals:	; Routine $C
 		bpl.s	.ispositive
 		neg.w	d0
 
-	.ispositive:
+.ispositive:
 		add.w	d0,obX(a1)
-		move.w	#$C,$36(a1)
+		move.w	#$C,objoff_36(a1)
 
-	.noanimal:
+.noanimal:
 		subq.w	#1,obTimeFrame(a0)
 		bne.s	.wait
 		addq.b	#2,obRoutine(a0)
 		move.w	#180,obTimeFrame(a0)
 
-	.wait:
-		rts	
+.wait:
+		rts
 ; ===========================================================================
 
 Pri_EndAct:	; Routine $E
-		moveq	#$3E,d0
+	if FixBugs
+		moveq	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d0
+	else
+		moveq	#(v_objspace_end-(v_objspace+object_size*1))/object_size/2-1,d0	; Nonsensical length, it only covers the first half of object RAM.
+	endif
 		moveq	#id_Animals,d1
-		moveq	#$40,d2
-		lea	(v_objspace+$40).w,a1 ; load object RAM
+		moveq	#object_size,d2
+	if FixBugs
+		lea	(v_lvlobjspace).w,a1
+	else
+		lea	(v_objspace+object_size*1).w,a1 ; Nonsensical starting point, since dynamic object allocations begin at v_lvlobjspace.
+	endif
 
-	.findanimal:
-		cmp.b	(a1),d1		; is object $28 (animal) loaded?
+.findanimal:
+		cmp.b	obID(a1),d1		; is object $28 (animal) loaded?
 		beq.s	.found		; if yes, branch
 		adda.w	d2,a1		; next object RAM
 		dbf	d0,.findanimal	; repeat $3E times
@@ -198,5 +206,5 @@ Pri_EndAct:	; Routine $E
 		jsr	(GotThroughAct).l
 		jmp	(DeleteObject).l
 
-	.found:
-		rts	
+.found:
+		rts

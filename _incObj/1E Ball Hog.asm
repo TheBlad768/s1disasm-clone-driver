@@ -11,14 +11,14 @@ BallHog:
 Hog_Index:	dc.w Hog_Main-Hog_Index
 		dc.w Hog_Action-Hog_Index
 
-hog_launchflag:	equ $32		; 0 to launch a cannonball
+hog_launchflag = objoff_32		; 0 to launch a cannonball
 ; ===========================================================================
 
 Hog_Main:	; Routine 0
 		move.b	#$13,obHeight(a0)
 		move.b	#8,obWidth(a0)
 		move.l	#Map_Hog,obMap(a0)
-		move.w	#$2302,obGfx(a0)
+		move.w	#ArtTile_Ball_Hog|Tile_Pal1,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#5,obColType(a0)
@@ -31,8 +31,8 @@ Hog_Main:	; Routine 0
 		move.w	#0,obVelY(a0)
 		addq.b	#2,obRoutine(a0)
 
-	.floornotfound:
-		rts	
+.floornotfound:
+		rts
 ; ===========================================================================
 
 Hog_Action:	; Routine 2
@@ -56,7 +56,7 @@ Hog_Action:	; Routine 2
 		move.b	#1,hog_launchflag(a0)
 		bsr.w	FindFreeObj
 		bne.s	.fail
-		move.b	#id_Cannonball,0(a1) ; load cannonball object ($20)
+		_move.b	#id_Cannonball,obID(a1) ; load cannonball object ($20)
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.w	#-$100,obVelX(a1) ; cannonball bounces to the left
@@ -67,10 +67,10 @@ Hog_Action:	; Routine 2
 		neg.w	d0
 		neg.w	obVelX(a1)	; cannonball bounces to the right
 
-	.noflip:
+.noflip:
 		add.w	d0,obX(a1)
 		addi.w	#$C,obY(a1)
 		move.b	obSubtype(a0),obSubtype(a1) ; copy object type from Ball Hog
 
-	.fail:
+.fail:
 		bra.s	.remember

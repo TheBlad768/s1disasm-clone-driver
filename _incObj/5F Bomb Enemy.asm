@@ -13,22 +13,22 @@ Bom_Index:	dc.w Bom_Main-Bom_Index
 		dc.w Bom_Display-Bom_Index
 		dc.w Bom_End-Bom_Index
 
-bom_time:	equ $30		; time of fuse
-bom_origY:	equ $34		; original y-axis position
-bom_parent:	equ $3C		; address of parent object
+bom_time = objoff_30		; time of fuse
+bom_origY = objoff_34		; original y-axis position
+bom_parent = objoff_3C		; address of parent object
 ; ===========================================================================
 
 Bom_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Bomb,obMap(a0)
-		move.w	#$400,obGfx(a0)
+		move.w	#ArtTile_Bomb,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$C,obActWid(a0)
 		move.b	obSubtype(a0),d0
 		beq.s	loc_11A3C
 		move.b	d0,obRoutine(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_11A3C:
@@ -61,8 +61,8 @@ Bom_Action:	; Routine 2
 		beq.s	.noflip
 		neg.w	obVelX(a0)	; change direction
 
-	.noflip:
-		rts	
+.noflip:
+		rts
 ; ===========================================================================
 
 .wait:
@@ -70,25 +70,25 @@ Bom_Action:	; Routine 2
 		subq.w	#1,bom_time(a0)	; subtract 1 from time delay
 		bmi.s	.stopwalking	; if time expires, branch
 		bsr.w	SpeedToPos
-		rts	
+		rts
 ; ===========================================================================
 
-	.stopwalking:
+.stopwalking:
 		subq.b	#2,ob2ndRout(a0)
 		move.w	#179,bom_time(a0) ; set time delay to 3 seconds
 		clr.w	obVelX(a0)	; stop walking
 		move.b	#0,obAnim(a0)	; use waiting animation
-		rts	
+		rts
 ; ===========================================================================
 
 .explode:
 		subq.w	#1,bom_time(a0)	; subtract 1 from time delay
 		bpl.s	.noexplode	; if time remains, branch
-		move.b	#id_ExplosionBomb,0(a0) ; change bomb into an explosion
+		_move.b	#id_ExplosionBomb,obID(a0) ; change bomb into an explosion
 		move.b	#0,obRoutine(a0)
 
-	.noexplode:
-		rts	
+.noexplode:
+		rts
 ; ===========================================================================
 
 .chksonic:
@@ -97,17 +97,17 @@ Bom_Action:	; Routine 2
 		bcc.s	.isleft
 		neg.w	d0
 
-	.isleft:
+.isleft:
 		cmpi.w	#$60,d0		; is Sonic within $60 pixels?
-		bcc.s	.outofrange	; if not, branch
+		bhs.s	.outofrange	; if not, branch
 		move.w	(v_player+obY).w,d0
 		sub.w	obY(a0),d0
 		bcc.s	.isabove
 		neg.w	d0
 
-	.isabove:
+.isabove:
 		cmpi.w	#$60,d0
-		bcc.s	.outofrange
+		bhs.s	.outofrange
 		tst.w	(v_debuguse).w
 		bne.s	.outofrange
 
@@ -117,7 +117,7 @@ Bom_Action:	; Routine 2
 		move.b	#2,obAnim(a0)	; use activated animation
 		bsr.w	FindNextFreeObj
 		bne.s	.outofrange
-		move.b	#id_Bomb,0(a1)	; load fuse object
+		_move.b	#id_Bomb,obID(a1)	; load fuse object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.w	obY(a0),bom_origY(a1)
@@ -129,12 +129,12 @@ Bom_Action:	; Routine 2
 		beq.s	.normal		; if not, branch
 		neg.w	obVelY(a1)	; reverse direction for fuse
 
-	.normal:
+.normal:
 		move.w	#143,bom_time(a1) ; set fuse time
 		move.l	a0,bom_parent(a1)
 
 .outofrange:
-		rts	
+		rts
 ; ===========================================================================
 
 Bom_Display:	; Routine 4
@@ -148,10 +148,15 @@ loc_11B70:
 		subq.w	#1,bom_time(a0)
 		bmi.s	loc_11B7C
 		bsr.w	SpeedToPos
-		rts	
+		rts
 ; ===========================================================================
 
 loc_11B7C:
+	if FixBugs
+		; Avoid returning to Bom_Display to prevent display-and-delete
+		; and double-delete bugs.
+		addq.l	#4,sp
+	endif
 		clr.w	bom_time(a0)
 		clr.b	obRoutine(a0)
 		move.w	bom_origY(a0),obY(a0)
@@ -161,12 +166,12 @@ loc_11B7C:
 		bra.s	.makeshrapnel
 ; ===========================================================================
 
-	.loop:
+.loop:
 		bsr.w	FindNextFreeObj
 		bne.s	.fail
 
 .makeshrapnel:
-		move.b	#id_Bomb,0(a1)	; load shrapnel object
+		_move.b	#id_Bomb,obID(a1)	; load shrapnel object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	#6,obSubtype(a1)
@@ -176,7 +181,7 @@ loc_11B7C:
 		move.b	#$98,obColType(a1)
 		bset	#7,obRender(a1)
 
-	.fail:
+.fail:
 		dbf	d1,.loop	; repeat 3 more times
 
 		move.b	#6,obRoutine(a0)

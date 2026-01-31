@@ -14,7 +14,7 @@ Hel_Index:	dc.w Hel_Main-Hel_Index
 		dc.w Hel_Delete-Hel_Index
 		dc.w Hel_Display-Hel_Index
 
-hel_frame:	equ $3E		; start frame (different for each spike)
+hel_frame = objoff_3E		; start frame (different for each spike)
 
 ;  $29-38 are used for child object addresses
 ; ===========================================================================
@@ -22,14 +22,14 @@ hel_frame:	equ $3E		; start frame (different for each spike)
 Hel_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Hel,obMap(a0)
-		move.w	#$4398,obGfx(a0)
+		move.w	#ArtTile_GHZ_Spike_Pole|Tile_Pal2,obGfx(a0)
 		move.b	#7,obStatus(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#8,obActWid(a0)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
-		move.b	0(a0),d4
+		_move.b	obID(a0),d4
 		lea	obSubtype(a0),a2 ; move helix length to a2
 		moveq	#0,d1
 		move.b	(a2),d1		; move helix length to d1
@@ -48,15 +48,15 @@ Hel_Build:
 		addq.b	#1,obSubtype(a0)
 		move.w	a1,d5
 		subi.w	#v_objspace&$FFFF,d5
-		lsr.w	#6,d5
+		lsr.w	#object_size_bits,d5
 		andi.w	#$7F,d5
 		move.b	d5,(a2)+	; copy child address to parent RAM
 		move.b	#8,obRoutine(a1)
-		move.b	d4,0(a1)
+		_move.b	d4,obID(a1)
 		move.w	d2,obY(a1)
 		move.w	d3,obX(a1)
 		move.l	obMap(a0),obMap(a1)
-		move.w	#$4398,obGfx(a1)
+		move.w	#ArtTile_GHZ_Spike_Pole|Tile_Pal2,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#3,obPriority(a1)
 		move.b	#8,obActWid(a1)
@@ -73,7 +73,7 @@ Hel_Build:
 		addi.w	#$10,d3		; skip to next spike
 		addq.b	#1,obSubtype(a0)
 
-	Hel_NotCentre:
+Hel_NotCentre:
 		dbf	d1,Hel_Build ; repeat d1 times (helix length)
 
 Hel_Action:	; Routine 2, 4
@@ -94,14 +94,14 @@ Hel_RotateSpikes:
 		move.b	#$84,obColType(a0) ; make object harmful
 
 locret_7DA6:
-		rts	
+		rts
 ; End of function Hel_RotateSpikes
 
 ; ===========================================================================
 
 Hel_ChkDel:
 		out_of_range.w	Hel_DelAll
-		rts	
+		rts
 ; ===========================================================================
 
 Hel_DelAll:
@@ -111,10 +111,10 @@ Hel_DelAll:
 		subq.b	#2,d2
 		bcs.s	Hel_Delete
 
-	Hel_DelLoop:
+Hel_DelLoop:
 		moveq	#0,d0
 		move.b	(a2)+,d0
-		lsl.w	#6,d0
+		lsl.w	#object_size_bits,d0
 		addi.l	#v_objspace&$FFFFFF,d0
 		movea.l	d0,a1		; get child address
 		bsr.w	DeleteChild	; delete object
@@ -122,7 +122,7 @@ Hel_DelAll:
 
 Hel_Delete:	; Routine 6
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Hel_Display:	; Routine 8

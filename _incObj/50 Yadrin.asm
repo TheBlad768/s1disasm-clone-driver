@@ -16,7 +16,7 @@ Yad_ChkWall:
 
 loc_F828:
 		moveq	#1,d0
-		rts	
+		rts
 ; ===========================================================================
 
 loc_F82C:
@@ -27,7 +27,7 @@ loc_F82C:
 
 loc_F836:
 		moveq	#0,d0
-		rts	
+		rts
 ; End of function Yad_ChkWall
 
 ; ===========================================================================
@@ -44,12 +44,12 @@ Yadrin:
 Yad_Index:	dc.w Yad_Main-Yad_Index
 		dc.w Yad_Action-Yad_Index
 
-yad_timedelay:	equ $30
+yad_timedelay = objoff_30
 ; ===========================================================================
 
 Yad_Main:	; Routine 0
 		move.l	#Map_Yad,obMap(a0)
-		move.w	#$247B,obGfx(a0)
+		move.w	#ArtTile_Yadrin|Tile_Pal1,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$14,obActWid(a0)
@@ -65,8 +65,8 @@ Yad_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		bchg	#0,obStatus(a0)
 
-	locret_F89E:
-		rts	
+locret_F89E:
+		rts
 ; ===========================================================================
 
 Yad_Action:	; Routine 2
@@ -92,8 +92,8 @@ Yad_Move:
 		bne.s	locret_F8E2
 		neg.w	obVelX(a0)	; change direction
 
-	locret_F8E2:
-		rts	
+locret_F8E2:
+		rts
 ; ===========================================================================
 
 Yad_FixToFloor:
@@ -106,7 +106,7 @@ Yad_FixToFloor:
 		add.w	d1,obY(a0)	; match object's position to the floor
 		bsr.w	Yad_ChkWall
 		bne.s	Yad_Pause
-		rts	
+		rts
 ; ===========================================================================
 
 Yad_Pause:
@@ -114,4 +114,4 @@ Yad_Pause:
 		move.w	#59,yad_timedelay(a0) ; set pause time to 1 second
 		move.w	#0,obVelX(a0)
 		move.b	#0,obAnim(a0)
-		rts	
+		rts

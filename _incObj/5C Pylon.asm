@@ -15,7 +15,7 @@ Pyl_Index:	dc.w Pyl_Main-Pyl_Index
 Pyl_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Pylon,obMap(a0)
-		move.w	#$83CC,obGfx(a0)
+		move.w	#ArtTile_SLZ_Pylon|Tile_Pri,obGfx(a0)
 		move.b	#$10,obActWid(a0)
 
 Pyl_Display:	; Routine 2

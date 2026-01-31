@@ -12,13 +12,13 @@ Harp_Index:	dc.w Harp_Main-Harp_Index
 		dc.w Harp_Move-Harp_Index
 		dc.w Harp_Wait-Harp_Index
 
-harp_time:	equ $30		; time between stabbing/retracting
+harp_time = objoff_30		; time between stabbing/retracting
 ; ===========================================================================
 
 Harp_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Harp,obMap(a0)
-		move.w	#$3CC,obGfx(a0)
+		move.w	#ArtTile_LZ_Harpoon,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	obSubtype(a0),obAnim(a0) ; get type (vert/horiz)
@@ -33,7 +33,7 @@ Harp_Move:	; Routine 2
 		move.b	.types(pc,d0.w),obColType(a0) ; get collision type
 		bra.w	RememberState
 
-	.types:
+.types:
 		dc.b $9B, $9C, $9D, $9E, $9F, $A0
 		even
 
@@ -44,5 +44,5 @@ Harp_Wait:	; Routine 4
 		subq.b	#2,obRoutine(a0) ; run "Harp_Move" subroutine
 		bchg	#0,obAnim(a0)	; reverse animation
 
-	.chkdel:
+.chkdel:
 		bra.w	RememberState

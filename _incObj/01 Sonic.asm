@@ -1,20 +1,22 @@
-; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Object 01 - Sonic
 ; ---------------------------------------------------------------------------
 
+; Obj01:
 SonicPlayer:
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		beq.s	Sonic_Normal	; if not, branch
 		jmp	(DebugMode).l
 ; ===========================================================================
 
+; Obj01_Normal:
 Sonic_Normal:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
 		move.w	Sonic_Index(pc,d0.w),d1
 		jmp	Sonic_Index(pc,d1.w)
 ; ===========================================================================
+; Obj01_Index:
 Sonic_Index:	dc.w Sonic_Main-Sonic_Index
 		dc.w Sonic_Control-Sonic_Index
 		dc.w Sonic_Hurt-Sonic_Index
@@ -22,12 +24,13 @@ Sonic_Index:	dc.w Sonic_Main-Sonic_Index
 		dc.w Sonic_ResetLevel-Sonic_Index
 ; ===========================================================================
 
+; Obj01_Main:
 Sonic_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.b	#$13,obHeight(a0)
 		move.b	#9,obWidth(a0)
 		move.l	#Map_Sonic,obMap(a0)
-		move.w	#$780,obGfx(a0)
+		move.w	#ArtTile_Sonic,obGfx(a0)
 		move.b	#2,obPriority(a0)
 		move.b	#$18,obActWid(a0)
 		move.b	#4,obRender(a0)
@@ -35,53 +38,55 @@ Sonic_Main:	; Routine 0
 		move.w	#$C,(v_sonspeedacc).w ; Sonic's acceleration
 		move.w	#$80,(v_sonspeeddec).w ; Sonic's deceleration
 
+; Obj01_Control:
 Sonic_Control:	; Routine 2
 		tst.w	(f_debugmode).w	; is debug cheat enabled?
-		beq.s	loc_12C58	; if not, branch
+		beq.s	.nodebug	; if not, branch
 		btst	#bitB,(v_jpadpress1).w ; is button B pressed?
-		beq.s	loc_12C58	; if not, branch
+		beq.s	.nodebug	; if not, branch
 		move.w	#1,(v_debuguse).w ; change Sonic into a ring/item
 		clr.b	(f_lockctrl).w
 		rts
 ; ===========================================================================
 
-loc_12C58:
+.nodebug:
 		tst.b	(f_lockctrl).w	; are controls locked?
-		bne.s	loc_12C64	; if yes, branch
+		bne.s	.ignorecontrols	; if yes, branch
 		move.w	(v_jpadhold1).w,(v_jpadhold2).w ; enable joypad control
 
-loc_12C64:
+.ignorecontrols:
 		btst	#0,(f_playerctrl).w ; are controls locked?
-		bne.s	loc_12C7E	; if yes, branch
+		bne.s	.ignoremodes	; if yes, branch
 		moveq	#0,d0
 		move.b	obStatus(a0),d0
 		andi.w	#6,d0
 		move.w	Sonic_Modes(pc,d0.w),d1
 		jsr	Sonic_Modes(pc,d1.w)
 
-loc_12C7E:
+.ignoremodes:
 		bsr.s	Sonic_Display
 		bsr.w	Sonic_RecordPosition
 		bsr.w	Sonic_Water
-		move.b	(v_anglebuffer).w,$36(a0)
-		move.b	($FFFFF76A).w,$37(a0)
+		move.b	(v_anglebuffer).w,objoff_36(a0)
+		move.b	(v_anglebuffer2).w,objoff_37(a0)
 		tst.b	(f_wtunnelmode).w
-		beq.s	loc_12CA6
+		beq.s	.nowindtunnel
 		tst.b	obAnim(a0)
-		bne.s	loc_12CA6
+		bne.s	.nowindtunnel
 		move.b	obPrevAni(a0),obAnim(a0)
 
-loc_12CA6:
+.nowindtunnel:
 		bsr.w	Sonic_Animate
 		tst.b	(f_playerctrl).w
-		bmi.s	loc_12CB6
+		bmi.s	.ignoreobjcoll
 		jsr	(ReactToItem).l
 
-loc_12CB6:
+.ignoreobjcoll:
 		bsr.w	Sonic_Loops
 		bsr.w	Sonic_LoadGfx
 		rts
 ; ===========================================================================
+; Obj01_Modes:
 Sonic_Modes:	dc.w Sonic_MdNormal-Sonic_Modes
 		dc.w Sonic_MdJump-Sonic_Modes
 		dc.w Sonic_MdRoll-Sonic_Modes
@@ -111,10 +116,10 @@ Sonic_Display:
 		lsr.w	#3,d0
 		bcc.s	.chkinvincible
 
-	.display:
+.display:
 		jsr	(DisplaySprite).l
 
-	.chkinvincible:
+.chkinvincible:
 		tst.b	(v_invinc).w	; does Sonic have invincibility?
 		beq.s	.chkshoes	; if not, branch
 		tst.w	invtime(a0)	; check time remaining for invinciblity
@@ -124,22 +129,22 @@ Sonic_Display:
 		tst.b	(f_lockscreen).w
 		bne.s	.removeinvincible
 		cmpi.w	#$C,(v_air).w
-		bcs.s	.removeinvincible
+		blo.s	.removeinvincible
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
 		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; check if level is SBZ3
 		bne.s	.music
 		moveq	#5,d0		; play SBZ music
 
-	.music:
+.music:
 		lea	(MusicList2).l,a1
 		move.b	(a1,d0.w),d0
 		jsr	(QueueSound1).l	; play normal music
 
-	.removeinvincible:
+.removeinvincible:
 		move.b	#0,(v_invinc).w ; cancel invincibility
 
-	.chkshoes:
+.chkshoes:
 		tst.b	(v_shoes).w	; does Sonic have speed shoes?
 		beq.s	.exit		; if not, branch
 		tst.w	shoetime(a0)	; check time remaining
@@ -153,15 +158,16 @@ Sonic_Display:
 		move.w	#bgm_Slowdown,d0
 		jmp	(QueueSound1).l	; run music at normal speed
 
-	.exit:
+.exit:
 		rts
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to record Sonic's previous positions for invincibility stars
 ; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
-
+; Sonic_RecordPos:
 Sonic_RecordPosition:
 		move.w	(v_trackpos).w,d0
 		lea	(v_tracksonic).w,a1
@@ -171,6 +177,7 @@ Sonic_RecordPosition:
 		addq.b	#4,(v_trackbyte).w
 		rts
 ; End of function Sonic_RecordPosition
+
 ; ---------------------------------------------------------------------------
 ; Subroutine for Sonic when he's underwater
 ; ---------------------------------------------------------------------------
@@ -179,14 +186,15 @@ Sonic_RecordPosition:
 
 
 Sonic_Water:
-		cmpi.b	#1,(v_zone).w	; is level LZ?
+		cmpi.b	#id_LZ,(v_zone).w	; is level LZ?
 		beq.s	.islabyrinth	; if yes, branch
 
-	.exit:
+.exit:
 		rts
 ; ===========================================================================
 
-	.islabyrinth:
+; Obj01_InWater:
+.islabyrinth:
 		move.w	(v_waterpos1).w,d0
 		cmp.w	obY(a0),d0	; is Sonic above the water?
 		bge.s	.abovewater	; if yes, branch
@@ -207,6 +215,7 @@ Sonic_Water:
 		jmp	(QueueSound2).l	 ; play splash sound
 ; ===========================================================================
 
+; Obj01_OutWater:
 .abovewater:
 		bclr	#6,obStatus(a0)
 		beq.s	.exit
@@ -221,17 +230,17 @@ Sonic_Water:
 		bgt.s	.belowmaxspeed
 		move.w	#-$1000,obVelY(a0) ; set maximum speed on leaving water
 
-	.belowmaxspeed:
+.belowmaxspeed:
 		move.w	#sfx_Splash,d0
 		jmp	(QueueSound2).l	 ; play splash sound
 ; End of function Sonic_Water
-
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Modes for controlling Sonic
 ; ---------------------------------------------------------------------------
 
+; Obj01_MdNormal:
 Sonic_MdNormal:
 		bsr.w	Sonic_Jump
 		bsr.w	Sonic_SlopeResist
@@ -244,21 +253,23 @@ Sonic_MdNormal:
 		rts
 ; ===========================================================================
 
+; Obj01_MdJump:
 Sonic_MdJump:
 		bsr.w	Sonic_JumpHeight
 		bsr.w	Sonic_JumpDirection
 		bsr.w	Sonic_LevelBound
 		jsr	(ObjectFall).l
 		btst	#6,obStatus(a0)
-		beq.s	loc_12E5C
+		beq.s	.notunderwater
 		subi.w	#$28,obVelY(a0)
 
-loc_12E5C:
+.notunderwater:
 		bsr.w	Sonic_JumpAngle
 		bsr.w	Sonic_Floor
 		rts
 ; ===========================================================================
 
+; Obj01_MdRoll:
 Sonic_MdRoll:
 		bsr.w	Sonic_Jump
 		bsr.w	Sonic_RollRepel
@@ -270,16 +281,17 @@ Sonic_MdRoll:
 		rts
 ; ===========================================================================
 
+; Obj01_MdJump2:
 Sonic_MdJump2:
 		bsr.w	Sonic_JumpHeight
 		bsr.w	Sonic_JumpDirection
 		bsr.w	Sonic_LevelBound
 		jsr	(ObjectFall).l
 		btst	#6,obStatus(a0)
-		beq.s	loc_12EA6
+		beq.s	.notunderwater
 		subi.w	#$28,obVelY(a0)
 
-loc_12EA6:
+.notunderwater:
 		bsr.w	Sonic_JumpAngle
 		bsr.w	Sonic_Floor
 		rts
@@ -290,25 +302,24 @@ loc_12EA6:
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
-
 Sonic_Move:
 		move.w	(v_sonspeedmax).w,d6
 		move.w	(v_sonspeedacc).w,d5
 		move.w	(v_sonspeeddec).w,d4
 		tst.b	(f_slidemode).w
 		bne.w	loc_12FEE
-		tst.w	$3E(a0)
+		tst.w	objoff_3E(a0)
 		bne.w	Sonic_ResetScr
 		btst	#bitL,(v_jpadhold2).w ; is left being pressed?
 		beq.s	.notleft	; if not, branch
 		bsr.w	Sonic_MoveLeft
 
-	.notleft:
+.notleft:
 		btst	#bitR,(v_jpadhold2).w ; is right being pressed?
 		beq.s	.notright	; if not, branch
 		bsr.w	Sonic_MoveRight
 
-	.notright:
+.notright:
 		move.b	obAngle(a0),d0
 		addi.b	#$20,d0
 		andi.b	#$C0,d0		; is Sonic on a slope?
@@ -321,7 +332,7 @@ Sonic_Move:
 		beq.s	Sonic_Balance
 		moveq	#0,d0
 		move.b	standonobject(a0),d0
-		lsl.w	#6,d0
+		lsl.w	#object_size_bits,d0
 		lea	(v_objspace).w,a1
 		lea	(a1,d0.w),a1
 		tst.b	obStatus(a1)
@@ -344,7 +355,7 @@ Sonic_Balance:
 		jsr	(ObjFloorDist).l
 		cmpi.w	#$C,d1
 		blt.s	Sonic_LookUp
-		cmpi.b	#3,$36(a0)
+		cmpi.b	#3,objoff_36(a0)
 		bne.s	loc_12F62
 
 loc_12F5A:
@@ -353,7 +364,7 @@ loc_12F5A:
 ; ===========================================================================
 
 loc_12F62:
-		cmpi.b	#3,$37(a0)
+		cmpi.b	#3,objoff_37(a0)
 		bne.s	Sonic_LookUp
 
 loc_12F6A:
@@ -384,6 +395,7 @@ Sonic_Duck:
 		bra.s	loc_12FC2
 ; ===========================================================================
 
+; Obj01_ResetScr
 Sonic_ResetScr:
 		cmpi.w	#$60,(v_lookshift).w ; is screen in its default position?
 		beq.s	loc_12FC2	; if yes, branch
@@ -478,9 +490,7 @@ locret_1307C:
 		rts
 ; End of function Sonic_Move
 
-
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_MoveLeft:
 		move.w	obInertia(a0),d0
@@ -491,7 +501,7 @@ loc_13086:
 		bset	#0,obStatus(a0)
 		bne.s	loc_1309A
 		bclr	#5,obStatus(a0)
-		move.b	#1,obPrevAni(a0)
+		move.b	#id_Run,obPrevAni(a0) ; restart Sonic's animation
 
 loc_1309A:
 		sub.w	d5,d0
@@ -539,7 +549,7 @@ Sonic_MoveRight:
 		bclr	#0,obStatus(a0)
 		beq.s	loc_13104
 		bclr	#5,obStatus(a0)
-		move.b	#1,obPrevAni(a0)
+		move.b	#id_Run,obPrevAni(a0) ; restart Sonic's animation
 
 loc_13104:
 		add.w	d5,d0
@@ -574,6 +584,7 @@ loc_13120:
 locret_1314E:
 		rts
 ; End of function Sonic_MoveRight
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to change Sonic's speed as he rolls
 ; ---------------------------------------------------------------------------
@@ -590,18 +601,18 @@ Sonic_RollSpeed:
 		asr.w	#2,d4
 		tst.b	(f_slidemode).w
 		bne.w	loc_131CC
-		tst.w	$3E(a0)
+		tst.w	objoff_3E(a0)
 		bne.s	.notright
 		btst	#bitL,(v_jpadhold2).w ; is left being pressed?
 		beq.s	.notleft	; if not, branch
 		bsr.w	Sonic_RollLeft
 
-	.notleft:
+.notleft:
 		btst	#bitR,(v_jpadhold2).w ; is right being pressed?
 		beq.s	.notright	; if not, branch
 		bsr.w	Sonic_RollRight
 
-	.notright:
+.notright:
 		move.w	obInertia(a0),d0
 		beq.s	loc_131AA
 		bmi.s	loc_1319E
@@ -699,13 +710,14 @@ loc_13242:
 		move.w	d0,obInertia(a0)
 		rts
 ; End of function Sonic_RollRight
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to change Sonic's direction while jumping
 ; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
-
+; Sonic_ChgJumpDir
 Sonic_JumpDirection:
 		move.w	(v_sonspeedmax).w,d6
 		move.w	(v_sonspeedacc).w,d5
@@ -746,7 +758,7 @@ loc_132A0:
 
 loc_132A4:
 		cmpi.w	#-$400,obVelY(a0) ; is Sonic moving faster than -$400 upwards?
-		bcs.s	locret_132D2	; if yes, branch
+		blo.s	locret_132D2	; if yes, branch
 		move.w	obVelX(a0),d0
 		move.w	d0,d1
 		asr.w	#5,d1
@@ -777,19 +789,21 @@ locret_132D2:
 ; ---------------------------------------------------------------------------
 ; Unused subroutine to squash Sonic
 ; ---------------------------------------------------------------------------
+
+Sonic_SquashUnused:
 		move.b	obAngle(a0),d0
 		addi.b	#$20,d0
 		andi.b	#$C0,d0
-		bne.s	locret_13302
+		bne.s	.return
 		bsr.w	Sonic_DontRunOnWalls
 		tst.w	d1
-		bpl.s	locret_13302
+		bpl.s	.return
 		move.w	#0,obInertia(a0) ; stop Sonic moving
 		move.w	#0,obVelX(a0)
 		move.w	#0,obVelY(a0)
 		move.b	#id_Warp3,obAnim(a0) ; use "warping" animation
 
-locret_13302:
+.return:
 		rts
 
 ; ---------------------------------------------------------------------------
@@ -816,29 +830,42 @@ Sonic_LevelBound:
 		bne.s	.screenlocked
 		addi.w	#$40,d0
 
-	.screenlocked:
+.screenlocked:
 		cmp.w	d1,d0		; has Sonic touched the side boundary?
 		bls.s	.sides		; if yes, branch
 
-	.chkbottom:
+.chkbottom:
 		move.w	(v_limitbtm2).w,d0
-		addi.w	#$E0,d0
+	if FixBugs
+		; The original code does not consider that the camera boundary
+		; may be in the middle of lowering itself, which is why going
+		; down the S-tunnel in Green Hill Zone Act 1 fast enough can
+		; kill Sonic.
+		move.w	(v_limitbtm1).w,d1
+		cmp.w	d0,d1
+		blo.s	.skip
+		move.w	d1,d0
+.skip:
+	endif
+		addi.w	#224,d0
 		cmp.w	obY(a0),d0	; has Sonic touched the bottom boundary?
 		blt.s	.bottom		; if yes, branch
 		rts
 ; ===========================================================================
 
+; Boundary_Bottom
 .bottom:
 		cmpi.w	#(id_SBZ<<8)+1,(v_zone).w ; is level SBZ2 ?
 		bne.w	KillSonic	; if not, kill Sonic
 		cmpi.w	#$2000,(v_player+obX).w
-		bcs.w	KillSonic
+		blo.w	KillSonic
 		clr.b	(v_lastlamp).w	; clear lamppost counter
 		move.w	#1,(f_restart).w ; restart the level
 		move.w	#(id_LZ<<8)+3,(v_zone).w ; set level to SBZ3 (LZ4)
 		rts
 ; ===========================================================================
 
+; Boundary_Sides
 .sides:
 		move.w	d0,obX(a0)
 		move.w	#0,obX+2(a0)
@@ -846,6 +873,7 @@ Sonic_LevelBound:
 		move.w	#0,obInertia(a0)
 		bra.s	.chkbottom
 ; End of function Sonic_LevelBound
+
 ; ---------------------------------------------------------------------------
 ; Subroutine allowing Sonic to roll when he's moving
 ; ---------------------------------------------------------------------------
@@ -860,25 +888,28 @@ Sonic_Roll:
 		bpl.s	.ispositive
 		neg.w	d0
 
-	.ispositive:
+.ispositive:
 		cmpi.w	#$80,d0		; is Sonic moving at $80 speed or faster?
-		bcs.s	.noroll		; if not, branch
+		blo.s	.noroll		; if not, branch
 		move.b	(v_jpadhold2).w,d0
 		andi.b	#btnL+btnR,d0	; is left/right being pressed?
 		bne.s	.noroll		; if yes, branch
 		btst	#bitDn,(v_jpadhold2).w ; is down being pressed?
 		bne.s	Sonic_ChkRoll	; if yes, branch
 
-	.noroll:
+; Obj01_NoRoll
+.noroll:
 		rts
 ; ===========================================================================
 
+; Obj01_ChkRoll
 Sonic_ChkRoll:
 		btst	#2,obStatus(a0)	; is Sonic already rolling?
 		beq.s	.roll		; if not, branch
 		rts
 ; ===========================================================================
 
+; Obj01_DoRoll
 .roll:
 		bset	#2,obStatus(a0)
 		move.b	#$E,obHeight(a0)
@@ -891,9 +922,10 @@ Sonic_ChkRoll:
 		bne.s	.ismoving
 		move.w	#$200,obInertia(a0) ; set inertia if 0
 
-	.ismoving:
+.ismoving:
 		rts
 ; End of function Sonic_Roll
+
 ; ---------------------------------------------------------------------------
 ; Subroutine allowing Sonic to jump
 ; ---------------------------------------------------------------------------
@@ -904,54 +936,54 @@ Sonic_ChkRoll:
 Sonic_Jump:
 		move.b	(v_jpadpress2).w,d0
 		andi.b	#btnABC,d0	; is A, B or C pressed?
-		beq.w	locret_1348E	; if not, branch
+		beq.w	.return	; if not, branch
 		moveq	#0,d0
 		move.b	obAngle(a0),d0
 		addi.b	#$80,d0
 		bsr.w	sub_14D48
 		cmpi.w	#6,d1
-		blt.w	locret_1348E
-		move.w	#$680,d2
-		btst	#6,obStatus(a0)
-		beq.s	loc_1341C
-		move.w	#$380,d2
+		blt.w	.return
+		move.w	#$680,d2	; set initial jump force.
+		btst	#6,obStatus(a0)	; is Sonic underwater?
+		beq.s	.notunderwater	; if not, continue.
+		move.w	#$380,d2	; set underwater jump force.
 
-loc_1341C:
+.notunderwater:
 		moveq	#0,d0
 		move.b	obAngle(a0),d0
 		subi.b	#$40,d0
-		jsr	(CalcSine).l
-		muls.w	d2,d1
+		jsr	(CalcSine).l	; find the direction Sonic should jump.
+		muls.w	d2,d1	; apply jump force to the cosine angle.
 		asr.l	#8,d1
-		add.w	d1,obVelX(a0)	; make Sonic jump
-		muls.w	d2,d0
+		add.w	d1,obVelX(a0)	; apply to X speed.
+		muls.w	d2,d0	; apply jump force to the sine angle.
 		asr.l	#8,d0
-		add.w	d0,obVelY(a0)	; make Sonic jump
-		bset	#1,obStatus(a0)
-		bclr	#5,obStatus(a0)
-		addq.l	#4,sp
-		move.b	#1,$3C(a0)
-		clr.b	$38(a0)
+		add.w	d0,obVelY(a0)	; apply to Y speed.
+		bset	#1,obStatus(a0)	; set in-air flag.
+		bclr	#5,obStatus(a0)	; clear pushing flag.
+		addq.l	#4,sp	; Run in-air subroutines when we return.
+		move.b	#1,objoff_3C(a0)	; set jump flag.
+		clr.b	stick_to_convex(a0)
 		move.w	#sfx_Jump,d0
 		jsr	(QueueSound2).l	; play jumping sound
-		move.b	#$13,obHeight(a0)
+		move.b	#$13,obHeight(a0)	; set Sonic's hitbox to standing size. This is a leftover from the victory animation in prototypes.
 		move.b	#9,obWidth(a0)
-		btst	#2,obStatus(a0)
-		bne.s	loc_13490
-		move.b	#$E,obHeight(a0)
+		btst	#2,obStatus(a0)	; is Sonic already in a ball state?
+		bne.s	.rolljump	; if so, branch.
+		move.b	#$E,obHeight(a0)	; set Sonic's hitbox to ball size.
 		move.b	#7,obWidth(a0)
 		move.b	#id_Roll,obAnim(a0) ; use "jumping" animation
 		bset	#2,obStatus(a0)
 		addq.w	#5,obY(a0)
 
-locret_1348E:
+.return:
 		rts
-; ===========================================================================
 
-loc_13490:
-		bset	#4,obStatus(a0)
+.rolljump:
+		bset	#4,obStatus(a0)	; set roll-jump flag.
 		rts
 ; End of function Sonic_Jump
+
 ; ---------------------------------------------------------------------------
 ; Subroutine controlling Sonic's jump height/duration
 ; ---------------------------------------------------------------------------
@@ -960,33 +992,33 @@ loc_13490:
 
 
 Sonic_JumpHeight:
-		tst.b	$3C(a0)
-		beq.s	loc_134C4
-		move.w	#-$400,d1
-		btst	#6,obStatus(a0)
-		beq.s	loc_134AE
-		move.w	#-$200,d1
+		tst.b	objoff_3C(a0)	; has Sonic jumped?
+		beq.s	.capyvel		; if not, just cap Y speed normally.
+		move.w	#-$400,d1		; set max jump height.
+		btst	#6,obStatus(a0)	; is Sonic underwater?
+		beq.s	.notunderwater	; if not, continue.
+		move.w	#-$200,d1		; set underwater jump height.
 
-loc_134AE:
-		cmp.w	obVelY(a0),d1
-		ble.s	locret_134C2
+.notunderwater:
+		cmp.w	obVelY(a0),d1	; get current y speed.
+		ble.s	.return
 		move.b	(v_jpadhold2).w,d0
 		andi.b	#btnABC,d0	; is A, B or C pressed?
-		bne.s	locret_134C2	; if yes, branch
+		bne.s	.return	; if yes, branch
 		move.w	d1,obVelY(a0)
 
-locret_134C2:
+.return:
 		rts
-; ===========================================================================
 
-loc_134C4:
+.capyvel:
 		cmpi.w	#-$FC0,obVelY(a0)
-		bge.s	locret_134D2
+		bge.s	.return2
 		move.w	#-$FC0,obVelY(a0)
 
-locret_134D2:
+.return2:
 		rts
 ; End of function Sonic_JumpHeight
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to slow Sonic walking up a slope
 ; ---------------------------------------------------------------------------
@@ -998,7 +1030,7 @@ Sonic_SlopeResist:
 		move.b	obAngle(a0),d0
 		addi.b	#$60,d0
 		cmpi.b	#$C0,d0
-		bcc.s	locret_13508
+		bhs.s	locret_13508
 		move.b	obAngle(a0),d0
 		jsr	(CalcSine).l
 		muls.w	#$20,d0
@@ -1020,6 +1052,7 @@ loc_13504:
 locret_13508:
 		rts
 ; End of function Sonic_SlopeResist
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to push Sonic down a slope while he's rolling
 ; ---------------------------------------------------------------------------
@@ -1031,7 +1064,7 @@ Sonic_RollRepel:
 		move.b	obAngle(a0),d0
 		addi.b	#$60,d0
 		cmpi.b	#-$40,d0
-		bcc.s	locret_13544
+		bhs.s	locret_13544
 		move.b	obAngle(a0),d0
 		jsr	(CalcSine).l
 		muls.w	#$50,d0
@@ -1058,6 +1091,7 @@ loc_13540:
 locret_13544:
 		rts
 ; End of function Sonic_RollRepel
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to push Sonic down a slope
 ; ---------------------------------------------------------------------------
@@ -1066,10 +1100,10 @@ locret_13544:
 
 
 Sonic_SlopeRepel:
-		nop
-		tst.b	$38(a0)
+		nop	
+		tst.b	stick_to_convex(a0)
 		bne.s	locret_13580
-		tst.w	$3E(a0)
+		tst.w	objoff_3E(a0)
 		bne.s	loc_13582
 		move.b	obAngle(a0),d0
 		addi.b	#$20,d0
@@ -1081,19 +1115,20 @@ Sonic_SlopeRepel:
 
 loc_1356A:
 		cmpi.w	#$280,d0
-		bcc.s	locret_13580
+		bhs.s	locret_13580
 		clr.w	obInertia(a0)
 		bset	#1,obStatus(a0)
-		move.w	#$1E,$3E(a0)
+		move.w	#$1E,objoff_3E(a0)
 
 locret_13580:
 		rts
 ; ===========================================================================
 
 loc_13582:
-		subq.w	#1,$3E(a0)
+		subq.w	#1,objoff_3E(a0)
 		rts
 ; End of function Sonic_SlopeRepel
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to return Sonic's angle to 0 as he jumps
 ; ---------------------------------------------------------------------------
@@ -1103,28 +1138,27 @@ loc_13582:
 
 Sonic_JumpAngle:
 		move.b	obAngle(a0),d0	; get Sonic's angle
-		beq.s	locret_135A2	; if already 0, branch
-		bpl.s	loc_13598	; if higher than 0, branch
-
+		beq.s	.return	; if already 0, branch
+		bpl.s	.decrease	; if higher than 0, branch
 		addq.b	#2,d0		; increase angle
-		bcc.s	loc_13596
+		bcc.s	.dontclear	; if the angle's still below 0, dont clear the angle.
 		moveq	#0,d0
 
-loc_13596:
-		bra.s	loc_1359E
-; ===========================================================================
+.dontclear:
+		bra.s	.applyangle
 
-loc_13598:
+.decrease:
 		subq.b	#2,d0		; decrease angle
-		bcc.s	loc_1359E
+		bcc.s	.applyangle	; if the angle's still above 0, don't clear the angle.
 		moveq	#0,d0
 
-loc_1359E:
+.applyangle:
 		move.b	d0,obAngle(a0)
 
-locret_135A2:
+.return:
 		rts
 ; End of function Sonic_JumpAngle
+
 ; ---------------------------------------------------------------------------
 ; Subroutine for Sonic to interact with the floor after jumping/falling
 ; ---------------------------------------------------------------------------
@@ -1136,11 +1170,11 @@ Sonic_Floor:
 		move.w	obVelX(a0),d1
 		move.w	obVelY(a0),d2
 		jsr	(CalcAngle).l
-		move.b	d0,($FFFFFFEC).w
+		move.b	d0,(v_unused3).w
 		subi.b	#$20,d0
-		move.b	d0,($FFFFFFED).w
+		move.b	d0,(v_unused4).w
 		andi.b	#$C0,d0
-		move.b	d0,($FFFFFFEE).w
+		move.b	d0,(v_unused5).w
 		cmpi.b	#$40,d0
 		beq.w	loc_13680
 		cmpi.b	#$80,d0
@@ -1162,7 +1196,7 @@ loc_135F0:
 
 loc_13602:
 		bsr.w	Sonic_HitFloor
-		move.b	d1,($FFFFFFEF).w
+		move.b	d1,(v_unused6).w
 		tst.w	d1
 		bpl.s	locret_1367E
 		move.b	obVelY(a0),d2
@@ -1330,6 +1364,7 @@ loc_13772:
 locret_1379E:
 		rts
 ; End of function Sonic_Floor
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to reset Sonic's mode when he lands on the floor
 ; ---------------------------------------------------------------------------
@@ -1338,41 +1373,43 @@ locret_1379E:
 
 
 Sonic_ResetOnFloor:
-		btst	#4,obStatus(a0)
-		beq.s	loc_137AE
-		nop
-		nop
-		nop
+		btst	#4,obStatus(a0)	; is Sonic roll-jumping?
+		beq.s	.notrolljump	; if not, skip.
+		nop	; Unknown removed code.
+		nop	
+		nop	
 
-loc_137AE:
-		bclr	#5,obStatus(a0)
-		bclr	#1,obStatus(a0)
-		bclr	#4,obStatus(a0)
-		btst	#2,obStatus(a0)
-		beq.s	loc_137E4
-		bclr	#2,obStatus(a0)
-		move.b	#$13,obHeight(a0)
+.notrolljump:
+		bclr	#5,obStatus(a0)	; clear push flag.
+		bclr	#1,obStatus(a0)	; clear in-air flag.
+		bclr	#4,obStatus(a0)	; clear roll-jump flag.
+		btst	#2,obStatus(a0)	; check if Sonic is in a ball state.
+		beq.s	.notball	; if not, skip.
+		bclr	#2,obStatus(a0)	; clear ball flag.
+		move.b	#$13,obHeight(a0)	; set Sonic's hitbox to standing.
 		move.b	#9,obWidth(a0)
 		move.b	#id_Walk,obAnim(a0) ; use running/walking animation
-		subq.w	#5,obY(a0)
+		subq.w	#5,obY(a0)	; raise Sonic up 5 pixels so he's not inside the ground.
 
-loc_137E4:
-		move.b	#0,$3C(a0)
-		move.w	#0,(v_itembonus).w
+.notball:
+		move.b	#0,objoff_3C(a0)	; clear jump flag.
+		move.w	#0,(v_itembonus).w	; clear enemy score chain.
 		rts
 ; End of function Sonic_ResetOnFloor
+
 ; ---------------------------------------------------------------------------
 ; Sonic when he gets hurt
 ; ---------------------------------------------------------------------------
 
+; Obj01_Hurt:
 Sonic_Hurt:	; Routine 4
 		jsr	(SpeedToPos).l
 		addi.w	#$30,obVelY(a0)
 		btst	#6,obStatus(a0)
-		beq.s	loc_1380C
+		beq.s	.notunderwater
 		subi.w	#$20,obVelY(a0)
 
-loc_1380C:
+.notunderwater:
 		bsr.w	Sonic_HurtStop
 		bsr.w	Sonic_LevelBound
 		bsr.w	Sonic_RecordPosition
@@ -1389,9 +1426,20 @@ loc_1380C:
 
 Sonic_HurtStop:
 		move.w	(v_limitbtm2).w,d0
-		addi.w	#$E0,d0
+	if FixBugs
+		; The original code does not consider that the camera boundary
+		; may be in the middle of lowering itself, which is why going
+		; down the S-tunnel in Green Hill Zone Act 1 fast enough can
+		; kill Sonic.
+		move.w	(v_limitbtm1).w,d1
+		cmp.w	d0,d1
+		blo.s	.skip
+		move.w	d1,d0
+.skip:
+	endif
+		addi.w	#224,d0
 		cmp.w	obY(a0),d0
-		bcs.w	KillSonic
+		blo.w	KillSonic
 		bsr.w	Sonic_Floor
 		btst	#1,obStatus(a0)
 		bne.s	locret_13860
@@ -1401,7 +1449,7 @@ Sonic_HurtStop:
 		move.w	d0,obInertia(a0)
 		move.b	#id_Walk,obAnim(a0)
 		subq.b	#2,obRoutine(a0)
-		move.w	#$78,$30(a0)
+		move.w	#$78,objoff_30(a0)
 
 locret_13860:
 		rts
@@ -1411,6 +1459,7 @@ locret_13860:
 ; Sonic when he dies
 ; ---------------------------------------------------------------------------
 
+; Obj01_Death:
 Sonic_Death:	; Routine 6
 		bsr.w	GameOver
 		jsr	(ObjectFall).l
@@ -1426,14 +1475,14 @@ GameOver:
 		move.w	(v_limitbtm2).w,d0
 		addi.w	#$100,d0
 		cmp.w	obY(a0),d0
-		bcc.w	locret_13900
+		bhs.w	locret_13900
 		move.w	#-$38,obVelY(a0)
 		addq.b	#2,obRoutine(a0)
 		clr.b	(f_timecount).w	; stop time counter
 		addq.b	#1,(f_lifecount).w ; update lives counter
 		subq.b	#1,(v_lives).w	; subtract 1 from number of lives
 		bne.s	loc_138D4
-		move.w	#0,$3A(a0)
+		move.w	#0,objoff_3A(a0)
 		move.b	#id_GameOverCard,(v_gameovertext1).w ; load GAME object
 		move.b	#id_GameOverCard,(v_gameovertext2).w ; load OVER object
 		move.b	#1,(v_gameovertext2+obFrame).w ; set OVER object to correct frame
@@ -1442,15 +1491,15 @@ GameOver:
 loc_138C2:
 		move.w	#bgm_GameOver,d0
 		jsr	(QueueSound1).l	; play game over music
-		moveq	#3,d0
+		moveq	#plcid_GameOver,d0
 		jmp	(AddPLC).l	; load game over patterns
 ; ===========================================================================
 
 loc_138D4:
-		move.w	#60,$3A(a0)	; set time delay to 1 second
+		move.w	#60,objoff_3A(a0)	; set time delay to 1 second
 		tst.b	(f_timeover).w	; is TIME OVER tag set?
 		beq.s	locret_13900	; if not, branch
-		move.w	#0,$3A(a0)
+		move.w	#0,objoff_3A(a0)
 		move.b	#id_GameOverCard,(v_gameovertext1).w ; load TIME object
 		move.b	#id_GameOverCard,(v_gameovertext2).w ; load OVER object
 		move.b	#2,(v_gameovertext1+obFrame).w
@@ -1466,15 +1515,17 @@ locret_13900:
 ; Sonic when the level is restarted
 ; ---------------------------------------------------------------------------
 
+; Obj01_ResetLevel:
 Sonic_ResetLevel:; Routine 8
-		tst.w	$3A(a0)
-		beq.s	locret_13914
-		subq.w	#1,$3A(a0)	; subtract 1 from time delay
-		bne.s	locret_13914
+		tst.w	objoff_3A(a0)
+		beq.s	.return
+		subq.w	#1,objoff_3A(a0)	; subtract 1 from time delay
+		bne.s	.return
 		move.w	#1,(f_restart).w ; restart the level
 
-	locret_13914:
+.return:
 		rts
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to make Sonic run around loops (GHZ/SLZ)
 ; ---------------------------------------------------------------------------
@@ -1488,7 +1539,7 @@ Sonic_Loops:
 		tst.b	(v_zone).w	; is level GHZ ?
 		bne.w	.noloops	; if not, branch
 
-	.isstarlight:
+.isstarlight:
 		move.w	obY(a0),d0
 		lsr.w	#1,d0
 		andi.w	#$380,d0
@@ -1522,7 +1573,7 @@ Sonic_Loops:
 .chkifleft:
 		move.w	obX(a0),d2
 		cmpi.b	#$2C,d2
-		bcc.s	.chkifright
+		bhs.s	.chkifright
 
 		bclr	#6,obRender(a0)	; return Sonic to high plane
 		rts
@@ -1530,7 +1581,7 @@ Sonic_Loops:
 
 .chkifright:
 		cmpi.b	#$E0,d2
-		bcs.s	.chkangle1
+		blo.s	.chkangle1
 
 		bset	#6,obRender(a0)	; send Sonic to low plane
 		rts
@@ -1558,6 +1609,7 @@ Sonic_Loops:
 .done:
 		rts
 ; End of function Sonic_Loops
+
 ; ---------------------------------------------------------------------------
 ; Subroutine to animate Sonic's sprites
 ; ---------------------------------------------------------------------------
@@ -1569,13 +1621,14 @@ Sonic_Animate:
 		lea	(Ani_Sonic).l,a1
 		moveq	#0,d0
 		move.b	obAnim(a0),d0
-		cmp.b	obPrevAni(a0),d0 ; is animation set to restart?
+		cmp.b	obPrevAni(a0),d0 ; has animation changed?
 		beq.s	.do		; if not, branch
-		move.b	d0,obPrevAni(a0) ; set to "no restart"
+		move.b	d0,obPrevAni(a0)
 		move.b	#0,obAniFrame(a0) ; reset animation
 		move.b	#0,obTimeFrame(a0) ; reset frame duration
 
-	.do:
+; SAnim_Do:
+.do:
 		add.w	d0,d0
 		adda.w	(a1,d0.w),a1	; jump to appropriate animation script
 		move.b	(a1),d0
@@ -1588,20 +1641,24 @@ Sonic_Animate:
 		bpl.s	.delay		; if time remains, branch
 		move.b	d0,obTimeFrame(a0) ; load frame duration
 
+; SAnim_Do2:
 .loadframe:
 		moveq	#0,d1
 		move.b	obAniFrame(a0),d1 ; load current frame number
 		move.b	1(a1,d1.w),d0	; read sprite number from script
 		bmi.s	.end_FF		; if animation is complete, branch
 
-	.next:
+; SAnim_Next:
+.next:
 		move.b	d0,obFrame(a0)	; load sprite number
 		addq.b	#1,obAniFrame(a0) ; next frame number
 
-	.delay:
+; SAnim_Delay:
+.delay:
 		rts
 ; ===========================================================================
 
+; SAnim_End_FF:
 .end_FF:
 		addq.b	#1,d0		; is the end flag = $FF ?
 		bne.s	.end_FE		; if not, branch
@@ -1610,6 +1667,7 @@ Sonic_Animate:
 		bra.s	.next
 ; ===========================================================================
 
+; SAnim_End_FE
 .end_FE:
 		addq.b	#1,d0		; is the end flag = $FE ?
 		bne.s	.end_FD		; if not, branch
@@ -1620,15 +1678,18 @@ Sonic_Animate:
 		bra.s	.next
 ; ===========================================================================
 
+; SAnim_End_FD:
 .end_FD:
 		addq.b	#1,d0		; is the end flag = $FD ?
 		bne.s	.end		; if not, branch
 		move.b	2(a1,d1.w),obAnim(a0) ; read next byte, run that animation
 
-	.end:
+; SAnim_End:
+.end:
 		rts
 ; ===========================================================================
 
+; SAnim_WalkRun:
 .walkrunroll:
 		subq.b	#1,obTimeFrame(a0) ; subtract 1 from frame duration
 		bpl.s	.delay		; if time remains, branch
@@ -1641,12 +1702,12 @@ Sonic_Animate:
 		bne.s	.flip		; if yes, branch
 		not.b	d0		; reverse angle
 
-	.flip:
+.flip:
 		addi.b	#$10,d0		; add $10 to angle
 		bpl.s	.noinvert	; if angle is $0-$7F, branch
 		moveq	#3,d1
 
-	.noinvert:
+.noinvert:
 		andi.b	#$FC,obRender(a0)
 		eor.b	d1,d2
 		or.b	d2,obRender(a0)
@@ -1659,17 +1720,17 @@ Sonic_Animate:
 		bpl.s	.nomodspeed
 		neg.w	d2		; modulus speed
 
-	.nomodspeed:
+.nomodspeed:
 		lea	(SonAni_Run).l,a1 ; use running animation
 		cmpi.w	#$600,d2	; is Sonic at running speed?
-		bcc.s	.running	; if yes, branch
+		bhs.s	.running	; if yes, branch
 
 		lea	(SonAni_Walk).l,a1 ; use walking animation
 		move.b	d0,d1
 		lsr.b	#1,d1
 		add.b	d1,d0
 
-	.running:
+.running:
 		add.b	d0,d0
 		move.b	d0,d3
 		neg.w	d2
@@ -1677,7 +1738,7 @@ Sonic_Animate:
 		bpl.s	.belowmax
 		moveq	#0,d2		; max animation speed
 
-	.belowmax:
+.belowmax:
 		lsr.w	#8,d2
 		move.b	d2,obTimeFrame(a0) ; modify frame duration
 		bsr.w	.loadframe
@@ -1685,6 +1746,7 @@ Sonic_Animate:
 		rts
 ; ===========================================================================
 
+; SAnim_RollJump:
 .rolljump:
 		addq.b	#1,d0		; is animation rolling/jumping?
 		bne.s	.push		; if not, branch
@@ -1692,19 +1754,19 @@ Sonic_Animate:
 		bpl.s	.nomodspeed2
 		neg.w	d2
 
-	.nomodspeed2:
+.nomodspeed2:
 		lea	(SonAni_Roll2).l,a1 ; use fast animation
 		cmpi.w	#$600,d2	; is Sonic moving fast?
-		bcc.s	.rollfast	; if yes, branch
+		bhs.s	.rollfast	; if yes, branch
 		lea	(SonAni_Roll).l,a1 ; use slower animation
 
-	.rollfast:
+.rollfast:
 		neg.w	d2
 		addi.w	#$400,d2
 		bpl.s	.belowmax2
 		moveq	#0,d2
 
-	.belowmax2:
+.belowmax2:
 		lsr.w	#8,d2
 		move.b	d2,obTimeFrame(a0) ; modify frame duration
 		move.b	obStatus(a0),d1
@@ -1714,17 +1776,18 @@ Sonic_Animate:
 		bra.w	.loadframe
 ; ===========================================================================
 
+; SAnim_Push:
 .push:
 		move.w	obInertia(a0),d2 ; get Sonic's speed
 		bmi.s	.negspeed
 		neg.w	d2
 
-	.negspeed:
+.negspeed:
 		addi.w	#$800,d2
-		bpl.s	.belowmax3
+		bpl.s	.belowmax3	
 		moveq	#0,d2
 
-	.belowmax3:
+.belowmax3:
 		lsr.w	#6,d2
 		move.b	d2,obTimeFrame(a0) ; modify frame duration
 		lea	(SonAni_Push).l,a1
@@ -1735,14 +1798,16 @@ Sonic_Animate:
 		bra.w	.loadframe
 
 ; End of function Sonic_Animate
-		include	"_anim\Sonic.asm"
+
+		include	"_anim/Sonic.asm"
+
 ; ---------------------------------------------------------------------------
 ; Sonic graphics loading subroutine
 ; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
-
+; LoadSonicDynPLC:
 Sonic_LoadGfx:
 		moveq	#0,d0
 		move.b	obFrame(a0),d0	; load frame number
@@ -1760,7 +1825,8 @@ Sonic_LoadGfx:
 		lea	(v_sgfx_buffer).w,a3
 		move.b	#1,(f_sonframechg).w ; set flag for Sonic graphics DMA
 
-	.readentry:
+; SPLC_ReadEntry:
+.readentry:
 		moveq	#0,d2
 		move.b	(a2)+,d2
 		move.w	d2,d0
@@ -1771,7 +1837,8 @@ Sonic_LoadGfx:
 		lea	(Art_Sonic).l,a1
 		adda.l	d2,a1
 
-	.loadtile:
+; SPLC_LoadTile:
+.loadtile:
 		movem.l	(a1)+,d2-d6/a4-a6
 		movem.l	d2-d6/a4-a6,(a3)
 		lea	$20(a3),a3	; next tile
@@ -1779,7 +1846,7 @@ Sonic_LoadGfx:
 
 		dbf	d1,.readentry	; repeat for number of entries
 
-	.nochange:
+.nochange:
 		rts
 
 ; End of function Sonic_LoadGfx

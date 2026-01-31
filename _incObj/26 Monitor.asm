@@ -20,7 +20,7 @@ Mon_Main:	; Routine 0
 		move.b	#$E,obHeight(a0)
 		move.b	#$E,obWidth(a0)
 		move.l	#Map_Monitor,obMap(a0)
-		move.w	#$680,obGfx(a0)
+		move.w	#ArtTile_Monitor,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$F,obActWid(a0)
@@ -32,10 +32,10 @@ Mon_Main:	; Routine 0
 		beq.s	.notbroken	; if not, branch
 		move.b	#8,obRoutine(a0) ; run "Mon_Display" routine
 		move.b	#$B,obFrame(a0)	; use broken monitor frame
-		rts	
+		rts
 ; ===========================================================================
 
-	.notbroken:
+.notbroken:
 		move.b	#$46,obColType(a0)
 		move.b	obSubtype(a0),obAnim(a0)
 
@@ -56,7 +56,7 @@ Mon_Solid:	; Routine 2
 		bra.w	Mon_Animate
 ; ===========================================================================
 
-	.ontop:
+.ontop:
 		move.w	#$10,d3
 		move.w	obX(a0),d2
 		bsr.w	MvSonicOnPtfm
@@ -122,7 +122,7 @@ loc_A246:
 loc_A25C:
 		btst	#5,obStatus(a0)
 		beq.s	Mon_Animate
-		move.w	#1,obAnim(a1)	; clear obAnim and set obPrevAni to 1
+		move.w	#1,obAnim(a1)	; clear obAnim and set obNextAni to 1
 
 loc_A26A:
 		bclr	#5,obStatus(a0)
@@ -135,7 +135,7 @@ Mon_Animate:	; Routine 6
 Mon_Display:	; Routine 8
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Mon_BreakOpen:	; Routine 4
@@ -143,7 +143,7 @@ Mon_BreakOpen:	; Routine 4
 		move.b	#0,obColType(a0)
 		bsr.w	FindFreeObj
 		bne.s	Mon_Explode
-		move.b	#id_PowerUp,0(a1) ; load monitor contents object
+		_move.b	#id_PowerUp,obID(a1) ; load monitor contents object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	obAnim(a0),obAnim(a1)
@@ -151,12 +151,12 @@ Mon_BreakOpen:	; Routine 4
 Mon_Explode:
 		bsr.w	FindFreeObj
 		bne.s	.fail
-		move.b	#id_ExplosionItem,0(a1) ; load explosion object
+		_move.b	#id_ExplosionItem,obID(a1) ; load explosion object
 		addq.b	#2,obRoutine(a1) ; don't create an animal
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 
-	.fail:
+.fail:
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
 		move.b	obRespawnNo(a0),d0

@@ -17,7 +17,7 @@ HUD_Main:	; Routine 0
 		move.w	#$90,obX(a0)
 		move.w	#$108,obScreenY(a0)
 		move.l	#Map_HUD,obMap(a0)
-		move.w	#$6CA,obGfx(a0)
+		move.w	#ArtTile_HUD,obGfx(a0)
 		move.b	#0,obRender(a0)
 		move.b	#0,obPriority(a0)
 
@@ -37,6 +37,6 @@ HUD_Flash:	; Routine 2
 		bne.s	.display	; if not, branch
 		addq.w	#2,d0		; make time counter flash red
 
-	.display:
+.display:
 		move.b	d0,obFrame(a0)
-		jmp	DisplaySprite
+		jmp	(DisplaySprite).l

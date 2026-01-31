@@ -15,7 +15,7 @@ MDis_Index:	dc.w MDis_Main-MDis_Index
 MDis_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_MisDissolve,obMap(a0)
-		move.w	#$41C,obGfx(a0)
+		move.w	#ArtTile_Missile_Disolve,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#0,obColType(a0)
@@ -33,7 +33,7 @@ MDis_Animate:	; Routine 2
 		cmpi.b	#4,obFrame(a0)	; has animation completed?
 		beq.w	DeleteObject	; if yes, branch
 
-	.display:
+.display:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
@@ -56,15 +56,15 @@ ExItem_Animal:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		bsr.w	FindFreeObj
 		bne.s	ExItem_Main
-		move.b	#id_Animals,0(a1) ; load animal object
+		_move.b	#id_Animals,obID(a1) ; load animal object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
-		move.w	$3E(a0),$3E(a1)
+		move.w	objoff_3E(a0),objoff_3E(a1)
 
 ExItem_Main:	; Routine 2
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_ExplodeItem,obMap(a0)
-		move.w	#$5A0,obGfx(a0)
+		move.w	#ArtTile_Explosion,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#0,obColType(a0)
@@ -82,7 +82,7 @@ ExItem_Animate:	; Routine 4 (2 for ExplosionBomb)
 		cmpi.b	#5,obFrame(a0)	; is the final frame (05) displayed?
 		beq.w	DeleteObject	; if yes, branch
 
-	.display:
+.display:
 		bra.w	DisplaySprite
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -102,7 +102,7 @@ ExBom_Index:	dc.w ExBom_Main-ExBom_Index
 ExBom_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_ExplodeBomb,obMap(a0)
-		move.w	#$5A0,obGfx(a0)
+		move.w	#ArtTile_Explosion,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#0,obColType(a0)

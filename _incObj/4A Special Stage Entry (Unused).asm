@@ -12,21 +12,21 @@ Van_Index:	dc.w Van_Main-Van_Index
 		dc.w Van_RmvSonic-Van_Index
 		dc.w Van_LoadSonic-Van_Index
 
-van_time:	equ $30		; time for Sonic to disappear
+van_time = objoff_30		; time for Sonic to disappear
 ; ===========================================================================
 
 Van_Main:	; Routine 0
 		tst.l	(v_plc_buffer).w ; are pattern load cues empty?
 		beq.s	.isempty	; if yes, branch
-		rts	
+		rts
 
-	.isempty:
+.isempty:
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Vanish,obMap(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#$38,obActWid(a0)
-		move.w	#$541,obGfx(a0)
+		move.w	#ArtTile_Warp,obGfx(a0)
 		move.w	#120,van_time(a0) ; set time for Sonic's disappearance to 2 seconds
 
 Van_RmvSonic:	; Routine 2
@@ -43,7 +43,7 @@ Van_RmvSonic:	; Routine 2
 		move.w	#sfx_SSGoal,d0
 		jsr	(QueueSound2).l	; play Special Stage "GOAL" sound
 
-	.display:
+.display:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
@@ -53,5 +53,5 @@ Van_LoadSonic:	; Routine 4
 		move.b	#id_SonicPlayer,(v_player).w ; load Sonic object
 		jmp	(DeleteObject).l
 
-	.wait:
-		rts	
+.wait:
+		rts

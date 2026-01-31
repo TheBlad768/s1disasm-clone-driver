@@ -11,22 +11,21 @@ Girder:
 Gird_Index:	dc.w Gird_Main-Gird_Index
 		dc.w Gird_Action-Gird_Index
 
-gird_height:	equ $16
-gird_origX:	equ $32		; original x-axis position
-gird_origY:	equ $30		; original y-axis position
-gird_time:	equ $34		; duration for movement in a direction
-gird_set:	equ $38		; which movement settings to use (0/8/16/24)
-gird_delay:	equ $3A		; delay for movement
+gird_origX = objoff_32		; original x-axis position
+gird_origY = objoff_30		; original y-axis position
+gird_time = objoff_34		; duration for movement in a direction
+gird_set = objoff_38		; which movement settings to use (0/8/16/24)
+gird_delay = objoff_3A		; delay for movement
 ; ===========================================================================
 
 Gird_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Gird,obMap(a0)
-		move.w	#$42F0,obGfx(a0)
+		move.w	#ArtTile_SBZ_Girder|Tile_Pal2,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$60,obActWid(a0)
-		move.b	#$18,gird_height(a0)
+		move.b	#$18,obHeight(a0)
 		move.w	obX(a0),gird_origX(a0)
 		move.w	obY(a0),gird_origY(a0)
 		bsr.w	Gird_ChgMove
@@ -38,13 +37,13 @@ Gird_Action:	; Routine 2
 		subq.w	#1,gird_delay(a0)
 		bne.s	.solid
 
-	.beginmove:
+.beginmove:
 		jsr	(SpeedToPos).l
 		subq.w	#1,gird_time(a0) ; decrement movement duration
 		bne.s	.solid		; if time remains, branch
 		bsr.w	Gird_ChgMove	; if time is zero, branch
 
-	.solid:
+.solid:
 		move.w	(sp)+,d4
 		tst.b	obRender(a0)
 		bpl.s	.chkdel
@@ -52,16 +51,16 @@ Gird_Action:	; Routine 2
 		move.b	obActWid(a0),d1
 		addi.w	#$B,d1
 		moveq	#0,d2
-		move.b	gird_height(a0),d2
+		move.b	obHeight(a0),d2
 		move.w	d2,d3
 		addq.w	#1,d3
 		bsr.w	SolidObject
 
-	.chkdel:
+.chkdel:
 		out_of_range.s	.delete,gird_origX(a0)
 		jmp	(DisplaySprite).l
 
-	.delete:
+.delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
@@ -75,7 +74,7 @@ Gird_ChgMove:
 		move.w	(a1)+,gird_time(a0)
 		addq.b	#8,gird_set(a0)	; use next settings
 		move.w	#7,gird_delay(a0)
-		rts	
+		rts
 ; ===========================================================================
 .settings:	;   x-speed, y-speed, duration
 		dc.w   $100,	 0,   $60,     0 ; right

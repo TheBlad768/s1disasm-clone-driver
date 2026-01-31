@@ -2,6 +2,9 @@
 ; Object 5A - platforms moving in circles (SLZ)
 ; ---------------------------------------------------------------------------
 
+circ_origX = objoff_32		; original x-axis position
+circ_origY = objoff_30		; original y-axis position
+
 CirclingPlatform:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
@@ -14,14 +17,12 @@ Circ_Index:	dc.w Circ_Main-Circ_Index
 		dc.w Circ_Platform-Circ_Index
 		dc.w Circ_Action-Circ_Index
 
-circ_origX:	equ $32		; original x-axis position
-circ_origY:	equ $30		; original y-axis position
 ; ===========================================================================
 
 Circ_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Circ,obMap(a0)
-		move.w	#$4000,obGfx(a0)
+		move.w	#ArtTile_Level|Tile_Pal2,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$18,obActWid(a0)
@@ -69,18 +70,18 @@ Circ_Types:
 		neg.w	d1
 		neg.w	d2
 
-	.noshift00a:
+.noshift00a:
 		btst	#1,obSubtype(a0)
 		beq.s	.noshift00b
 		neg.w	d1
 		exg	d1,d2
 
-	.noshift00b:
+.noshift00b:
 		add.w	circ_origX(a0),d1
 		move.w	d1,obX(a0)
 		add.w	circ_origY(a0),d2
 		move.w	d2,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .type04:
@@ -95,16 +96,16 @@ Circ_Types:
 		neg.w	d1
 		neg.w	d2
 
-	.noshift04a:
+.noshift04a:
 		btst	#1,obSubtype(a0)
 		beq.s	.noshift04b
 		neg.w	d1
 		exg	d1,d2
 
-	.noshift04b:
+.noshift04b:
 		neg.w	d1
 		add.w	circ_origX(a0),d1
 		move.w	d1,obX(a0)
 		add.w	circ_origY(a0),d2
 		move.w	d2,obY(a0)
-		rts	
+		rts

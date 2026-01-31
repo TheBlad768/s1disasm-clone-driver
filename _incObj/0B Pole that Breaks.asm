@@ -12,14 +12,14 @@ Pole_Index:	dc.w Pole_Main-Pole_Index
 		dc.w Pole_Action-Pole_Index
 		dc.w Pole_Display-Pole_Index
 
-pole_time:	equ $30		; time between grabbing the pole & breaking
-pole_grabbed:	equ $32		; flag set when Sonic grabs the pole
+pole_time = objoff_30		; time between grabbing the pole & breaking
+pole_grabbed = objoff_32		; flag set when Sonic grabs the pole
 ; ===========================================================================
 
 Pole_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Pole,obMap(a0)
-		move.w	#$43DE,obGfx(a0)
+		move.w	#ArtTile_LZ_Pole|Tile_Pal2,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#8,obActWid(a0)
 		move.b	#4,obPriority(a0)
@@ -48,7 +48,7 @@ Pole_Action:	; Routine 2
 		beq.s	.movedown	; if not, branch
 		subq.w	#1,obY(a1)	; move Sonic up
 		cmp.w	obY(a1),d0
-		bcs.s	.movedown
+		blo.s	.movedown
 		move.w	d0,obY(a1)
 
 .movedown:
@@ -57,7 +57,7 @@ Pole_Action:	; Routine 2
 		beq.s	.letgo		; if not, branch
 		addq.w	#1,obY(a1)	; move Sonic down
 		cmp.w	obY(a1),d0
-		bcc.s	.letgo
+		bhs.s	.letgo
 		move.w	d0,obY(a1)
 
 .letgo:
@@ -81,10 +81,10 @@ Pole_Action:	; Routine 2
 		move.w	obX(a0),d0
 		addi.w	#$14,d0
 		cmp.w	obX(a1),d0
-		bcc.s	Pole_Display
+		bhs.s	Pole_Display
 		clr.b	obColProp(a0)
 		cmpi.b	#4,obRoutine(a1)
-		bcc.s	Pole_Display
+		bhs.s	Pole_Display
 		clr.w	obVelX(a1)	; stop Sonic moving
 		clr.w	obVelY(a1)	; stop Sonic moving
 		move.w	obX(a0),d0

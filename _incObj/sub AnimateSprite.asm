@@ -8,10 +8,10 @@
 AnimateSprite:
 		moveq	#0,d0
 		move.b	obAnim(a0),d0	; move animation number to d0
-		cmp.b	obPrevAni(a0),d0 ; is animation set to restart?
+		cmp.b	obPrevAni(a0),d0 ; has animation changed?
 		beq.s	Anim_Run	; if not, branch
 
-		move.b	d0,obPrevAni(a0) ; set to "no restart"
+		move.b	d0,obPrevAni(a0)
 		move.b	#0,obAniFrame(a0) ; reset animation
 		move.b	#0,obTimeFrame(a0) ; reset frame duration
 
@@ -39,7 +39,7 @@ Anim_Next:
 		addq.b	#1,obAniFrame(a0) ; next frame number
 
 Anim_Wait:
-		rts	
+		rts
 ; ===========================================================================
 
 Anim_End_FF:
@@ -82,5 +82,5 @@ Anim_End_FA:
 		addq.b	#2,ob2ndRout(a0) ; jump to next routine
 
 Anim_End:
-		rts	
+		rts
 ; End of function AnimateSprite

@@ -11,14 +11,14 @@ Fan:
 Fan_Index:	dc.w Fan_Main-Fan_Index
 		dc.w Fan_Delay-Fan_Index
 
-fan_time:	equ $30		; time between switching on/off
-fan_switch:	equ $32		; on/off switch
+fan_time = objoff_30		; time between switching on/off
+fan_switch = objoff_32		; on/off switch
 ; ===========================================================================
 
 Fan_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Fan,obMap(a0)
-		move.w	#$43A0,obGfx(a0)
+		move.w	#ArtTile_SLZ_Fan|Tile_Pal2,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$10,obActWid(a0)
 		move.b	#4,obPriority(a0)
@@ -46,32 +46,32 @@ Fan_Delay:	; Routine 2
 .chksonic:
 		addi.w	#$50,d0
 		cmpi.w	#$F0,d0		; is Sonic more than $A0 pixels from the fan?
-		bcc.s	.animate	; if yes, branch
+		bhs.s	.animate	; if yes, branch
 		move.w	obY(a1),d1
 		addi.w	#$60,d1
 		sub.w	obY(a0),d1
 		bcs.s	.animate	; branch if Sonic is too low
 		cmpi.w	#$70,d1
-		bcc.s	.animate	; branch if Sonic is too high
+		bhs.s	.animate	; branch if Sonic is too high
 		subi.w	#$50,d0		; is Sonic more than $50 pixels from the fan?
 		bcc.s	.faraway	; if yes, branch
 		not.w	d0
 		add.w	d0,d0
 
-	.faraway:
+.faraway:
 		addi.w	#$60,d0
 		btst	#0,obStatus(a0)	; is fan facing right?
 		bne.s	.right		; if yes, branch
 		neg.w	d0
 
-	.right:
+.right:
 		neg.b	d0
 		asr.w	#4,d0
 		btst	#0,obSubtype(a0)
 		beq.s	.movesonic
 		neg.w	d0
 
-	.movesonic:
+.movesonic:
 		add.w	d0,obX(a1)	; push Sonic away from the fan
 
 .animate:
@@ -80,20 +80,20 @@ Fan_Delay:	; Routine 2
 		move.b	#0,obTimeFrame(a0)
 		addq.b	#1,obAniFrame(a0)
 		cmpi.b	#3,obAniFrame(a0)
-		bcs.s	.noreset
+		blo.s	.noreset
 		move.b	#0,obAniFrame(a0) ; reset after 4 frames
 
-	.noreset:
+.noreset:
 		moveq	#0,d0
 		btst	#0,obSubtype(a0)
 		beq.s	.noflip
 		moveq	#2,d0
 
-	.noflip:
+.noflip:
 		add.b	obAniFrame(a0),d0
 		move.b	d0,obFrame(a0)
 
 .chkdel:
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
-		rts	
+		rts

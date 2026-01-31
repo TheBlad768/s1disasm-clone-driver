@@ -12,17 +12,17 @@ EndChaos:
 ECha_Index:	dc.w ECha_Main-ECha_Index
 		dc.w ECha_Move-ECha_Index
 
-echa_origX:	equ $38	; x-axis centre of emerald circle (2 bytes)
-echa_origY:	equ $3A	; y-axis centre of emerald circle (2 bytes)
-echa_radius:	equ $3C	; radius (2 bytes)
-echa_angle:	equ $3E	; angle for rotation (2 bytes)
+echa_origX = objoff_38	; x-axis centre of emerald circle (2 bytes)
+echa_origY = objoff_3A	; y-axis centre of emerald circle (2 bytes)
+echa_radius = objoff_3C	; radius (2 bytes)
+echa_angle = objoff_3E	; angle for rotation (2 bytes)
 ; ===========================================================================
 
 ECha_Main:	; Routine 0
 		cmpi.b	#2,(v_player+obFrame).w ; this isn't `fr_Wait1`: `v_player` is Object 88, which has its own frames
 		beq.s	ECha_CreateEms
 		addq.l	#4,sp
-		rts	
+		rts
 ; ===========================================================================
 
 ECha_CreateEms:
@@ -33,11 +33,11 @@ ECha_CreateEms:
 		moveq	#1,d2
 		moveq	#5,d1
 
-	ECha_LoadLoop:
-		move.b	#id_EndChaos,(a1) ; load chaos emerald object
+ECha_LoadLoop:
+		move.b	#id_EndChaos,obID(a1) ; load chaos emerald object
 		addq.b	#2,obRoutine(a1)
 		move.l	#Map_ECha,obMap(a1)
-		move.w	#$3C5,obGfx(a1)
+		move.w	#ArtTile_Ending_Emeralds,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#1,obPriority(a1)
 		move.w	obX(a0),echa_origX(a1)
@@ -47,7 +47,7 @@ ECha_CreateEms:
 		addq.b	#1,d2
 		move.b	d3,obAngle(a1)
 		addi.b	#$100/6,d3	; angle between each emerald
-		lea	$40(a1),a1
+		lea	object_size(a1),a1
 		dbf	d1,ECha_LoadLoop ; repeat 5 more times
 
 ECha_Move:	; Routine 2
@@ -66,20 +66,20 @@ ECha_Move:	; Routine 2
 		move.w	d1,obX(a0)
 		move.w	d0,obY(a0)
 
-	ECha_Expand:
+ECha_Expand:
 		cmpi.w	#$2000,echa_radius(a0)
 		beq.s	ECha_Rotate
 		addi.w	#$20,echa_radius(a0) ; expand circle of emeralds
 
-	ECha_Rotate:
+ECha_Rotate:
 		cmpi.w	#$2000,echa_angle(a0)
 		beq.s	ECha_Rise
 		addi.w	#$20,echa_angle(a0) ; move emeralds around the centre
 
-	ECha_Rise:
+ECha_Rise:
 		cmpi.w	#$140,echa_origY(a0)
 		beq.s	ECha_End
 		subq.w	#1,echa_origY(a0) ; make circle rise
 
 ECha_End:
-		rts	
+		rts

@@ -11,22 +11,22 @@ Saws:
 Saw_Index:	dc.w Saw_Main-Saw_Index
 		dc.w Saw_Action-Saw_Index
 
-saw_origX:	equ $3A		; original x-axis position
-saw_origY:	equ $38		; original y-axis position
-saw_here:	equ $3D		; flag set when the ground saw appears
+saw_origX = objoff_3A		; original x-axis position
+saw_origY = objoff_38		; original y-axis position
+saw_here = objoff_3D		; flag set when the ground saw appears
 ; ===========================================================================
 
 Saw_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Saw,obMap(a0)
-		move.w	#$43B5,obGfx(a0)
+		move.w	#ArtTile_SBZ_Saw|Tile_Pal2,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$20,obActWid(a0)
 		move.w	obX(a0),saw_origX(a0)
 		move.w	obY(a0),saw_origY(a0)
 		cmpi.b	#3,obSubtype(a0) ; is object a ground saw?
-		bcc.s	Saw_Action	; if yes, branch
+		bhs.s	Saw_Action	; if yes, branch
 		move.b	#$A2,obColType(a0)
 
 Saw_Action:	; Routine 2
@@ -39,7 +39,7 @@ Saw_Action:	; Routine 2
 		out_of_range.s	.delete,saw_origX(a0)
 		jmp	(DisplaySprite).l
 
-	.delete:
+.delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 .index:		dc.w .type00-.index, .type01-.index, .type02-.index ; pizza cutters
@@ -47,7 +47,7 @@ Saw_Action:	; Routine 2
 ; ===========================================================================
 
 .type00:
-		rts			; doesn't move
+		rts		; doesn't move
 ; ===========================================================================
 
 .type01:
@@ -59,7 +59,7 @@ Saw_Action:	; Routine 2
 		neg.w	d0
 		add.w	d1,d0
 
-	.noflip01:
+.noflip01:
 		move.w	saw_origX(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obX(a0)	; move saw sideways
@@ -69,7 +69,7 @@ Saw_Action:	; Routine 2
 		move.b	#2,obTimeFrame(a0) ; time between frame changes
 		bchg	#0,obFrame(a0)	; change frame
 
-	.sameframe01:
+.sameframe01:
 		tst.b	obRender(a0)
 		bpl.s	.nosound01
 		move.w	(v_framecount).w,d0
@@ -78,8 +78,8 @@ Saw_Action:	; Routine 2
 		move.w	#sfx_Saw,d0
 		jsr	(QueueSound2).l		; play saw sound
 
-	.nosound01:
-		rts	
+.nosound01:
+		rts
 ; ===========================================================================
 
 .type02:
@@ -91,7 +91,7 @@ Saw_Action:	; Routine 2
 		neg.w	d0
 		addi.w	#$80,d0
 
-	.noflip02:
+.noflip02:
 		move.w	saw_origY(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)	; move saw vertically
@@ -100,7 +100,7 @@ Saw_Action:	; Routine 2
 		move.b	#2,obTimeFrame(a0)
 		bchg	#0,obFrame(a0)
 
-	.sameframe02:
+.sameframe02:
 		tst.b	obRender(a0)
 		bpl.s	.nosound02
 		move.b	(v_oscillate+6).w,d0
@@ -109,8 +109,8 @@ Saw_Action:	; Routine 2
 		move.w	#sfx_Saw,d0
 		jsr	(QueueSound2).l		; play saw sound
 
-	.nosound02:
-		rts	
+.nosound02:
+		rts
 ; ===========================================================================
 
 .type03:
@@ -125,10 +125,10 @@ Saw_Action:	; Routine 2
 		move.w	(v_player+obY).w,d0
 		subi.w	#$80,d0
 		cmp.w	obY(a0),d0
-		bcc.s	.nosaw03y
+		bhs.s	.nosaw03y
 		addi.w	#$100,d0
 		cmp.w	obY(a0),d0
-		bcs.s	.nosaw03y
+		blo.s	.nosaw03y
 		move.b	#1,saw_here(a0)
 		move.w	#$600,obVelX(a0) ; move object to the right
 		move.b	#$A2,obColType(a0)
@@ -136,11 +136,11 @@ Saw_Action:	; Routine 2
 		move.w	#sfx_Saw,d0
 		jsr	(QueueSound2).l		; play saw sound
 
-	.nosaw03x:
+.nosaw03x:
 		addq.l	#4,sp
 
-	.nosaw03y:
-		rts	
+.nosaw03y:
+		rts
 ; ===========================================================================
 
 .here03:
@@ -151,8 +151,8 @@ Saw_Action:	; Routine 2
 		move.b	#2,obTimeFrame(a0)
 		bchg	#0,obFrame(a0)
 
-	.sameframe03:
-		rts	
+.sameframe03:
+		rts
 ; ===========================================================================
 
 .type04:
@@ -165,10 +165,10 @@ Saw_Action:	; Routine 2
 		move.w	(v_player+obY).w,d0
 		subi.w	#$80,d0
 		cmp.w	obY(a0),d0
-		bcc.s	.nosaw04y
+		bhs.s	.nosaw04y
 		addi.w	#$100,d0
 		cmp.w	obY(a0),d0
-		bcs.s	.nosaw04y
+		blo.s	.nosaw04y
 		move.b	#1,saw_here(a0)
 		move.w	#-$600,obVelX(a0) ; move object to the left
 		move.b	#$A2,obColType(a0)
@@ -176,11 +176,11 @@ Saw_Action:	; Routine 2
 		move.w	#sfx_Saw,d0
 		jsr	(QueueSound2).l		; play saw sound
 
-	.nosaw04x:
+.nosaw04x:
 		addq.l	#4,sp
 
-	.nosaw04y:
-		rts	
+.nosaw04y:
+		rts
 ; ===========================================================================
 
 .here04:
@@ -191,5 +191,5 @@ Saw_Action:	; Routine 2
 		move.b	#2,obTimeFrame(a0)
 		bchg	#0,obFrame(a0)
 
-	.sameframe04:
-		rts	
+.sameframe04:
+		rts

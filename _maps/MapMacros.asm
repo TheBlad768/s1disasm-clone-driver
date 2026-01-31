@@ -25,13 +25,13 @@ spritePiece: macro xpos,ypos,width,height,tile,xflip,yflip,pal,pri
 	if SonicMappingsVer=1
 		dc.b	\ypos
 		dc.b	((((\width)-1)&3)<<2)|(((\height)-1)&3)
-		dc.b	(((((\pri)&1)<<15)|(((\pal)&3)<<13)|(((\yflip)&1)<<12)|(((\xflip)&1)<<11))+(\tile))>>8
+		dc.b	((((((\pri)&1)<<15)|(((\pal)&3)<<13)|(((\yflip)&1)<<12)|(((\xflip)&1)<<11))+(\tile))>>8)&$FF
 		dc.b	(\tile)&$FF
 		dc.b	\xpos
 	elseif SonicMappingsVer=2
 		dc.w	(((\ypos)&$FF)<<8)|((((\width)-1)&3)<<2)|(((\height)-1)&3)
 		dc.w	((((\pri)&1)<<15)|(((\pal)&3)<<13)|(((\yflip)&1)<<12)|(((\xflip)&1)<<11))+(\tile)
-		dc.w	((((\pri)&1)<<15)|(((\pal)&3)<<13)|(((\yflip)&1)<<12)|(((\xflip)&1)<<11))+(((tile)>>1)|((\tile)&$8000))
+		dc.w	((((\pri)&1)<<15)|(((\pal)&3)<<13)|(((\yflip)&1)<<12)|(((\xflip)&1)<<11))+(((\tile)>>1)|((\tile)&$8000))
 		dc.w	\xpos
 	else
 		dc.w	(((\ypos)&$FF)<<8)|((((\width)-1)&3)<<2)|(((\height)-1)&3)
@@ -44,7 +44,7 @@ spritePiece2P: macro xpos,ypos,width,height,tile,xflip,yflip,pal,pri,tile2,xflip
 	if SonicMappingsVer=1
 		dc.b	\ypos
 		dc.b	((((\width)-1)&3)<<2)|(((\height)-1)&3)
-		dc.b	(((((\pri)&1)<<15)|(((\pal)&3)<<13)|(((\yflip)&1)<<12)|(((\xflip)&1)<<11))+(\tile))>>8
+		dc.b	((((((\pri)&1)<<15)|(((\pal)&3)<<13)|(((\yflip)&1)<<12)|(((\xflip)&1)<<11))+(\tile))>>8)&$FF
 		dc.b	(\tile)&$FF
 		dc.b	\xpos
 	elseif SonicMappingsVer=2

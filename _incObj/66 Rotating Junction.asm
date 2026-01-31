@@ -13,9 +13,9 @@ Jun_Index:	dc.w Jun_Main-Jun_Index
 		dc.w Jun_Display-Jun_Index
 		dc.w Jun_Release-Jun_Index
 
-jun_frame:	equ $34		; current frame
-jun_reverse:	equ $36		; flag set when switch is pressed
-jun_switch:	equ $38		; which switch will reverse the disc
+jun_frame = objoff_34		; current frame
+jun_reverse = objoff_36		; flag set when switch is pressed
+jun_switch = objoff_38		; which switch will reverse the disc
 ; ===========================================================================
 
 Jun_Main:	; Routine 0
@@ -25,10 +25,10 @@ Jun_Main:	; Routine 0
 		bra.s	.makeitem
 ; ===========================================================================
 
-	.repeat:
+.repeat:
 		bsr.w	FindFreeObj
 		bne.s	.fail
-		move.b	#id_Junction,0(a1)
+		_move.b	#id_Junction,obID(a1)
 		addq.b	#4,obRoutine(a1) ; goto Jun_Display next
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
@@ -37,16 +37,16 @@ Jun_Main:	; Routine 0
 
 .makeitem:
 		move.l	#Map_Jun,obMap(a1)
-		move.w	#$4348,obGfx(a1)
+		move.w	#ArtTile_SBZ_Junction|Tile_Pal2,obGfx(a1)
 		ori.b	#4,obRender(a1)
 		move.b	#$38,obActWid(a1)
 
-	.fail:
+.fail:
 		dbf	d1,.repeat
 
 		move.b	#$30,obActWid(a0)
 		move.b	#4,obPriority(a0)
-		move.w	#$3C,$30(a0)
+		move.w	#$3C,objoff_30(a0)
 		move.b	#1,jun_frame(a0)
 		move.b	obSubtype(a0),jun_switch(a0)
 
@@ -67,14 +67,14 @@ Jun_Action:	; Routine 2
 		moveq	#$E,d1
 		move.w	obX(a1),d0
 		cmp.w	obX(a0),d0	; is Sonic to the left of the disc?
-		bcs.s	.isleft		; if yes, branch
+		blo.s	.isleft		; if yes, branch
 		moveq	#7,d1		
 
-	.isleft:
+.isleft:
 		cmp.b	obFrame(a0),d1	; is the gap next to Sonic?
 		bne.s	Jun_Display	; if not, branch
 
-		move.b	d1,$32(a0)
+		move.b	d1,objoff_32(a0)
 		addq.b	#4,obRoutine(a0) ; goto Jun_Release next
 		move.b	#1,(f_playerctrl).w ; lock controls
 		move.b	#id_Roll,obAnim(a1) ; make Sonic use "rolling" animation
@@ -103,8 +103,8 @@ Jun_Release:	; Routine 6
 		cmpi.b	#7,d0		; is gap pointing right?
 		bne.s	.dontrelease	; if not, branch
 
-	.release:
-		cmp.b	$32(a0),d0
+.release:
+		cmp.b	objoff_32(a0),d0
 		beq.s	.dontrelease
 		lea	(v_player).w,a1
 		move.w	#0,obVelX(a1)
@@ -114,11 +114,11 @@ Jun_Release:	; Routine 6
 		move.w	#$800,obVelX(a1)
 		move.w	#$800,obVelY(a1)
 
-	.isdown:
+.isdown:
 		clr.b	(f_playerctrl).w	; unlock controls
 		subq.b	#4,obRoutine(a0)
 
-	.dontrelease:
+.dontrelease:
 		bsr.s	Jun_ChkSwitch
 		bsr.s	Jun_ChgPos
 		bra.w	RememberState
@@ -153,8 +153,8 @@ Jun_ChkSwitch:
 		andi.b	#$F,d0
 		move.b	d0,obFrame(a0)	; update frame
 
-	.nochange:
-		rts	
+.nochange:
+		rts
 ; End of function Jun_ChkSwitch
 
 
@@ -175,7 +175,7 @@ Jun_ChgPos:
 		ext.w	d0
 		add.w	obY(a0),d0
 		move.w	d0,obY(a1)
-		rts	
+		rts
 
 
 .data:		dc.b -$20,    0, -$1E,   $E ; disc x-pos, Sonic x-pos, disc y-pos, Sonic y-pos

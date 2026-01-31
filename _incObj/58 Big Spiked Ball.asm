@@ -11,16 +11,16 @@ BigSpikeBall:
 BBall_Index:	dc.w BBall_Main-BBall_Index
 		dc.w BBall_Move-BBall_Index
 
-bball_origX:	equ $3A		; original x-axis position
-bball_origY:	equ $38		; original y-axis position
-bball_radius:	equ $3C		; radius of circle
-bball_speed:	equ $3E		; speed
+bball_origX = objoff_3A		; original x-axis position
+bball_origY = objoff_38		; original y-axis position
+bball_radius = objoff_3C	; radius of circle
+bball_speed = objoff_3E		; speed
 ; ===========================================================================
 
 BBall_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_BBall,obMap(a0)
-		move.w	#$396,obGfx(a0)
+		move.w	#ArtTile_SYZ_Big_Spikeball,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$18,obActWid(a0)
@@ -55,7 +55,7 @@ BBall_Move:	; Routine 2
 ; ===========================================================================
 
 .type00:
-		rts	
+		rts
 ; ===========================================================================
 
 .type01:
@@ -67,11 +67,11 @@ BBall_Move:	; Routine 2
 		neg.w	d0
 		add.w	d1,d0
 
-	.noflip1:
+.noflip1:
 		move.w	bball_origX(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obX(a0)	; move object horizontally
-		rts	
+		rts
 ; ===========================================================================
 
 .type02:
@@ -83,11 +83,11 @@ BBall_Move:	; Routine 2
 		neg.w	d0
 		addi.w	#$80,d0
 
-	.noflip2:
+.noflip2:
 		move.w	bball_origY(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)	; move object vertically
-		rts	
+		rts
 ; ===========================================================================
 
 .type03:
@@ -108,4 +108,4 @@ BBall_Move:	; Routine 2
 		add.w	d3,d5
 		move.w	d4,obY(a0)	; move object circularly
 		move.w	d5,obX(a0)
-		rts	
+		rts

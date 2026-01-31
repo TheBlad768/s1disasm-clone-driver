@@ -16,7 +16,7 @@ Moto_Index:	dc.w Moto_Main-Moto_Index
 
 Moto_Main:	; Routine 0
 		move.l	#Map_Moto,obMap(a0)
-		move.w	#$4F0,obGfx(a0)
+		move.w	#ArtTile_Moto_Bug,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$14,obActWid(a0)
@@ -34,8 +34,8 @@ Moto_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0) ; goto Moto_Action next
 		bchg	#0,obStatus(a0)
 
-	.notonfloor:
-		rts	
+.notonfloor:
+		rts
 ; ===========================================================================
 
 .smoke:
@@ -51,14 +51,14 @@ Moto_Action:	; Routine 2
 		lea	(Ani_Moto).l,a1
 		bsr.w	AnimateSprite
 
-		include	"_incObj\sub RememberState.asm" ; Moto_Action terminates in this file
+		include	"_incObj/sub RememberState.asm" ; Moto_Action terminates in this file
 
 ; ===========================================================================
 Moto_ActIndex:	dc.w .move-Moto_ActIndex
 		dc.w .findfloor-Moto_ActIndex
 
-.time:		equ $30
-.smokedelay:	equ $33
+.time = objoff_30
+.smokedelay = objoff_33
 ; ===========================================================================
 
 .move:
@@ -71,8 +71,8 @@ Moto_ActIndex:	dc.w .move-Moto_ActIndex
 		bne.s	.wait
 		neg.w	obVelX(a0)	; change direction
 
-	.wait:
-		rts	
+.wait:
+		rts
 ; ===========================================================================
 
 .findfloor:
@@ -88,21 +88,21 @@ Moto_ActIndex:	dc.w .move-Moto_ActIndex
 		move.b	#$F,.smokedelay(a0)
 		bsr.w	FindFreeObj
 		bne.s	.nosmoke
-		move.b	#id_MotoBug,0(a1) ; load exhaust smoke object
+		_move.b	#id_MotoBug,obID(a1) ; load exhaust smoke object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	obStatus(a0),obStatus(a1)
 		move.b	#2,obAnim(a1)
 
-	.nosmoke:
-		rts	
+.nosmoke:
+		rts
 
 .pause:
 		subq.b	#2,ob2ndRout(a0)
 		move.w	#59,.time(a0)	; set pause time to 1 second
 		move.w	#0,obVelX(a0)	; stop the object moving
 		move.b	#0,obAnim(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Moto_Animate:	; Routine 4

@@ -19,20 +19,20 @@ PSB_Main:	; Routine 0
 		move.w	#$D0,obX(a0)
 		move.w	#$130,obScreenY(a0)
 		move.l	#Map_PSB,obMap(a0)
-		move.w	#$200,obGfx(a0)
+		move.w	#ArtTile_Title_Foreground,obGfx(a0)
 		cmpi.b	#2,obFrame(a0)	; is object "PRESS START"?
-		bcs.s	PSB_PrsStart	; if yes, branch
+		blo.s	PSB_PrsStart	; if yes, branch
 
 		addq.b	#2,obRoutine(a0)
 		cmpi.b	#3,obFrame(a0)	; is the object "TM"?
 		bne.s	PSB_Exit	; if not, branch
 
-		move.w	#$2510,obGfx(a0) ; "TM" specific code
+		move.w	#ArtTile_Title_Trademark|Tile_Pal1,obGfx(a0) ; "TM" specific code
 		move.w	#$170,obX(a0)
 		move.w	#$F8,obScreenY(a0)
 
 PSB_Exit:	; Routine 4
-		rts	
+		rts
 ; ===========================================================================
 
 PSB_PrsStart:	; Routine 2

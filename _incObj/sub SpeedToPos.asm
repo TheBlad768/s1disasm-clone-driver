@@ -18,6 +18,6 @@ SpeedToPos:
 		add.l	d0,d3		; add to y-axis position
 		move.l	d2,obX(a0)	; update x-axis position
 		move.l	d3,obY(a0)	; update y-axis position
-		rts	
+		rts
 
 ; End of function SpeedToPos

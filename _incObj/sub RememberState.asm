@@ -6,12 +6,12 @@ RememberState:
 		out_of_range.w	.offscreen
 		bra.w	DisplaySprite
 
-	.offscreen:
+.offscreen:
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
 		move.b	obRespawnNo(a0),d0
 		beq.s	.delete
 		bclr	#7,2(a2,d0.w)
 
-	.delete:
+.delete:
 		bra.w	DeleteObject

@@ -24,20 +24,20 @@ SolidObject:
 		add.w	d1,d0
 		bmi.s	.leave		; if Sonic moves off the left, branch
 		cmp.w	d2,d0		; has Sonic moved off the right?
-		bcs.s	.stand		; if not, branch
+		blo.s	.stand		; if not, branch
 
-	.leave:
+.leave:
 		bclr	#3,obStatus(a1)	; clear Sonic's standing flag
 		bclr	#3,obStatus(a0)	; clear object's standing flag
 		clr.b	obSolid(a0)
 		moveq	#0,d4
-		rts	
+		rts
 
-	.stand:
+.stand:
 		move.w	d4,d2
 		bsr.w	MvSonicOnPtfm
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 SolidObject71:
@@ -53,20 +53,20 @@ SolidObject71:
 		add.w	d1,d0
 		bmi.s	.leave
 		cmp.w	d2,d0
-		bcs.s	.stand
+		blo.s	.stand
 
-	.leave:
+.leave:
 		bclr	#3,obStatus(a1)
 		bclr	#3,obStatus(a0)
 		clr.b	obSolid(a0)
 		moveq	#0,d4
-		rts	
+		rts
 
-	.stand:
+.stand:
 		move.w	d4,d2
 		bsr.w	MvSonicOnPtfm
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 SolidObject2F:
@@ -87,7 +87,7 @@ SolidObject2F:
 		not.w	d5
 		add.w	d3,d5
 
-	.notflipped:
+.notflipped:
 		lsr.w	#1,d5
 		moveq	#0,d3
 		move.b	(a2,d5.w),d3
@@ -105,7 +105,7 @@ SolidObject2F:
 		move.w	d2,d4
 		add.w	d4,d4
 		cmp.w	d4,d3
-		bcc.w	Solid_Ignore
+		bhs.w	Solid_Ignore
 		bra.w	loc_FB0E
 ; ===========================================================================
 
@@ -134,38 +134,38 @@ loc_FAD0:
 		move.w	d2,d4
 		add.w	d4,d4
 		cmp.w	d4,d3		; has Sonic moved below?
-		bcc.w	Solid_Ignore	; if yes, branch
+		bhs.w	Solid_Ignore	; if yes, branch
 
 loc_FB0E:
 		tst.b	(f_playerctrl).w ; are object interactions disabled?
 		bmi.w	Solid_Ignore	; if yes, branch
 		cmpi.b	#6,(v_player+obRoutine).w ; is Sonic dying?
-		if Revision=0
+	if Revision=0
 		bcc.w	Solid_Ignore	; if yes, branch
-		else
-			bcc.w	Solid_Debug
-		endc
+	else
+		bcc.w	Solid_Debug
+	endif
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.w	Solid_Debug	; if yes, branch
 		move.w	d0,d5
 		cmp.w	d0,d1		; is Sonic right of centre of object?
-		bcc.s	.isright	; if yes, branch
+		bhs.s	.isright	; if yes, branch
 		add.w	d1,d1
 		sub.w	d1,d0
 		move.w	d0,d5
 		neg.w	d5
 
-	.isright:
+.isright:
 		move.w	d3,d1
 		cmp.w	d3,d2		; is Sonic below centre of object?
-		bcc.s	.isbelow	; if yes, branch
+		bhs.s	.isbelow	; if yes, branch
 
 		subq.w	#4,d3
 		sub.w	d4,d3
 		move.w	d3,d1
 		neg.w	d1
 
-	.isbelow:
+.isbelow:
 		cmp.w	d1,d5
 		bhi.w	Solid_TopBottom	; if Sonic hits top or bottom, branch
 		cmpi.w	#4,d1
@@ -193,13 +193,13 @@ Solid_Centre:
 		bset	#5,obStatus(a1)	; make Sonic push object
 		bset	#5,obStatus(a0)	; make object be pushed
 		moveq	#1,d4		; return side collision
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_SideAir:
 		bsr.s	Solid_NotPushing
 		moveq	#1,d4		; return side collision
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_Ignore:
@@ -213,14 +213,14 @@ Solid_NotPushing:
 
 Solid_Debug:
 		moveq	#0,d4		; return no collision
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_TopBottom:
 		tst.w	d3		; is Sonic below the object?
 		bmi.s	Solid_Below	; if yes, branch
 		cmpi.w	#$10,d3		; has Sonic landed on the object?
-		bcs.s	Solid_Landed	; if yes, branch
+		blo.s	Solid_Landed	; if yes, branch
 		bra.s	Solid_Ignore
 ; ===========================================================================
 
@@ -235,7 +235,7 @@ Solid_Below:
 
 Solid_TopBtmAir:
 		moveq	#-1,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_Squash:
@@ -246,7 +246,7 @@ Solid_Squash:
 		jsr	(KillSonic).l	; kill Sonic
 		movea.l	(sp)+,a0
 		moveq	#-1,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_Landed:
@@ -259,7 +259,7 @@ Solid_Landed:
 		sub.w	obX(a0),d1
 		bmi.s	Solid_Miss	; if Sonic is right of object, branch
 		cmp.w	d2,d1		; is Sonic left of object?
-		bcc.s	Solid_Miss	; if yes, branch
+		bhs.s	Solid_Miss	; if yes, branch
 		tst.w	obVelY(a1)	; is Sonic moving upwards?
 		bmi.s	Solid_Miss	; if yes, branch
 		sub.w	d3,obY(a1)	; correct Sonic's position
@@ -268,12 +268,12 @@ Solid_Landed:
 		move.b	#2,obSolid(a0) ; set standing flags
 		bset	#3,obStatus(a0)
 		moveq	#-1,d4		; return top/bottom collision
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_Miss:
 		moveq	#0,d4
-		rts	
+		rts
 ; End of function SolidObject
 
 
@@ -286,16 +286,16 @@ Solid_ResetFloor:
 
 		moveq	#0,d0
 		move.b	standonobject(a1),d0	; get object being stood on
-		lsl.w	#6,d0
+		lsl.w	#object_size_bits,d0
 		addi.l	#(v_objspace&$FFFFFF),d0
 		movea.l	d0,a2
 		bclr	#3,obStatus(a2)	; clear object's standing flags
 		clr.b	obSolid(a2)
 
-	.notonobj:
+.notonobj:
 		move.w	a0,d0
 		subi.w	#v_objspace&$FFFF,d0
-		lsr.w	#6,d0
+		lsr.w	#object_size_bits,d0
 		andi.w	#$7F,d0
 		move.b	d0,standonobject(a1)	; set object being stood on
 		move.b	#0,obAngle(a1)	; clear Sonic's angle
@@ -308,8 +308,8 @@ Solid_ResetFloor:
 		jsr	(Sonic_ResetOnFloor).l ; reset Sonic as if on floor
 		movea.l	(sp)+,a0
 
-	.notinair:
+.notinair:
 		bset	#3,obStatus(a1)	; set object standing flag
 		bset	#3,obStatus(a0)	; set Sonic standing on object flag
-		rts	
+		rts
 ; End of function Solid_ResetFloor

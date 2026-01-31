@@ -11,8 +11,8 @@ Conveyor:
 Conv_Index:	dc.w Conv_Main-Conv_Index
 		dc.w Conv_Action-Conv_Index
 
-conv_speed:	equ $36
-conv_width:	equ $38
+conv_speed = objoff_36
+conv_width = objoff_38
 ; ===========================================================================
 
 Conv_Main:	; Routine 0
@@ -23,7 +23,7 @@ Conv_Main:	; Routine 0
 		beq.s	.typeis0	; if zero, branch
 		move.b	#56,conv_width(a0) ; set width to 56 pixels
 
-	.typeis0:
+.typeis0:
 		move.b	obSubtype(a0),d1 ; get object type
 		andi.b	#$F0,d1		; read only the 1st digit
 		ext.w	d1
@@ -33,9 +33,9 @@ Conv_Main:	; Routine 0
 Conv_Action:	; Routine 2
 		bsr.s	.movesonic
 		out_of_range.s	.delete
-		rts	
+		rts
 
-	.delete:
+.delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
@@ -49,16 +49,16 @@ Conv_Action:	; Routine 2
 		sub.w	obX(a0),d0
 		add.w	d2,d0
 		cmp.w	d3,d0
-		bcc.s	.notonconveyor
+		bhs.s	.notonconveyor
 		move.w	obY(a1),d1
 		sub.w	obY(a0),d1
 		addi.w	#$30,d1
 		cmpi.w	#$30,d1
-		bcc.s	.notonconveyor
+		bhs.s	.notonconveyor
 		btst	#1,obStatus(a1)
 		bne.s	.notonconveyor
 		move.w	conv_speed(a0),d0
 		add.w	d0,obX(a1)
 
-	.notonconveyor:
-		rts	
+.notonconveyor:
+		rts

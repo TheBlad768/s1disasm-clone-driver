@@ -16,17 +16,16 @@ LBlk_Var:	dc.b $10, $10		; width, height
 		dc.b $10, $10
 		dc.b $10, $10
 
-lblk_height:	equ $16		; block height
-lblk_origX:	equ $34		; original x-axis position
-lblk_origY:	equ $30		; original y-axis position
-lblk_time:	equ $36		; time delay for block movement
-lblk_untouched:	equ $38		; flag block as untouched
+lblk_origX = objoff_34		; original x-axis position
+lblk_origY = objoff_30		; original y-axis position
+lblk_time = objoff_36		; time delay for block movement
+lblk_untouched = objoff_38	; flag block as untouched
 ; ===========================================================================
 
 LBlk_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_LBlock,obMap(a0)
-		move.w	#$43E6,obGfx(a0)
+		move.w	#ArtTile_LZ_Blocks|Tile_Pal2,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		moveq	#0,d0
@@ -35,7 +34,7 @@ LBlk_Main:	; Routine 0
 		andi.w	#$E,d0
 		lea	LBlk_Var(pc,d0.w),a2
 		move.b	(a2)+,obActWid(a0) ; set width
-		move.b	(a2),lblk_height(a0) ; set height
+		move.b	(a2),obHeight(a0) ; set height
 		lsr.w	#1,d0
 		move.b	d0,obFrame(a0)
 		move.w	obX(a0),lblk_origX(a0)
@@ -62,11 +61,11 @@ LBlk_Action:	; Routine 2
 		move.b	obActWid(a0),d1
 		addi.w	#$B,d1
 		moveq	#0,d2
-		move.b	lblk_height(a0),d2
+		move.b	obHeight(a0),d2
 		move.w	d2,d3
 		addq.w	#1,d3
 		bsr.w	SolidObject
-		move.b	d4,$3F(a0)
+		move.b	d4,objoff_3F(a0)
 		bsr.w	loc_12180
 
 .chkdel:
@@ -80,7 +79,7 @@ LBlk_Action:	; Routine 2
 ; ===========================================================================
 
 .type00:
-		rts	
+		rts
 ; ===========================================================================
 
 .type01:
@@ -91,16 +90,16 @@ LBlk_Action:	; Routine 2
 		beq.s	.donothing01	; if not, branch
 		move.w	#30,lblk_time(a0) ; wait for half second
 
-	.donothing01:
-		rts	
+.donothing01:
+		rts
 ; ===========================================================================
 
-	.wait01:
+.wait01:
 		subq.w	#1,lblk_time(a0); decrement waiting time
 		bne.s	.donothing01	; if time remains, branch
 		addq.b	#1,obSubtype(a0) ; goto .type02 or .type04
 		clr.b	lblk_untouched(a0) ; flag block as touched
-		rts	
+		rts
 ; ===========================================================================
 
 .type02:
@@ -115,8 +114,8 @@ LBlk_Action:	; Routine 2
 		clr.w	obVelY(a0)	; stop when it touches the floor
 		clr.b	obSubtype(a0)	; set type to 00 (non-moving type)
 
-	.nofloor02:
-		rts	
+.nofloor02:
+		rts
 ; ===========================================================================
 
 .type04:
@@ -129,18 +128,18 @@ LBlk_Action:	; Routine 2
 		clr.w	obVelY(a0)	; stop when it touches the ceiling
 		clr.b	obSubtype(a0)	; set type to 00 (non-moving type)
 
-	.noceiling04:
-		rts	
+.noceiling04:
+		rts
 ; ===========================================================================
 
 .type05:
-		cmpi.b	#1,$3F(a0)	; is Sonic touching the block?
+		cmpi.b	#1,objoff_3F(a0)	; is Sonic touching the block?
 		bne.s	.notouch05	; if not, branch
 		addq.b	#1,obSubtype(a0) ; goto .type06
 		clr.b	lblk_untouched(a0)
 
-	.notouch05:
-		rts	
+.notouch05:
+		rts
 ; ===========================================================================
 
 .type07:
@@ -152,15 +151,15 @@ LBlk_Action:	; Routine 2
 		bge.s	.loc_1214E
 		moveq	#-2,d0
 
-	.loc_1214E:
+.loc_1214E:
 		add.w	d0,obY(a0)	; make the block rise with water level
 		bsr.w	ObjHitCeiling
 		tst.w	d1		; has block hit the ceiling?
 		bpl.w	.noceiling07	; if not, branch
 		sub.w	d1,obY(a0)	; stop block
 
-	.noceiling07:
-		rts	
+.noceiling07:
+		rts
 ; ===========================================================================
 
 .fall07:
@@ -168,7 +167,7 @@ LBlk_Action:	; Routine 2
 		ble.s	.loc_1216A
 		moveq	#2,d0
 
-	.loc_1216A:
+.loc_1216A:
 		add.w	d0,obY(a0)	; make the block sink with water level
 		bsr.w	ObjFloorDist
 		tst.w	d1
@@ -176,8 +175,8 @@ LBlk_Action:	; Routine 2
 		addq.w	#1,d1
 		add.w	d1,obY(a0)
 
-	.stop07:
-		rts	
+.stop07:
+		rts
 ; ===========================================================================
 
 loc_12180:
@@ -185,19 +184,19 @@ loc_12180:
 		beq.s	locret_121C0	; if yes, branch
 		btst	#3,obStatus(a0)	; is Sonic standing on it now?
 		bne.s	loc_1219A	; if yes, branch
-		tst.b	$3E(a0)
+		tst.b	objoff_3E(a0)
 		beq.s	locret_121C0
-		subq.b	#4,$3E(a0)
+		subq.b	#4,objoff_3E(a0)
 		bra.s	loc_121A6
 ; ===========================================================================
 
 loc_1219A:
-		cmpi.b	#$40,$3E(a0)
+		cmpi.b	#$40,objoff_3E(a0)
 		beq.s	locret_121C0
-		addq.b	#4,$3E(a0)
+		addq.b	#4,objoff_3E(a0)
 
 loc_121A6:
-		move.b	$3E(a0),d0
+		move.b	objoff_3E(a0),d0
 		jsr	(CalcSine).l
 		move.w	#$400,d1
 		muls.w	d1,d0
@@ -206,4 +205,4 @@ loc_121A6:
 		move.w	d0,obY(a0)
 
 locret_121C0:
-		rts	
+		rts

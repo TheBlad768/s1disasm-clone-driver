@@ -30,7 +30,7 @@ FindFloor:
 		bsr.w	FindFloor2	; try tile below the nearest
 		sub.w	a3,d2
 		addi.w	#$10,d1		; return distance to floor
-		rts	
+		rts
 ; ===========================================================================
 
 .issolid:
@@ -47,14 +47,14 @@ FindFloor:
 		not.w	d1
 		neg.b	(a4)
 
-	.noflip:
+.noflip:
 		btst	#$C,d4		; is block flipped vertically?
 		beq.s	.noflip2	; if not, branch
 		addi.b	#$40,(a4)
 		neg.b	(a4)
 		subi.b	#$40,(a4)
 
-	.noflip2:
+.noflip2:
 		andi.w	#$F,d1
 		add.w	d0,d1		; (block num. * $10) + x-pos. = place in array
 		lea	(CollArray1).l,a2
@@ -65,7 +65,7 @@ FindFloor:
 		beq.s	.noflip3	; if not, branch
 		neg.w	d0
 
-	.noflip3:
+.noflip3:
 		tst.w	d0
 		beq.s	.isblank	; branch if height is 0
 		bmi.s	.negfloor	; branch if height is negative
@@ -76,7 +76,7 @@ FindFloor:
 		add.w	d1,d0
 		move.w	#$F,d1
 		sub.w	d0,d1		; return distance to floor
-		rts	
+		rts
 ; ===========================================================================
 
 .negfloor:
@@ -90,7 +90,7 @@ FindFloor:
 		bsr.w	FindFloor2	; try tile above the nearest
 		add.w	a3,d2
 		subi.w	#$10,d1		; return distance to floor
-		rts	
+		rts
 ; End of function FindFloor
 
 
@@ -111,7 +111,7 @@ FindFloor2:
 		move.w	d2,d0
 		andi.w	#$F,d0
 		sub.w	d0,d1
-		rts	
+		rts
 ; ===========================================================================
 
 .issolid:
@@ -128,14 +128,14 @@ FindFloor2:
 		not.w	d1
 		neg.b	(a4)
 
-	.noflip:
+.noflip:
 		btst	#$C,d4
 		beq.s	.noflip2
 		addi.b	#$40,(a4)
 		neg.b	(a4)
 		subi.b	#$40,(a4)
 
-	.noflip2:
+.noflip2:
 		andi.w	#$F,d1
 		add.w	d0,d1
 		lea	(CollArray1).l,a2
@@ -146,7 +146,7 @@ FindFloor2:
 		beq.s	.noflip3
 		neg.w	d0
 
-	.noflip3:
+.noflip3:
 		tst.w	d0
 		beq.s	.isblank2
 		bmi.s	.negfloor
@@ -155,7 +155,7 @@ FindFloor2:
 		add.w	d1,d0
 		move.w	#$F,d1
 		sub.w	d0,d1
-		rts	
+		rts
 ; ===========================================================================
 
 .negfloor:
@@ -164,5 +164,5 @@ FindFloor2:
 		add.w	d1,d0
 		bpl.w	.isblank2
 		not.w	d1
-		rts	
+		rts
 ; End of function FindFloor2

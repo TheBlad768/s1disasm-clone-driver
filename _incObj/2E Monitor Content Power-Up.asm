@@ -16,7 +16,7 @@ Pow_Index:	dc.w Pow_Main-Pow_Index
 
 Pow_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.w	#$680,obGfx(a0)
+		move.w	#ArtTile_Monitor,obGfx(a0)
 		move.b	#$24,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#8,obActWid(a0)
@@ -36,7 +36,7 @@ Pow_Move:	; Routine 2
 		bpl.w	Pow_Checks	; if not, branch
 		bsr.w	SpeedToPos
 		addi.w	#$18,obVelY(a0)	; reduce object speed
-		rts	
+		rts
 ; ===========================================================================
 
 Pow_Checks:
@@ -47,14 +47,14 @@ Pow_ChkEggman:
 		move.b	obAnim(a0),d0
 		cmpi.b	#1,d0		; does monitor contain Eggman?
 		bne.s	Pow_ChkSonic
-		rts			; Eggman monitor does nothing
+		rts		; Eggman monitor does nothing
 ; ===========================================================================
 
 Pow_ChkSonic:
 		cmpi.b	#2,d0		; does monitor contain Sonic?
 		bne.s	Pow_ChkShoes
 
-	ExtraLife:
+ExtraLife:
 		addq.b	#1,(v_lives).w	; add 1 to the number of lives you have
 		addq.b	#1,(f_lifecount).w ; update the lives counter
 		move.w	#bgm_ExtraLife,d0
@@ -66,7 +66,7 @@ Pow_ChkShoes:
 		bne.s	Pow_ChkShield
 
 		move.b	#1,(v_shoes).w	; speed up the BG music
-		move.w	#$4B0,(v_player+$34).w	; time limit for the power-up
+		move.w	#$4B0,(v_player+shoetime).w	; time limit for the power-up
 		move.w	#$C00,(v_sonspeedmax).w ; change Sonic's top speed
 		move.w	#$18,(v_sonspeedacc).w	; change Sonic's acceleration
 		move.w	#$80,(v_sonspeeddec).w	; change Sonic's deceleration
@@ -89,7 +89,7 @@ Pow_ChkInvinc:
 		bne.s	Pow_ChkRings
 
 		move.b	#1,(v_invinc).w	; make Sonic invincible
-		move.w	#$4B0,(v_player+$32).w ; time limit for the power-up
+		move.w	#$4B0,(v_player+invtime).w ; time limit for the power-up
 		move.b	#id_ShieldItem,(v_starsobj1).w ; load stars object ($3801)
 		move.b	#1,(v_starsobj1+obAnim).w
 		move.b	#id_ShieldItem,(v_starsobj2).w ; load stars object ($3802)
@@ -100,17 +100,16 @@ Pow_ChkInvinc:
 		move.b	#4,(v_starsobj4+obAnim).w
 		tst.b	(f_lockscreen).w ; is boss mode on?
 		bne.s	Pow_NoMusic	; if yes, branch
-		if Revision=0
-		else
-			cmpi.w	#$C,(v_air).w
-			bls.s	Pow_NoMusic
-		endc
+	if Revision<>0
+		cmpi.w	#$C,(v_air).w
+		bls.s	Pow_NoMusic
+	endif
 		move.w	#bgm_Invincible,d0
 		jmp	(QueueSound1).l ; play invincibility music
 ; ===========================================================================
 
 Pow_NoMusic:
-		rts	
+		rts
 ; ===========================================================================
 
 Pow_ChkRings:
@@ -120,15 +119,15 @@ Pow_ChkRings:
 		addi.w	#10,(v_rings).w	; add 10 rings to the number of rings you have
 		ori.b	#1,(f_ringcount).w ; update the ring counter
 		cmpi.w	#100,(v_rings).w ; check if you have 100 rings
-		bcs.s	Pow_RingSound
+		blo.s	Pow_RingSound
 		bset	#1,(v_lifecount).w
 		beq.w	ExtraLife
 		cmpi.w	#200,(v_rings).w ; check if you have 200 rings
-		bcs.s	Pow_RingSound
+		blo.s	Pow_RingSound
 		bset	#2,(v_lifecount).w
 		beq.w	ExtraLife
 
-	Pow_RingSound:
+Pow_RingSound:
 		move.w	#sfx_Ring,d0
 		jmp	(QueueSound1).l	; play ring sound
 ; ===========================================================================
@@ -139,10 +138,10 @@ Pow_ChkS:
 		nop	
 
 Pow_ChkEnd:
-		rts			; 'S' and goggles monitors do nothing
+		rts		; 'S' and goggles monitors do nothing
 ; ===========================================================================
 
 Pow_Delete:	; Routine 4
 		subq.w	#1,obTimeFrame(a0)
 		bmi.w	DeleteObject	; delete after half a second
-		rts	
+		rts

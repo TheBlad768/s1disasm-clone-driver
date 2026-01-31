@@ -21,14 +21,14 @@ Shi_Main:	; Routine 0
 		move.b	#$10,obActWid(a0)
 		tst.b	obAnim(a0)	; is object a shield?
 		bne.s	.stars		; if not, branch
-		move.w	#$541,obGfx(a0)	; shield specific code
-		rts	
+		move.w	#ArtTile_Shield,obGfx(a0)	; shield specific code
+		rts
 ; ===========================================================================
 
 .stars:
 		addq.b	#2,obRoutine(a0) ; goto Shi_Stars next
-		move.w	#$55C,obGfx(a0)
-		rts	
+		move.w	#ArtTile_Invincibility,obGfx(a0)
+		rts
 ; ===========================================================================
 
 Shi_Shield:	; Routine 2
@@ -43,10 +43,10 @@ Shi_Shield:	; Routine 2
 		jsr	(AnimateSprite).l
 		jmp	(DisplaySprite).l
 
-	.remove:
-		rts	
+.remove:
+		rts
 
-	.delete:
+.delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
@@ -58,14 +58,16 @@ Shi_Stars:	; Routine 4
 		subq.b	#1,d1
 		bra.s	.trail
 ; ===========================================================================
-		lsl.b	#4,d1
+
+.trail_unused:	;	unused older trailing code that makes a much shorter trail
+		lsl.b	#4,d1		; multiply animation number by 16
 		addq.b	#4,d1
 		sub.b	d1,d0
-		move.b	$30(a0),d1
-		sub.b	d1,d0
+		move.b	objoff_30(a0),d1
+		sub.b	d1,d0		; use earlier tracking data to create trail
 		addq.b	#4,d1
 		andi.b	#$F,d1
-		move.b	d1,$30(a0)
+		move.b	d1,objoff_30(a0)
 		bra.s	.b
 ; ===========================================================================
 
@@ -76,17 +78,17 @@ Shi_Stars:	; Routine 4
 		add.b	d2,d1		; multiply by 3
 		addq.b	#4,d1
 		sub.b	d1,d0
-		move.b	$30(a0),d1
+		move.b	objoff_30(a0),d1
 		sub.b	d1,d0		; use earlier tracking data to create trail
 		addq.b	#4,d1
 		cmpi.b	#$18,d1
-		bcs.s	.a
+		blo.s	.a
 		moveq	#0,d1
 
-	.a:
-		move.b	d1,$30(a0)
+.a:
+		move.b	d1,objoff_30(a0)
 
-	.b:
+.b:
 		lea	(v_tracksonic).w,a1
 		lea	(a1,d0.w),a1
 		move.w	(a1)+,obX(a0)

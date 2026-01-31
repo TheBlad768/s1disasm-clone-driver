@@ -11,7 +11,7 @@ Burrobot:
 Burro_Index:	dc.w Burro_Main-Burro_Index
 		dc.w Burro_Action-Burro_Index
 
-burro_timedelay:	equ $30		; time between direction changes
+burro_timedelay = objoff_30		; time between direction changes
 ; ===========================================================================
 
 Burro_Main:	; Routine 0
@@ -19,7 +19,7 @@ Burro_Main:	; Routine 0
 		move.b	#$13,obHeight(a0)
 		move.b	#8,obWidth(a0)
 		move.l	#Map_Burro,obMap(a0)
-		move.w	#$4A6,obGfx(a0)
+		move.w	#ArtTile_Burrobot,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#5,obColType(a0)
@@ -53,15 +53,15 @@ Burro_Action:	; Routine 2
 		beq.s	.nochg
 		neg.w	obVelX(a0)	; change direction the Burrobot is moving
 
-	.nochg:
-		rts	
+.nochg:
+		rts
 ; ===========================================================================
 
 Burro_Move:
 		subq.w	#1,burro_timedelay(a0)
 		bmi.s	loc_AD84
 		bsr.w	SpeedToPos
-		bchg	#0,$32(a0)
+		bchg	#0,objoff_32(a0)
 		bne.s	loc_AD78
 		move.w	obX(a0),d3
 		addi.w	#$C,d3
@@ -73,13 +73,13 @@ loc_AD6A:
 		jsr	(ObjFloorDist2).l
 		cmpi.w	#$C,d1
 		bge.s	loc_AD84
-		rts	
+		rts
 ; ===========================================================================
 
 loc_AD78:
 		jsr	(ObjFloorDist).l
 		add.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_AD84:
@@ -89,14 +89,14 @@ loc_AD84:
 		move.w	#59,burro_timedelay(a0)
 		move.w	#0,obVelX(a0)
 		move.b	#0,obAnim(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_ADA4:
 		addq.b	#2,ob2ndRout(a0)
 		move.w	#-$400,obVelY(a0)
 		move.b	#2,obAnim(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Burro_Jump:
@@ -115,7 +115,7 @@ Burro_Jump:
 		bsr.w	Burro_ChkSonic2
 
 locret_ADF0:
-		rts	
+		rts
 ; ===========================================================================
 
 Burro_ChkSonic:
@@ -126,7 +126,7 @@ Burro_ChkSonic:
 		sub.w	obY(a0),d0
 		bcc.s	locret_AE20
 		cmpi.w	#-$80,d0
-		bcs.s	locret_AE20
+		blo.s	locret_AE20
 		tst.w	(v_debuguse).w
 		bne.s	locret_AE20
 		subq.b	#2,ob2ndRout(a0)
@@ -134,7 +134,7 @@ Burro_ChkSonic:
 		move.w	#-$400,obVelY(a0)
 
 locret_AE20:
-		rts	
+		rts
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -151,5 +151,5 @@ Burro_ChkSonic2:
 
 loc_AE40:
 		cmp.w	d2,d0
-		rts	
+		rts
 ; End of function Burro_ChkSonic2

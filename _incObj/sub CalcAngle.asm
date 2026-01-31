@@ -32,7 +32,7 @@ loc_2CC2:
 
 loc_2CCA:
 		cmp.w	d3,d4
-		bcc.w	loc_2CDC
+		bhs.w	loc_2CDC
 		lsl.l	#8,d4
 		divu.w	d3,d4
 		moveq	#0,d0
@@ -60,17 +60,17 @@ loc_2CF2:
 
 loc_2CFE:
 		movem.l	(sp)+,d3-d4
-		rts	
+		rts
 ; ===========================================================================
 
 loc_2D04:
 		move.w	#$40,d0
 		movem.l	(sp)+,d3-d4
-		rts	
+		rts
 ; End of function CalcAngle
 
 ; ===========================================================================
 
-Angle_Data:	incbin	"misc\angles.bin"
+Angle_Data:	incbin	"misc/angles.bin"
 
 ; ===========================================================================

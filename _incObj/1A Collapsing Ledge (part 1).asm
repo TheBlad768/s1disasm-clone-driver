@@ -12,14 +12,14 @@ Ledge_Index:	dc.w Ledge_Main-Ledge_Index, Ledge_Touch-Ledge_Index
 		dc.w Ledge_Collapse-Ledge_Index, Ledge_Display-Ledge_Index
 		dc.w Ledge_Delete-Ledge_Index, Ledge_WalkOff-Ledge_Index
 
-ledge_timedelay:	equ $38		; time between touching the ledge and it collapsing
-ledge_collapse_flag:	equ $3A		; collapse flag
+ledge_timedelay = objoff_38		; time between touching the ledge and it collapsing
+ledge_collapse_flag = objoff_3A		; collapse flag
 ; ===========================================================================
 
 Ledge_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Ledge,obMap(a0)
-		move.w	#$4000,obGfx(a0)
+		move.w	#ArtTile_Level|Tile_Pal2,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#7,ledge_timedelay(a0) ; set time delay for collapse
@@ -35,7 +35,7 @@ Ledge_Touch:	; Routine 2
 		beq.w	Ledge_Fragment	; if yes, branch
 		subq.b	#1,ledge_timedelay(a0) ; subtract 1 from time
 
-	.slope:
+.slope:
 		move.w	#$30,d1
 		lea	(Ledge_SlopeData).l,a2
 		bsr.w	SlopeObject
@@ -82,14 +82,14 @@ loc_82D0:
 		bne.s	locret_8308
 		bclr	#3,obStatus(a1)
 		bclr	#5,obStatus(a1)
-		move.b	#1,obPrevAni(a1)
+		move.b	#id_Run,obPrevAni(a1) ; restart Sonic's animation
 
 loc_82FC:
 		move.b	#0,ledge_collapse_flag(a0)
 		move.b	#6,obRoutine(a0) ; run "Ledge_Display" routine
 
 locret_8308:
-		rts	
+		rts
 ; ===========================================================================
 
 Ledge_TimeZero:
@@ -97,9 +97,9 @@ Ledge_TimeZero:
 		bsr.w	DisplaySprite
 		tst.b	obRender(a0)
 		bpl.s	Ledge_Delete
-		rts	
+		rts
 ; ===========================================================================
 
 Ledge_Delete:	; Routine 8
 		bsr.w	DeleteObject
-		rts	
+		rts

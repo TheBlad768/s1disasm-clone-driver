@@ -11,14 +11,14 @@ Cannonball:
 Cbal_Index:	dc.w Cbal_Main-Cbal_Index
 		dc.w Cbal_Bounce-Cbal_Index
 
-cbal_time:	equ $30		; time until the cannonball explodes (2 bytes)
+cbal_time = objoff_30		; time until the cannonball explodes (2 bytes)
 ; ===========================================================================
 
 Cbal_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.b	#7,obHeight(a0)
 		move.l	#Map_Hog,obMap(a0)
-		move.w	#$2302,obGfx(a0)
+		move.w	#ArtTile_Ball_Hog|Tile_Pal1,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$87,obColType(a0)
@@ -57,9 +57,9 @@ Cbal_ChkExplode:
 		subq.w	#1,cbal_time(a0) ; subtract 1 from explosion time
 		bpl.s	Cbal_Animate	; if time is > 0, branch
 
-	Cbal_Explode:
-		move.b	#id_MissileDissolve,0(a0)
-		move.b	#id_ExplosionBomb,0(a0)	; change object to an explosion ($3F)
+Cbal_Explode:
+		_move.b	#id_MissileDissolve,obID(a0)
+		_move.b	#id_ExplosionBomb,obID(a0)	; change object to an explosion ($3F)
 		move.b	#0,obRoutine(a0) ; reset routine counter
 		bra.w	ExplosionBomb	; jump to explosion code
 ; ===========================================================================
@@ -71,9 +71,16 @@ Cbal_Animate:
 		bchg	#0,obFrame(a0)	; change frame
 
 Cbal_Display:
+	if FixBugs=0
+		; Moved to prevent a display-and-delete bug.
 		bsr.w	DisplaySprite
+	endif
 		move.w	(v_limitbtm2).w,d0
 		addi.w	#$E0,d0
 		cmp.w	obY(a0),d0	; has object fallen off the level?
-		bcs.w	DeleteObject	; if yes, branch
-		rts	
+		blo.w	DeleteObject	; if yes, branch
+	if FixBugs
+		bra.w	DisplaySprite
+	else
+		rts
+	endif

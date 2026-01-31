@@ -15,21 +15,21 @@ ptr_Crab_Delete:	dc.w Crab_Delete-Crab_Index
 ptr_Crab_BallMain:	dc.w Crab_BallMain-Crab_Index
 ptr_Crab_BallMove:	dc.w Crab_BallMove-Crab_Index
 
-id_Crab_Main:		equ ptr_Crab_Main-Crab_Index	; 0
-id_Crab_Action:		equ ptr_Crab_Action-Crab_Index	; 2
-id_Crab_Delete:		equ ptr_Crab_Delete-Crab_Index	; 4
-id_Crab_BallMain:	equ ptr_Crab_BallMain-Crab_Index	; 6
-id_Crab_BallMove:	equ ptr_Crab_BallMove-Crab_Index	; 8
+id_Crab_Main = ptr_Crab_Main-Crab_Index	; 0
+id_Crab_Action = ptr_Crab_Action-Crab_Index	; 2
+id_Crab_Delete = ptr_Crab_Delete-Crab_Index	; 4
+id_Crab_BallMain = ptr_Crab_BallMain-Crab_Index	; 6
+id_Crab_BallMove = ptr_Crab_BallMove-Crab_Index	; 8
 
-crab_timedelay:	equ $30
-crab_mode:	equ $32
+crab_timedelay = objoff_30
+crab_mode = objoff_32
 ; ===========================================================================
 
 Crab_Main:	; Routine 0
 		move.b	#$10,obHeight(a0)
 		move.b	#8,obWidth(a0)
 		move.l	#Map_Crab,obMap(a0)
-		move.w	#$400,obGfx(a0)
+		move.w	#ArtTile_Crabmeat,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#6,obColType(a0)
@@ -43,8 +43,8 @@ Crab_Main:	; Routine 0
 		move.w	#0,obVelY(a0)
 		addq.b	#2,obRoutine(a0)
 
-	.floornotfound:
-		rts	
+.floornotfound:
+		rts
 ; ===========================================================================
 
 Crab_Action:	; Routine 2
@@ -68,7 +68,7 @@ Crab_Action:	; Routine 2
 		bchg	#1,crab_mode(a0)
 		bne.s	.fire
 
-	.movecrab:
+.movecrab:
 		addq.b	#2,ob2ndRout(a0)
 		move.w	#127,crab_timedelay(a0) ; set time delay to approx 2 seconds
 		move.w	#$80,obVelX(a0)	; move Crabmeat to the right
@@ -79,9 +79,9 @@ Crab_Action:	; Routine 2
 		bne.s	.noflip
 		neg.w	obVelX(a0)	; change direction
 
-	.dontmove:
-	.noflip:
-		rts	
+.dontmove:
+.noflip:
+		rts
 ; ===========================================================================
 
 .fire:
@@ -89,25 +89,25 @@ Crab_Action:	; Routine 2
 		move.b	#6,obAnim(a0)	; use firing animation
 		bsr.w	FindFreeObj
 		bne.s	.failleft
-		move.b	#id_Crabmeat,0(a1) ; load left fireball
+		_move.b	#id_Crabmeat,obID(a1) ; load left fireball
 		move.b	#id_Crab_BallMain,obRoutine(a1)
 		move.w	obX(a0),obX(a1)
 		subi.w	#$10,obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.w	#-$100,obVelX(a1)
 
-	.failleft:
+.failleft:
 		bsr.w	FindFreeObj
 		bne.s	.failright
-		move.b	#id_Crabmeat,0(a1) ; load right fireball
+		_move.b	#id_Crabmeat,obID(a1) ; load right fireball
 		move.b	#id_Crab_BallMain,obRoutine(a1)
 		move.w	obX(a0),obX(a1)
 		addi.w	#$10,obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.w	#$100,obVelX(a1)
 
-	.failright:
-		rts	
+.failright:
+		rts
 ; ===========================================================================
 
 .walkonfloor:
@@ -128,7 +128,7 @@ loc_9640:
 		blt.s	loc_966E
 		cmpi.w	#$C,d1
 		bge.s	loc_966E
-		rts	
+		rts
 ; ===========================================================================
 
 loc_9654:
@@ -138,7 +138,7 @@ loc_9654:
 		bsr.w	Crab_SetAni
 		addq.b	#3,d0
 		move.b	d0,obAnim(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_966E:
@@ -147,7 +147,7 @@ loc_966E:
 		move.w	#0,obVelX(a0)
 		bsr.w	Crab_SetAni
 		move.b	d0,obAnim(a0)
-		rts	
+		rts
 ; ---------------------------------------------------------------------------
 ; Subroutine to set the correct animation for a Crabmeat
 ; ---------------------------------------------------------------------------
@@ -160,14 +160,14 @@ Crab_SetAni:
 		move.b	obAngle(a0),d3
 		bmi.s	loc_96A4
 		cmpi.b	#6,d3
-		bcs.s	locret_96A2
+		blo.s	locret_96A2
 		moveq	#1,d0
 		btst	#0,obStatus(a0)
 		bne.s	locret_96A2
 		moveq	#2,d0
 
 locret_96A2:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_96A4:
@@ -179,14 +179,14 @@ loc_96A4:
 		moveq	#1,d0
 
 locret_96B6:
-		rts	
+		rts
 ; End of function Crab_SetAni
 
 ; ===========================================================================
 
 Crab_Delete:	; Routine 4
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Sub-object - missile that the Crabmeat throws
@@ -195,7 +195,7 @@ Crab_Delete:	; Routine 4
 Crab_BallMain:	; Routine 6
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Crab,obMap(a0)
-		move.w	#$400,obGfx(a0)
+		move.w	#ArtTile_Crabmeat,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$87,obColType(a0)
@@ -207,12 +207,21 @@ Crab_BallMove:	; Routine 8
 		lea	(Ani_Crab).l,a1
 		bsr.w	AnimateSprite
 		bsr.w	ObjectFall
+	if FixBugs=0
+		; Another bug where an object is queued for display and then
+		; deleted, causing a null-pointer dereference.
 		bsr.w	DisplaySprite
+	endif
 		move.w	(v_limitbtm2).w,d0
 		addi.w	#$E0,d0
 		cmp.w	obY(a0),d0	; has object moved below the level boundary?
-		bcs.s	.delete		; if yes, branch
-		rts	
+	if FixBugs
+		blo.s	Crab_Delete
+		bra.w	DisplaySprite
+	else
+		blo.s	.delete		; if yes, branch
+		rts
 
-	.delete:
+.delete:
 		bra.w	DeleteObject
+	endif

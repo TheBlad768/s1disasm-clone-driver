@@ -18,7 +18,7 @@ WFall_Index:	dc.w WFall_Main-WFall_Index
 WFall_Main:	; Routine 0
 		addq.b	#4,obRoutine(a0)
 		move.l	#Map_WFall,obMap(a0)
-		move.w	#$4259,obGfx(a0)
+		move.w	#ArtTile_LZ_Splash|Tile_Pal2,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$18,obActWid(a0)
 		move.b	#1,obPriority(a0)
@@ -26,7 +26,7 @@ WFall_Main:	; Routine 0
 		bpl.s	.under80	; branch if $00-$7F
 		bset	#7,obGfx(a0)
 
-	.under80:
+.under80:
 		andi.b	#$F,d0		; read only the 2nd digit
 		move.b	d0,obFrame(a0)	; set frame number
 		cmpi.b	#9,d0		; is object type $x9 ?
@@ -39,7 +39,7 @@ WFall_Main:	; Routine 0
 
 		move.b	#6,obRoutine(a0) ; goto WFall_OnWater next
 
-	.not49:
+.not49:
 		btst	#5,obSubtype(a0) ; is object type $A9 ?
 		beq.s	WFall_Animate	; if not, branch
 		move.b	#8,obRoutine(a0) ; goto loc_12B36 next
@@ -61,9 +61,9 @@ WFall_OnWater:	; Routine 6
 
 loc_12B36:	; Routine 8
 		bclr	#7,obGfx(a0)
-		cmpi.b	#7,(v_lvllayout+$106).w
+		cmpi.b	#7,(v_lvllayout+$80*2+6).w
 		bne.s	.animate
 		bset	#7,obGfx(a0)
 
-	.animate:
+.animate:
 		bra.s	WFall_Animate

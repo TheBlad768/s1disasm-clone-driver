@@ -18,14 +18,14 @@ Got_Index:	dc.w Got_ChkPLC-Got_Index
 		dc.w Got_Move2-Got_Index
 		dc.w loc_C766-Got_Index
 
-got_mainX:	equ $30		; position for card to display on
-got_finalX:	equ $32		; position for card to finish on
+got_mainX = objoff_30		; position for card to display on
+got_finalX = objoff_32		; position for card to finish on
 ; ===========================================================================
 
 Got_ChkPLC:	; Routine 0
 		tst.l	(v_plc_buffer).w ; are the pattern load cues empty?
 		beq.s	Got_Main	; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 Got_Main:
@@ -34,7 +34,7 @@ Got_Main:
 		moveq	#6,d1
 
 Got_Loop:
-		move.b	#id_GotThroughCard,0(a1)
+		_move.b	#id_GotThroughCard,obID(a1)
 		move.w	(a2),obX(a1)	; load start x-position
 		move.w	(a2)+,got_finalX(a1) ; load finish x-position (same as start)
 		move.w	(a2)+,got_mainX(a1) ; load main x-position
@@ -45,12 +45,12 @@ Got_Loop:
 		bne.s	loc_C5CA
 		add.b	(v_act).w,d0	; add act number to frame number
 
-	loc_C5CA:
+loc_C5CA:
 		move.b	d0,obFrame(a1)
 		move.l	#Map_Got,obMap(a1)
-		move.w	#$8580,obGfx(a1)
+		move.w	#ArtTile_Title_Card|Tile_Pri,obGfx(a1)
 		move.b	#0,obRender(a1)
-		lea	$40(a1),a1
+		lea	object_size(a1),a1
 		dbf	d1,Got_Loop	; repeat 6 times
 
 Got_Move:	; Routine 2
@@ -61,19 +61,19 @@ Got_Move:	; Routine 2
 		bge.s	Got_ChgPos
 		neg.w	d1
 
-	Got_ChgPos:
+Got_ChgPos:
 		add.w	d1,obX(a0)	; change item's position
 
-	loc_C5FE:
+loc_C5FE:
 		move.w	obX(a0),d0
 		bmi.s	locret_C60E
 		cmpi.w	#$200,d0	; has item moved beyond $200 on x-axis?
-		bcc.s	locret_C60E	; if yes, branch
+		bhs.s	locret_C60E	; if yes, branch
 		bra.w	DisplaySprite
 ; ===========================================================================
 
 locret_C60E:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_C610:
@@ -127,7 +127,7 @@ Got_SetDelay:
 		move.w	#180,obTimeFrame(a0) ; set time delay to 3 seconds
 
 locret_C692:
-		rts	
+		rts
 ; ===========================================================================
 
 Got_AddBonus:
@@ -158,12 +158,12 @@ Got_NextLevel:	; Routine $A
 Got_ChkSS:
 		clr.b	(v_lastlamp).w	; clear lamppost counter
 		tst.b	(f_bigring).w	; has Sonic jumped into a giant ring?
-		beq.s	VBla_08A	; if not, branch
+		beq.s	loc_C6EA	; if not, branch
 		move.b	#id_Special,(v_gamemode).w ; set game mode to Special Stage (10)
 		bra.s	Got_Display2
 ; ===========================================================================
 
-VBla_08A:
+loc_C6EA:
 		move.w	#1,(f_restart).w ; restart level
 
 Got_Display2:
@@ -220,17 +220,17 @@ Got_Move2:	; Routine $E
 		bge.s	Got_ChgPos2
 		neg.w	d1
 
-	Got_ChgPos2:
+Got_ChgPos2:
 		add.w	d1,obX(a0)	; change item's position
 		move.w	obX(a0),d0
 		bmi.s	locret_C748
 		cmpi.w	#$200,d0	; has item moved beyond $200 on x-axis?
-		bcc.s	locret_C748	; if yes, branch
+		bhs.s	locret_C748	; if yes, branch
 		bra.w	DisplaySprite
 ; ===========================================================================
 
 locret_C748:
-		rts	
+		rts
 ; ===========================================================================
 
 Got_SBZ2:
@@ -246,7 +246,7 @@ loc_C766:	; Routine $10
 		addq.w	#2,(v_limitright2).w
 		cmpi.w	#$2100,(v_limitright2).w
 		beq.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 		;    x-start, x-main, y-main,
 		;    routine, frame number

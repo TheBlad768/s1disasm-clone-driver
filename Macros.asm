@@ -1,11 +1,11 @@
 ; ---------------------------------------------------------------------------
 ; Align and pad
-; input: length to align to, value to use as padding (default is 0)
+; input: length to align to, value to use as padding (default is $FF)
 ; ---------------------------------------------------------------------------
 
 align:	macro
 	if (narg=1)
-	dcb.b (\1-(*%\1))%\1,0
+	dcb.b (\1-(*%\1))%\1,$FF
 	else
 	dcb.b (\1-(*%\1))%\1,\2
 	endif
@@ -29,9 +29,9 @@ locVRAM:	macro loc,controlport
 ; input: source, length, destination
 ; ---------------------------------------------------------------------------
 
-writeVRAM:	macro source,length,destination
+writeVRAM:	macro source,destination
 		lea	(vdp_control_port).l,a5
-		move.l	#$94000000+((((\length)>>1)&$FF00)<<8)+$9300+(((\length)>>1)&$FF),(a5)
+		move.l	#$94000000+((((\source\_end-\source)>>1)&$FF00)<<8)+$9300+(((\source\_end-\source)>>1)&$FF),(a5)
 		move.l	#$96000000+((((\source)>>1)&$FF00)<<8)+$9500+(((\source)>>1)&$FF),(a5)
 		move.w	#$9700+(((((\source)>>1)&$FF0000)>>16)&$7F),(a5)
 		move.w	#$4000+((\destination)&$3FFF),(a5)
@@ -44,9 +44,9 @@ writeVRAM:	macro source,length,destination
 ; input: source, length, destination
 ; ---------------------------------------------------------------------------
 
-writeCRAM:	macro source,length,destination
+writeCRAM:	macro source,destination
 		lea	(vdp_control_port).l,a5
-		move.l	#$94000000+((((\length)>>1)&$FF00)<<8)+$9300+(((\length)>>1)&$FF),(a5)
+		move.l	#$94000000+((((\source\_end-\source)>>1)&$FF00)<<8)+$9300+(((\source\_end-\source)>>1)&$FF),(a5)
 		move.l	#$96000000+((((\source)>>1)&$FF00)<<8)+$9500+(((\source)>>1)&$FF),(a5)
 		move.w	#$9700+(((((\source)>>1)&$FF0000)>>16)&$7F),(a5)
 		move.w	#$C000+((\destination)&$3FFF),(a5)
@@ -59,13 +59,45 @@ writeCRAM:	macro source,length,destination
 ; input: value, length, destination
 ; ---------------------------------------------------------------------------
 
-fillVRAM:	macro value,length,loc
+fillVRAM:	macro byte,start,end
 		lea	(vdp_control_port).l,a5
-		move.w	#$8F01,(a5)
-		move.l	#$94000000+(((\length)&$FF00)<<8)+$9300+((\length)&$FF),(a5)
+		move.w	#$8F01,(a5) ; Set increment to 1, since DMA fill writes bytes
+		move.l	#$94000000+((((\end)-(\start)-1)&$FF00)<<8)+$9300+(((\end)-(\start)-1)&$FF),(a5)
 		move.w	#$9780,(a5)
-		move.l	#$40000080+(((\loc)&$3FFF)<<16)+(((\loc)&$C000)>>14),(a5)
-		move.w	#\value,(vdp_data_port).l
+		move.l	#$40000080+(((\start)&$3FFF)<<16)+(((\start)&$C000)>>14),(a5)
+		move.w	#(\byte)|(\byte)<<8,(vdp_data_port).l
+.wait\@:	move.w	(a5),d1
+		btst	#1,d1
+		bne.s	.wait\@
+		move.w	#$8F02,(a5) ; Set increment back to 2, since the VDP usually operates on words
+		endm
+
+; ---------------------------------------------------------------------------
+; Fill portion of RAM with 0
+; input: start, end
+; ---------------------------------------------------------------------------
+
+clearRAM:	macro startAddress,endAddress
+	if narg=2
+		.length\@: equ (\endAddress)-(\startAddress)
+	else
+		.length\@: equ \startAddress\_end-\startAddress
+	endif
+		lea	(\startAddress).w,a1
+		moveq	#0,d0
+		move.w	#.length\@/4-1,d1
+
+.loop\@:
+		move.l	d0,(a1)+
+		dbf	d1,.loop\@
+
+	if (\endAddress-\startAddress)&2
+		move.w	d0,(a1)+
+	endif
+
+	if (\endAddress-\startAddress)&1
+		move.b	d0,(a1)+
+	endif
 		endm
 
 ; ---------------------------------------------------------------------------
@@ -76,8 +108,8 @@ fillVRAM:	macro value,length,loc
 copyTilemap:	macro source,destination,width,height
 		lea	(\source).l,a1
 		locVRAM	\destination,d0
-		moveq	#width,d1
-		moveq	#height,d2
+		moveq	#(\width)-1,d1
+		moveq	#(\height)-1,d2
 		bsr.w	TilemapToVRAM
 		endm
 
@@ -132,6 +164,26 @@ disable_ints:	macro
 
 enable_ints:	macro
 		move	#$2300,sr
+		endm
+
+; ---------------------------------------------------------------------------
+; disable display
+; ---------------------------------------------------------------------------
+
+disable_display:	macro
+		move.w	(v_vdp_buffer1).w,d0		; get buffered copy of VDP register $81
+		andi.b	#%10111111,d0			; clear bit 6 (disable display; fill with background color)
+		move.w	d0,(vdp_control_port).l		; write to VDP
+		endm
+
+; ---------------------------------------------------------------------------
+; enable display
+; ---------------------------------------------------------------------------
+
+enable_display:	macro
+		move.w	(v_vdp_buffer1).w,d0		; get buffered copy of VDP register $81
+		ori.b	#%01000000,d0			; set bit 6 (enable display)
+		move.w	d0,(vdp_control_port).l		; write to VDP
 		endm
 
 ; ---------------------------------------------------------------------------
@@ -263,6 +315,15 @@ zonewarning:	macro loc,elementsize
 		inform 1,"Size of \loc ($%h) does not match ZoneCount ($\#ZoneCount).",(.end-loc)/elementsize
 		endif
 		endm
+
+; ---------------------------------------------------------------------------
+; Macro to binclude something with an end marker
+; ---------------------------------------------------------------------------
+
+bincludeEndMarker: macro *,path
+\*:	incbin	\path
+\*_end:
+	endm
 
 ; ---------------------------------------------------------------------------
 ; sprite mappings and DPLCs macros

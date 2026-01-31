@@ -2,6 +2,12 @@
 ; Object 5E - seesaws (SLZ)
 ; ---------------------------------------------------------------------------
 
+see_origX = objoff_30		; original x-axis position
+see_origY = objoff_34		; original y-axis position
+see_speed = objoff_38		; speed of collision
+see_frame = objoff_3A		; 
+see_parent = objoff_3C		; RAM address of parent object
+
 Seesaw:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
@@ -25,17 +31,12 @@ See_Index:	dc.w See_Main-See_Index
 		dc.w See_MoveSpike-See_Index
 		dc.w See_SpikeFall-See_Index
 
-see_origX:	equ $30		; original x-axis position
-see_origY:	equ $34		; original y-axis position
-see_speed:	equ $38		; speed of collision
-see_frame:	equ $3A		; 
-see_parent:	equ $3C		; RAM address of parent object
 ; ===========================================================================
 
 See_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Seesaw,obMap(a0)
-		move.w	#$374,obGfx(a0)
+		move.w	#ArtTile_SLZ_Seesaw,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$30,obActWid(a0)
@@ -45,19 +46,19 @@ See_Main:	; Routine 0
 
 		bsr.w	FindNextFreeObj
 		bne.s	.noball
-		move.b	#id_Seesaw,0(a1) ; load spikeball object
+		_move.b	#id_Seesaw,obID(a1) ; load spikeball object
 		addq.b	#6,obRoutine(a1) ; use See_Spikeball routine
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	obStatus(a0),obStatus(a1)
 		move.l	a0,see_parent(a1)
 
-	.noball:
+.noball:
 		btst	#0,obStatus(a0)	; is seesaw flipped?
 		beq.s	.noflip		; if not, branch
 		move.b	#2,obFrame(a0)	; use different frame
 
-	.noflip:
+.noflip:
 		move.b	obFrame(a0),see_frame(a0)
 
 See_Slope:	; Routine 2
@@ -68,12 +69,12 @@ See_Slope:	; Routine 2
 		beq.s	.notflat	; if not, branch
 		lea	(See_DataFlat).l,a2
 
-	.notflat:
+.notflat:
 		lea	(v_player).w,a1
 		move.w	obVelY(a1),see_speed(a0)
 		move.w	#$30,d1
 		jsr	(SlopeObject).l
-		rts	
+		rts
 ; ===========================================================================
 
 See_Slope2:	; Routine 4
@@ -83,13 +84,13 @@ See_Slope2:	; Routine 4
 		beq.s	.notflat	; if not, branch
 		lea	(See_DataFlat).l,a2
 
-	.notflat:
+.notflat:
 		move.w	#$30,d1
 		jsr	(ExitPlatform).l
 		move.w	#$30,d1
 		move.w	obX(a0),d2
 		jsr	(SlopeObject2).l
-		rts	
+		rts
 ; ===========================================================================
 
 See_ChkSide:
@@ -101,9 +102,9 @@ See_ChkSide:
 		neg.w	d0
 		moveq	#0,d1
 
-	.leftside:
+.leftside:
 		cmpi.w	#8,d0
-		bcc.s	See_ChgFrame
+		bhs.s	See_ChgFrame
 		moveq	#1,d1
 
 See_ChgFrame:
@@ -113,7 +114,7 @@ See_ChgFrame:
 		bcc.s	.loc_11772
 		addq.b	#2,d0
 
-	.loc_11772:
+.loc_11772:
 		subq.b	#1,d0
 		move.b	d0,obFrame(a0)
 		move.b	d1,see_frame(a0)
@@ -122,14 +123,14 @@ See_ChgFrame:
 		beq.s	.noflip
 		bset	#0,obRender(a0)
 
-	.noflip:
-		rts	
+.noflip:
+		rts
 ; ===========================================================================
 
 See_Spikeball:	; Routine 6
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_SSawBall,obMap(a0)
-		move.w	#$4F0,obGfx(a0)
+		move.w	#ArtTile_SLZ_Spikeball,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$8B,obColType(a0)
@@ -159,7 +160,7 @@ loc_117FC:
 		beq.s	loc_11822
 		move.w	#-$AF0,d1
 		move.w	#-$CC,d2
-		cmpi.w	#$A00,$38(a1)
+		cmpi.w	#$A00,objoff_38(a1)
 		blt.s	loc_11822
 		move.w	#-$E00,d1
 		move.w	#-$A0,d2
@@ -197,7 +198,7 @@ loc_1185C:
 		move.w	d2,obX(a0)
 		clr.w	obY+2(a0)
 		clr.w	obX+2(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 See_SpikeFall:	; Routine $A
@@ -211,7 +212,7 @@ See_SpikeFall:	; Routine $A
 		bsr.w	ObjectFall
 
 locret_11898:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1189A:
@@ -238,7 +239,7 @@ loc_118BA:
 		moveq	#0,d1
 
 See_Spring:
-		move.b	d1,$3A(a1)
+		move.b	d1,objoff_3A(a1)
 		move.b	d1,see_frame(a0)
 		cmp.b	obFrame(a1),d1
 		beq.s	loc_1192C
@@ -251,7 +252,7 @@ See_Spring:
 		neg.w	obVelY(a2)
 		bset	#1,obStatus(a2)
 		bclr	#3,obStatus(a2)
-		clr.b	$3C(a2)
+		clr.b	objoff_3C(a2)
 		move.b	#id_Spring,obAnim(a2) ; change Sonic's animation to "spring" ($10)
 		move.b	#2,obRoutine(a2)
 		move.w	#sfx_Spring,d0
@@ -263,11 +264,11 @@ loc_1192C:
 		subq.b	#2,obRoutine(a0)
 
 locret_11938:
-		rts	
+		rts
 ; ===========================================================================
 See_Speeds:	dc.w -8, -$1C, -$2F, -$1C, -8
 
-See_DataSlope:	incbin	"misc\slzssaw1.bin"
+See_DataSlope:	incbin	"misc/slzssaw1.bin"
 		even
-See_DataFlat:	incbin	"misc\slzssaw2.bin"
+See_DataFlat:	incbin	"misc/slzssaw2.bin"
 		even

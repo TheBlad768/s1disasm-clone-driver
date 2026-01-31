@@ -22,11 +22,11 @@ ChkObjectVisible:
 		bge.s	.offscreen	; if not, branch
 
 		moveq	#0,d0		; set flag to 0
-		rts	
+		rts
 
-	.offscreen:
+.offscreen:
 		moveq	#1,d0		; set flag to 1
-		rts	
+		rts
 ; End of function ChkObjectVisible
 
 ; ---------------------------------------------------------------------------
@@ -59,9 +59,9 @@ ChkPartiallyVisible:
 		bge.s	.offscreen2
 
 		moveq	#0,d0
-		rts	
+		rts
 
-	.offscreen2:
+.offscreen2:
 		moveq	#1,d0
-		rts	
+		rts
 ; End of function ChkPartiallyVisible

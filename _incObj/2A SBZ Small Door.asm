@@ -15,7 +15,7 @@ ADoor_Index:	dc.w ADoor_Main-ADoor_Index
 ADoor_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_ADoor,obMap(a0)
-		move.w	#$42E8,obGfx(a0)
+		move.w	#ArtTile_SBZ_Door|Tile_Pal2,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#8,obActWid(a0)
 		move.b	#4,obPriority(a0)
@@ -26,14 +26,14 @@ ADoor_OpenShut:	; Routine 2
 		move.w	(v_player+obX).w,d0
 		add.w	d1,d0
 		cmp.w	obX(a0),d0
-		bcs.s	ADoor_Animate
+		blo.s	ADoor_Animate
 		sub.w	d1,d0
 		sub.w	d1,d0
 		cmp.w	obX(a0),d0	; is Sonic > $40 pixels from door?
-		bcc.s	ADoor_Animate	; close door
+		bhs.s	ADoor_Animate	; close door
 		add.w	d1,d0
 		cmp.w	obX(a0),d0	; is Sonic left of the door?
-		bcc.s	loc_899A	; if yes, branch
+		bhs.s	loc_899A	; if yes, branch
 		btst	#0,obStatus(a0)
 		bne.s	ADoor_Animate
 		bra.s	ADoor_Open
@@ -58,5 +58,5 @@ ADoor_Animate:
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 
-	.remember:
+.remember:
 		bra.w	RememberState

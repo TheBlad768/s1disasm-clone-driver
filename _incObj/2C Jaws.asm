@@ -11,14 +11,14 @@ Jaws:
 Jaws_Index:	dc.w Jaws_Main-Jaws_Index
 		dc.w Jaws_Turn-Jaws_Index
 
-jaws_timecount:	equ $30
-jaws_timedelay:	equ $32
+jaws_timecount = objoff_30
+jaws_timedelay = objoff_32
 ; ===========================================================================
 
 Jaws_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Jaws,obMap(a0)
-		move.w	#$2486,obGfx(a0)
+		move.w	#ArtTile_Jaws|Tile_Pal1,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$A,obColType(a0)
 		move.b	#4,obPriority(a0)
@@ -42,7 +42,7 @@ Jaws_Turn:	; Routine 2
 		bchg	#0,obStatus(a0)	; change Jaws facing direction
 		move.b	#1,obPrevAni(a0) ; reset animation
 
-	.animate:
+.animate:
 		lea	(Ani_Jaws).l,a1
 		bsr.w	AnimateSprite
 		bsr.w	SpeedToPos
