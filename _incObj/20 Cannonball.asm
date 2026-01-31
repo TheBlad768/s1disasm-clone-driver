@@ -71,7 +71,7 @@ Cbal_Animate:
 		bchg	#0,obFrame(a0)	; change frame
 
 Cbal_Display:
-	if ~~FixBugs
+	if FixBugs=0
 		; Moved to prevent a display-and-delete bug.
 		bsr.w	DisplaySprite
 	endif

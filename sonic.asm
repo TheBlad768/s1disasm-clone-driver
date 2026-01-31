@@ -7527,7 +7527,7 @@ Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 		; - in rev00, it starts at $1DC00, which amounts to $EE bytes
 		; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
 		; From a technical standpoint, this padding serves no purpose.
-		if ~~paddingOptimization
+		if paddingOptimization=0
 			align	$200
 			if Revision<>0
 				dc.b	[$300]$FF
@@ -7965,7 +7965,7 @@ Nem_EndStH:	binclude	"artnem/Ending - StH Logo.nem"
 		; AngleMap starts at $62900 in all revisions, which amounts
 		; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
-		if ~~paddingOptimization
+		if paddingOptimization=0
 			if Revision=0
 				dc.b	[$104]$FF
 			else
@@ -8170,7 +8170,7 @@ Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 		; ObjPos_Index starts at $6B000 in all revisions, which amounts
 		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
-		if ~~paddingOptimization
+		if paddingOptimization=0
 			align	$100
 		endif
 	
@@ -8333,7 +8333,7 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 		; It appears to be placed in such a way that the sound driver
 		; ends right on the $80000 mark in the ROM in all revisions.
 		; From a technical standpoint, this padding serves no purpose.
-		if ~~paddingOptimization
+		if paddingOptimization=0
 			if Revision=0
 				dc.b	[$62A]$FF
 			else

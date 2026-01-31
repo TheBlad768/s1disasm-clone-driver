@@ -88,7 +88,7 @@ sonicAniFrame = objoff_32		; Sonic's current animation number
 Smab_Points:	; Routine 4
 		bsr.w	SpeedToPos
 		addi.w	#$38,obVelY(a0)
-	if ~~FixBugs
+	if FixBugs=0
 		; Objects should not call DisplaySprite and DeleteObject on
 		; the same frame or else cause a null-pointer dereference.
 		bsr.w	DisplaySprite

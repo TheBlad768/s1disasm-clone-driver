@@ -85,7 +85,7 @@ Msl_FromBuzz:	; Routine 4
 		move.b	#1,obAnim(a0)
 		bsr.w	SpeedToPos
 
-	if ~~FixBugs
+	if FixBugs=0
 		; Object should not call DisplaySprite and DeleteObject on
 		; the same frame, or else cause a null-pointer dereference.
 		lea	(Ani_Missile).l,a1

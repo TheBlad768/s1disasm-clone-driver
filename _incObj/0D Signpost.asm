@@ -115,7 +115,7 @@ Sign_SonicRun:	; Routine 6
 	endif
 		move.b	#1,(f_lockctrl).w ; lock controls
 		move.w	#btnR<<8,(v_jpadhold2).w ; make Sonic run to the right
-	if ~~FixBugs
+	if FixBugs=0
 loc_EC70:
 		tst.b	(v_player+obID).w	; Check if Sonic's object has been deleted (because he entered the giant ring)
 		beq.s	loc_EC86

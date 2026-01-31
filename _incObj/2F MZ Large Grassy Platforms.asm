@@ -82,7 +82,7 @@ loc_AF8E:
 		bsr.w	SolidObject2F
 
 LGrass_Display:
-	if ~~FixBugs
+	if FixBugs=0
 		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
 	endif
