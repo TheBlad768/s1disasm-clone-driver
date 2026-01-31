@@ -728,7 +728,7 @@ Mus91_Credits_Loop29:
 	smpsLoop            $00, $04, Mus91_Credits_Loop29
 	smpsLoop            $01, $02, Mus91_Credits_Loop27
 	dc.b	nRst, $60, nRst, nRst, nRst, nRst, nRst
-    if ~~FixMusicAndSFXDataBugs
+    if FixMusicAndSFXDataBugs=0
 	; These rests are unnecessary, and cause the following notes to play way too late.
 	; Delete these three notes to fix this.
 	dc.b	nRst, nRst, nRst

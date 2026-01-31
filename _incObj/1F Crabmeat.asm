@@ -207,7 +207,7 @@ Crab_BallMove:	; Routine 8
 		lea	(Ani_Crab).l,a1
 		bsr.w	AnimateSprite
 		bsr.w	ObjectFall
-	if ~~FixBugs
+	if FixBugs=0
 		; Another bug where an object is queued for display and then
 		; deleted, causing a null-pointer dereference.
 		bsr.w	DisplaySprite

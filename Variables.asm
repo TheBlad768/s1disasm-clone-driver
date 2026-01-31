@@ -289,13 +289,30 @@ v_levelvariables_end:
 
 v_spritetablebuffer:	ds.b	$280		; sprite table (last $80 bytes are overwritten by v_palette_water_fading)
 v_spritetablebuffer_end:
+
 v_palette_water_fading = v_spritetablebuffer_end-$80	; duplicate underwater palette, used for transitions ($80 bytes)
-v_palette_water:	ds.b	$80		; main underwater palette
+
+v_palette_water:	; main underwater palette
+v_palette_water_line_1:	ds.b $20
+v_palette_water_line_2:	ds.b $20
+v_palette_water_line_3:	ds.b $20
+v_palette_water_line_4:	ds.b $20
 v_palette_water_end:
-v_palette:		ds.b	$80		; main palette
+
+v_palette:		; main palette
+v_palette_line_1:	ds.b $20
+v_palette_line_2:	ds.b $20
+v_palette_line_3:	ds.b $20
+v_palette_line_4:	ds.b $20
 v_palette_end:
-v_palette_fading:	ds.b	$80		; duplicate palette, used for transitions
+
+v_palette_fading:	; duplicate palette, used for transitions
+v_palette_fading_line_1:ds.b $20
+v_palette_fading_line_2:ds.b $20
+v_palette_fading_line_3:ds.b $20
+v_palette_fading_line_4:ds.b $20
 v_palette_fading_end:
+
 v_objstate:		ds.b	$C0		; object state list
 v_objstate_end:
 			ds.b	$140		; stack
@@ -385,7 +402,11 @@ v_limitbtmdb:		ds.w	1		; level bottom boundary, buffered for debug mode
 			ds.b	$C		; unused
 v_timingvariables_end:
 
-			ds.b	$10		; unused
+v_chunk0collision:	ds.w	1		; very subtly (and perhaps unintentionally) used by FindNearestTile when encountering chunk 0
+	if v_chunk0collision<>ramaddr($FFFFFF00)
+		fatal "v_chunk0collision needs to be at address $FFFFFF00 so that FindNearestTile works correctly (currently offset by \{signedToString(v_chunk0collision-ramaddr($FFFFFF00))} bytes) ."
+	endif
+			ds.b	$E		; unused
 v_screenposx_dup:	ds.l	1		; screen position x (duplicate)
 v_screenposy_dup:	ds.l	1		; screen position y (duplicate)
 v_bgscreenposx_dup:	ds.l	1		; background screen position x (duplicate)

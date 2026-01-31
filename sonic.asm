@@ -23,6 +23,7 @@ ZoneCount	  = 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
 FixBugs		  = 0	; change to 1 to enable bugfixes
 
 zeroOffsetOptimization = 0	; if 1, makes a handful of zero-offset instructions smaller
+paddingOptimization = 0		; if 1, removes about 3 KB of various superfluous padding
 
 	include "MacroSetup.asm"
 	include	"Constants.asm"
@@ -117,27 +118,27 @@ loc_E0:
 		dc.b "(C)SEGA 1991.APR" ; Copyright holder and release date (generally year)
 		dc.b "SONIC THE               HEDGEHOG                " ; Domestic name
 		dc.b "SONIC THE               HEDGEHOG                " ; International name
-		if Revision=0
+	if Revision=0
 		dc.b "GM 00001009-00"   ; Serial/version number (Rev 0)
-		else
-			dc.b "GM 00004049-01" ; Serial/version number (Rev non-0)
-		endif
+	else
+		dc.b "GM 00004049-01" ; Serial/version number (Rev non-0)
+	endif
 Checksum:
-		if Revision=0
+	if Revision=0
 		dc.w $264A	; Hardcoded to make it easier to check for ROM correctness
-		else
+	else
 		dc.w $AFC7
-		endif
+	endif
 		dc.b "J               " ; I/O support
 		dc.l StartOfRom		; Start address of ROM
 RomEndLoc:	dc.l EndOfRom-1		; End address of ROM
 		dc.l $FF0000		; Start address of RAM
 		dc.l $FFFFFF		; End address of RAM
-		if EnableSRAM=1
+	if EnableSRAM=1
 		dc.b $52, $41, $A0+(BackupSRAM<<6)+(AddressSRAM<<3), $20 ; SRAM support
-		else
+	else
 		dc.l $20202020
-		endif
+	endif
 		dc.l $20202020		; SRAM start ($200001)
 		dc.l $20202020		; SRAM end ($20xxxx)
 		dc.b "                                                    " ; Notes (unused, anything can be put in this space, but it has to be 52 bytes.)
@@ -1090,13 +1091,13 @@ ClearScreen:
 		fillVRAM	0, vram_fg, vram_fg+plane_size_64x32 ; clear foreground namespace
 		fillVRAM	0, vram_bg, vram_bg+plane_size_64x32 ; clear background namespace
 
-		if Revision=0
+	if Revision=0
 		move.l	#0,(v_scrposy_vdp).w
 		move.l	#0,(v_scrposx_vdp).w
-		else
+	else
 		clr.l	(v_scrposy_vdp).w
 		clr.l	(v_scrposx_vdp).w
-		endif
+	endif
 
 	if FixBugs
 		clearRAM v_spritetablebuffer,v_spritetablebuffer_end
@@ -1386,9 +1387,9 @@ loc_16E2:
 		; than a bug: treating the 16th entry as a dummy that
 		; should never be occupied makes this code unnecessary.
 		; Still, the overhead of this code is minimal.
-	if (v_plc_buffer_only_end-v_plc_buffer-6)&2
-		move.w	6(a0),(a0)
-	endif
+		if (v_plc_buffer_only_end-v_plc_buffer-6)&2
+			move.w	6(a0),(a0)
+		endif
 
 		clr.l	(v_plc_buffer_only_end-6).w
 	endif
@@ -1948,7 +1949,7 @@ Pal_Sega2:	binclude	"palette/Sega2.bin"
 
 
 PalLoad_Fade:
-		lea	(PalPointers).l,a1
+		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
@@ -1967,7 +1968,7 @@ PalLoad_Fade:
 
 
 PalLoad:
-		lea	(PalPointers).l,a1
+		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
@@ -1988,7 +1989,7 @@ PalLoad:
 
 
 PalLoad_Fade_Water:
-		lea	(PalPointers).l,a1
+		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
@@ -2007,7 +2008,7 @@ PalLoad_Fade_Water:
 
 
 PalLoad_Water:
-		lea	(PalPointers).l,a1
+		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
 		adda.w	d0,a1
 		movea.l	(a1)+,a2	; get palette data address
@@ -2023,36 +2024,32 @@ PalLoad_Water:
 
 ; ===========================================================================
 
-		include	"_inc/Palette Pointers.asm"
+		include	"_inc/Palette Index.asm"
 
 ; ---------------------------------------------------------------------------
 ; Palette data
 ; ---------------------------------------------------------------------------
-bincludePalette macro path,{INTLABEL},{GLOBALSYMBOLS}
-__LABEL__:	binclude	path
-__LABEL___end:
-	endm
 
-Pal_SegaBG:	bincludePalette	"palette/Sega Background.bin"
-Pal_Title:	bincludePalette	"palette/Title Screen.bin"
-Pal_LevelSel:	bincludePalette	"palette/Level Select.bin"
-Pal_Sonic:	bincludePalette	"palette/Sonic.bin"
-Pal_GHZ:	bincludePalette	"palette/Green Hill Zone.bin"
-Pal_LZ:		bincludePalette	"palette/Labyrinth Zone.bin"
-Pal_LZWater:	bincludePalette	"palette/Labyrinth Zone Underwater.bin"
-Pal_MZ:		bincludePalette	"palette/Marble Zone.bin"
-Pal_SLZ:	bincludePalette	"palette/Star Light Zone.bin"
-Pal_SYZ:	bincludePalette	"palette/Spring Yard Zone.bin"
-Pal_SBZ1:	bincludePalette	"palette/SBZ Act 1.bin"
-Pal_SBZ2:	bincludePalette	"palette/SBZ Act 2.bin"
-Pal_Special:	bincludePalette	"palette/Special Stage.bin"
-Pal_SBZ3:	bincludePalette	"palette/SBZ Act 3.bin"
-Pal_SBZ3Water:	bincludePalette	"palette/SBZ Act 3 Underwater.bin"
-Pal_LZSonWater:	bincludePalette	"palette/Sonic - LZ Underwater.bin"
-Pal_SBZ3SonWat:	bincludePalette	"palette/Sonic - SBZ3 Underwater.bin"
-Pal_SSResult:	bincludePalette	"palette/Special Stage Results.bin"
-Pal_Continue:	bincludePalette	"palette/Special Stage Continue Bonus.bin"
-Pal_Ending:	bincludePalette	"palette/Ending.bin"
+Pal_SegaBG:		bincludeEndMarker	"palette/Sega Background.bin"
+Pal_Title:		bincludeEndMarker	"palette/Title Screen.bin"
+Pal_LevelSel:	bincludeEndMarker	"palette/Level Select.bin"
+Pal_Sonic:		bincludeEndMarker	"palette/Sonic.bin"
+Pal_GHZ:		bincludeEndMarker	"palette/Green Hill Zone.bin"
+Pal_LZ:			bincludeEndMarker	"palette/Labyrinth Zone.bin"
+Pal_LZWater:	bincludeEndMarker	"palette/Labyrinth Zone Underwater.bin"
+Pal_MZ:			bincludeEndMarker	"palette/Marble Zone.bin"
+Pal_SLZ:		bincludeEndMarker	"palette/Star Light Zone.bin"
+Pal_SYZ:		bincludeEndMarker	"palette/Spring Yard Zone.bin"
+Pal_SBZ1:		bincludeEndMarker	"palette/SBZ Act 1.bin"
+Pal_SBZ2:		bincludeEndMarker	"palette/SBZ Act 2.bin"
+Pal_Special:	bincludeEndMarker	"palette/Special Stage.bin"
+Pal_SBZ3:		bincludeEndMarker	"palette/SBZ Act 3.bin"
+Pal_SBZ3Water:	bincludeEndMarker	"palette/SBZ Act 3 Underwater.bin"
+Pal_LZSonWater:	bincludeEndMarker	"palette/Sonic - LZ Underwater.bin"
+Pal_SBZ3SonWat:	bincludeEndMarker	"palette/Sonic - SBZ3 Underwater.bin"
+Pal_SSResult:	bincludeEndMarker	"palette/Special Stage Results.bin"
+Pal_Continue:	bincludeEndMarker	"palette/Special Stage Continue Bonus.bin"
+Pal_Ending:		bincludeEndMarker	"palette/Ending.bin"
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to wait for VBlank routines to complete
@@ -2074,9 +2071,9 @@ WaitForVBla:
 
 		include	"_incObj/sub RandomNumber.asm"
 		include	"_incObj/sub CalcSine.asm"
-		if Revision=0
+	if Revision=0
 		include	"_incObj/sub CalcSqrt.asm"
-		endif
+	endif
 		include	"_incObj/sub CalcAngle.asm"
 
 ; ===========================================================================
@@ -2110,11 +2107,11 @@ GM_Sega:
 		copyTilemap	v_128x128&$FFFFFF,vram_bg+$510,24,8
 		copyTilemap	(v_128x128+24*8*2)&$FFFFFF,vram_fg,40,28
 
-		if Revision<>0
-			tst.b	(v_megadrive).w	; is console Japanese?
-			bmi.s	.loadpal
-			copyTilemap	(v_128x128+$A40)&$FFFFFF,vram_fg+$53A,3,2 ; hide "TM" with a white rectangle
-		endif
+	if Revision<>0
+		tst.b	(v_megadrive).w	; is console Japanese?
+		bmi.s	.loadpal
+		copyTilemap	(v_128x128+$A40)&$FFFFFF,vram_fg+$53A,3,2 ; hide "TM" with a white rectangle
+	endif
 
 .loadpal:
 		moveq	#palid_SegaBG,d0
@@ -2269,10 +2266,10 @@ Tit_LoadText:
 		move.b	#id_PSBTM,(v_pressstart).w ; load "PRESS START BUTTON" object
 		;clr.b	(v_pressstart+obRoutine).w ; The 'Mega Games 10' version of Sonic 1 added this line, to fix the 'PRESS START BUTTON' object not appearing
 
-		if Revision<>0
-			tst.b	(v_megadrive).w	; is console Japanese?
-			bpl.s	.isjap		; if yes, branch
-		endif
+	if Revision<>0
+		tst.b	(v_megadrive).w	; is console Japanese?
+		bpl.s	.isjap		; if yes, branch
+	endif
 
 		move.b	#id_PSBTM,(v_titletm).w ; load "TM" object
 		move.b	#3,(v_titletm+obFrame).w
@@ -2451,9 +2448,9 @@ LevSel_Level_SS:
 		move.w	d0,(v_rings).w	; clear rings
 		move.l	d0,(v_time).w	; clear time
 		move.l	d0,(v_score).w	; clear score
-		if Revision<>0
-			move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
-		endif
+	if Revision<>0
+		move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
+	endif
 		rts	
 ; ===========================================================================
 
@@ -2473,9 +2470,9 @@ PlayLevel:
 		move.l	d0,(v_emldlist).w ; clear emeralds
 		move.l	d0,(v_emldlist+4).w ; clear emeralds
 		move.b	d0,(v_continues).w ; clear continues
-		if Revision<>0
-			move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
-		endif
+	if Revision<>0
+		move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
+	endif
 		move.b	#bgm_Fade,d0
 		bsr.w	QueueSound2 ; fade out music
 		rts	
@@ -2483,7 +2480,8 @@ PlayLevel:
 ; ---------------------------------------------------------------------------
 ; Level select - level pointers
 ; ---------------------------------------------------------------------------
-LevSel_Ptrs:	if Revision=0
+LevSel_Ptrs:
+	if Revision=0
 		; old level order
 		dc.b id_GHZ, 0
 		dc.b id_GHZ, 1
@@ -2504,7 +2502,7 @@ LevSel_Ptrs:	if Revision=0
 		dc.b id_SBZ, 1
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
-		else
+	else
 		; correct level order
 		dc.b id_GHZ, 0
 		dc.b id_GHZ, 1
@@ -2525,18 +2523,19 @@ LevSel_Ptrs:	if Revision=0
 		dc.b id_SBZ, 1
 		dc.b id_LZ, 3
 		dc.b id_SBZ, 2
-		endif
+	endif
 		dc.b id_SS, 0		; Special Stage
 		dc.w $8000		; Sound Test
 		even
 ; ---------------------------------------------------------------------------
 ; Level select codes
 ; ---------------------------------------------------------------------------
-LevSelCode_J:	if Revision=0
+LevSelCode_J:
+	if Revision=0
 		dc.b btnUp,btnDn,btnL,btnR,0,$FF
-		else
+	else
 		dc.b btnUp,btnDn,btnDn,btnDn,btnL,btnR,0,$FF
-		endif
+	endif
 		even
 
 LevSelCode_US:	dc.b btnUp,btnDn,btnL,btnR,0,$FF
@@ -2597,9 +2596,9 @@ Demo_Level:
 		move.w	d0,(v_rings).w	; clear rings
 		move.l	d0,(v_time).w	; clear time
 		move.l	d0,(v_score).w	; clear score
-		if Revision<>0
-			move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
-		endif
+	if Revision<>0
+		move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
+	endif
 		rts	
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -2780,14 +2779,14 @@ LevSel_CharOk:
 
 LevelMenuText:
 		charset ' ', $FF
-		charset '0', "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09"
+		charset '0','9',$00
 		charset '$', $0A
 		charset '-', $0B
 		charset '=', $0C
 		charset '>', $0D
-		;charset '>', $0E ; there are two identical right arrows back-to-back in the menutext font, for some reason
-		charset 'Y', "\x0F\x10" ; Y and Z come before A-X
-		charset 'A', "\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F\x20\x21\x22\x23\x24\x25\x26\x27\x28"
+		;charset '>', $0E ; there are two right arrows in the font for some reason
+		charset 'Y','Z',$0F ; Y and Z come before A-X
+		charset 'A','X',$11
 
 		dc.b "GREEN HILL ZONE  STAGE 1"
 		dc.b "                 STAGE 2"
@@ -3100,10 +3099,10 @@ Level_MainLoop:
 		bsr.w	MoveSonicInDemo
 		bsr.w	LZWaterFeatures
 		jsr	(ExecuteObjects).l
-		if Revision<>0
-			tst.w	(f_restart).w
-			bne	GM_Level
-		endif
+	if Revision<>0
+		tst.w	(f_restart).w
+		bne	GM_Level
+	endif
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.s	Level_DoScroll	; if yes, branch
 		cmpi.b	#6,(v_player+obRoutine).w ; has Sonic just died?
@@ -3123,10 +3122,10 @@ Level_SkipScroll:
 
 		cmpi.b	#id_Demo,(v_gamemode).w
 		beq.s	Level_ChkDemo	; if mode is 8 (demo), branch
-		if Revision=0
+	if Revision=0
 		tst.w	(f_restart).w	; is the level set to restart?
 		bne.w	GM_Level	; if yes, branch
-		endif
+	endif
 		cmpi.b	#id_Level,(v_gamemode).w
 		beq.w	Level_MainLoop	; if mode is $C (level), branch
 		rts	
@@ -3395,11 +3394,11 @@ SS_ChkEnd:
 		beq.w	SS_MainLoop	; if yes, branch
 
 		tst.w	(f_demo).w	; is demo mode on?
-		if Revision=0
+	if Revision=0
 		bne.w	SS_ToSegaScreen	; if yes, branch
-		else
+	else
 		bne.w	SS_ToLevel
-		endif
+	endif
 		move.b	#id_Level,(v_gamemode).w ; set screen mode to $0C (level)
 		cmpi.w	#(id_SBZ<<8)+3,(v_zone).w ; is level number higher than FZ?
 		blo.s	SS_Finish	; if not, branch
@@ -3478,11 +3477,12 @@ SS_ToSegaScreen:
 		move.b	#id_Sega,(v_gamemode).w ; goto Sega screen
 		rts
 
-		if Revision<>0
-SS_ToLevel:	cmpi.b	#id_Level,(v_gamemode).w
+	if Revision<>0
+SS_ToLevel:
+		cmpi.b	#id_Level,(v_gamemode).w
 		beq.s	SS_ToSegaScreen
 		rts
-		endif
+	endif
 
 ; ---------------------------------------------------------------------------
 ; Special stage background loading subroutine
@@ -4345,15 +4345,15 @@ Demo_EndSBZ2:	binclude	"demodata/Ending - SBZ2.bin"
 Demo_EndGHZ2:	binclude	"demodata/Ending - GHZ2.bin"
 		even
 
-		if Revision=0
+	if Revision=0
 		include	"_inc/LevelSizeLoad & BgScrollSpeed.asm"
 		include	"_inc/DeformLayers.asm"
 		include	"_inc/Level Drawing.asm"
-		else
+	else
 		include	"_inc/LevelSizeLoad & BgScrollSpeed (JP1).asm"
 		include	"_inc/DeformLayers (JP1).asm"
 		include	"_inc/Level Drawing (JP1).asm"
-		endif
+	endif
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to load basic level data
@@ -4933,11 +4933,14 @@ Map_Missile:	include	"_maps/Buzz Bomber Missile.asm"
 		include	"_incObj/7C Ring Flash.asm"
 
 		include	"_anim/Rings.asm"
-		if Revision=0
-Map_Ring:	include	"_maps/Rings.asm"
-		else
-Map_Ring:		include	"_maps/Rings (JP1).asm"
-		endif
+
+Map_Ring:
+	if Revision=0
+		include	"_maps/Rings.asm"
+	else
+		include	"_maps/Rings (JP1).asm"
+	endif
+
 Map_GRing:	include	"_maps/Giant Ring.asm"
 Map_Flash:	include	"_maps/Ring Flash.asm"
 		include	"_incObj/26 Monitor.asm"
@@ -4995,120 +4998,124 @@ Map_Push:	include	"_maps/Pushable Blocks.asm"
 ; Sprite mappings - zone title cards
 ; ---------------------------------------------------------------------------
 Map_Card:	mappingsTable
-	mappingsTableEntry.w	M_Card_GHZ
-	mappingsTableEntry.w	M_Card_LZ
-	mappingsTableEntry.w	M_Card_MZ
-	mappingsTableEntry.w	M_Card_SLZ
-	mappingsTableEntry.w	M_Card_SYZ
-	mappingsTableEntry.w	M_Card_SBZ
-	mappingsTableEntry.w	M_Card_Zone
-	mappingsTableEntry.w	M_Card_Act1
-	mappingsTableEntry.w	M_Card_Act2
-	mappingsTableEntry.w	M_Card_Act3
-	mappingsTableEntry.w	M_Card_Oval
-	mappingsTableEntry.w	M_Card_FZ
+	mappingsTableEntry.w	M_Card_GHZ	; Green Hill Zone
+	mappingsTableEntry.w	M_Card_LZ	; Labyrinth Zone
+	mappingsTableEntry.w	M_Card_MZ	; Marble Zone
+	mappingsTableEntry.w	M_Card_SLZ	; Star Light Zone
+	mappingsTableEntry.w	M_Card_SYZ	; Spring Yard Zone
+	mappingsTableEntry.w	M_Card_SBZ	; Scrap Brain Zone
+	mappingsTableEntry.w	M_Card_Zone	; "ZONE" text
+	mappingsTableEntry.w	M_Card_Act1	; Act number 1
+	mappingsTableEntry.w	M_Card_Act2	; Act number 2
+	mappingsTableEntry.w	M_Card_Act3	; Act number 3
+	mappingsTableEntry.w	M_Card_Oval	; Blue oval
+	mappingsTableEntry.w	M_Card_FZ	; Final Zone
 
-M_Card_GHZ:	spriteHeader		; GREEN HILL
-	spritePiece	-$4C, -8, 2, 2, $18, 0, 0, 0, 0
-	spritePiece	-$3C, -8, 2, 2, $3A, 0, 0, 0, 0
-	spritePiece	-$2C, -8, 2, 2, $10, 0, 0, 0, 0
-	spritePiece	-$1C, -8, 2, 2, $10, 0, 0, 0, 0
-	spritePiece	-$C, -8, 2, 2, $2E, 0, 0, 0, 0
-	spritePiece	$14, -8, 2, 2, $1C, 0, 0, 0, 0
-	spritePiece	$24, -8, 1, 2, $20, 0, 0, 0, 0
-	spritePiece	$2C, -8, 2, 2, $26, 0, 0, 0, 0
-	spritePiece	$3C, -8, 2, 2, $26, 0, 0, 0, 0
+M_Card_GHZ:	spriteHeader	; GREEN HILL
+	spritePiece	-$4C, -8, 2, 2, $18, 0, 0, 0, 0	; G
+	spritePiece	-$3C, -8, 2, 2, $3A, 0, 0, 0, 0	; R
+	spritePiece	-$2C, -8, 2, 2, $10, 0, 0, 0, 0	; E
+	spritePiece	-$1C, -8, 2, 2, $10, 0, 0, 0, 0	; E
+	spritePiece	-$C, -8, 2, 2, $2E, 0, 0, 0, 0	; N
+
+	spritePiece	$14, -8, 2, 2, $1C, 0, 0, 0, 0	; H
+	spritePiece	$24, -8, 1, 2, $20, 0, 0, 0, 0	; I
+	spritePiece	$2C, -8, 2, 2, $26, 0, 0, 0, 0	; L
+	spritePiece	$3C, -8, 2, 2, $26, 0, 0, 0, 0	; L
 M_Card_GHZ_End
 	even
 
-M_Card_LZ:	spriteHeader		; LABYRINTH
-	spritePiece	-$44, -8, 2, 2, $26, 0, 0, 0, 0
-	spritePiece	-$34, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	-$24, -8, 2, 2, 4, 0, 0, 0, 0
-	spritePiece	-$14, -8, 2, 2, $4A, 0, 0, 0, 0
-	spritePiece	-4, -8, 2, 2, $3A, 0, 0, 0, 0
-	spritePiece	$C, -8, 1, 2, $20, 0, 0, 0, 0
-	spritePiece	$14, -8, 2, 2, $2E, 0, 0, 0, 0
-	spritePiece	$24, -8, 2, 2, $42, 0, 0, 0, 0
-	spritePiece	$34, -8, 2, 2, $1C, 0, 0, 0, 0
+M_Card_LZ:	spriteHeader	; LABYRINTH
+	spritePiece	-$44, -8, 2, 2, $26, 0, 0, 0, 0	; L
+	spritePiece	-$34, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	-$24, -8, 2, 2, 4, 0, 0, 0, 0	; B
+	spritePiece	-$14, -8, 2, 2, $4A, 0, 0, 0, 0	; Y
+	spritePiece	-4, -8, 2, 2, $3A, 0, 0, 0, 0	; R
+	spritePiece	$C, -8, 1, 2, $20, 0, 0, 0, 0	; I
+	spritePiece	$14, -8, 2, 2, $2E, 0, 0, 0, 0	; N
+	spritePiece	$24, -8, 2, 2, $42, 0, 0, 0, 0	; T
+	spritePiece	$34, -8, 2, 2, $1C, 0, 0, 0, 0	; H
 M_Card_LZ_End
 	even
 
-M_Card_MZ:	spriteHeader		; MARBLE
-	spritePiece	-$31, -8, 2, 2, $2A, 0, 0, 0, 0
-	spritePiece	-$20, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	-$10, -8, 2, 2, $3A, 0, 0, 0, 0
-	spritePiece	 0, -8, 2, 2, 4, 0, 0, 0, 0
-	spritePiece	 $10, -8, 2, 2, $26, 0, 0, 0, 0
-	spritePiece	 $20, -8, 2, 2, $10, 0, 0, 0, 0
+M_Card_MZ:	spriteHeader	; MARBLE
+	spritePiece	-$31, -8, 2, 2, $2A, 0, 0, 0, 0	; M
+	spritePiece	-$20, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	-$10, -8, 2, 2, $3A, 0, 0, 0, 0	; R
+	spritePiece	 0, -8, 2, 2, 4, 0, 0, 0, 0	; B
+	spritePiece	 $10, -8, 2, 2, $26, 0, 0, 0, 0	; L
+	spritePiece	 $20, -8, 2, 2, $10, 0, 0, 0, 0	; E
 M_Card_MZ_End
 	even
 
-M_Card_SLZ:	spriteHeader		; STAR LIGHT
-	spritePiece	-$4C, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	-$3C, -8, 2, 2, $42, 0, 0, 0, 0
-	spritePiece	-$2C, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	-$1C, -8, 2, 2, $3A, 0, 0, 0, 0
-	spritePiece	4, -8, 2, 2, $26, 0, 0, 0, 0
-	spritePiece	$14, -8, 1, 2, $20, 0, 0, 0, 0
-	spritePiece	$1C, -8, 2, 2, $18, 0, 0, 0, 0
-	spritePiece	$2C, -8, 2, 2, $1C, 0, 0, 0, 0
-	spritePiece	$3C, -8, 2, 2, $42, 0, 0, 0, 0
+M_Card_SLZ:	spriteHeader	; STAR LIGHT
+	spritePiece	-$4C, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+	spritePiece	-$3C, -8, 2, 2, $42, 0, 0, 0, 0	; T
+	spritePiece	-$2C, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	-$1C, -8, 2, 2, $3A, 0, 0, 0, 0	; R
+
+	spritePiece	4, -8, 2, 2, $26, 0, 0, 0, 0	; L
+	spritePiece	$14, -8, 1, 2, $20, 0, 0, 0, 0	; I
+	spritePiece	$1C, -8, 2, 2, $18, 0, 0, 0, 0	; G
+	spritePiece	$2C, -8, 2, 2, $1C, 0, 0, 0, 0	; H
+	spritePiece	$3C, -8, 2, 2, $42, 0, 0, 0, 0	; T
 M_Card_SLZ_End
 	even
 
-M_Card_SYZ:	spriteHeader		; SPRING YARD
-	spritePiece	-$54, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	-$44, -8, 2, 2, $36, 0, 0, 0, 0
-	spritePiece	-$34, -8, 2, 2, $3A, 0, 0, 0, 0
-	spritePiece	-$24, -8, 1, 2, $20, 0, 0, 0, 0
-	spritePiece	-$1C, -8, 2, 2, $2E, 0, 0, 0, 0
-	spritePiece	-$C, -8, 2, 2, $18, 0, 0, 0, 0
-	spritePiece	$14, -8, 2, 2, $4A, 0, 0, 0, 0
-	spritePiece	$24, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	$34, -8, 2, 2, $3A, 0, 0, 0, 0
-	spritePiece	$44, -8, 2, 2, $C, 0, 0, 0, 0
+M_Card_SYZ:	spriteHeader	; SPRING YARD
+	spritePiece	-$54, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+	spritePiece	-$44, -8, 2, 2, $36, 0, 0, 0, 0	; P
+	spritePiece	-$34, -8, 2, 2, $3A, 0, 0, 0, 0	; R
+	spritePiece	-$24, -8, 1, 2, $20, 0, 0, 0, 0	; I
+	spritePiece	-$1C, -8, 2, 2, $2E, 0, 0, 0, 0	; N
+	spritePiece	-$C, -8, 2, 2, $18, 0, 0, 0, 0	; G
+
+	spritePiece	$14, -8, 2, 2, $4A, 0, 0, 0, 0	; Y
+	spritePiece	$24, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	$34, -8, 2, 2, $3A, 0, 0, 0, 0	; R
+	spritePiece	$44, -8, 2, 2, $C, 0, 0, 0, 0	; D
 M_Card_SYZ_End
 	even
 
-M_Card_SBZ:	spriteHeader		; SCRAP BRAIN
-	spritePiece	-$54, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	-$44, -8, 2, 2, 8, 0, 0, 0, 0
-	spritePiece	-$34, -8, 2, 2, $3A, 0, 0, 0, 0
-	spritePiece	-$24, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	-$14, -8, 2, 2, $36, 0, 0, 0, 0
-	spritePiece	$C, -8, 2, 2, 4, 0, 0, 0, 0
-	spritePiece	$1C, -8, 2, 2, $3A, 0, 0, 0, 0
-	spritePiece	$2C, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	$3C, -8, 1, 2, $20, 0, 0, 0, 0
-	spritePiece	$44, -8, 2, 2, $2E, 0, 0, 0, 0
+M_Card_SBZ:	spriteHeader	; SCRAP BRAIN
+	spritePiece	-$54, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+	spritePiece	-$44, -8, 2, 2, 8, 0, 0, 0, 0	; C
+	spritePiece	-$34, -8, 2, 2, $3A, 0, 0, 0, 0	; R
+	spritePiece	-$24, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	-$14, -8, 2, 2, $36, 0, 0, 0, 0	; P
+
+	spritePiece	$C, -8, 2, 2, 4, 0, 0, 0, 0	; B
+	spritePiece	$1C, -8, 2, 2, $3A, 0, 0, 0, 0	; R
+	spritePiece	$2C, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	$3C, -8, 1, 2, $20, 0, 0, 0, 0	; I
+	spritePiece	$44, -8, 2, 2, $2E, 0, 0, 0, 0	; N
 M_Card_SBZ_End
 	even
 
-M_Card_Zone:	spriteHeader		; ZONE
-	spritePiece	-$20, -8, 2, 2, $4E, 0, 0, 0, 0
-	spritePiece	-$10, -8, 2, 2, $32, 0, 0, 0, 0
-	spritePiece	0, -8, 2, 2, $2E, 0, 0, 0, 0
-	spritePiece	$10, -8, 2, 2, $10, 0, 0, 0, 0
+M_Card_Zone:	spriteHeader	; ZONE
+	spritePiece	-$20, -8, 2, 2, $4E, 0, 0, 0, 0	; Z
+	spritePiece	-$10, -8, 2, 2, $32, 0, 0, 0, 0	; O
+	spritePiece	0, -8, 2, 2, $2E, 0, 0, 0, 0	; N
+	spritePiece	$10, -8, 2, 2, $10, 0, 0, 0, 0	; E
 M_Card_Zone_End
 	even
 
-M_Card_Act1:	spriteHeader		; ACT 1
-	spritePiece	-$14, 4, 4, 1, $53, 0, 0, 0, 0
-	spritePiece	$C, -$C, 1, 3, $57, 0, 0, 0, 0
+M_Card_Act1:	spriteHeader	; Act number 1
+	spritePiece	-$14, 4, 4, 1, $53, 0, 0, 0, 0	; "ACT"
+	spritePiece	$C, -$C, 1, 3, $57, 0, 0, 0, 0	; 1
 M_Card_Act1_End
 
-M_Card_Act2:	spriteHeader		; ACT 2
-	spritePiece	-$14, 4, 4, 1, $53, 0, 0, 0, 0
-	spritePiece	8, -$C, 2, 3, $5A, 0, 0, 0, 0
+M_Card_Act2:	spriteHeader	; Act number 2
+	spritePiece	-$14, 4, 4, 1, $53, 0, 0, 0, 0	; "ACT"
+	spritePiece	8, -$C, 2, 3, $5A, 0, 0, 0, 0	; 2
 M_Card_Act2_End
 
-M_Card_Act3:	spriteHeader		; ACT 3
-	spritePiece	-$14, 4, 4, 1, $53, 0, 0, 0, 0
-	spritePiece	8, -$C, 2, 3, $60, 0, 0, 0, 0
+M_Card_Act3:	spriteHeader	; Act number 3
+	spritePiece	-$14, 4, 4, 1, $53, 0, 0, 0, 0	; "ACT"
+	spritePiece	8, -$C, 2, 3, $60, 0, 0, 0, 0	; 3
 M_Card_Act3_End
 
-M_Card_Oval:	spriteHeader		; Oval
+M_Card_Oval:	spriteHeader	; Blue oval
 	spritePiece	-$C, -$1C, 4, 1, $70, 0, 0, 0, 0
 	spritePiece	$14, -$1C, 1, 3, $74, 0, 0, 0, 0
 	spritePiece	-$14, -$14, 2, 1, $77, 0, 0, 0, 0
@@ -5125,14 +5132,16 @@ M_Card_Oval:	spriteHeader		; Oval
 M_Card_Oval_End
 	even
 
-M_Card_FZ:	spriteHeader		; FINAL
-	spritePiece	-$24, -8, 2, 2, $14, 0, 0, 0, 0
-	spritePiece	-$14, -8, 1, 2, $20, 0, 0, 0, 0
-	spritePiece	-$C, -8, 2, 2, $2E, 0, 0, 0, 0
-	spritePiece	4, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	$14, -8, 2, 2, $26, 0, 0, 0, 0
+M_Card_FZ:	spriteHeader	; FINAL
+	spritePiece	-$24, -8, 2, 2, $14, 0, 0, 0, 0	; F
+	spritePiece	-$14, -8, 1, 2, $20, 0, 0, 0, 0	; I
+	spritePiece	-$C, -8, 2, 2, $2E, 0, 0, 0, 0	; N
+	spritePiece	4, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	$14, -8, 2, 2, $26, 0, 0, 0, 0	; L
 M_Card_FZ_End
 	even
+
+; ===========================================================================
 
 Map_Over:	include	"_maps/Game Over.asm"
 
@@ -5140,170 +5149,180 @@ Map_Over:	include	"_maps/Game Over.asm"
 ; Sprite mappings - "SONIC HAS PASSED" title card
 ; ---------------------------------------------------------------------------
 Map_Got:	mappingsTable
-	mappingsTableEntry.w	M_Got_SonicHas
-	mappingsTableEntry.w	M_Got_Passed
-	mappingsTableEntry.w	M_Got_Score
-	mappingsTableEntry.w	M_Got_TBonus
-	mappingsTableEntry.w	M_Got_RBonus
-	mappingsTableEntry.w	M_Card_Oval
-	mappingsTableEntry.w	M_Card_Act1
-	mappingsTableEntry.w	M_Card_Act2
-	mappingsTableEntry.w	M_Card_Act3
+	mappingsTableEntry.w	M_Got_SonicHas	; "SONIC HAS" text
+	mappingsTableEntry.w	M_Got_Passed	; "PASSED" text
+	mappingsTableEntry.w	M_Got_Score	; Score tally
+	mappingsTableEntry.w	M_Got_TBonus	; Time Bonus tally
+	mappingsTableEntry.w	M_Got_RBonus	; Ring Bonus tally
+
+	; These elements are cross-referenced from the regular title card mappings!
+	mappingsTableEntry.w	M_Card_Oval	; Blue oval
+	mappingsTableEntry.w	M_Card_Act1	; Act number 1
+	mappingsTableEntry.w	M_Card_Act2	; Act number 2
+	mappingsTableEntry.w	M_Card_Act3	; Act number 3
 	
-M_Got_SonicHas:	spriteHeader		; SONIC HAS
-	spritePiece	-$48, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	-$38, -8, 2, 2, $32, 0, 0, 0, 0
-	spritePiece	-$28, -8, 2, 2, $2E, 0, 0, 0, 0
-	spritePiece	-$18, -8, 1, 2, $20, 0, 0, 0, 0
-	spritePiece	-$10, -8, 2, 2, 8, 0, 0, 0, 0
-	spritePiece	$10, -8, 2, 2, $1C, 0, 0, 0, 0
-	spritePiece	$20, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	$30, -8, 2, 2, $3E, 0, 0, 0, 0
+M_Got_SonicHas:	spriteHeader	; SONIC HAS
+	spritePiece	-$48, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+	spritePiece	-$38, -8, 2, 2, $32, 0, 0, 0, 0	; O
+	spritePiece	-$28, -8, 2, 2, $2E, 0, 0, 0, 0	; N
+	spritePiece	-$18, -8, 1, 2, $20, 0, 0, 0, 0	; I
+	spritePiece	-$10, -8, 2, 2, 8, 0, 0, 0, 0	; C
+
+	spritePiece	$10, -8, 2, 2, $1C, 0, 0, 0, 0	; H
+	spritePiece	$20, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	$30, -8, 2, 2, $3E, 0, 0, 0, 0	; S
 M_Got_SonicHas_End
 
-M_Got_Passed:	spriteHeader		; PASSED
-	spritePiece	-$30, -8, 2, 2, $36, 0, 0, 0, 0
-	spritePiece	-$20, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	-$10, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	0, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	$10, -8, 2, 2, $10, 0, 0, 0, 0
-	spritePiece	$20, -8, 2, 2, $C, 0, 0, 0, 0
+M_Got_Passed:	spriteHeader	; PASSED
+	spritePiece	-$30, -8, 2, 2, $36, 0, 0, 0, 0	; P
+	spritePiece	-$20, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	-$10, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+	spritePiece	0, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+	spritePiece	$10, -8, 2, 2, $10, 0, 0, 0, 0	; E
+	spritePiece	$20, -8, 2, 2, $C, 0, 0, 0, 0	; D
 M_Got_Passed_End
 
-M_Got_Score:	spriteHeader		; SCORE
-	spritePiece	-$50, -8, 4, 2, $14A, 0, 0, 0, 0
-	spritePiece	-$30, -8, 1, 2, $162, 0, 0, 0, 0
-	spritePiece	$18, -8, 3, 2, $164, 0, 0, 0, 0
-	spritePiece	$30, -8, 4, 2, $16A, 0, 0, 0, 0
-	spritePiece	-$33, -9, 2, 1, $6E, 0, 0, 0, 0
-	spritePiece	-$33, -1, 2, 1, $6E, 1, 1, 0, 0
+M_Got_Score:	spriteHeader	; Score tally
+	spritePiece	-$50, -8, 4, 2, $14A, 0, 0, 0, 0; "SCOR"
+	spritePiece	-$30, -8, 1, 2, $162, 0, 0, 0, 0; "E"
+	spritePiece	$18, -8, 3, 2, $164, 0, 0, 0, 0	; Tally (first four digits)
+	spritePiece	$30, -8, 4, 2, $16A, 0, 0, 0, 0	; Tally (second four digits)
+	spritePiece	-$33, -9, 2, 1, $6E, 0, 0, 0, 0	; Small oval (upper half)
+	spritePiece	-$33, -1, 2, 1, $6E, 1, 1, 0, 0	; Small oval (lower half)
 M_Got_Score_End
 
-M_Got_TBonus:	spriteHeader		; TIME BONUS
-	spritePiece	-$50, -8, 4, 2, $15A, 0, 0, 0, 0
-	spritePiece	-$27, -8, 4, 2, $66, 0, 0, 0, 0
-	spritePiece	-7, -8, 1, 2, $14A, 0, 0, 0, 0
-	spritePiece	-$A, -9, 2, 1, $6E, 0, 0, 0, 0
-	spritePiece	-$A, -1, 2, 1, $6E, 1, 1, 0, 0
-	spritePiece	$28, -8, 4, 2, -$10, 0, 0, 0, 0
-	spritePiece	$48, -8, 1, 2, $170, 0, 0, 0, 0
+M_Got_TBonus:	spriteHeader	; Time Bonus tally
+	spritePiece	-$50, -8, 4, 2, $15A, 0, 0, 0, 0; "TIME"
+	spritePiece	-$27, -8, 4, 2, $66, 0, 0, 0, 0	; "BONU"
+	spritePiece	-7, -8, 1, 2, $14A, 0, 0, 0, 0	; "S"
+	spritePiece	-$A, -9, 2, 1, $6E, 0, 0, 0, 0	; Small oval (upper half)
+	spritePiece	-$A, -1, 2, 1, $6E, 1, 1, 0, 0	; Small oval (lower half)
+	spritePiece	$28, -8, 4, 2, -$10, 0, 0, 0, 0	; Tally (first four digits)
+	spritePiece	$48, -8, 1, 2, $170, 0, 0, 0, 0	; Tally (second four digits)
 M_Got_TBonus_End
 
-M_Got_RBonus:	spriteHeader		; RING BONUS
-	spritePiece	-$50, -8, 4, 2, $152, 0, 0, 0, 0
-	spritePiece	-$27, -8, 4, 2, $66, 0, 0, 0, 0
-	spritePiece	-7, -8, 1, 2, $14A, 0, 0, 0, 0
-	spritePiece	-$A, -9, 2, 1, $6E, 0, 0, 0, 0
-	spritePiece	-$A, -1, 2, 1, $6E, 1, 1, 0, 0
-	spritePiece	$28, -8, 4, 2, -8, 0, 0, 0, 0
-	spritePiece	$48, -8, 1, 2, $170, 0, 0, 0, 0
+M_Got_RBonus:	spriteHeader	; Ring Bonus tally
+	spritePiece	-$50, -8, 4, 2, $152, 0, 0, 0, 0; "RING"
+	spritePiece	-$27, -8, 4, 2, $66, 0, 0, 0, 0	; "BONU"
+	spritePiece	-7, -8, 1, 2, $14A, 0, 0, 0, 0	; "S"
+	spritePiece	-$A, -9, 2, 1, $6E, 0, 0, 0, 0	; Small oval (upper half)
+	spritePiece	-$A, -1, 2, 1, $6E, 1, 1, 0, 0	; Small oval (lower half)
+	spritePiece	$28, -8, 4, 2, -8, 0, 0, 0, 0	; Tally (first four digits)
+	spritePiece	$48, -8, 1, 2, $170, 0, 0, 0, 0	; Tally (second four digits)
 M_Got_RBonus_End
 	even
+
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - special stage results screen
 ; ---------------------------------------------------------------------------
 Map_SSR:	mappingsTable
-	mappingsTableEntry.w	M_SSR_Chaos
-	mappingsTableEntry.w	M_SSR_Score
-	mappingsTableEntry.w	M_SSR_Ring
-	mappingsTableEntry.w	M_Card_Oval
-	mappingsTableEntry.w	M_SSR_ContSonic1
-	mappingsTableEntry.w	M_SSR_ContSonic2
-	mappingsTableEntry.w	M_SSR_Continue
-	mappingsTableEntry.w	M_SSR_SpecStage
-	mappingsTableEntry.w	M_SSR_GotAll
+	mappingsTableEntry.w	M_SSR_Chaos	; "CHAOS EMERLADS" text
+	mappingsTableEntry.w	M_SSR_Score	; Score tally
+	mappingsTableEntry.w	M_SSR_Ring	; Ring Bonus tally
+	mappingsTableEntry.w	M_Card_Oval	; Blue oval (cross-referended from the regular title card mappings)
+	mappingsTableEntry.w	M_SSR_ContSon1	; Continue tally with mini Sonic (foot down)
+	mappingsTableEntry.w	M_SSR_ContSon2	; Continue tally with mini Sonic (foot up)
+	mappingsTableEntry.w	M_SSR_Continue	; Continue tally without mini Sonic
+	mappingsTableEntry.w	M_SSR_SpeStage	; "SPECIAL STAGE" text
+	mappingsTableEntry.w	M_SSR_GotAll	; "SONIC GOT THEM ALL" text
 
-M_SSR_Chaos:	spriteHeader		; "CHAOS EMERALDS"
-	spritePiece	-$70, -8, 2, 2, 8, 0, 0, 0, 0
-	spritePiece	-$60, -8, 2, 2, $1C, 0, 0, 0, 0
-	spritePiece	-$50, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	-$40, -8, 2, 2, $32, 0, 0, 0, 0
-	spritePiece	-$30, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	-$10, -8, 2, 2, $10, 0, 0, 0, 0
-	spritePiece	0, -8, 2, 2, $2A, 0, 0, 0, 0
-	spritePiece	$10, -8, 2, 2, $10, 0, 0, 0, 0
-	spritePiece	$20, -8, 2, 2, $3A, 0, 0, 0, 0
-	spritePiece	$30, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	$40, -8, 2, 2, $26, 0, 0, 0, 0
-	spritePiece	$50, -8, 2, 2, $C, 0, 0, 0, 0
-	spritePiece	$60, -8, 2, 2, $3E, 0, 0, 0, 0
+M_SSR_Chaos:	spriteHeader	; CHAOS EMERALDS
+	spritePiece	-$70, -8, 2, 2, 8, 0, 0, 0, 0	; C
+	spritePiece	-$60, -8, 2, 2, $1C, 0, 0, 0, 0	; H
+	spritePiece	-$50, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	-$40, -8, 2, 2, $32, 0, 0, 0, 0	; O
+	spritePiece	-$30, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+
+	spritePiece	-$10, -8, 2, 2, $10, 0, 0, 0, 0	; E
+	spritePiece	0, -8, 2, 2, $2A, 0, 0, 0, 0	; M
+	spritePiece	$10, -8, 2, 2, $10, 0, 0, 0, 0	; E
+	spritePiece	$20, -8, 2, 2, $3A, 0, 0, 0, 0	; R
+	spritePiece	$30, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	$40, -8, 2, 2, $26, 0, 0, 0, 0	; L
+	spritePiece	$50, -8, 2, 2, $C, 0, 0, 0, 0	; D
+	spritePiece	$60, -8, 2, 2, $3E, 0, 0, 0, 0	; S
 M_SSR_Chaos_End
 
-M_SSR_Score:	spriteHeader		; "SCORE"
-	spritePiece	-$50, -8, 4, 2, $14A, 0, 0, 0, 0
-	spritePiece	-$30, -8, 1, 2, $162, 0, 0, 0, 0
-	spritePiece	$18, -8, 3, 2, $164, 0, 0, 0, 0
-	spritePiece	$30, -8, 4, 2, $16A, 0, 0, 0, 0
-	spritePiece	-$33, -9, 2, 1, $6E, 0, 0, 0, 0
-	spritePiece	-$33, -1, 2, 1, $6E, 1, 1, 0, 0
+M_SSR_Score:	spriteHeader	; Score tally
+	spritePiece	-$50, -8, 4, 2, $14A, 0, 0, 0, 0; "SCOR"
+	spritePiece	-$30, -8, 1, 2, $162, 0, 0, 0, 0; "E"
+	spritePiece	$18, -8, 3, 2, $164, 0, 0, 0, 0	; Tally (first four digits)
+	spritePiece	$30, -8, 4, 2, $16A, 0, 0, 0, 0	; Tally (second four digits)
+	spritePiece	-$33, -9, 2, 1, $6E, 0, 0, 0, 0	; Small oval (upper half)
+	spritePiece	-$33, -1, 2, 1, $6E, 1, 1, 0, 0	; Small oval (lower half)
 M_SSR_Score_End
 
-M_SSR_Ring:	spriteHeader
-	spritePiece	-$50, -8, 4, 2, $152, 0, 0, 0, 0
-	spritePiece	-$27, -8, 4, 2, $66, 0, 0, 0, 0
-	spritePiece	-7, -8, 1, 2, $14A, 0, 0, 0, 0
-	spritePiece	-$A, -9, 2, 1, $6E, 0, 0, 0, 0
-	spritePiece	-$A, -1, 2, 1, $6E, 1, 1, 0, 0
-	spritePiece	$28, -8, 4, 2, -8, 0, 0, 0, 0
-	spritePiece	$48, -8, 1, 2, $170, 0, 0, 0, 0
+M_SSR_Ring:	spriteHeader	; Ring Bonus tally
+	spritePiece	-$50, -8, 4, 2, $152, 0, 0, 0, 0; "RING"
+	spritePiece	-$27, -8, 4, 2, $66, 0, 0, 0, 0	; "BONU"
+	spritePiece	-7, -8, 1, 2, $14A, 0, 0, 0, 0	; "S"
+	spritePiece	-$A, -9, 2, 1, $6E, 0, 0, 0, 0	; Small oval (upper half)
+	spritePiece	-$A, -1, 2, 1, $6E, 1, 1, 0, 0	; Small oval (lower half)
+	spritePiece	$28, -8, 4, 2, -8, 0, 0, 0, 0	; Tally (first four digits)
+	spritePiece	$48, -8, 1, 2, $170, 0, 0, 0, 0	; Tally (second four digits)
 M_SSR_Ring_End
 
-M_SSR_ContSonic1:	spriteHeader
-	spritePiece	-$50, -8, 4, 2, -$2F, 0, 0, 0, 0
-	spritePiece	-$30, -8, 4, 2, -$27, 0, 0, 0, 0
-	spritePiece	-$10, -8, 1, 2, -$1F, 0, 0, 0, 0
-	spritePiece	$40, -8, 2, 3, -$1D, 0, 0, 1, 0
-M_SSR_ContSonic1_End
+M_SSR_ContSon1:	spriteHeader	; Continue tally with mini Sonic (foot down)
+	spritePiece	-$50, -8, 4, 2, -$2F, 0, 0, 0, 0; "CONT"
+	spritePiece	-$30, -8, 4, 2, -$27, 0, 0, 0, 0; "INUE" and small oval (left half)
+	spritePiece	-$10, -8, 1, 2, -$1F, 0, 0, 0, 0; Small oval (right half)
+	spritePiece	$40, -8, 2, 3, -$1D, 0, 0, 1, 0	; Mini Sonic (foot down)
+M_SSR_ContSon1_End
 
-M_SSR_ContSonic2:	spriteHeader
-	spritePiece	-$50, -8, 4, 2, -$2F, 0, 0, 0, 0
-	spritePiece	-$30, -8, 4, 2, -$27, 0, 0, 0, 0
-	spritePiece	-$10, -8, 1, 2, -$1F, 0, 0, 0, 0
-	spritePiece	$40, -8, 2, 3, -$17, 0, 0, 1, 0
-M_SSR_ContSonic2_End
+M_SSR_ContSon2:	spriteHeader	; Continue tally with mini Sonic (foot up)
+	spritePiece	-$50, -8, 4, 2, -$2F, 0, 0, 0, 0; "CONT"
+	spritePiece	-$30, -8, 4, 2, -$27, 0, 0, 0, 0; "INUE" and small oval (left half)
+	spritePiece	-$10, -8, 1, 2, -$1F, 0, 0, 0, 0; Small oval (right half)
+	spritePiece	$40, -8, 2, 3, -$17, 0, 0, 1, 0	; Mini Sonic (foot up)
+M_SSR_ContSon2_End
 
-M_SSR_Continue:	spriteHeader
-	spritePiece	-$50, -8, 4, 2, -$2F, 0, 0, 0, 0
-	spritePiece	-$30, -8, 4, 2, -$27, 0, 0, 0, 0
-	spritePiece	-$10, -8, 1, 2, -$1F, 0, 0, 0, 0
+M_SSR_Continue:	spriteHeader	; Continue tally without mini Sonic
+	spritePiece	-$50, -8, 4, 2, -$2F, 0, 0, 0, 0; "CONT"
+	spritePiece	-$30, -8, 4, 2, -$27, 0, 0, 0, 0; "INUE" and small oval (left half)
+	spritePiece	-$10, -8, 1, 2, -$1F, 0, 0, 0, 0; Small oval (right half)
 M_SSR_Continue_End
 
-M_SSR_SpecStage:	spriteHeader		; "SPECIAL STAGE"
-	spritePiece	-$64, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	-$54, -8, 2, 2, $36, 0, 0, 0, 0
-	spritePiece	-$44, -8, 2, 2, $10, 0, 0, 0, 0
-	spritePiece	-$34, -8, 2, 2, 8, 0, 0, 0, 0
-	spritePiece	-$24, -8, 1, 2, $20, 0, 0, 0, 0
-	spritePiece	-$1C, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	-$C, -8, 2, 2, $26, 0, 0, 0, 0
-	spritePiece	$14, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	$24, -8, 2, 2, $42, 0, 0, 0, 0
-	spritePiece	$34, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	$44, -8, 2, 2, $18, 0, 0, 0, 0
-	spritePiece	$54, -8, 2, 2, $10, 0, 0, 0, 0
-M_SSR_SpecStage_End
+M_SSR_SpeStage:	spriteHeader	; SPECIAL STAGE
+	spritePiece	-$64, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+	spritePiece	-$54, -8, 2, 2, $36, 0, 0, 0, 0	; P
+	spritePiece	-$44, -8, 2, 2, $10, 0, 0, 0, 0	; E
+	spritePiece	-$34, -8, 2, 2, 8, 0, 0, 0, 0	; C
+	spritePiece	-$24, -8, 1, 2, $20, 0, 0, 0, 0	; I
+	spritePiece	-$1C, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	-$C, -8, 2, 2, $26, 0, 0, 0, 0	; L
 
-M_SSR_GotAll:	spriteHeader		; "SONIC GOT THEM ALL"
-	spritePiece	-$78, -8, 2, 2, $3E, 0, 0, 0, 0
-	spritePiece	-$68, -8, 2, 2, $32, 0, 0, 0, 0
-	spritePiece	-$58, -8, 2, 2, $2E, 0, 0, 0, 0
-	spritePiece	-$48, -8, 1, 2, $20, 0, 0, 0, 0
-	spritePiece	-$40, -8, 2, 2, 8, 0, 0, 0, 0
-	spritePiece	-$28, -8, 2, 2, $18, 0, 0, 0, 0
-	spritePiece	-$18, -8, 2, 2, $32, 0, 0, 0, 0
-	spritePiece	-8, -8, 2, 2, $42, 0, 0, 0, 0
-	spritePiece	$10, -8, 2, 2, $42, 0, 0, 0, 0
-	spritePiece	$20, -8, 2, 2, $1C, 0, 0, 0, 0
-	spritePiece	$30, -8, 2, 2, $10, 0, 0, 0, 0
-	spritePiece	$40, -8, 2, 2, $2A, 0, 0, 0, 0
-	spritePiece	$58, -8, 2, 2, 0, 0, 0, 0, 0
-	spritePiece	$68, -8, 2, 2, $26, 0, 0, 0, 0
-	spritePiece	$78, -8, 2, 2, $26, 0, 0, 0, 0
+	spritePiece	$14, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+	spritePiece	$24, -8, 2, 2, $42, 0, 0, 0, 0	; T
+	spritePiece	$34, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	$44, -8, 2, 2, $18, 0, 0, 0, 0	; G
+	spritePiece	$54, -8, 2, 2, $10, 0, 0, 0, 0	; E
+M_SSR_SpeStage_End
+
+M_SSR_GotAll:	spriteHeader	; SONIC GOT THEM ALL
+	spritePiece	-$78, -8, 2, 2, $3E, 0, 0, 0, 0	; S
+	spritePiece	-$68, -8, 2, 2, $32, 0, 0, 0, 0	; O
+	spritePiece	-$58, -8, 2, 2, $2E, 0, 0, 0, 0	; N
+	spritePiece	-$48, -8, 1, 2, $20, 0, 0, 0, 0	; I
+	spritePiece	-$40, -8, 2, 2, 8, 0, 0, 0, 0	; C
+
+	spritePiece	-$28, -8, 2, 2, $18, 0, 0, 0, 0	; G
+	spritePiece	-$18, -8, 2, 2, $32, 0, 0, 0, 0	; O
+	spritePiece	-8, -8, 2, 2, $42, 0, 0, 0, 0	; T
+
+	spritePiece	$10, -8, 2, 2, $42, 0, 0, 0, 0	; T
+	spritePiece	$20, -8, 2, 2, $1C, 0, 0, 0, 0	; H
+	spritePiece	$30, -8, 2, 2, $10, 0, 0, 0, 0	; E
+	spritePiece	$40, -8, 2, 2, $2A, 0, 0, 0, 0	; M
+
+	spritePiece	$58, -8, 2, 2, 0, 0, 0, 0, 0	; A
+	spritePiece	$68, -8, 2, 2, $26, 0, 0, 0, 0	; L
+	spritePiece	$78, -8, 2, 2, $26, 0, 0, 0, 0	; L
 M_SSR_GotAll_End
 	even
 
-Map_SSRC:	include	"_maps/SS Result Chaos Emeralds.asm"
+; ===========================================================================
 
+Map_SSRC:	include	"_maps/SS Result Chaos Emeralds.asm"
 		include	"_incObj/36 Spikes.asm"
 Map_Spike:	include	"_maps/Spikes.asm"
 		include	"_incObj/3B Purple Rock.asm"
@@ -5734,9 +5753,9 @@ OPL_ClrList:
 
 	if FixBugs
 		; Clear the last word, since the above loop only does longwords.
-	if (v_objstate_end-v_objstate-2)&2
-		clr.w	(a2)+
-	endif
+		if (v_objstate_end-v_objstate-2)&2
+			clr.w	(a2)+
+		endif
 	endif
 
 		lea	(v_objstate).w,a2
@@ -6067,16 +6086,16 @@ ResumeMusic:
 		move.w	#bgm_SBZ,d0	; play SBZ music
 
 .notsbz:
-		if Revision<>0
-			tst.b	(v_invinc).w ; is Sonic invincible?
-			beq.s	.notinvinc ; if not, branch
-			move.w	#bgm_Invincible,d0
+	if Revision<>0
+		tst.b	(v_invinc).w ; is Sonic invincible?
+		beq.s	.notinvinc ; if not, branch
+		move.w	#bgm_Invincible,d0
 .notinvinc:
-			tst.b	(f_lockscreen).w ; is Sonic at a boss?
-			beq.s	.playselected ; if not, branch
-			move.w	#bgm_Boss,d0
+		tst.b	(f_lockscreen).w ; is Sonic at a boss?
+		beq.s	.playselected ; if not, branch
+		move.w	#bgm_Boss,d0
 .playselected:
-		endif
+	endif
 
 		jsr	(QueueSound1).l
 
@@ -7379,7 +7398,7 @@ Map_HUD:	include	"_maps/HUD.asm"
 AddPoints:
 		move.b	#1,(f_scorecount).w ; set score counter to update
 
-		if Revision=0
+	if Revision=0
 		lea	(v_scorecopy).w,a2
 		lea	(v_score).w,a3
 		add.l	d0,(a3)		; add d0*10 to the score
@@ -7395,27 +7414,27 @@ AddPoints:
 		blo.w	.locret_1C6B6
 		move.l	d0,(a2)
 
-		else
+	else
 
-			lea	(v_score).w,a3
-			add.l	d0,(a3)
-			move.l	#999999,d1
-			cmp.l	(a3),d1 ; is score below 999999?
-			bhi.s	.belowmax ; if yes, branch
-			move.l	d1,(a3) ; reset score to 999999
+		lea	(v_score).w,a3
+		add.l	d0,(a3)
+		move.l	#999999,d1
+		cmp.l	(a3),d1 ; is score below 999999?
+		bhi.s	.belowmax ; if yes, branch
+		move.l	d1,(a3) ; reset score to 999999
 .belowmax:
-			move.l	(a3),d0
-			cmp.l	(v_scorelife).w,d0 ; has Sonic got 50000+ points?
-			blo.s	.noextralife ; if not, branch
+		move.l	(a3),d0
+		cmp.l	(v_scorelife).w,d0 ; has Sonic got 50000+ points?
+		blo.s	.noextralife ; if not, branch
 
-			addi.l	#5000,(v_scorelife).w ; increase requirement by 50000
-			tst.b	(v_megadrive).w
-			bmi.s	.noextralife ; branch if Mega Drive is Japanese
-			addq.b	#1,(v_lives).w ; give extra life
-			addq.b	#1,(f_lifecount).w
-			move.w	#bgm_ExtraLife,d0
-			jmp	(QueueSound1).l
-		endif
+		addi.l	#5000,(v_scorelife).w ; increase requirement by 50000
+		tst.b	(v_megadrive).w
+		bmi.s	.noextralife ; branch if Mega Drive is Japanese
+		addq.b	#1,(v_lives).w ; give extra life
+		addq.b	#1,(f_lifecount).w
+		move.w	#bgm_ExtraLife,d0
+		jmp	(QueueSound1).l
+	endif
 
 .locret_1C6B6:
 .noextralife:
@@ -7489,21 +7508,29 @@ Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 		include	"_inc/LevelHeaders.asm"
 		include	"_inc/Pattern Load Cues.asm"
 
-		align	$200
-		if Revision=0
+		; Nem_SegaLogo has a bunch of padding before it that differs between revisions:
+		; - in rev00, it starts at $1DC00, which amounts to $EE bytes
+		; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
+		; From a technical standpoint, this padding serves no purpose.
+		if paddingOptimization=0
+			align	$200
+			if Revision<>0
+				dc.b	[$300]$FF
+			endif
+		endif
+
+	if Revision=0
 Nem_SegaLogo:	binclude	"artnem/Sega Logo.nem"	; large Sega logo
 		even
 Eni_SegaLogo:	binclude	"tilemaps/Sega Logo.eni" ; large Sega logo (mappings)
 		even
-		else
-		rept $300
-			dc.b	$FF
-		endm
+	else
 Nem_SegaLogo:	binclude	"artnem/Sega Logo (JP1).nem" ; large Sega logo
-			even
+		even
 Eni_SegaLogo:	binclude	"tilemaps/Sega Logo (JP1).eni" ; large Sega logo (mappings)
-			even
-		endif
+		even
+	endif
+
 Eni_Title:	binclude	"tilemaps/Title Screen.eni" ; title screen foreground (mappings)
 		even
 Nem_TitleFg:	binclude	"artnem/Title Screen Foreground.nem"
@@ -7528,17 +7555,19 @@ Art_Sonic:	binclude	"artunc/Sonic.bin"	; Sonic
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------
-		if Revision=0
+	if Revision=0
 Nem_Smoke:	binclude	"artnem/Unused - Smoke.nem"
 		even
 Nem_SyzSparkle:	binclude	"artnem/Unused - SYZ Sparkles.nem"
 		even
-		endif
+	endif
+
 Nem_Shield:	binclude	"artnem/Shield.nem"
 		even
 Nem_Stars:	binclude	"artnem/Invincibility Stars.nem"
 		even
-		if Revision=0
+
+	if Revision=0
 Nem_LzSonic:	binclude	"artnem/Unused - LZ Sonic.nem" ; Sonic holding his breath
 		even
 Nem_UnkFire:	binclude	"artnem/Unused - Fireball.nem" ; unused fireball
@@ -7547,7 +7576,7 @@ Nem_Warp:	binclude	"artnem/Unused - SStage Flash.nem" ; entry to special stage f
 		even
 Nem_Goggle:	binclude	"artnem/Unused - Goggles.nem" ; unused goggles
 		even
-		endif
+	endif
 
 Map_SSWalls:	include	"_maps/SS Walls.asm"
 
@@ -7849,12 +7878,14 @@ Blk16_MZ:	binclude	"map16/MZ.eni"
 		even
 Nem_MZ:		binclude	"artnem/8x8 - MZ.nem"	; MZ primary patterns
 		even
-Blk128_MZ:	if Revision=0
+Blk128_MZ:
+	if Revision=0
 		binclude	"map128/MZ.kos"
-		else
-		binclude	"map128/MZ (JP1).kos"
-		endif
 		even
+	else
+		binclude	"map128/MZ (JP1).kos"
+		even
+	endif
 Blk16_SLZ:	binclude	"map16/SLZ.eni"
 		even
 Nem_SLZ:	binclude	"artnem/8x8 - SLZ.nem"	; SLZ primary patterns
@@ -7871,12 +7902,14 @@ Blk16_SBZ:	binclude	"map16/SBZ.eni"
 		even
 Nem_SBZ:	binclude	"artnem/8x8 - SBZ.nem"	; SBZ primary patterns
 		even
-Blk128_SBZ:	if Revision=0
+Blk128_SBZ:
+	if Revision=0
 		binclude	"map128/SBZ.kos"
-		else
-		binclude	"map128/SBZ (JP1).kos"
-		endif
 		even
+	else
+		binclude	"map128/SBZ (JP1).kos"
+		even
+	endif
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - bosses and ending sequence
 ; ---------------------------------------------------------------------------
@@ -7900,10 +7933,11 @@ Nem_EndSonic:	binclude	"artnem/Ending - Sonic.nem"
 		even
 Nem_TryAgain:	binclude	"artnem/Ending - Try Again.nem"
 		even
-Nem_EndEggman:	if Revision=0
+	if Revision=0
+Nem_EndEggman:
 		binclude	"artnem/Unused - Eggman Ending.nem"
-		endif
 		even
+	endif
 Kos_EndFlowers:	binclude	"artkos/Flowers at Ending.kos" ; ending sequence animated flowers
 		even
 Nem_EndFlower:	binclude	"artnem/Ending - Flowers.nem"
@@ -7913,15 +7947,17 @@ Nem_CreditText:	binclude	"artnem/Ending - Credits.nem"
 Nem_EndStH:	binclude	"artnem/Ending - StH Logo.nem"
 		even
 
-		if Revision=0
-		rept $104
-		dc.b $FF			; why?
-		endm
-		else
-		rept $40
-		dc.b $FF
-		endm
+		; AngleMap starts at $62900 in all revisions, which amounts
+		; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
+		; From a technical standpoint, this padding serves no purpose.
+		if paddingOptimization=0
+			if Revision=0
+				dc.b	[$104]$FF
+			else
+				dc.b	[$40]$FF
+			endif
 		endif
+
 ; ---------------------------------------------------------------------------
 ; Collision data
 ; ---------------------------------------------------------------------------
@@ -7966,16 +8002,19 @@ SS_3:		binclude	"sslayout/3.eni"
 		even
 SS_4:		binclude	"sslayout/4.eni"
 		even
-		if Revision=0
+	if Revision=0
 SS_5:		binclude	"sslayout/5.eni"
 		even
 SS_6:		binclude	"sslayout/6.eni"
-		else
-SS_5:		binclude	"sslayout/5 (JP1).eni"
-			even
-SS_6:		binclude	"sslayout/6 (JP1).eni"
-		endif
 		even
+	else
+		; SS 5 and 6 had broken objects outside the accessible layout;
+		; rev01 removes those - remaining layouts stay unchanged.
+SS_5:		binclude	"sslayout/5 (JP1).eni"
+		even
+SS_6:		binclude	"sslayout/6 (JP1).eni"
+		even
+	endif
 ; ---------------------------------------------------------------------------
 ; Animated uncompressed graphics
 ; ---------------------------------------------------------------------------
@@ -8086,8 +8125,13 @@ Level_End:	binclude	"levels/ending.kos"
 Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 		even
 
-		align	$100
-
+		; ObjPos_Index starts at $6B000 in all revisions, which amounts
+		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
+		; From a technical standpoint, this padding serves no purpose.
+		if paddingOptimization=0
+			align	$100
+		endif
+	
 ; ---------------------------------------------------------------------------
 ; Sprite locations index
 ; ---------------------------------------------------------------------------
@@ -8144,26 +8188,32 @@ ObjPos_GHZ1:	binclude	"objpos/ghz1.bin"
 		even
 ObjPos_GHZ2:	binclude	"objpos/ghz2.bin"
 		even
-ObjPos_GHZ3:	if Revision=0
+ObjPos_GHZ3:
+	if Revision=0
 		binclude	"objpos/ghz3.bin"
-		else
+		even
+	else
 		binclude	"objpos/ghz3 (JP1).bin"
-		endif
 		even
-ObjPos_LZ1:	if Revision=0
+	endif
+ObjPos_LZ1:
+	if Revision=0
 		binclude	"objpos/lz1.bin"
-		else
-		binclude	"objpos/lz1 (JP1).bin"
-		endif
 		even
+	else
+		binclude	"objpos/lz1 (JP1).bin"
+		even
+	endif
 ObjPos_LZ2:	binclude	"objpos/lz2.bin"
 		even
-ObjPos_LZ3:	if Revision=0
+ObjPos_LZ3:
+	if Revision=0
 		binclude	"objpos/lz3.bin"
-		else
-		binclude	"objpos/lz3 (JP1).bin"
-		endif
 		even
+	else
+		binclude	"objpos/lz3 (JP1).bin"
+		even
+	endif
 ObjPos_SBZ3:	binclude	"objpos/sbz3.bin"
 		even
 ObjPos_LZ1pf1:	binclude	"objpos/lz1pf1.bin"
@@ -8178,12 +8228,14 @@ ObjPos_LZ3pf1:	binclude	"objpos/lz3pf1.bin"
 		even
 ObjPos_LZ3pf2:	binclude	"objpos/lz3pf2.bin"
 		even
-ObjPos_MZ1:	if Revision=0
+ObjPos_MZ1:
+	if Revision=0
 		binclude	"objpos/mz1.bin"
-		else
-		binclude	"objpos/mz1 (JP1).bin"
-		endif
 		even
+	else
+		binclude	"objpos/mz1 (JP1).bin"
+		even
+	endif
 ObjPos_MZ2:	binclude	"objpos/mz2.bin"
 		even
 ObjPos_MZ3:	binclude	"objpos/mz3.bin"
@@ -8198,18 +8250,22 @@ ObjPos_SYZ1:	binclude	"objpos/syz1.bin"
 		even
 ObjPos_SYZ2:	binclude	"objpos/syz2.bin"
 		even
-ObjPos_SYZ3:	if Revision=0
+ObjPos_SYZ3:
+	if Revision=0
 		binclude	"objpos/syz3.bin"
-		else
+		even
+	else
 		binclude	"objpos/syz3 (JP1).bin"
-		endif
 		even
-ObjPos_SBZ1:	if Revision=0
+	endif
+ObjPos_SBZ1:
+	if Revision=0
 		binclude	"objpos/sbz1.bin"
-		else
-		binclude	"objpos/sbz1 (JP1).bin"
-		endif
 		even
+	else
+		binclude	"objpos/sbz1 (JP1).bin"
+		even
+	endif
 ObjPos_SBZ2:	binclude	"objpos/sbz2.bin"
 		even
 ObjPos_FZ:	binclude	"objpos/fz.bin"
@@ -8230,14 +8286,17 @@ ObjPos_End:	binclude	"objpos/ending.bin"
 		even
 ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
-		if Revision=0
-		rept $62A
-		dc.b $FF
-		endm
-		else
-		rept $63C
-		dc.b $FF
-		endm
+		; SoundDriver starts at $71990 in all revisions, which amounts
+		; to $62A bytes of padding for rev00 and $63C for rev01/rev02.
+		; It appears to be placed in such a way that the sound driver
+		; ends right on the $80000 mark in the ROM in all revisions.
+		; From a technical standpoint, this padding serves no purpose.
+		if paddingOptimization=0
+			if Revision=0
+				dc.b	[$62A]$FF
+			else
+				dc.b	[$63C]$FF
+			endif
 		endif
 
 SoundDriver:	include "s1.sounddriver.asm"

@@ -1261,7 +1261,7 @@ StopSFX:
 		bclr	#2,SMPS_Track.PlaybackControl(a5)	; Clear 'SFX is overriding' bit
 		bset	#1,SMPS_Track.PlaybackControl(a5)	; Set 'track at rest' bit
 	if FixBugs
-		moveq	#0, d0
+		moveq	#0,d0
 	else
 		; DANGER! `SetVoice` expects d0 to be a word, but it's only passed
 		; as a byte below. This may result in restoring invalid/broken FM
@@ -1324,7 +1324,7 @@ StopSpecialSFX:
 		bpl.s	.fadedfm				; Branch if not
 		movea.l	SMPS_RAM.v_voice_ptr(a6),a1		; Voice pointer
 	if FixBugs
-		moveq	#0, d0
+		moveq	#0,d0
 	else
 		; DANGER! `SetVoice` expects d0 to be a word, but it's only passed
 		; as a byte below. This may result in restoring invalid/broken FM
@@ -2298,7 +2298,7 @@ cfStopSpecialFM4:
 		bclr	#2,SMPS_Track.PlaybackControl(a5)	; Clear 'SFX is overriding' bit
 		bset	#1,SMPS_Track.PlaybackControl(a5)	; Set 'track at rest' bit
 	if FixBugs
-		moveq	#0, d0
+		moveq	#0,d0
 	else
 		; DANGER! `SetVoice` expects d0 to be a word, but it's only passed
 		; as a byte below. This may result in restoring invalid/broken FM
