@@ -76,6 +76,8 @@ Msl_ChkCancel:
 		rts
 ; End of function Msl_ChkCancel
 
+Msl_ChkCancel.return:	equ	.return	; emulates local label access from AS disassembly
+
 ; ===========================================================================
 
 Msl_FromBuzz:	; Routine 4
