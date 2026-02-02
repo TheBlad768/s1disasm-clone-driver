@@ -2478,6 +2478,8 @@ PlayLevel:
 ; ---------------------------------------------------------------------------
 ; Level select - level pointers
 ; ---------------------------------------------------------------------------
+; This is just for the pointers. For the text itself, see: LevelMenuText
+; ---------------------------------------------------------------------------
 LevSel_Ptrs:
 	if Revision=0
 		; old level order
@@ -2500,6 +2502,9 @@ LevSel_Ptrs:
 		dc.b id_SBZ, 1
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
+		dc.b id_SS, 0		; Special Stage
+		dc.w $8000		; Sound Test
+		even
 	else
 		; correct level order
 		dc.b id_GHZ, 0
@@ -2519,12 +2524,13 @@ LevSel_Ptrs:
 		dc.b id_SLZ, 2
 		dc.b id_SBZ, 0
 		dc.b id_SBZ, 1
-		dc.b id_LZ, 3
-		dc.b id_SBZ, 2
-	endif
+		dc.b id_LZ, 3		; Scrap Brain Zone 3
+		dc.b id_SBZ, 2		; Final Zone
 		dc.b id_SS, 0		; Special Stage
 		dc.w $8000		; Sound Test
 		even
+	endif
+
 ; ---------------------------------------------------------------------------
 ; Level select codes
 ; ---------------------------------------------------------------------------
@@ -2774,22 +2780,25 @@ LevSel_CharOk:
 ; ---------------------------------------------------------------------------
 ; Level select menu text
 ; ---------------------------------------------------------------------------
+; This is just for the actual text. For the level pointers, see: LevSel_Ptrs
+; ---------------------------------------------------------------------------
 
 LevelMenuText:
-		charset ' ', $FF
-		charset '0','9',$00
-		charset '$', $0A
-		charset '-', $0B
-		charset '=', $0C
-		charset '>', $0D
-		;charset '>', $0E ; there are two right arrows in the font for some reason
-		charset 'Y','Z',$0F ; Y and Z come before A-X
-		charset 'A','X',$11
+	charset ' ', $FF
+	charset '0','9',$00
+	charset '$', $0A
+	charset '-', $0B
+	charset '=', $0C
+	charset '>', $0D
+	;charset '>', $0E ; there are two right arrows in the font for some reason
+	charset 'Y','Z',$0F ; Y and Z come before A-X
+	charset 'A','X',$11
 
+	if Revision=0
+		; old level order
 		dc.b "GREEN HILL ZONE  STAGE 1"
 		dc.b "                 STAGE 2"
 		dc.b "                 STAGE 3"
-	if Revision=0
 		dc.b "LABYRINTH ZONE   STAGE 1"
 		dc.b "                 STAGE 2"
 		dc.b "                 STAGE 3"
@@ -2802,29 +2811,40 @@ LevelMenuText:
 		dc.b "SPRING YARD ZONE STAGE 1"
 		dc.b "                 STAGE 2"
 		dc.b "                 STAGE 3"
-	else
-		dc.b "MARBLE ZONE      STAGE 1"
-		dc.b "                 STAGE 2"
-		dc.b "                 STAGE 3"
-		dc.b "SPRING YARD ZONE STAGE 1"
-		dc.b "                 STAGE 2"
-		dc.b "                 STAGE 3"
-		dc.b "LABYRINTH ZONE   STAGE 1"
-		dc.b "                 STAGE 2"
-		dc.b "                 STAGE 3"
-		dc.b "STAR LIGHT ZONE  STAGE 1"
-		dc.b "                 STAGE 2"
-		dc.b "                 STAGE 3"
-	endif
 		dc.b "SCRAP BRAIN ZONE STAGE 1"
 		dc.b "                 STAGE 2"
 		dc.b "                 STAGE 3"
 		dc.b "FINAL ZONE              "
 		dc.b "SPECIAL STAGE           "
 		dc.b "SOUND SELECT            "
-
 		even
-		charset
+	else
+		; correct level order
+		dc.b "GREEN HILL ZONE  STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "MARBLE ZONE      STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "SPRING YARD ZONE STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "LABYRINTH ZONE   STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "STAR LIGHT ZONE  STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "SCRAP BRAIN ZONE STAGE 1"
+		dc.b "                 STAGE 2"
+		dc.b "                 STAGE 3"
+		dc.b "FINAL ZONE              "
+		dc.b "SPECIAL STAGE           "
+		dc.b "SOUND SELECT            "
+		even
+	endif
+
+	charset
 
 ; ---------------------------------------------------------------------------
 ; Music playlist
