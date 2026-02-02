@@ -2469,6 +2469,8 @@ PlayLevel:
 ; ---------------------------------------------------------------------------
 ; Level select - level pointers
 ; ---------------------------------------------------------------------------
+; This is just for the pointers. For the text itself, see: LevelMenuText
+; ---------------------------------------------------------------------------
 LevSel_Ptrs:
 	if Revision=0
 		; old level order
@@ -2491,6 +2493,9 @@ LevSel_Ptrs:
 		dc.b id_SBZ, 1
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
+		dc.b id_SS, 0		; Special Stage
+		dc.w $8000		; Sound Test
+		even
 	else
 		; correct level order
 		dc.b id_GHZ, 0
@@ -2510,12 +2515,13 @@ LevSel_Ptrs:
 		dc.b id_SLZ, 2
 		dc.b id_SBZ, 0
 		dc.b id_SBZ, 1
-		dc.b id_LZ, 3
-		dc.b id_SBZ, 2
-	endif
+		dc.b id_LZ, 3		; Scrap Brain Zone 3
+		dc.b id_SBZ, 2		; Final Zone
 		dc.b id_SS, 0		; Special Stage
 		dc.w $8000		; Sound Test
 		even
+	endif
+
 ; ---------------------------------------------------------------------------
 ; Level select codes
 ; ---------------------------------------------------------------------------
@@ -2765,7 +2771,12 @@ LevSel_CharOk:
 ; ---------------------------------------------------------------------------
 ; Level select menu text
 ; ---------------------------------------------------------------------------
-lstxt macro textline
+; This is just for the actual text. For the level pointers, see: LevSel_Ptrs
+; ---------------------------------------------------------------------------
+
+; Macro to convert input text to the correct level select text,
+; because ASM68K doesn't support the "charset" feature of AS.
+lstxt	macro textline
 	i:   = 1
 	len: = strlen(\textline)
 	if len<>24
@@ -2788,9 +2799,9 @@ lstxt macro textline
 			dc.b	$0C
 		elseif "\char"=">"
 			dc.b	$0D
-		;elseif "\char"=">"
+		;elseif "\char"=">"	; there are two right arrows in the font for some reason
 		;	dc.b	$0E
-		elseif "\char"='Y'
+		elseif "\char"='Y'	; Y and Z come before A-X
 			dc.b	$0F
 		elseif "\char"='Z'
 			dc.b	$10
@@ -2802,7 +2813,9 @@ lstxt macro textline
 	endw
 	endm
 
-LevelMenuText:	if Revision=0
+LevelMenuText:
+	if Revision=0
+		; old level order
 		lstxt "GREEN HILL ZONE  STAGE 1"
 		lstxt "                 STAGE 2"
 		lstxt "                 STAGE 3"
@@ -2824,30 +2837,32 @@ LevelMenuText:	if Revision=0
 		lstxt "FINAL ZONE              "
 		lstxt "SPECIAL STAGE           "
 		lstxt "SOUND SELECT            "
-		else
-		lstxt "GREEN HILL ZONE  STAGE 1"
-		lstxt "                 STAGE 2"
-		lstxt "                 STAGE 3"
-		lstxt "MARBLE ZONE      STAGE 1"
-		lstxt "                 STAGE 2"
-		lstxt "                 STAGE 3"
-		lstxt "SPRING YARD ZONE STAGE 1"
-		lstxt "                 STAGE 2"
-		lstxt "                 STAGE 3"
-		lstxt "LABYRINTH ZONE   STAGE 1"
-		lstxt "                 STAGE 2"
-		lstxt "                 STAGE 3"
-		lstxt "STAR LIGHT ZONE  STAGE 1"
-		lstxt "                 STAGE 2"
-		lstxt "                 STAGE 3"
-		lstxt "SCRAP BRAIN ZONE STAGE 1"
-		lstxt "                 STAGE 2"
-		lstxt "                 STAGE 3"
-		lstxt "FINAL ZONE              "
-		lstxt "SPECIAL STAGE           "
-		lstxt "SOUND SELECT            "
-		endc
 		even
+	else
+		; correct level order
+		lstxt "GREEN HILL ZONE  STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "MARBLE ZONE      STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "SPRING YARD ZONE STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "LABYRINTH ZONE   STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "STAR LIGHT ZONE  STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "SCRAP BRAIN ZONE STAGE 1"
+		lstxt "                 STAGE 2"
+		lstxt "                 STAGE 3"
+		lstxt "FINAL ZONE              "
+		lstxt "SPECIAL STAGE           "
+		lstxt "SOUND SELECT            "
+		even
+	endc
 
 ; ---------------------------------------------------------------------------
 ; Music playlist
