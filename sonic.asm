@@ -4,34 +4,77 @@
 ;
 ; Disassembly created by Hivebrain
 ; thanks to drx, Stealth and Esrael L.G. Neto
+; ---------------------------------------------------------------------------
+; NOTE:
+; Set your editor's tab width to 8 characters wide for viewing this file.
 
 ; ===========================================================================
+; ASSEMBLY OPTIONS:
 
-EnableSRAM:	  equ 0	; change to 1 to enable SRAM
-BackupSRAM:	  equ 1
-AddressSRAM:	  equ 3	; 0 = odd+even; 2 = even only; 3 = odd only
+Revision = 1
+; 	| If 0, build the original version of the game, dubbed REV00
+; 	| If 1, build the later version, dubbed REV01, which includes various bugfixes and enhancements
+; 	| If 2, build the hacked version from Sonic Mega Collection, dubbed REVXB,
+;	|       which (sloppily) fixes the infamous "spike bug" -- not recommended
 
-; Change to 0 to build the original version of the game, dubbed REV00
-; Change to 1 to build the later version, dubbed REV01, which includes various bugfixes and enhancements
-; Change to 2 to build the version from Sonic Mega Collection, dubbed REVXB, which fixes the infamous "spike bug"
-Revision:	  equ 1
+FixBugs = 0
+;	| If 1, enables various bugfixes across the game and sound driver
+;	| See also FixMusicAndSFXDataBugs
 
-ZoneCount:	  equ 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
+AllOptimizations = 0
+;	| If 1, enables all optimizations
+SkipChecksumCheck = 0|AllOptimizations
+;	| If 1, disables the slow bootup checksum calculation
+ZeroOffsetOptimization = 0|AllOptimizations
+;	| If 1, makes a handful of zero-offset instructions smaller
+PaddingOptimization = 0|AllOptimizations
+;	| If 1, removes about 3 KB of various superfluous padding
 
-FixBugs:	  equ 0	; change to 1 to enable bugfixes
+EnableSRAM = 0
+;	| If 1, enable SRAM support
+BackupSRAM = 1
+;	| 0 = no saving (read-only SRAM); 1 = allow saving
+AddressSRAM = 3
+;	| 0 = odd+even; 2 = even only; 3 = odd only
+;	| (odd only is the most common)
 
-zeroOffsetOptimization:	equ 0		; if 1, makes a handful of zero-offset instructions smaller
-paddingOptimization: 	equ 0		; if 1, removes about 3 KB of various superfluous padding
+ZoneCount = 6
+;	| Used for the zonewarning macro. Do not change, unless more zones get added.
+;	| Discrete zones are: GHZ, LZ, MZ, SLZ, SYZ, and SBZ
 
+; ===========================================================================
+; AS-specific macros and assembler settings
+	cpu 68000
 	include "MacroSetup.asm"
-	include	"Constants.asm"
-	include	"Variables.asm"
+
+; ===========================================================================
+; Simplifying macros and functions
 	include	"Macros.asm"
 
 ; ===========================================================================
+; Equates section - Names for constants
+	include	"Constants.asm"
+
+; ===========================================================================
+; Equates section - Names for variables
+	include	"Variables.asm"
+
+; ===========================================================================
+; Expressing sprite mappings and DPLCs in a portable and human-readable form
+SonicMappingsVer = 1
+SonicDplcVer = 1
+	include	"_maps/_MapMacros.asm"
+
+; ===========================================================================
+; start of ROM
 
 StartOfRom:
-Vectors:	dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
+	if * <> 0
+		fatal "StartOfRom was $\{*} but it should be 0"
+	endif
+
+Vectors:
+		dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
 		dc.l EntryPoint			; Start of program
 		dc.l BusError			; Bus error
 		dc.l AddressError		; Address error (4)
@@ -40,7 +83,7 @@ Vectors:	dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
 		dc.l ChkInstr			; CHK exception
 		dc.l TrapvInstr			; TRAPV exception (8)
 		dc.l PrivilegeViol		; Privilege violation
-		dc.l Trace				; TRACE exception
+		dc.l Trace			; TRACE exception
 		dc.l Line1010Emu		; Line-A emulator
 		dc.l Line1111Emu		; Line-F emulator (12)
 		dc.l ErrorExcept		; Unused (reserved)
@@ -59,9 +102,9 @@ Vectors:	dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
 		dc.l ErrorTrap			; IRQ level 1
 		dc.l ErrorTrap			; IRQ level 2
 		dc.l ErrorTrap			; IRQ level 3 (28)
-		dc.l HBlank				; IRQ level 4 (horizontal retrace interrupt)
+		dc.l HBlank			; IRQ level 4 (horizontal retrace interrupt)
 		dc.l ErrorTrap			; IRQ level 5
-		dc.l VBlank				; IRQ level 6 (vertical retrace interrupt)
+		dc.l VBlank			; IRQ level 6 (vertical retrace interrupt)
 		dc.l ErrorTrap			; IRQ level 7 (32)
 		dc.l ErrorTrap			; TRAP #00 exception
 		dc.l ErrorTrap			; TRAP #01 exception
@@ -87,7 +130,7 @@ Vectors:	dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
-	if Revision<>2
+	if Revision<>2|FixBugs
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
@@ -97,8 +140,8 @@ Vectors:	dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
 	else
-loc_E0:
-		; Relocated code from Spik_Hurt. REVXB was a nasty hex-edit.
+loc_E0:		; Relocated code from Spik_Hurt. REVXB was a nasty hex-edit.
+		; See _incObj/36 Spikes.asm for more info.
 		move.l	obY(a0),d3
 		move.w	obVelY(a0),d0
 		ext.l	d0
@@ -131,7 +174,7 @@ RomEndLoc:	dc.l EndOfRom-1		; End address of ROM
 		dc.l $FF0000		; Start address of RAM
 		dc.l $FFFFFF		; End address of RAM
 	if EnableSRAM=1
-		dc.b $52, $41, $A0+(BackupSRAM<<6)+(AddressSRAM<<3), $20 ; SRAM support
+		dc.b "RA", $A0+(BackupSRAM<<6)+(AddressSRAM<<3), $20 ; SRAM support
 	else
 		dc.l $20202020
 	endif
@@ -302,11 +345,11 @@ GameProgram:
 		beq.w	GameInit	; if yes, branch
 
 CheckSumCheck:
+	if SkipChecksumCheck=0
 		movea.l	#EndOfHeader,a0	; start checking bytes after the header ($200)
 		movea.l	#RomEndLoc,a1	; stop at end of ROM
 		move.l	(a1),d0
 		moveq	#0,d1
-
 .loop:
 		add.w	(a0)+,d1
 		cmp.l	a0,d0
@@ -314,6 +357,7 @@ CheckSumCheck:
 		movea.l	#Checksum,a1	; read the checksum
 		cmp.w	(a1),d1		; compare checksum in header to ROM
 		bne.w	CheckSumError	; if they don't match, branch
+	endif
 
 CheckSumOk:
 		lea	(v_crossresetram).w,a6
@@ -371,7 +415,7 @@ ptr_GM_Credits:	bra.w	GM_Credits	; Credits ($1C)
 
 		rts
 ; ===========================================================================
-
+	if SkipChecksumCheck=0
 CheckSumError:
 		bsr.w	VDPSetupGame
 		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
@@ -383,6 +427,7 @@ CheckSumError:
 
 .endlessloop:
 		bra.s	.endlessloop
+	endif
 ; ===========================================================================
 
 BusError:
@@ -1273,7 +1318,10 @@ RunPLC:
 
 loc_160E:
 		andi.w	#$7FFF,d2
+	if FixBugs=0
+		; Relocated to bugfix below
 		move.w	d2,(v_plc_patternsleft).w
+	endif
 		bsr.w	NemDec_BuildCodeTable
 		move.b	(a0)+,d5
 		asl.w	#8,d5
@@ -1287,6 +1335,11 @@ loc_160E:
 		move.l	d0,(v_plc_previousrow).w
 		move.l	d5,(v_plc_dataword).w
 		move.l	d6,(v_plc_shiftvalue).w
+	if FixBugs
+		; Fix a race condition with Pattern Load Cues
+		; https://info.sonicretro.org/SCHG_How-to:Fix_a_race_condition_with_Pattern_Load_Cues
+		move.w	d2,(v_plc_patternsleft).w
+	endif
 
 Rplc_Exit:
 		rts
@@ -2230,7 +2283,13 @@ Tit_LoadText:
 		move.w	#0,d0
 		bsr.w	EniDec
 
+	if FixBugs
+		; Fix title screen position
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Title_Screen_position_in_Sonic_1
+		copyTilemap	v_256x256&$FFFFFF,vram_fg+$208,34,22
+	else
 		copyTilemap	v_256x256&$FFFFFF,vram_fg+$206,34,22
+	endif
 
 		locVRAM	ArtTile_Level*tile_size
 		lea	(Nem_GHZ_1st).l,a0 ; load GHZ patterns
@@ -2243,6 +2302,8 @@ Tit_LoadText:
 		move.w	#376,(v_generictimer).w ; run title screen for 376 frames
 		
 	if FixBugs
+		; Fix the Press Start Button text
+		; https://info.sonicretro.org/SCHG_How-to:Display_the_Press_Start_Button_text
 		clearRAM v_sonicteam,v_sonicteam+object_size
 	else
 		; Bug: this only clears half of the "SONIC TEAM PRESENTS" slot.
@@ -2354,6 +2415,13 @@ Tit_ChkLevSel:
 		beq.w	PlayLevel	; if not, play level
 		btst	#bitA,(v_jpadhold1).w ; check if A is pressed
 		beq.w	PlayLevel	; if not, play level
+	
+	if FixBugs
+		; Fix the level selects graphics bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Level_Select_graphics_bug
+		move.b	#4,(v_vbla_routine).w
+		bsr.w	WaitForVBla
+	endif
 
 		moveq	#palid_LevelSel,d0
 		bsr.w	PalLoad	; load level select palette
@@ -5446,6 +5514,12 @@ loc_D358:
 ; ===========================================================================
 
 loc_D362:
+	if FixBugs
+		; Correct Drowning bugs
+		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
+		cmpi.b	#$A,(v_player+obRoutine).w	; Has Sonic drowned?
+		beq.s	loc_D348			; If so, run objects a little longer
+	endif
 		moveq	#(v_lvlobjspace-v_objspace)/object_size-1,d7
 		bsr.s	loc_D348
 		moveq	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d7
@@ -5940,6 +6014,13 @@ loc_DA02:
 loc_DA10:
 		bsr.w	loc_DA3C
 		beq.s	loc_DA02
+	if FixBugs
+		; Fix a remember sprite related bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_a_remember_sprite_related_bug
+		tst.b	4(a0)		; was this object a remember state?
+		bpl.s	loc_DA16	; if not, branch
+		subq.b	#1,(a2)		; move right counter back
+	endif
 
 loc_DA16:
 		move.l	a0,(v_opl_data).w
@@ -5969,7 +6050,13 @@ locret_DA3A:
 loc_DA3C:
 		tst.b	4(a0)
 		bpl.s	OPL_MakeItem
+	if FixBugs
+		; Fix a remember sprite related bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_a_remember_sprite_related_bug
+		btst	#7,2(a2,d2.w)
+	else
 		bset	#7,2(a2,d2.w)
+	endif
 		beq.s	OPL_MakeItem
 		addq.w	#6,a0
 		moveq	#0,d0
@@ -5990,6 +6077,11 @@ OPL_MakeItem:
 		move.b	d1,obStatus(a1)
 		move.b	(a0)+,d0
 		bpl.s	loc_DA80
+	if FixBugs
+		; Fix a remember sprite related bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_a_remember_sprite_related_bug
+		bset	#7,2(a2,d2.w)		; set as removed
+	endif
 		andi.b	#$7F,d0
 		move.b	d2,obRespawnNo(a1)
 
@@ -7565,7 +7657,7 @@ Art_LivesNums:	incbin	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers on 
 		; - in rev00, it starts at $1DC00, which amounts to $EE bytes
 		; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
 		; From a technical standpoint, this padding serves no purpose.
-		if paddingOptimization=0
+		if PaddingOptimization=0
 			align	$200
 			if Revision<>0
 				dcb.b	$300,$FF
@@ -8003,7 +8095,7 @@ Nem_EndStH:	incbin	"artnem/Ending - StH Logo.nem"
 		; AngleMap starts at $62900 in all revisions, which amounts
 		; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
-		if paddingOptimization=0
+		if PaddingOptimization=0
 			if Revision=0
 				dcb.b	$104,$FF
 			else
@@ -8208,7 +8300,7 @@ Art_BigRing:	incbin	"artunc/Giant Ring.bin"
 		; ObjPos_Index starts at $6B000 in all revisions, which amounts
 		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
-		if paddingOptimization=0
+		if PaddingOptimization=0
 			align	$100
 		endif
 	
@@ -8371,7 +8463,7 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 		; It appears to be placed in such a way that the sound driver
 		; ends right on the $80000 mark in the ROM in all revisions.
 		; From a technical standpoint, this padding serves no purpose.
-		if paddingOptimization=0
+		if PaddingOptimization=0
 			if Revision=0
 				dcb.b	$62A,$FF
 			else

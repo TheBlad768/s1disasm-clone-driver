@@ -295,7 +295,7 @@ loc_18FA2:
 loc_18FDC:
 		bset	#1,obStatus(a2)
 		bclr	#3,obStatus(a2)
-		clr.b	objoff_3C(a2)
+		clr.b	jumping(a2)
 		move.l	a0,-(sp)
 		lea	(a2),a0
 		jsr	(Sonic_ChkRoll).l

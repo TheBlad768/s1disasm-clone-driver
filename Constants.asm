@@ -118,16 +118,22 @@ obStatus:	equ $22	; orientation or mode
 obRespawnNo:	equ $23	; respawn list index number
 obRoutine:	equ $24	; routine number
 ob2ndRout:	equ $25	; secondary routine number
+obSolid:	equ ob2ndRout ; solid status flag
 obAngle:	equ $26	; angle
 obSubtype:	equ $28	; object subtype
-obSolid:	equ ob2ndRout ; solid status flag
 
 ; Object variables used by Sonic
-flashtime:	equ $30	; time between flashes after getting hit
-invtime:	equ $32	; time left for invincibility
-shoetime:	equ $34	; time left for speed shoes
-stick_to_convex:equ $38 ; flag set while running on an SBZ gear
-standonobject:	equ $3D	; object Sonic stands on
+flashtime:	equ $30	; time between flashes after getting hit (2 bytes)
+invtime:	equ $32	; time left for invincibility (2 bytes)
+shoetime:	equ $34	; time left for speed shoes (2 bytes)
+angleright:	equ $36	; angle of floor on Sonic's right side
+angleleft:	equ $37	; angle of floor on Sonic's left side
+sticktoconvex:	equ $38	; flag set while running on an SBZ gear
+;unused:	equ $39	; unused by Sonic
+restartime:	equ $3A	; time left before level restarts after dying (2 bytes)
+jumping:	equ $3C	; flag set while Sonic is jumping
+standonobject:	equ $3D	; object index Sonic stands on
+locktime:	equ $3E	; temporary D-Pad control lock timer (2 bytes)
 
 ; Miscellaneous object scratch-RAM
 objoff_25:	equ $25

@@ -22,6 +22,11 @@ Sonic_Index:	dc.w Sonic_Main-Sonic_Index
 		dc.w Sonic_Hurt-Sonic_Index
 		dc.w Sonic_Death-Sonic_Index
 		dc.w Sonic_ResetLevel-Sonic_Index
+	if FixBugs
+		; Fix drowning bugs
+		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
+		dc.w Sonic_Drowned-Sonic_Index
+	endif
 ; ===========================================================================
 
 ; Obj01_Main:
@@ -67,8 +72,8 @@ Sonic_Control:	; Routine 2
 		bsr.s	Sonic_Display
 		bsr.w	Sonic_RecordPosition
 		bsr.w	Sonic_Water
-		move.b	(v_anglebuffer).w,objoff_36(a0)
-		move.b	(v_anglebuffer2).w,objoff_37(a0)
+		move.b	(v_anglebuffer).w,angleright(a0)
+		move.b	(v_anglebuffer2).w,angleleft(a0)
 		tst.b	(f_wtunnelmode).w
 		beq.s	.nowindtunnel
 		tst.b	obAnim(a0)
@@ -308,8 +313,8 @@ Sonic_Move:
 		move.w	(v_sonspeeddec).w,d4
 		tst.b	(f_slidemode).w
 		bne.w	loc_12FEE
-		tst.w	objoff_3E(a0)
-		bne.w	Sonic_ResetScr
+		tst.w	locktime(a0)	; is Sonic's D-Pad input temporarily locked?
+		bne.w	Sonic_ResetScr	; if yes, ignore D-Pad input
 		btst	#bitL,(v_jpadhold2).w ; is left being pressed?
 		beq.s	.notleft	; if not, branch
 		bsr.w	Sonic_MoveLeft
@@ -355,7 +360,7 @@ Sonic_Balance:
 		jsr	(ObjFloorDist).l
 		cmpi.w	#$C,d1
 		blt.s	Sonic_LookUp
-		cmpi.b	#3,objoff_36(a0)
+		cmpi.b	#3,angleright(a0)
 		bne.s	loc_12F62
 
 loc_12F5A:
@@ -364,7 +369,7 @@ loc_12F5A:
 ; ===========================================================================
 
 loc_12F62:
-		cmpi.b	#3,objoff_37(a0)
+		cmpi.b	#3,angleleft(a0)
 		bne.s	Sonic_LookUp
 
 loc_12F6A:
@@ -601,8 +606,8 @@ Sonic_RollSpeed:
 		asr.w	#2,d4
 		tst.b	(f_slidemode).w
 		bne.w	loc_131CC
-		tst.w	objoff_3E(a0)
-		bne.s	.notright
+		tst.w	locktime(a0)	; is Sonic's D-Pad input temporarily locked?
+		bne.s	.notright	; if yes, ignore D-Pad input
 		btst	#bitL,(v_jpadhold2).w ; is left being pressed?
 		beq.s	.notleft	; if not, branch
 		bsr.w	Sonic_RollLeft
@@ -962,8 +967,8 @@ Sonic_Jump:
 		bset	#1,obStatus(a0)	; set in-air flag.
 		bclr	#5,obStatus(a0)	; clear pushing flag.
 		addq.l	#4,sp	; Run in-air subroutines when we return.
-		move.b	#1,objoff_3C(a0)	; set jump flag.
-		clr.b	stick_to_convex(a0)
+		move.b	#1,jumping(a0)	; set jump flag.
+		clr.b	sticktoconvex(a0)
 		move.w	#sfx_Jump,d0
 		jsr	(QueueSound2).l	; play jumping sound
 		move.b	#$13,obHeight(a0)	; set Sonic's hitbox to standing size. This is a leftover from the victory animation in prototypes.
@@ -992,7 +997,7 @@ Sonic_Jump:
 
 
 Sonic_JumpHeight:
-		tst.b	objoff_3C(a0)	; has Sonic jumped?
+		tst.b	jumping(a0)	; has Sonic jumped?
 		beq.s	.capyvel		; if not, just cap Y speed normally.
 		move.w	#-$400,d1		; set max jump height.
 		btst	#6,obStatus(a0)	; is Sonic underwater?
@@ -1101,9 +1106,9 @@ locret_13544:
 
 Sonic_SlopeRepel:
 		nop	
-		tst.b	stick_to_convex(a0)
+		tst.b	sticktoconvex(a0)
 		bne.s	locret_13580
-		tst.w	objoff_3E(a0)
+		tst.w	locktime(a0)
 		bne.s	loc_13582
 		move.b	obAngle(a0),d0
 		addi.b	#$20,d0
@@ -1118,14 +1123,14 @@ loc_1356A:
 		bhs.s	locret_13580
 		clr.w	obInertia(a0)
 		bset	#1,obStatus(a0)
-		move.w	#$1E,objoff_3E(a0)
+		move.w	#30,locktime(a0)
 
 locret_13580:
 		rts
 ; ===========================================================================
 
 loc_13582:
-		subq.w	#1,objoff_3E(a0)
+		subq.w	#1,locktime(a0)
 		rts
 ; End of function Sonic_SlopeRepel
 
@@ -1392,7 +1397,7 @@ Sonic_ResetOnFloor:
 		subq.w	#5,obY(a0)	; raise Sonic up 5 pixels so he's not inside the ground.
 
 .notball:
-		move.b	#0,objoff_3C(a0)	; clear jump flag.
+		move.b	#0,jumping(a0)	; clear jump flag.
 		move.w	#0,(v_itembonus).w	; clear enemy score chain.
 		rts
 ; End of function Sonic_ResetOnFloor
@@ -1449,7 +1454,7 @@ Sonic_HurtStop:
 		move.w	d0,obInertia(a0)
 		move.b	#id_Walk,obAnim(a0)
 		subq.b	#2,obRoutine(a0)
-		move.w	#$78,objoff_30(a0)
+		move.w	#120,flashtime(a0)	; set flash time to 2 seconds
 
 locret_13860:
 		rts
@@ -1472,17 +1477,26 @@ Sonic_Death:	; Routine 6
 
 
 GameOver:
+	if FixBugs
+		; Fix the death boundary bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_death_boundary_bug
+		move.w	(v_screenposy).w,d0
+		addi.w	#$100,d0
+		cmp.w	obY(a0),d0
+		bge.w	locret_13900
+	else
 		move.w	(v_limitbtm2).w,d0
 		addi.w	#$100,d0
 		cmp.w	obY(a0),d0
 		bhs.w	locret_13900
+	endif
 		move.w	#-$38,obVelY(a0)
 		addq.b	#2,obRoutine(a0)
 		clr.b	(f_timecount).w	; stop time counter
 		addq.b	#1,(f_lifecount).w ; update lives counter
 		subq.b	#1,(v_lives).w	; subtract 1 from number of lives
 		bne.s	loc_138D4
-		move.w	#0,objoff_3A(a0)
+		move.w	#0,restartime(a0)
 		move.b	#id_GameOverCard,(v_gameovertext1).w ; load GAME object
 		move.b	#id_GameOverCard,(v_gameovertext2).w ; load OVER object
 		move.b	#1,(v_gameovertext2+obFrame).w ; set OVER object to correct frame
@@ -1496,10 +1510,10 @@ loc_138C2:
 ; ===========================================================================
 
 loc_138D4:
-		move.w	#60,objoff_3A(a0)	; set time delay to 1 second
+		move.w	#60,restartime(a0)	; set time delay to 1 second
 		tst.b	(f_timeover).w	; is TIME OVER tag set?
 		beq.s	locret_13900	; if not, branch
-		move.w	#0,objoff_3A(a0)
+		move.w	#0,restartime(a0)
 		move.b	#id_GameOverCard,(v_gameovertext1).w ; load TIME object
 		move.b	#id_GameOverCard,(v_gameovertext2).w ; load OVER object
 		move.b	#2,(v_gameovertext1+obFrame).w
@@ -1517,14 +1531,31 @@ locret_13900:
 
 ; Obj01_ResetLevel:
 Sonic_ResetLevel:; Routine 8
-		tst.w	objoff_3A(a0)
+		tst.w	restartime(a0)
 		beq.s	.return
-		subq.w	#1,objoff_3A(a0)	; subtract 1 from time delay
+		subq.w	#1,restartime(a0)	; subtract 1 from time delay
 		bne.s	.return
 		move.w	#1,(f_restart).w ; restart the level
 
 .return:
 		rts
+; End of function Sonic_ResetLevel
+
+	if FixBugs
+		; Fix drowning bugs
+		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
+; ---------------------------------------------------------------------------
+; Sonic when he's drowning
+; ---------------------------------------------------------------------------
+Sonic_Drowned:
+		bsr.w	SpeedToPos		; Make Sonic able to move
+		addi.w	#$10,obVelY(a0)		; Apply gravity
+		bsr.w	Sonic_RecordPosition	; Record position
+		bsr.w	Sonic_Animate		; Animate Sonic
+		bsr.w	Sonic_LoadGfx		; Load Sonic's DPLCs
+		bra.w	DisplaySprite		; And finally, display Sonic
+; End of function Sonic_Drowned
+	endif
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to make Sonic run around loops (GHZ/SLZ)
@@ -1848,5 +1879,4 @@ Sonic_LoadGfx:
 
 .nochange:
 		rts
-
 ; End of function Sonic_LoadGfx
