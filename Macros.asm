@@ -324,12 +324,3 @@ bincludeEndMarker: macro *,path
 \*:	incbin	\path
 \*_end:
 	endm
-
-; ---------------------------------------------------------------------------
-; sprite mappings and DPLCs macros
-; ---------------------------------------------------------------------------
-
-SonicMappingsVer:	equ 1
-SonicDplcVer: 		equ 1
-
-		include	"_maps/MapMacros.asm"

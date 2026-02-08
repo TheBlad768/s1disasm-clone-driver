@@ -43,8 +43,7 @@ ZoneCount = 6
 ;	| Discrete zones are: GHZ, LZ, MZ, SLZ, SYZ, and SBZ
 
 ; ===========================================================================
-; AS-specific macros and assembler settings
-	cpu 68000
+; Assembler-specific macros and assembler settings
 	include "MacroSetup.asm"
 
 ; ===========================================================================
