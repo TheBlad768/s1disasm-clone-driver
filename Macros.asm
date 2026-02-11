@@ -317,10 +317,17 @@ zonewarning:	macro loc,elementsize
 		endm
 
 ; ---------------------------------------------------------------------------
+; binclude compatibility macro for asm68k
+; ---------------------------------------------------------------------------
+binclude:	macro path
+		incbin \path
+		endm
+
+; ---------------------------------------------------------------------------
 ; Macro to binclude something with an end marker
 ; ---------------------------------------------------------------------------
 
 bincludeEndMarker: macro *,path
-\*:	incbin	\path
+\*:	binclude \path
 \*_end:
 	endm
