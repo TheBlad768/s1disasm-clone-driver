@@ -2750,97 +2750,97 @@ LevSel_NoMove:
 ; Subroutine to load level select text
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+levsel_line_length:	equ 24	; characters per line
+levsel_line_count:	equ 21	; total number of lines
+levsel_start_col:	equ 8	; left tile offset for start position
+levsel_start_row:	equ 4	; top tile offset for start position
+levsel_sndtest_col:	equ 16	; column offset for the sound test number 
+levsel_sndtest_row:	equ levsel_line_count-1 ; row index of the sound test
 
+levsel_white:		equ make_art_tile(ArtTile_Level_Select_Font,3,1) ; VRAM setting for white text (non-selected)
+levsel_yellow:		equ make_art_tile(ArtTile_Level_Select_Font,2,1) ; VRAM setting for yellow text (selected line)
+levsel_vram_main:	equ vram_bg+(levsel_start_row<<7)+(levsel_start_col<<1)	; nametable address in VRAM
+levsel_vram_soundnum:	equ levsel_vram_main+(levsel_sndtest_row<<7)+(levsel_sndtest_col<<1) ; nametable address for sound test numbers
+
+; ---------------------------------------------------------------------------
 
 LevSelTextLoad:
+		; Write main text in white
+		lea	(LevelMenuText).l,a1	; load menu text offset
+		lea	(vdp_data_port).l,a6	; prepare VDP data write
+		locVRAM	levsel_vram_main,d4	; prepare base VRAM nametable location in d4
+		move.w	#levsel_white,d3	; VRAM setting
+		moveq	#levsel_line_count-1,d1	; number of lines of text to write
+.DrawAll:	move.l	d4,4(a6)		; write to VDP
+		bsr.w	LevSel_ChgLine		; draw line of text
+		addi.l	#$00800000,d4		; jump to next line
+		dbf	d1,.DrawAll		; repeat until all lines are drawn
 
-textpos:	= ($40000000+(($E210&$3FFF)<<16)+(($E210&$C000)>>14))
-					; $E210 is a VRAM address
+		; Draw currently selected line in yellow
+		moveq	#0,d0			; clear d0
+		move.w	(v_levselitem).w,d0	; get currently selected line
+		move.w	d0,d1			; back up selected line
+		locVRAM	levsel_vram_main,d4	; prepare base VRAM nametable location in d4
+		lsl.w	#7,d0			; times $80
+		swap	d0			; swap so that line now becomes VRAM nametable offset
+		add.l	d0,d4			; add that to base VRAM location
+		lea	(LevelMenuText).l,a1	; load menu text offset
+	if levsel_line_length=24
+		lsl.w	#3,d1			; times 8
+		move.w	d1,d0			; copy result
+		add.w	d1,d1			; times...
+		add.w	d0,d1			; ...3 (because default line length 8 x 3 = 24)
+	else
+		; The above calculation assumes 24 as line length, we need a different approach if it changes.
+		mulu.w	#levsel_line_length,d1	; multiply selected line index by line length
+	endif
+		adda.w	d1,a1			; add to menu text offset
+		move.w	#levsel_yellow,d3 	; prepare selected-line VRAM setting
+		move.l	d4,4(a6)		; write to VDP
+		bsr.w	LevSel_ChgLine		; recolour selected line
 
-		lea	(LevelMenuText).l,a1
-		lea	(vdp_data_port).l,a6
-		move.l	#textpos,d4	; text position on screen
-		move.w	#$E680,d3	; VRAM setting (4th palette, $680th tile)
-		moveq	#$15-1,d1	; number of lines of text
-
-LevSel_DrawAll:
-		move.l	d4,4(a6)
-		bsr.w	LevSel_ChgLine	; draw line of text
-		addi.l	#$800000,d4	; jump to next line
-		dbf	d1,LevSel_DrawAll
-
-		moveq	#0,d0
-		move.w	(v_levselitem).w,d0
-		move.w	d0,d1
-		move.l	#textpos,d4
-		lsl.w	#7,d0
-		swap	d0
-		add.l	d0,d4
-		lea	(LevelMenuText).l,a1
-		lsl.w	#3,d1
-		move.w	d1,d0
-		add.w	d1,d1
-		add.w	d0,d1
-		adda.w	d1,a1
-		move.w	#$C680,d3	; VRAM setting (3rd palette, $680th tile)
-		move.l	d4,4(a6)
-		bsr.w	LevSel_ChgLine	; recolour selected line
-		move.w	#$E680,d3
-		cmpi.w	#$14,(v_levselitem).w
-		bne.s	LevSel_DrawSnd
-		move.w	#$C680,d3
-
+		; Write sound test numbers
+		move.w	#levsel_white,d3	; draw numbers in white by default
+		cmpi.w	#levsel_sndtest_row,(v_levselitem).w ; is currently selected line the sound test?
+		bne.s	LevSel_DrawSnd		; if not, branch
+		move.w	#levsel_yellow,d3	; draw numbers in yellow
 LevSel_DrawSnd:
-		locVRAM	vram_bg+$C30		; sound test position on screen
-		move.w	(v_levselsound).w,d0
-		addi.w	#$80,d0
-		move.b	d0,d2
-		lsr.b	#4,d0
-		bsr.w	LevSel_ChgSnd	; draw 1st digit
-		move.b	d2,d0
-		bsr.w	LevSel_ChgSnd	; draw 2nd digit
+		locVRAM	levsel_vram_soundnum	; write sound test number position to VRAM
+		move.w	(v_levselsound).w,d0	; get currently selected sound test number
+		addi.w	#$80,d0			; make sound ID to be drawn $80-based
+		move.b	d0,d2			; backup number
+		lsr.b	#4,d0			; move first digit to lower nybble 
+		bsr.w	LevSel_ChgSnd		; draw 1st digit
+		move.b	d2,d0			; restore backup
+		bsr.w	LevSel_ChgSnd		; draw 2nd digit
 		rts
-; End of function LevSelTextLoad
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 LevSel_ChgSnd:
-		andi.w	#$F,d0
-		cmpi.b	#$A,d0		; is digit $A-$F?
-		blo.s	LevSel_Numb	; if not, branch
-		addi.b	#7,d0		; use alpha characters
-
-LevSel_Numb:
-		add.w	d3,d0
-		move.w	d0,(a6)
+		andi.w	#$F,d0			; mask out upper nybble
+		cmpi.b	#$A,d0			; is digit $A-$F?
+		blo.s	.DrawNum		; if not, branch
+		addi.b	#7,d0			; use letter characters
+.DrawNum:	add.w	d3,d0			; combine number with VRAM setting (white or yellow)
+		move.w	d0,(a6)			; send to VRAM
 		rts
-; End of function LevSel_ChgSnd
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 LevSel_ChgLine:
-		moveq	#$18-1,d2	; number of characters per line
+		moveq	#levsel_line_length-1,d2 ; number of characters per line
 
-LevSel_LineLoop:
-		moveq	#0,d0
-		move.b	(a1)+,d0	; get character
-		bpl.s	LevSel_CharOk	; branch if valid
-		move.w	#0,(a6)		; use blank character
-		dbf	d2,LevSel_LineLoop
+.LineLoop:	moveq	#0,d0			; clear d0
+		move.b	(a1)+,d0		; get current character
+		bpl.s	.CharOk			; is it a valid ASCII character? if yes, branch
+		move.w	#0,(a6)			; draw a blank character
+		dbf	d2,.LineLoop		; loop until all characters are drawn
 		rts
 
-
-LevSel_CharOk:
-		add.w	d3,d0		; combine char with VRAM setting
-		move.w	d0,(a6)		; send to VRAM
-		dbf	d2,LevSel_LineLoop
+.CharOk:	add.w	d3,d0			; combine char with VRAM setting (white or yellow)
+		move.w	d0,(a6)			; send to VRAM
+		dbf	d2,.LineLoop		; loop until all characters are drawn
 		rts
-; End of function LevSel_ChgLine
+; End of function LevSelTextLoad
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -2910,6 +2910,9 @@ LevelMenuText:
 		even
 	endif
 
+	if *-(levsel_line_count*levsel_line_length)<>LevelMenuText
+		warning "LevelMenuText does not match expected line count/length."
+	endif
 	charset
 
 ; ---------------------------------------------------------------------------
