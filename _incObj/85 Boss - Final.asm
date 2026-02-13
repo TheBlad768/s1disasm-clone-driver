@@ -135,12 +135,12 @@ loc_19EA8:
 		andi.w	#$C,d0
 		move.w	d0,d1
 		addq.w	#2,d1
-		tst.l	d0
-		bpl.s	loc_19EC6
-		exg	d1,d0
+		tst.l	d0		; is random result negative?
+		bpl.s	loc_19EC6	; if not, branch
+		exg	d1,d0		; swap, Eggman's target cylinder
 
 loc_19EC6:
-		lea	word_19FD6(pc),a1
+		lea	BossFinal_CylinderPairs(pc),a1
 		move.w	(a1,d0.w),d0
 		move.w	(a1,d1.w),d1
 		move.w	d0,objoff_30(a0)
@@ -234,8 +234,17 @@ loc_19FBC:
 		move.w	#boss_fz_y+$2C,obY(a0)
 		move.b	#$14,obHeight(a0)
 		rts
+
 ; ===========================================================================
-word_19FD6:	dc.w 0,	2, 2, 4, 4, 6, 6, 0
+; word_19FD6:
+BossFinal_CylinderPairs:
+		; Possible permutations of the two cylinders that are activated at once.
+		; Two words per pair, first one is (normally) the cylinder Eggman is hiding in.
+		; 0 = top-left -- 2 = top-right -- 4 = bottom-left -- 6 bottom-right
+		dc.w 0, 2
+		dc.w 2, 4
+		dc.w 4, 6
+		dc.w 6, 0
 ; ===========================================================================
 
 loc_19FE6:
