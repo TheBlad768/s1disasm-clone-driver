@@ -2361,9 +2361,9 @@ Tit_MainLoop:
 		move.w	d0,(v_player+obX).w	; write new X position
 		cmpi.w	#$1C00,d0		; has Sonic object passed $1C00 on x-axis?
 		blo.s	Tit_ChkRegion		; if not, branch
-		move.b	#id_Sega,(v_gamemode).w	; return to Sega screen
 		; Will never happen due to the short title screen generic timer.
-		; This was likely an old failsafe before Demos were introduced.
+		; This likely was an old failsafe before Demos were introduced.
+		move.b	#id_Sega,(v_gamemode).w	; return to Sega screen
 		rts
 ; ===========================================================================
 
@@ -2384,13 +2384,13 @@ Tit_EnterCheat:
 		cmp.b	(a0),d0			; does button press match current cheat entry?
 		bne.s	Tit_ResetCheat		; if not, branch and reset cheat
 		addq.w	#1,(v_title_dcount).w	; increment number of successful D-Pad cheat inputs
-		tst.b	d0			; has end of cheat code been reached?
+		tst.b	d0			; has end of cheat code been reached? (0-entry in cheat)
 		bne.s	Tit_CountC		; if not, branch
 		
 Tit_ActivateCheat:
 		; (On JAPANESE consoles only) Activated cheat depends on the amount of times C was pressed:
 		; 0-1 level select -- 2-3 slow motion -- 4-5 debug mode -- 6-7: hidden Japanese credits / sound test skips
-		; For any other regions, pressing C twice or more will ALWAYS result in debug mode.
+		; For any other regions, pressing C twice or more will ALWAYS result in slow motion and debug mode.
 		lea	(f_levselcheat).w,a0	; get base cheat index
 		move.w	(v_title_ccount).w,d1	; get number of tiles C was pressed
 		lsr.w	#1,d1			; half pressed amount
@@ -2398,8 +2398,8 @@ Tit_ActivateCheat:
 		beq.s	Tit_PlayRing		; if C was not pressed, only activate level select
 		tst.b	(v_megadrive).w		; check if the machine is US or Japanese
 		bpl.s	Tit_PlayRing		; if Japanese, branch
-		moveq	#1,d1			; on non-Japanese consoles, enable debug mode...
-		move.b	d1,1(a0,d1.w)		; ...no matter how many times C was pressed
+		moveq	#1,d1			; on non-Japanese console, force index to slow motion cheat
+		move.b	d1,1(a0,d1.w)		; enable debug mode first (and slow motion in the next line)
 
 Tit_PlayRing:
 		move.b	#1,(a0,d1.w)		; activate cheat depending on C-press count
@@ -2409,11 +2409,11 @@ Tit_PlayRing:
 ; ===========================================================================
 
 Tit_ResetCheat:
-		tst.b	d0			; has cheat already been successfully entered?
+		tst.b	d0			; has D-Pad been pressed?
 		beq.s	Tit_CountC		; if yes, branch
-		cmpi.w	#9,(v_title_dcount).w	; has D-Pad been pressed 9 times already?
+		cmpi.w	#9,(v_title_dcount).w	; has cheat reached index 9? (impossible condition)
 		beq.s	Tit_CountC		; if yes, don't reset D-Pad counter
-		move.w	#0,(v_title_dcount).w	; reset UDLR counter
+		move.w	#0,(v_title_dcount).w	; reset cheat index counter
 
 Tit_CountC:
 		move.b	(v_jpadpress1).w,d0	; get currently pressed buttons
@@ -2421,7 +2421,7 @@ Tit_CountC:
 		beq.s	Tit_ChkStartOrDemo	; if not, branch
 		addq.w	#1,(v_title_ccount).w	; increment C counter
 
-; loc_3230
+; loc_3230:
 Tit_ChkStartOrDemo:
 		tst.w	(v_generictimer).w	; has title screen timer expired?
 		beq.w	GotoDemo		; if yes, launch Demo mode
@@ -2486,7 +2486,6 @@ LevSel_SelectionMade:
 LevSel_NoCheat:
 	if FixBugs=0
 		; This is a workaround for a bug; see PlaySoundID for more.
-		; Once you've fixed the bugs there, comment these four instructions out.
 		cmpi.w	#bgm__Last+1,d0		; is sound $80-$93 being played?
 		blo.s	LevSel_PlaySnd		; if yes, branch
 		cmpi.w	#sfx__First,d0		; is sound $94-$9F being played?
@@ -2581,8 +2580,7 @@ LevSel_Ptrs:
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
 		dc.b id_SS, 0		; Special Stage
-		dc.w $8000		; Sound Test
-		even
+		dc.b $80, 0		; Sound Test
 	else
 		; correct level order
 		dc.b id_GHZ, 0
@@ -2605,9 +2603,9 @@ LevSel_Ptrs:
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
 		dc.b id_SS, 0		; Special Stage
-		dc.w $8000		; Sound Test
-		even
+		dc.b $80, 0		; Sound Test
 	endif
+LevSel_PtrsEnd:	even
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -2763,17 +2761,18 @@ LevSel_NoMove:
 ; Subroutine to load level select text
 ; ---------------------------------------------------------------------------
 
-levsel_line_length:	equ 24	; characters per line
 levsel_line_count:	equ 21	; total number of lines
-levsel_start_col:	equ 8	; left tile offset for start position
-levsel_start_row:	equ 4	; top tile offset for start position
-levsel_sndtest_col:	equ 16	; column offset for the sound test number 
-levsel_sndtest_row:	equ levsel_line_count-1 ; row index of the sound test
+levsel_line_length:	equ 24	; characters per line
+levsel_sndtest_row:	equ levsel_line_count-1  ; row index of the sound test
+levsel_sndtest_col:	equ levsel_line_length-8 ; column offset for the sound test number 
 
-levsel_white:		equ make_art_tile(ArtTile_Level_Select_Font,3,1) ; VRAM setting for white text (non-selected)
-levsel_yellow:		equ make_art_tile(ArtTile_Level_Select_Font,2,1) ; VRAM setting for yellow text (selected line)
+levsel_start_row:	equ 4	; top tile offset for start position
+levsel_start_col:	equ 8	; left tile offset for start position
 levsel_vram_main:	equ vram_bg+(levsel_start_row<<7)+(levsel_start_col<<1)	; nametable address in VRAM
-levsel_vram_soundnum:	equ levsel_vram_main+(levsel_sndtest_row<<7)+(levsel_sndtest_col<<1) ; nametable address for sound test numbers
+levsel_vram_sndtestnum:	equ levsel_vram_main+(levsel_sndtest_row<<7)+(levsel_sndtest_col<<1) ; nametable address for sound test numbers
+
+levsel_white:		equ make_art_tile(ArtTile_Level_Select_Font,3,TRUE) ; VRAM setting for white text (non-selected lines)
+levsel_yellow:		equ make_art_tile(ArtTile_Level_Select_Font,2,TRUE) ; VRAM setting for yellow text (selected line)
 
 ; ---------------------------------------------------------------------------
 
@@ -2818,7 +2817,7 @@ LevSelTextLoad:
 		bne.s	LevSel_DrawSnd		; if not, branch
 		move.w	#levsel_yellow,d3	; draw numbers in yellow
 LevSel_DrawSnd:
-		locVRAM	levsel_vram_soundnum	; write sound test number position to VRAM
+		locVRAM	levsel_vram_sndtestnum	; write sound test number position to VRAM
 		move.w	(v_levselsound).w,d0	; get currently selected sound test number
 		addi.w	#$80,d0			; make sound ID to be drawn $80-based
 		move.b	d0,d2			; backup number
@@ -2923,10 +2922,16 @@ LevelMenuText:
 		even
 	endif
 
-	if *-(levsel_line_count*levsel_line_length)<>LevelMenuText
-		warning "LevelMenuText does not match expected line count/length."
+	if MOMPASS=1
+		if *-(levsel_line_count*levsel_line_length)<>LevelMenuText
+			warning "LevelMenuText does not match expected line count/length."
+		endif
+		if (LevSel_PtrsEnd-LevSel_Ptrs)/2<>levsel_line_count
+			warning "LevSel_Ptrs does not match expected line count."
+		endif
 	endif
 	charset
+	even
 
 ; ---------------------------------------------------------------------------
 ; Music playlist
