@@ -336,7 +336,13 @@ KillSonic:
 		move.w	#-$700,obVelY(a0)
 		move.w	#0,obVelX(a0)
 		move.w	#0,obInertia(a0)
+	if ~~FixBugs
+		; This is a leftover line from the prototype, where objoff_38 and objoff_39 were once used to store Sonic's last y position before he died to respawn him at after a death.
+		; What this does now is that it overwrites sticktoconvex with the high byte of Sonic's y position, for example, if the y position of Sonic is at $300, sticktoconvex becomes 3.
+		; This won't matter much because Sonic doesn't interact with solids when he dies, so effectively, this is useless code.
+		; This line was removed in the CENSOR prototype of Sonic 2 and onwards.
 		move.w	obY(a0),objoff_38(a0)
+	endif
 		move.b	#id_Death,obAnim(a0)
 		bset	#7,obGfx(a0)
 	if FixBugs
