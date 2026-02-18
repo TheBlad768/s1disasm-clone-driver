@@ -337,10 +337,10 @@ KillSonic:
 		move.w	#0,obVelX(a0)
 		move.w	#0,obInertia(a0)
 	if FixBugs=0
-		; Leftover line from the prototype, where objoff_38 was once used as two bytes to use Sonic's last y position to respawn at.
-		; Currently, this line overwrites sticktoconvex with the high byte of Sonic's y position.
-		; However, it is made redundant because Sonic doesn't react to solids when he dies.
-		; This line was removed in the CENSOR prototype of Sonic 2 and onwards.
+		; Leftover line from the prototype, where objoff_38 was used to respawn Sonic at his last y position.
+		; sticktoconvex gets overwritten with the high byte of Sonic's y position.
+		; It is made redundant as Sonic doesn't react to solids when he dies.
+		; It was removed in the CENSOR prototype of Sonic 2 onwards.
 		move.w	obY(a0),objoff_38(a0)
 	endif
 		move.b	#id_Death,obAnim(a0)
