@@ -2343,202 +2343,213 @@ Tit_LoadText:
 		enable_display
 		bsr.w	PaletteFadeIn
 
-Tit_MainLoop:
-		move.b	#4,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		jsr	(ExecuteObjects).l
-		bsr.w	DeformLayers
-		jsr	(BuildSprites).l
-		bsr.w	PalCycle_Title
-		bsr.w	RunPLC
-		move.w	(v_player+obX).w,d0
-		addq.w	#2,d0
-		move.w	d0,(v_player+obX).w ; move Sonic to the right
-		cmpi.w	#$1C00,d0	; has Sonic object passed $1C00 on x-axis?
-		blo.s	Tit_ChkRegion	; if not, branch
+; ---------------------------------------------------------------------------
+; Title screen main loop and cheat checks
+; ---------------------------------------------------------------------------
 
-		move.b	#id_Sega,(v_gamemode).w ; go to Sega screen
+Tit_MainLoop:
+		move.b	#4,(v_vbla_routine).w	; set routine 4 in V-Int
+		bsr.w	WaitForVBla		; wait for V-Blank to finish
+		jsr	(ExecuteObjects).l	; execute title screen objects
+		bsr.w	DeformLayers		; run background deformation
+		jsr	(BuildSprites).l	; display sprites
+		bsr.w	PalCycle_Title		; run title screen palette cycle
+		bsr.w	RunPLC			; run any potential PLC
+
+		move.w	(v_player+obX).w,d0	; get current title screen position (big Sonic object)
+		addq.w	#2,d0			; move it 2px to the right
+		move.w	d0,(v_player+obX).w	; write new X position
+		cmpi.w	#$1C00,d0		; has Sonic object passed $1C00 on x-axis?
+		blo.s	Tit_ChkRegion		; if not, branch
+		; Will never happen due to the short title screen generic timer.
+		; This likely was an old failsafe before Demos were introduced.
+		move.b	#id_Sega,(v_gamemode).w	; return to Sega screen
 		rts
 ; ===========================================================================
 
 Tit_ChkRegion:
-		tst.b	(v_megadrive).w	; check if the machine is US or Japanese
-		bpl.s	Tit_RegionJap	; if Japanese, branch
-
-		lea	(LevSelCode_US).l,a0 ; load US code
-		bra.s	Tit_EnterCheat
+		tst.b	(v_megadrive).w		; check if the machine is US or Japanese
+		bpl.s	Tit_RegionJap		; if Japanese, branch
+		lea	(LevSelCode_US).l,a0	; load US code
+		bra.s	Tit_EnterCheat		; skip over
 
 Tit_RegionJap:
-		lea	(LevSelCode_J).l,a0 ; load J code
+		lea	(LevSelCode_J).l,a0	; load J code
 
 Tit_EnterCheat:
-		move.w	(v_title_dcount).w,d0
-		adda.w	d0,a0
-		move.b	(v_jpadpress1).w,d0 ; get button press
-		andi.b	#btnDir,d0	; read only UDLR buttons
-		cmp.b	(a0),d0		; does button press match the cheat code?
-		bne.s	Tit_ResetCheat	; if not, branch
-		addq.w	#1,(v_title_dcount).w ; next button press
-		tst.b	d0
-		bne.s	Tit_CountC
-		lea	(f_levselcheat).w,a0
-		move.w	(v_title_ccount).w,d1
-		lsr.w	#1,d1
-		andi.w	#3,d1
-		beq.s	Tit_PlayRing
-		tst.b	(v_megadrive).w
-		bpl.s	Tit_PlayRing
-		moveq	#1,d1
-		move.b	d1,1(a0,d1.w)	; cheat depends on how many times C is pressed
+		move.w	(v_title_dcount).w,d0	; get number of successful D-Pad cheat inputs
+		adda.w	d0,a0			; add to loaded code to find current cheat input requirement
+		move.b	(v_jpadpress1).w,d0	; get buttons pressed this frame
+		andi.b	#btnDir,d0		; read only D-Pad buttons (UDLR)
+		cmp.b	(a0),d0			; does button press match current cheat entry?
+		bne.s	Tit_ResetCheat		; if not, branch and reset cheat
+		addq.w	#1,(v_title_dcount).w	; increment number of successful D-Pad cheat inputs
+		tst.b	d0			; has end of cheat code been reached? (0-entry in cheat)
+		bne.s	Tit_CountC		; if not, branch
+		
+Tit_ActivateCheat:
+		; (On JAPANESE consoles only) Activated cheat depends on the amount of times C was pressed:
+		; 0-1 level select -- 2-3 slow motion -- 4-5 debug mode -- 6-7: hidden Japanese credits / sound test skips
+		; For any other regions, pressing C twice or more will ALWAYS result in slow motion and debug mode.
+		lea	(f_levselcheat).w,a0	; get base cheat index
+		move.w	(v_title_ccount).w,d1	; get number of tiles C was pressed
+		lsr.w	#1,d1			; half pressed amount
+		andi.w	#3,d1			; only four cheats are possible
+		beq.s	Tit_PlayRing		; if C was not pressed, only activate level select
+		tst.b	(v_megadrive).w		; check if the machine is US or Japanese
+		bpl.s	Tit_PlayRing		; if Japanese, branch
+		moveq	#1,d1			; on non-Japanese console, force index to slow motion cheat
+		move.b	d1,1(a0,d1.w)		; enable debug mode first (and slow motion in the next line)
 
 Tit_PlayRing:
-		move.b	#1,(a0,d1.w)	; activate cheat
-		move.b	#sfx_Ring,d0
-		bsr.w	QueueSound2	; play ring sound when code is entered
-		bra.s	Tit_CountC
+		move.b	#1,(a0,d1.w)		; activate cheat depending on C-press count
+		move.b	#sfx_Ring,d0		; set ring sound when code is entered
+		bsr.w	QueueSound2		; play it
+		bra.s	Tit_CountC		; skip over cheat reset 
 ; ===========================================================================
 
 Tit_ResetCheat:
-		tst.b	d0
-		beq.s	Tit_CountC
-		cmpi.w	#9,(v_title_dcount).w
-		beq.s	Tit_CountC
-		move.w	#0,(v_title_dcount).w ; reset UDLR counter
+		tst.b	d0			; has D-Pad been pressed?
+		beq.s	Tit_CountC		; if yes, branch
+		cmpi.w	#9,(v_title_dcount).w	; has cheat reached index 9? (impossible condition)
+		beq.s	Tit_CountC		; if yes, don't reset D-Pad counter
+		move.w	#0,(v_title_dcount).w	; reset cheat index counter
 
 Tit_CountC:
-		move.b	(v_jpadpress1).w,d0
-		andi.b	#btnC,d0	; is C button pressed?
-		beq.s	loc_3230	; if not, branch
-		addq.w	#1,(v_title_ccount).w ; increment C counter
+		move.b	(v_jpadpress1).w,d0	; get currently pressed buttons
+		andi.b	#btnC,d0		; is C button pressed?
+		beq.s	Tit_ChkStartOrDemo	; if not, branch
+		addq.w	#1,(v_title_ccount).w	; increment C counter
 
-loc_3230:
-		tst.w	(v_generictimer).w
-		beq.w	GotoDemo
+; loc_3230:
+Tit_ChkStartOrDemo:
+		tst.w	(v_generictimer).w	; has title screen timer expired?
+		beq.w	GotoDemo		; if yes, launch Demo mode
 		andi.b	#btnStart,(v_jpadpress1).w ; check if Start is pressed
-		beq.w	Tit_MainLoop	; if not, branch
+		beq.w	Tit_MainLoop		; if not, continue looping title screen
 
 Tit_ChkLevSel:
-		tst.b	(f_levselcheat).w ; check if level select code is on
-		beq.w	PlayLevel	; if not, play level
-		btst	#bitA,(v_jpadhold1).w ; check if A is pressed
-		beq.w	PlayLevel	; if not, play level
-	
+		tst.b	(f_levselcheat).w	; check if level select code is on
+		beq.w	PlayLevel		; if not, begin game by playing normal level
+		btst	#bitA,(v_jpadhold1).w	; check if A was held while pressing Start
+		beq.w	PlayLevel		; if not, begin game by playing normal level
+; ---------------------------------------------------------------------------
+
+Tit_EnterLevelSelect:
 	if FixBugs
 		; Fix the level selects graphics bug
 		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Level_Select_graphics_bug
-		move.b	#4,(v_vbla_routine).w
-		bsr.w	WaitForVBla
+		move.b	#4,(v_vbla_routine).w	; set routine 4 in V-Int
+		bsr.w	WaitForVBla		; run V-Blank one extra frame to prevent graphical glitches
 	endif
-
 		moveq	#palid_LevelSel,d0
-		bsr.w	PalLoad	; load level select palette
+		bsr.w	PalLoad			; load level select palette
 
-		clearRAM v_hscrolltablebuffer
+		clearRAM v_hscrolltablebuffer	; clear H-Scroll buffer
+		move.l	d0,(v_scrposy_vdp).w	; clear VSRAM (d0 is still 0)
+		disable_ints			; disable interrupts
 
-		move.l	d0,(v_scrposy_vdp).w
-		disable_ints
-		lea	(vdp_data_port).l,a6
-		locVRAM	vram_bg
-		move.w	#plane_size_64x32/4-1,d1
+		lea	(vdp_data_port).l,a6	; prepare VDP data write
+		locVRAM	vram_bg			; write to background nametable
+		move.w	#plane_size_64x32/4-1,d1 ; write full screen
+.LevSelClearBG:	move.l	d0,(a6)			; clear background plane
+		dbf	d1,.LevSelClearBG	; loop until plane is fully cleared
 
-Tit_ClrScroll2:
-		move.l	d0,(a6)
-		dbf	d1,Tit_ClrScroll2 ; clear scroll data (in VRAM)
-
-		bsr.w	LevSelTextLoad
+		bsr.w	LevSelTextLoad		; load level select text before entering main loop
 
 ; ---------------------------------------------------------------------------
-; Level Select
+; Level Select main loop
 ; ---------------------------------------------------------------------------
 
 LevelSelect:
-		move.b	#4,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		bsr.w	LevSelControls
-		bsr.w	RunPLC
-		tst.l	(v_plc_buffer).w
-		bne.s	LevelSelect
+		move.b	#4,(v_vbla_routine).w	; set routine 4 in V-Int
+		bsr.w	WaitForVBla		; wait for V-Blank to finish
+		bsr.w	LevSelControls		; update selected line if necessary
+		bsr.w	RunPLC			; run any potential PLC
+		tst.l	(v_plc_buffer).w	; are any patterns in the PLC still left to be loaded?
+		bne.s	LevelSelect		; if yes, block quitting level select until finished
 		andi.b	#btnABC+btnStart,(v_jpadpress1).w ; is A, B, C, or Start pressed?
-		beq.s	LevelSelect	; if not, branch
-		move.w	(v_levselitem).w,d0
-		cmpi.w	#$14,d0		; have you selected item $14 (sound test)?
-		bne.s	LevSel_Level_SS	; if not, go to Level/SS subroutine
-		move.w	(v_levselsound).w,d0
-		addi.w	#$80,d0
-		tst.b	(f_creditscheat).w ; is Japanese Credits cheat on?
-		beq.s	LevSel_NoCheat	; if not, branch
-		cmpi.w	#$9F,d0		; is sound $9F being played?
-		beq.s	LevSel_Ending	; if yes, branch
-		cmpi.w	#$9E,d0		; is sound $9E being played?
-		beq.s	LevSel_Credits	; if yes, branch
+		beq.s	LevelSelect		; if not, loop level select
 
+LevSel_SelectionMade:
+		move.w	(v_levselitem).w,d0	; get currently selected line
+		cmpi.w	#levsel_sndtest_row,d0	; have you selected item $14 (sound test)?
+		bne.s	LevSel_Level_SS		; if not, go to Level/SS subroutine
+		move.w	(v_levselsound).w,d0	; get currently selected sound test entry
+		addi.w	#$80,d0			; make it $80-based
+		tst.b	(f_creditscheat).w	; is Japanese Credits cheat on?
+		beq.s	LevSel_NoCheat		; if not, branch
+		cmpi.w	#$9F,d0			; is sound $9F being played?
+		beq.s	LevSel_Ending		; if yes, branch
+		cmpi.w	#$9E,d0			; is sound $9E being played?
+		beq.s	LevSel_Credits		; if yes, branch
 LevSel_NoCheat:
+	if FixBugs=0
 		; This is a workaround for a bug; see PlaySoundID for more.
-		; Once you've fixed the bugs there, comment these four instructions out.
-		cmpi.w	#bgm__Last+1,d0	; is sound $80-$93 being played?
-		blo.s	LevSel_PlaySnd	; if yes, branch
-		cmpi.w	#sfx__First,d0	; is sound $94-$9F being played?
-		blo.s	LevelSelect	; if yes, branch
-
+		cmpi.w	#bgm__Last+1,d0		; is sound $80-$93 being played?
+		blo.s	LevSel_PlaySnd		; if yes, branch
+		cmpi.w	#sfx__First,d0		; is sound $94-$9F being played?
+		blo.s	LevelSelect		; if yes, branch
 LevSel_PlaySnd:
-		bsr.w	QueueSound2
-		bra.s	LevelSelect
+	endif
+		bsr.w	QueueSound2		; play selected sound
+		bra.s	LevelSelect		; loop level select
 ; ===========================================================================
 
 LevSel_Ending:
 		move.b	#id_Ending,(v_gamemode).w ; set screen mode to $18 (Ending)
-		move.w	#(id_EndZ<<8),(v_zone).w ; set level to 0600 (Ending)
+		move.w	#(id_EndZ<<8),(v_zone).w  ; set level to 0600 (good Ending)
 		rts
 ; ===========================================================================
 
 LevSel_Credits:
 		move.b	#id_Credits,(v_gamemode).w ; set screen mode to $1C (Credits)
-		move.b	#bgm_Credits,d0
-		bsr.w	QueueSound2 ; play credits music
-		move.w	#0,(v_creditsnum).w
+		move.b	#bgm_Credits,d0		; set credits music
+		bsr.w	QueueSound2		; play it
+		move.w	#0,(v_creditsnum).w	; start at the first credits page
 		rts
 ; ===========================================================================
 
 LevSel_Level_SS:
-		add.w	d0,d0
-		move.w	LevSel_Ptrs(pc,d0.w),d0 ; load level number
-		bmi.w	LevelSelect
-		cmpi.w	#id_SS*$100,d0	; check if level is 0700 (Special Stage)
-		bne.s	LevSel_Level	; if not, branch
+		add.w	d0,d0			; double selected line for word-based indexing
+		move.w	LevSel_Ptrs(pc,d0.w),d0	; find relevant level pointer from table
+		bmi.w	LevelSelect		; if it's an invalid entry, branch back to main loop
+		cmpi.w	#id_SS<<8,d0		; check if selected level Special Stage (0700 is used as dummy value)
+		bne.s	LevSel_Level		; if not, branch
 		move.b	#id_Special,(v_gamemode).w ; set screen mode to $10 (Special Stage)
-		clr.w	(v_zone).w	; clear level
-		move.b	#3,(v_lives).w	; set lives to 3
-		moveq	#0,d0
-		move.w	d0,(v_rings).w	; clear rings
-		move.l	d0,(v_time).w	; clear time
-		move.l	d0,(v_score).w	; clear score
+		clr.w	(v_zone).w		; clear level
+		move.b	#3,(v_lives).w		; set lives to 3
+		moveq	#0,d0			; set d0 to 0
+		move.w	d0,(v_rings).w		; clear rings
+		move.l	d0,(v_time).w		; clear time
+		move.l	d0,(v_score).w		; clear score
 	if Revision<>0
-		move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
+		move.l	#5000,(v_scorelife).w	; extra life is awarded at 50000 points
 	endif
 		rts
 ; ===========================================================================
 
 LevSel_Level:
-		andi.w	#$3FFF,d0
-		move.w	d0,(v_zone).w	; set level number
+		andi.w	#$3FFF,d0		; mask out invalid bits of level number
+		move.w	d0,(v_zone).w		; set new level number (zone and act)
 
 PlayLevel:
 		move.b	#id_Level,(v_gamemode).w ; set screen mode to $0C (level)
-		move.b	#3,(v_lives).w	; set lives to 3
-		moveq	#0,d0
-		move.w	d0,(v_rings).w	; clear rings
-		move.l	d0,(v_time).w	; clear time
-		move.l	d0,(v_score).w	; clear score
-		move.b	d0,(v_lastspecial).w ; clear special stage number
-		move.b	d0,(v_emeralds).w ; clear emeralds
-		move.l	d0,(v_emldlist).w ; clear emeralds
-		move.l	d0,(v_emldlist+4).w ; clear emeralds
-		move.b	d0,(v_continues).w ; clear continues
+		move.b	#3,(v_lives).w		; set lives to 3
+		moveq	#0,d0			; set d0 to 0
+		move.w	d0,(v_rings).w		; clear rings
+		move.l	d0,(v_time).w		; clear time
+		move.l	d0,(v_score).w		; clear score
+		move.b	d0,(v_lastspecial).w	; clear special stage number
+		move.b	d0,(v_emeralds).w	; clear emeralds
+		move.l	d0,(v_emldlist).w	; clear emeralds
+		move.l	d0,(v_emldlist+4).w	; clear emeralds
+		move.b	d0,(v_continues).w	; clear continues
 	if Revision<>0
-		move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
+		move.l	#5000,(v_scorelife).w	; extra life is awarded at 50000 points
 	endif
-		move.b	#bgm_Fade,d0
-		bsr.w	QueueSound2 ; fade out music
+		move.b	#bgm_Fade,d0		; set music fade-out command
+		bsr.w	QueueSound2		; fade out music
 		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -2569,8 +2580,7 @@ LevSel_Ptrs:
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
 		dc.b id_SS, 0		; Special Stage
-		dc.w $8000		; Sound Test
-		even
+		dc.b $80, 0		; Sound Test
 	else
 		; correct level order
 		dc.b id_GHZ, 0
@@ -2593,10 +2603,11 @@ LevSel_Ptrs:
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
 		dc.b id_SS, 0		; Special Stage
-		dc.w $8000		; Sound Test
-		even
+		dc.b $80, 0		; Sound Test
 	endif
+LevSel_PtrsEnd:	even
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Level select codes
 ; ---------------------------------------------------------------------------
@@ -2610,8 +2621,8 @@ LevSelCode_J:
 
 LevSelCode_US:	dc.b btnUp,btnDn,btnL,btnR,0,$FF
 		even
-; ===========================================================================
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Demo mode
 ; ---------------------------------------------------------------------------
@@ -2677,170 +2688,171 @@ Demo_Level:
 Demo_Levels:	binclude	"misc/Demo Level Order - Intro.bin"
 		even
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to change what you're selecting in the level select
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 LevSelControls:
-		move.b	(v_jpadpress1).w,d1
-		andi.b	#btnUp+btnDn,d1	; is up/down pressed and held?
-		bne.s	LevSel_UpDown	; if yes, branch
-		subq.w	#1,(v_levseldelay).w ; subtract 1 from time to next move
-		bpl.s	LevSel_SndTest	; if time remains, branch
+		move.b	(v_jpadpress1).w,d1	; get current button presses
+		andi.b	#btnUp+btnDn,d1		; is up/down pressed this frame?
+		bne.s	LevSel_UpDown		; if yes, branch
+		subq.w	#1,(v_levseldelay).w	; if held, subtract 1 from delay until next move
+		bpl.s	LevSel_SndTest		; if time remains, branch
 
 LevSel_UpDown:
-		move.w	#$C-1,(v_levseldelay).w ; reset time delay
-		move.b	(v_jpadhold1).w,d1
-		andi.b	#btnUp+btnDn,d1	; is up/down pressed?
-		beq.s	LevSel_SndTest	; if not, branch
-		move.w	(v_levselitem).w,d0
-		btst	#bitUp,d1	; is up pressed?
-		beq.s	LevSel_Down	; if not, branch
-		subq.w	#1,d0		; move up 1 selection
-		bhs.s	LevSel_Down
-		moveq	#$14,d0		; if selection moves below 0, jump to selection $14
+		move.w	#12-1,(v_levseldelay).w	; reset time delay
+		move.b	(v_jpadhold1).w,d1	; get currently held buttons
+		andi.b	#btnUp+btnDn,d1		; is up/down held?
+		beq.s	LevSel_SndTest		; if not, branch
+		move.w	(v_levselitem).w,d0	; get currently selected line
+		btst	#bitUp,d1		; is up held?
+		beq.s	LevSel_Down		; if not, branch
+		subq.w	#1,d0			; move up 1 selection
+		bhs.s	LevSel_Down		; if entry is still valid, branch
+		moveq	#levsel_line_count-1,d0	; if selection moves below 0, jump to selection last row
 
 LevSel_Down:
-		btst	#bitDn,d1	; is down pressed?
-		beq.s	LevSel_Refresh	; if not, branch
-		addq.w	#1,d0		; move down 1 selection
-		cmpi.w	#$15,d0
-		blo.s	LevSel_Refresh
-		moveq	#0,d0		; if selection moves above $14, jump to selection 0
+		btst	#bitDn,d1		; is down held?
+		beq.s	LevSel_Refresh		; if not, branch
+		addq.w	#1,d0			; move down 1 selection
+		cmpi.w	#levsel_line_count,d0	; is selection past the last one now?
+		blo.s	LevSel_Refresh		; if not, branch
+		moveq	#0,d0			; if selection moves past the last row, jump to selection 0
 
 LevSel_Refresh:
-		move.w	d0,(v_levselitem).w ; set new selection
-		bsr.w	LevSelTextLoad	; refresh text
+		move.w	d0,(v_levselitem).w	; set new selection
+		bsr.w	LevSelTextLoad		; refresh text
 		rts
 ; ===========================================================================
 
 LevSel_SndTest:
-		cmpi.w	#$14,(v_levselitem).w ; is item $14 selected?
-		bne.s	LevSel_NoMove	; if not, branch
-		move.b	(v_jpadpress1).w,d1
-		andi.b	#btnR+btnL,d1	; is left/right pressed?
-		beq.s	LevSel_NoMove	; if not, branch
-		move.w	(v_levselsound).w,d0
-		btst	#bitL,d1	; is left pressed?
-		beq.s	LevSel_Right	; if not, branch
-		subq.w	#1,d0		; subtract 1 from sound test
-		bhs.s	LevSel_Right
-		moveq	#$4F,d0		; if sound test moves below 0, set to $4F
+		cmpi.w	#levsel_sndtest_row,(v_levselitem).w ; is sound test row selected?
+		bne.s	LevSel_NoMove		; if not, branch
+		move.b	(v_jpadpress1).w,d1	; get currently pressed buttons
+		andi.b	#btnR+btnL,d1		; is left/right pressed?
+		beq.s	LevSel_NoMove		; if not, branch
+
+		move.w	(v_levselsound).w,d0	; get currently selected sound test number
+		btst	#bitL,d1		; is left pressed?
+		beq.s	LevSel_Right		; if not, branch
+		subq.w	#1,d0			; subtract 1 from sound test
+		bhs.s	LevSel_Right		; is result still positive? if yes, branch
+		moveq	#sfx__Last-$80,d0 	; if sound test moves below 0, set to last entry (non-$80 based)
 
 LevSel_Right:
-		btst	#bitR,d1	; is right pressed?
-		beq.s	LevSel_Refresh2	; if not, branch
-		addq.w	#1,d0		; add 1 to sound test
-		cmpi.w	#$50,d0
-		blo.s	LevSel_Refresh2
-		moveq	#0,d0		; if sound test moves above $4F, set to 0
+		btst	#bitR,d1		; is right pressed?
+		beq.s	LevSel_Refresh2		; if not, branch
+		addq.w	#1,d0			; add 1 to sound test
+		cmpi.w	#sfx__Last-$80+1,d0	; is result now past the last entry?
+		blo.s	LevSel_Refresh2		; if not, branch
+		moveq	#0,d0			; if sound test moves above last entry, set to 0
 
 LevSel_Refresh2:
-		move.w	d0,(v_levselsound).w ; set sound test number
-		bsr.w	LevSelTextLoad	; refresh text
+		move.w	d0,(v_levselsound).w	; set sound test number
+		bsr.w	LevSelTextLoad		; refresh text
 
 LevSel_NoMove:
 		rts
 ; End of function LevSelControls
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to load level select text
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+levsel_line_count:	equ 21	; total number of lines
+levsel_line_length:	equ 24	; characters per line
+levsel_sndtest_row:	equ levsel_line_count-1  ; row index of the sound test
+levsel_sndtest_col:	equ levsel_line_length-8 ; column offset for the sound test number 
 
+levsel_start_row:	equ 4	; top tile offset for start position
+levsel_start_col:	equ 8	; left tile offset for start position
+levsel_vram_main:	equ vram_bg+(levsel_start_row<<7)+(levsel_start_col<<1)	; nametable address in VRAM
+levsel_vram_sndtestnum:	equ levsel_vram_main+(levsel_sndtest_row<<7)+(levsel_sndtest_col<<1) ; nametable address for sound test numbers
+
+levsel_white:		equ make_art_tile(ArtTile_Level_Select_Font,3,TRUE) ; VRAM setting for white text (non-selected lines)
+levsel_yellow:		equ make_art_tile(ArtTile_Level_Select_Font,2,TRUE) ; VRAM setting for yellow text (selected line)
+
+; ---------------------------------------------------------------------------
 
 LevSelTextLoad:
+		; Write main text in white
+		lea	(LevelMenuText).l,a1	; load menu text offset
+		lea	(vdp_data_port).l,a6	; prepare VDP data write
+		locVRAM	levsel_vram_main,d4	; prepare base VRAM nametable location in d4
+		move.w	#levsel_white,d3	; VRAM setting
+		moveq	#levsel_line_count-1,d1	; number of lines of text to write
+.DrawAll:	move.l	d4,4(a6)		; write to VDP
+		bsr.w	LevSel_ChgLine		; draw line of text
+		addi.l	#$00800000,d4		; jump to next line
+		dbf	d1,.DrawAll		; repeat until all lines are drawn
 
-textpos:	= ($40000000+(($E210&$3FFF)<<16)+(($E210&$C000)>>14))
-					; $E210 is a VRAM address
+		; Draw currently selected line in yellow
+		moveq	#0,d0			; clear d0
+		move.w	(v_levselitem).w,d0	; get currently selected line
+		move.w	d0,d1			; back up selected line
+		locVRAM	levsel_vram_main,d4	; prepare base VRAM nametable location in d4
+		lsl.w	#7,d0			; times $80
+		swap	d0			; swap so that line now becomes VRAM nametable offset
+		add.l	d0,d4			; add that to base VRAM location
+		lea	(LevelMenuText).l,a1	; load menu text offset
+	if levsel_line_length=24
+		lsl.w	#3,d1			; times 8
+		move.w	d1,d0			; copy result
+		add.w	d1,d1			; times...
+		add.w	d0,d1			; ...3 (because default line length 8 x 3 = 24)
+	else
+		; The above calculation assumes 24 as line length, we need a different approach if it changes.
+		mulu.w	#levsel_line_length,d1	; multiply selected line index by line length
+	endif
+		adda.w	d1,a1			; add to menu text offset
+		move.w	#levsel_yellow,d3 	; prepare selected-line VRAM setting
+		move.l	d4,4(a6)		; write to VDP
+		bsr.w	LevSel_ChgLine		; recolour selected line
 
-		lea	(LevelMenuText).l,a1
-		lea	(vdp_data_port).l,a6
-		move.l	#textpos,d4	; text position on screen
-		move.w	#$E680,d3	; VRAM setting (4th palette, $680th tile)
-		moveq	#$15-1,d1	; number of lines of text
-
-LevSel_DrawAll:
-		move.l	d4,4(a6)
-		bsr.w	LevSel_ChgLine	; draw line of text
-		addi.l	#$800000,d4	; jump to next line
-		dbf	d1,LevSel_DrawAll
-
-		moveq	#0,d0
-		move.w	(v_levselitem).w,d0
-		move.w	d0,d1
-		move.l	#textpos,d4
-		lsl.w	#7,d0
-		swap	d0
-		add.l	d0,d4
-		lea	(LevelMenuText).l,a1
-		lsl.w	#3,d1
-		move.w	d1,d0
-		add.w	d1,d1
-		add.w	d0,d1
-		adda.w	d1,a1
-		move.w	#$C680,d3	; VRAM setting (3rd palette, $680th tile)
-		move.l	d4,4(a6)
-		bsr.w	LevSel_ChgLine	; recolour selected line
-		move.w	#$E680,d3
-		cmpi.w	#$14,(v_levselitem).w
-		bne.s	LevSel_DrawSnd
-		move.w	#$C680,d3
-
+		; Write sound test numbers
+		move.w	#levsel_white,d3	; draw numbers in white by default
+		cmpi.w	#levsel_sndtest_row,(v_levselitem).w ; is currently selected line the sound test?
+		bne.s	LevSel_DrawSnd		; if not, branch
+		move.w	#levsel_yellow,d3	; draw numbers in yellow
 LevSel_DrawSnd:
-		locVRAM	vram_bg+$C30		; sound test position on screen
-		move.w	(v_levselsound).w,d0
-		addi.w	#$80,d0
-		move.b	d0,d2
-		lsr.b	#4,d0
-		bsr.w	LevSel_ChgSnd	; draw 1st digit
-		move.b	d2,d0
-		bsr.w	LevSel_ChgSnd	; draw 2nd digit
+		locVRAM	levsel_vram_sndtestnum	; write sound test number position to VRAM
+		move.w	(v_levselsound).w,d0	; get currently selected sound test number
+		addi.w	#$80,d0			; make sound ID to be drawn $80-based
+		move.b	d0,d2			; backup number
+		lsr.b	#4,d0			; move first digit to lower nybble 
+		bsr.w	LevSel_ChgSnd		; draw 1st digit
+		move.b	d2,d0			; restore backup
+		bsr.w	LevSel_ChgSnd		; draw 2nd digit
 		rts
-; End of function LevSelTextLoad
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 LevSel_ChgSnd:
-		andi.w	#$F,d0
-		cmpi.b	#$A,d0		; is digit $A-$F?
-		blo.s	LevSel_Numb	; if not, branch
-		addi.b	#7,d0		; use alpha characters
-
-LevSel_Numb:
-		add.w	d3,d0
-		move.w	d0,(a6)
+		andi.w	#$F,d0			; mask out upper nybble
+		cmpi.b	#$A,d0			; is digit $A-$F?
+		blo.s	.DrawNum		; if not, branch
+		addi.b	#7,d0			; use letter characters
+.DrawNum:	add.w	d3,d0			; combine number with VRAM setting (white or yellow)
+		move.w	d0,(a6)			; send to VRAM
 		rts
-; End of function LevSel_ChgSnd
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 LevSel_ChgLine:
-		moveq	#$18-1,d2	; number of characters per line
+		moveq	#levsel_line_length-1,d2 ; number of characters per line
 
-LevSel_LineLoop:
-		moveq	#0,d0
-		move.b	(a1)+,d0	; get character
-		bpl.s	LevSel_CharOk	; branch if valid
-		move.w	#0,(a6)		; use blank character
-		dbf	d2,LevSel_LineLoop
+.LineLoop:	moveq	#0,d0			; clear d0
+		move.b	(a1)+,d0		; get current character
+		bpl.s	.CharOk			; is it a valid ASCII character? if yes, branch
+		move.w	#0,(a6)			; draw a blank character
+		dbf	d2,.LineLoop		; loop until all characters are drawn
 		rts
 
-
-LevSel_CharOk:
-		add.w	d3,d0		; combine char with VRAM setting
-		move.w	d0,(a6)		; send to VRAM
-		dbf	d2,LevSel_LineLoop
+.CharOk:	add.w	d3,d0			; combine char with VRAM setting (white or yellow)
+		move.w	d0,(a6)			; send to VRAM
+		dbf	d2,.LineLoop		; loop until all characters are drawn
 		rts
-; End of function LevSel_ChgLine
+; End of function LevSelTextLoad
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -2910,7 +2922,16 @@ LevelMenuText:
 		even
 	endif
 
+	if MOMPASS=1
+		if *-(levsel_line_count*levsel_line_length)<>LevelMenuText
+			warning "LevelMenuText does not match expected line count/length."
+		endif
+		if (LevSel_PtrsEnd-LevSel_Ptrs)/2<>levsel_line_count
+			warning "LevSel_Ptrs does not match expected line count."
+		endif
+	endif
 	charset
+	even
 
 ; ---------------------------------------------------------------------------
 ; Music playlist
