@@ -194,13 +194,12 @@ ErrorTrap:
 ; ===========================================================================
 
 EntryPoint:
-		tst.l	(z80_port_1_control).l ; test port A & B control registers
+		tst.l	(port_1_control_hi).l	; test port A & B control registers
 		bne.s	PortA_Ok
-		tst.w	(z80_expansion_control).l ; test port C control register
+		tst.w	(expansion_control_hi).l ; test port C control register
+PortA_Ok:	bne.s	SkipSetup		; skip the VDP and Z80 setup code if this is a soft-reset
 
-PortA_Ok:
-		bne.s	SkipSetup ; Skip the VDP and Z80 setup code if port A, B or C is ok...?
-		lea	SetupValues(pc),a5	; Load setup values array address.
+		lea	SetupValues(pc),a5	; load setup values array address
 		movem.w	(a5)+,d5-d7
 		movem.l	(a5)+,a0-a4
 		move.b	-$10FF(a1),d0	; get hardware version (from $A10001)
@@ -346,7 +345,7 @@ zStartupCodeEndLoc:
 
 GameProgram:
 		tst.w	(vdp_control_port).l
-		btst	#6,(z80_expansion_control+1).l
+		btst	#6,(expansion_control).l
 		beq.s	CheckSumCheck
 		cmpi.l	#'init',(v_init).w ; has checksum routine already run?
 		beq.w	GameInit	; if yes, branch
@@ -374,7 +373,7 @@ CheckSumOk:
 		move.l	d7,(a6)+
 		dbf	d6,.clearRAM	; clear RAM ($FE00-$FFFF)
 
-		move.b	(z80_version).l,d0
+		move.b	(console_version).l,d0
 		andi.b	#$C0,d0
 		move.b	d0,(v_megadrive).w ; get region setting
 		move.l	#'init',(v_init).w ; set flag so checksum won't run again
@@ -1025,9 +1024,9 @@ JoypadInit:
 		stopZ80
 		waitZ80
 		moveq	#$40,d0
-		move.b	d0,(z80_port_1_control+1).l	; init port 1 (joypad 1)
-		move.b	d0,(z80_port_2_control+1).l	; init port 2 (joypad 2)
-		move.b	d0,(z80_expansion_control+1).l	; init port 3 (expansion/extra)
+		move.b	d0,(port_1_control).l		; init port 1 (joypad 1)
+		move.b	d0,(port_2_control).l		; init port 2 (joypad 2)
+		move.b	d0,(expansion_control).l	; init port 3 (expansion/extra)
 		startZ80
 		rts
 ; End of function JoypadInit
@@ -1039,10 +1038,10 @@ JoypadInit:
 
 
 ReadJoypads:
-		lea	(v_jpadhold1).w,a0 ; address where joypad states are written
-		lea	(z80_port_1_data+1).l,a1	; first joypad port
-		bsr.s	.read		; do the first joypad
-		addq.w	#2,a1		; do the second joypad
+		lea	(v_jpadhold1).w,a0	; address where joypad states are written
+		lea	(port_1_data).l,a1	; first joypad port
+		bsr.s	.read			; do the first joypad
+		addq.w	#2,a1			; do the second joypad (port_2_data)
 
 .read:
 		move.b	#0,(a1)
