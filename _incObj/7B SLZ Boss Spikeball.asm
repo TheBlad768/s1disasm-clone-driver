@@ -51,7 +51,7 @@ loc_18D68:
 BossSpikeball_Fall:	; Routine 2
 		jsr	(ObjectFall).l
 		movea.l	objoff_3C(a0),a1
-		lea	(word_19018).l,a2
+		lea	(BossSpikeball_SeesawYOffset).l,a2
 		moveq	#0,d0
 		move.b	obFrame(a1),d0
 		move.w	obX(a0),d1
@@ -119,7 +119,7 @@ loc_18E16:
 ; ===========================================================================
 
 loc_18E2A:
-		lea	(word_19018).l,a2
+		lea	(BossSpikeball_SeesawYOffset).l,a2
 		moveq	#0,d0
 		move.b	obFrame(a1),d0
 		move.w	#$28,d2
@@ -253,7 +253,7 @@ loc_18F58:
 loc_18F5C:
 		jsr	(ObjectFall).l
 		movea.l	objoff_3C(a0),a1
-		lea	(word_19018).l,a2
+		lea	(BossSpikeball_SeesawYOffset).l,a2
 		moveq	#0,d0
 		move.b	obFrame(a1),d0
 		move.w	obX(a0),d1
@@ -290,12 +290,12 @@ loc_18FA2:
 		neg.w	obVelY(a2)
 		cmpi.b	#1,obFrame(a1)
 		bne.s	loc_18FDC
-		asr	obVelY(a2)
+		asr.w	obVelY(a2)
 
 loc_18FDC:
 		bset	#1,obStatus(a2)
 		bclr	#3,obStatus(a2)
-		clr.b	objoff_3C(a2)
+		clr.b	jumping(a2)
 		move.l	a0,-(sp)
 		lea	(a2),a0
 		jsr	(Sonic_ChkRoll).l
@@ -309,13 +309,24 @@ loc_19008:
 		clr.w	obVelY(a0)
 		addq.b	#2,obRoutine(a0)
 		bra.w	loc_18E7A
+
 ; ===========================================================================
-word_19018:	dc.w -8, -$1C, -$2F, -$1C, -8
+BossSpikeball_SeesawYOffset:
+		; Y offset between a falling spike ball and the target seesaw's side,
+		; depending on the current slanting state of the seesaw.
+		; Entries 1-3 are read if ball falls on left side, 3-5 if on right.
+		dc.w -8				; left - seesaw is raised
+		dc.w -$1C			; left - seesaw is flat
+		dc.w -$2F			; shared - seesaw is lowered
+		dc.w -$1C			; right - seesaw is flat
+		dc.w -8				; right - seesaw is raised
 		even
+
 BossSpikeball_BossHitbox:
 		dc.b -$18, $18+$18		; left to right
 		dc.b -$18, $18+$18		; top to bottom
 		even
+
 BossSpikeball_BallHitbox:
 		dc.b 8,	-8-8			; right to left
 		dc.b 8, -8-8			; bottom to top

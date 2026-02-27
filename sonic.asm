@@ -4,38 +4,79 @@
 ;
 ; Disassembly created by Hivebrain
 ; thanks to drx, Stealth and Esrael L.G. Neto
+; ---------------------------------------------------------------------------
+; NOTE:
+; Set your editor's tab width to 8 characters wide for viewing this file.
 
 ; ===========================================================================
+; ASSEMBLY OPTIONS:
 
-	cpu 68000
+Revision = 1
+; 	| If 0, build the original version of the game, dubbed REV00
+; 	| If 1, build the later version, dubbed REV01, which includes various bugfixes and enhancements
+; 	| If 2, build the hacked version from Sonic Mega Collection, dubbed REVXB,
+;	|       which (sloppily) fixes the infamous "spike bug" -- not recommended
 
-EnableSRAM	  = 0	; change to 1 to enable SRAM
+FixBugs = 0
+;	| If 1, enables various bugfixes across the game and sound driver
+;	| See also FixMusicAndSFXDataBugs
+
+AllOptimizations = 0
+;	| If 1, enables all optimizations
+SkipChecksumCheck = 0|AllOptimizations
+;	| If 1, disables the slow bootup checksum calculation
+ZeroOffsetOptimization = 0|AllOptimizations
+;	| If 1, makes a handful of zero-offset instructions smaller
+PaddingOptimization = 0|AllOptimizations
+;	| If 1, removes about 3 KB of various superfluous padding
+
+EnableSRAM = 0
+;	| If 1, enable SRAM support
 BackupSRAM	  = 1
-AddressSRAM	  = 3	; 0 = odd+even; 2 = even only; 3 = odd only
+;	| 0 = no saving (read-only SRAM); 1 = allow saving
+AddressSRAM = 3
+;	| 0 = odd+even; 2 = even only; 3 = odd only
+;	| (odd only is the most common)
 
-; Change to 0 to build the original version of the game, dubbed REV00
-; Change to 1 to build the later version, dubbed REV01, which includes various bugfixes and enhancements
-; Change to 2 to build the version from Sonic Mega Collection, dubbed REVXB, which fixes the infamous "spike bug"
-Revision	  = 1
+ZoneCount = 6
+;	| Used for the zonewarning macro. Do not change, unless more zones get added.
+;	| Discrete zones are: GHZ, LZ, MZ, SLZ, SYZ, and SBZ
 
-ZoneCount	  = 6	; discrete zones are: GHZ, MZ, SYZ, LZ, SLZ, and SBZ
-
-FixBugs		  = 0	; change to 1 to enable bugfixes
-
-zeroOffsetOptimization = 0	; if 1, makes a handful of zero-offset instructions smaller
-paddingOptimization = 0		; if 1, removes about 3 KB of various superfluous padding
-
+; ===========================================================================
+; AS-specific macros and assembler settings
+	cpu 68000
 	include "MacroSetup.asm"
-	include	"Constants.asm"
-	include	"Variables.asm"
+
+; ===========================================================================
+; Simplifying macros and functions
 	include	"Macros.asm"
+
+; ===========================================================================
+; Equates section - Names for constants
+	include	"Constants.asm"
+
+; ===========================================================================
+; Equates section - Names for variables
+	include	"Variables.asm"
 
 DebugPathSwappers: = 1
 
 ; ===========================================================================
+; Expressing sprite mappings and DPLCs in a portable and human-readable form
+SonicMappingsVer = 1
+SonicDplcVer = 1
+	include	"_maps/_MapMacros.asm"
+
+; ===========================================================================
+; start of ROM
 
 StartOfRom:
-Vectors:	dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
+	if * <> 0
+		fatal "StartOfRom was $\{*} but it should be 0"
+	endif
+
+Vectors:
+		dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
 		dc.l EntryPoint			; Start of program
 		dc.l BusError			; Bus error
 		dc.l AddressError		; Address error (4)
@@ -91,7 +132,7 @@ Vectors:	dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
-	if Revision<>2
+	if Revision<>2|FixBugs
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
@@ -101,8 +142,8 @@ Vectors:	dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
 		dc.l ErrorTrap			; Unused (reserved)
 		dc.l ErrorTrap			; Unused (reserved)
 	else
-loc_E0:
-		; Relocated code from Spik_Hurt. REVXB was a nasty hex-edit.
+loc_E0:		; Relocated code from Spik_Hurt. REVXB was a nasty hex-edit.
+		; See _incObj/36 Spikes.asm for more info.
 		move.l	obY(a0),d3
 		move.w	obVelY(a0),d0
 		ext.l	d0
@@ -135,7 +176,7 @@ RomEndLoc:	dc.l EndOfRom-1		; End address of ROM
 		dc.l $FF0000		; Start address of RAM
 		dc.l $FFFFFF		; End address of RAM
 	if EnableSRAM=1
-		dc.b $52, $41, $A0+(BackupSRAM<<6)+(AddressSRAM<<3), $20 ; SRAM support
+		dc.b "RA", $A0+(BackupSRAM<<6)+(AddressSRAM<<3), $20 ; SRAM support
 	else
 		dc.l $20202020
 	endif
@@ -313,11 +354,11 @@ GameProgram:
 		beq.w	GameInit	; if yes, branch
 
 CheckSumCheck:
+	if SkipChecksumCheck=0
 		movea.l	#EndOfHeader,a0	; start checking bytes after the header ($200)
 		movea.l	#RomEndLoc,a1	; stop at end of ROM
 		move.l	(a1),d0
 		moveq	#0,d1
-
 .loop:
 		add.w	(a0)+,d1
 		cmp.l	a0,d0
@@ -325,6 +366,7 @@ CheckSumCheck:
 		movea.l	#Checksum,a1	; read the checksum
 		cmp.w	(a1),d1		; compare checksum in header to ROM
 		bne.w	CheckSumError	; if they don't match, branch
+	endif
 
 CheckSumOk:
 		lea	(v_crossresetram).w,a6
@@ -382,7 +424,7 @@ ptr_GM_Credits:	bra.w	GM_Credits	; Credits ($1C)
 
 		rts	
 ; ===========================================================================
-
+	if SkipChecksumCheck=0
 CheckSumError:
 		bsr.w	VDPSetupGame
 		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
@@ -394,6 +436,7 @@ CheckSumError:
 
 .endlessloop:
 		bra.s	.endlessloop
+	endif
 ; ===========================================================================
 
 BusError:
@@ -878,7 +921,7 @@ VBla_12:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; VBlank 16 - Continue Screen
+; VBlank 16 - Continue Screen and Special Stage finish loop
 ; ---------------------------------------------------------------------------
 
 VBla_16:
@@ -1284,7 +1327,10 @@ RunPLC:
 
 loc_160E:
 		andi.w	#$7FFF,d2
+	if FixBugs=0
+		; Relocated to bugfix below
 		move.w	d2,(v_plc_patternsleft).w
+	endif
 		bsr.w	NemDec_BuildCodeTable
 		move.b	(a0)+,d5
 		asl.w	#8,d5
@@ -1298,6 +1344,11 @@ loc_160E:
 		move.l	d0,(v_plc_previousrow).w
 		move.l	d5,(v_plc_dataword).w
 		move.l	d6,(v_plc_shiftvalue).w
+	if FixBugs
+		; Fix a race condition with Pattern Load Cues
+		; https://info.sonicretro.org/SCHG_How-to:Fix_a_race_condition_with_Pattern_Load_Cues
+		move.w	d2,(v_plc_patternsleft).w
+	endif
 
 Rplc_Exit:
 		rts	
@@ -2032,23 +2083,23 @@ PalLoad_Water:
 
 Pal_SegaBG:		bincludeEndMarker	"palette/Sega Background.bin"
 Pal_Title:		bincludeEndMarker	"palette/Title Screen.bin"
-Pal_LevelSel:	bincludeEndMarker	"palette/Level Select.bin"
+Pal_LevelSel:		bincludeEndMarker	"palette/Level Select.bin"
 Pal_Sonic:		bincludeEndMarker	"palette/Sonic.bin"
 Pal_GHZ:		bincludeEndMarker	"palette/Green Hill Zone.bin"
 Pal_LZ:			bincludeEndMarker	"palette/Labyrinth Zone.bin"
-Pal_LZWater:	bincludeEndMarker	"palette/Labyrinth Zone Underwater.bin"
+Pal_LZWater:		bincludeEndMarker	"palette/Labyrinth Zone Underwater.bin"
 Pal_MZ:			bincludeEndMarker	"palette/Marble Zone.bin"
 Pal_SLZ:		bincludeEndMarker	"palette/Star Light Zone.bin"
 Pal_SYZ:		bincludeEndMarker	"palette/Spring Yard Zone.bin"
 Pal_SBZ1:		bincludeEndMarker	"palette/SBZ Act 1.bin"
 Pal_SBZ2:		bincludeEndMarker	"palette/SBZ Act 2.bin"
-Pal_Special:	bincludeEndMarker	"palette/Special Stage.bin"
+Pal_Special:		bincludeEndMarker	"palette/Special Stage.bin"
 Pal_SBZ3:		bincludeEndMarker	"palette/SBZ Act 3.bin"
-Pal_SBZ3Water:	bincludeEndMarker	"palette/SBZ Act 3 Underwater.bin"
-Pal_LZSonWater:	bincludeEndMarker	"palette/Sonic - LZ Underwater.bin"
-Pal_SBZ3SonWat:	bincludeEndMarker	"palette/Sonic - SBZ3 Underwater.bin"
-Pal_SSResult:	bincludeEndMarker	"palette/Special Stage Results.bin"
-Pal_Continue:	bincludeEndMarker	"palette/Special Stage Continue Bonus.bin"
+Pal_SBZ3Water:		bincludeEndMarker	"palette/SBZ Act 3 Underwater.bin"
+Pal_LZSonWater:		bincludeEndMarker	"palette/Sonic - LZ Underwater.bin"
+Pal_SBZ3SonWat:		bincludeEndMarker	"palette/Sonic - SBZ3 Underwater.bin"
+Pal_SSResult:		bincludeEndMarker	"palette/Special Stage Results.bin"
+Pal_Continue:		bincludeEndMarker	"palette/Special Stage Continue Bonus.bin"
 Pal_Ending:		bincludeEndMarker	"palette/Ending.bin"
 
 ; ---------------------------------------------------------------------------
@@ -2241,7 +2292,13 @@ Tit_LoadText:
 		move.w	#0,d0
 		bsr.w	EniDec
 
+	if FixBugs
+		; Fix title screen position
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Title_Screen_position_in_Sonic_1
+		copyTilemap	v_128x128&$FFFFFF,vram_fg+$208,34,22
+	else
 		copyTilemap	v_128x128&$FFFFFF,vram_fg+$206,34,22
+	endif
 
 		locVRAM	ArtTile_Level*tile_size
 		lea	(Nem_GHZ_1st).l,a0 ; load GHZ patterns
@@ -2254,6 +2311,8 @@ Tit_LoadText:
 		move.w	#376,(v_generictimer).w ; run title screen for 376 frames
 		
 	if FixBugs
+		; Fix the Press Start Button text
+		; https://info.sonicretro.org/SCHG_How-to:Display_the_Press_Start_Button_text
 		clearRAM v_sonicteam,v_sonicteam+object_size
 	else
 		; Bug: this only clears half of the "SONIC TEAM PRESENTS" slot.
@@ -2286,165 +2345,183 @@ Tit_LoadText:
 		enable_display
 		bsr.w	PaletteFadeIn
 
+; ---------------------------------------------------------------------------
+; Title screen main loop and cheat checks
+; ---------------------------------------------------------------------------
+
 Tit_MainLoop:
-		move.b	#4,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		jsr	(ExecuteObjects).l
-		bsr.w	DeformLayers
-		jsr	(BuildSprites).l
-		bsr.w	PalCycle_Title
-		bsr.w	RunPLC
-		move.w	(v_player+obX).w,d0
-		addq.w	#2,d0
-		move.w	d0,(v_player+obX).w ; move Sonic to the right
+		move.b	#4,(v_vbla_routine).w	; set routine 4 in V-Int
+		bsr.w	WaitForVBla		; wait for V-Blank to finish
+		jsr	(ExecuteObjects).l	; execute title screen objects
+		bsr.w	DeformLayers		; run background deformation
+		jsr	(BuildSprites).l	; display sprites
+		bsr.w	PalCycle_Title		; run title screen palette cycle
+		bsr.w	RunPLC			; run any potential PLC
+
+		move.w	(v_player+obX).w,d0	; get current title screen position (big Sonic object)
+		addq.w	#2,d0			; move it 2px to the right
+		move.w	d0,(v_player+obX).w	; write new X position
 		cmpi.w	#$1C00,d0	; has Sonic object passed $1C00 on x-axis?
 		blo.s	Tit_ChkRegion	; if not, branch
-
-		move.b	#id_Sega,(v_gamemode).w ; go to Sega screen
+		; Will never happen due to the short title screen generic timer.
+		; This likely was an old failsafe before Demos were introduced.
+		move.b	#id_Sega,(v_gamemode).w	; return to Sega screen
 		rts	
 ; ===========================================================================
 
 Tit_ChkRegion:
 		tst.b	(v_megadrive).w	; check if the machine is US or Japanese
 		bpl.s	Tit_RegionJap	; if Japanese, branch
-
 		lea	(LevSelCode_US).l,a0 ; load US code
-		bra.s	Tit_EnterCheat
+		bra.s	Tit_EnterCheat		; skip over
 
 Tit_RegionJap:
 		lea	(LevSelCode_J).l,a0 ; load J code
 
 Tit_EnterCheat:
-		move.w	(v_title_dcount).w,d0
-		adda.w	d0,a0
-		move.b	(v_jpadpress1).w,d0 ; get button press
-		andi.b	#btnDir,d0	; read only UDLR buttons
-		cmp.b	(a0),d0		; does button press match the cheat code?
-		bne.s	Tit_ResetCheat	; if not, branch
-		addq.w	#1,(v_title_dcount).w ; next button press
-		tst.b	d0
-		bne.s	Tit_CountC
-		lea	(f_levselcheat).w,a0
-		move.w	(v_title_ccount).w,d1
-		lsr.w	#1,d1
-		andi.w	#3,d1
-		beq.s	Tit_PlayRing
-		tst.b	(v_megadrive).w
-		bpl.s	Tit_PlayRing
-		moveq	#1,d1
-		move.b	d1,1(a0,d1.w)	; cheat depends on how many times C is pressed
+		move.w	(v_title_dcount).w,d0	; get number of successful D-Pad cheat inputs
+		adda.w	d0,a0			; add to loaded code to find current cheat input requirement
+		move.b	(v_jpadpress1).w,d0	; get buttons pressed this frame
+		andi.b	#btnDir,d0		; read only D-Pad buttons (UDLR)
+		cmp.b	(a0),d0			; does button press match current cheat entry?
+		bne.s	Tit_ResetCheat		; if not, branch and reset cheat
+		addq.w	#1,(v_title_dcount).w	; increment number of successful D-Pad cheat inputs
+		tst.b	d0			; has end of cheat code been reached? (0-entry in cheat)
+		bne.s	Tit_CountC		; if not, branch
+
+Tit_ActivateCheat:
+		; (On JAPANESE consoles only) Activated cheat depends on the amount of times C was pressed:
+		; 0-1 level select -- 2-3 slow motion -- 4-5 debug mode -- 6-7: hidden Japanese credits / sound test skips
+		; For any other regions, pressing C twice or more will ALWAYS result in slow motion and debug mode.
+		lea	(f_levselcheat).w,a0	; get base cheat index
+		move.w	(v_title_ccount).w,d1	; get number of tiles C was pressed
+		lsr.w	#1,d1			; half pressed amount
+		andi.w	#3,d1			; only four cheats are possible
+		beq.s	Tit_PlayRing		; if C was not pressed, only activate level select
+		tst.b	(v_megadrive).w		; check if the machine is US or Japanese
+		bpl.s	Tit_PlayRing		; if Japanese, branch
+		moveq	#1,d1			; on non-Japanese console, force index to slow motion cheat
+		move.b	d1,1(a0,d1.w)		; enable debug mode first (and slow motion in the next line)
 
 Tit_PlayRing:
-		move.b	#1,(a0,d1.w)	; activate cheat
-		move.b	#sfx_Ring,d0
-		bsr.w	QueueSound2	; play ring sound when code is entered
-		bra.s	Tit_CountC
+		move.b	#1,(a0,d1.w)		; activate cheat depending on C-press count
+		move.b	#sfx_Ring,d0		; set ring sound when code is entered
+		bsr.w	QueueSound2		; play it
+		bra.s	Tit_CountC		; skip over cheat reset 
 ; ===========================================================================
 
 Tit_ResetCheat:
-		tst.b	d0
-		beq.s	Tit_CountC
-		cmpi.w	#9,(v_title_dcount).w
-		beq.s	Tit_CountC
-		move.w	#0,(v_title_dcount).w ; reset UDLR counter
+		tst.b	d0			; has D-Pad been pressed?
+		beq.s	Tit_CountC		; if yes, branch
+		cmpi.w	#9,(v_title_dcount).w	; has cheat reached index 9? (impossible condition)
+		beq.s	Tit_CountC		; if yes, don't reset D-Pad counter
+		move.w	#0,(v_title_dcount).w	; reset cheat index counter
 
 Tit_CountC:
-		move.b	(v_jpadpress1).w,d0
+		move.b	(v_jpadpress1).w,d0	; get currently pressed buttons
 		andi.b	#btnC,d0	; is C button pressed?
-		beq.s	loc_3230	; if not, branch
+		beq.s	Tit_ChkStartOrDemo	; if not, branch
 		addq.w	#1,(v_title_ccount).w ; increment C counter
 
-loc_3230:
-		tst.w	(v_generictimer).w
-		beq.w	GotoDemo
+; loc_3230:
+Tit_ChkStartOrDemo:
+		tst.w	(v_generictimer).w	; has title screen timer expired?
+		beq.w	GotoDemo		; if yes, launch Demo mode
 		andi.b	#btnStart,(v_jpadpress1).w ; check if Start is pressed
-		beq.w	Tit_MainLoop	; if not, branch
+		beq.w	Tit_MainLoop		; if not, continue looping title screen
 
 Tit_ChkLevSel:
 		tst.b	(f_levselcheat).w ; check if level select code is on
-		beq.w	PlayLevel	; if not, play level
-		btst	#bitA,(v_jpadhold1).w ; check if A is pressed
-		beq.w	PlayLevel	; if not, play level
+		beq.w	PlayLevel		; if not, begin game by playing normal level
+		btst	#bitA,(v_jpadhold1).w	; check if A was held while pressing Start
+		beq.w	PlayLevel		; if not, begin game by playing normal level
+; ---------------------------------------------------------------------------
 
+Tit_EnterLevelSelect:
+	if FixBugs
+		; Fix the level selects graphics bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Level_Select_graphics_bug
+		move.b	#4,(v_vbla_routine).w	; set routine 4 in V-Int
+		bsr.w	WaitForVBla		; run V-Blank one extra frame to prevent graphical glitches
+	endif
 		moveq	#palid_LevelSel,d0
 		bsr.w	PalLoad	; load level select palette
 
-		clearRAM v_hscrolltablebuffer
+		clearRAM v_hscrolltablebuffer	; clear H-Scroll buffer
+		move.l	d0,(v_scrposy_vdp).w	; clear VSRAM (d0 is still 0)
+		disable_ints			; disable interrupts
 
-		move.l	d0,(v_scrposy_vdp).w
-		disable_ints
-		lea	(vdp_data_port).l,a6
-		locVRAM	vram_bg
-		move.w	#plane_size_64x32/4-1,d1
+		lea	(vdp_data_port).l,a6	; prepare VDP data write
+		locVRAM	vram_bg			; write to background nametable
+		move.w	#plane_size_64x32/4-1,d1 ; write full screen
+.LevSelClearBG:	move.l	d0,(a6)			; clear background plane
+		dbf	d1,.LevSelClearBG	; loop until plane is fully cleared
 
-Tit_ClrScroll2:
-		move.l	d0,(a6)
-		dbf	d1,Tit_ClrScroll2 ; clear scroll data (in VRAM)
-
-		bsr.w	LevSelTextLoad
+		bsr.w	LevSelTextLoad		; load level select text before entering main loop
 
 ; ---------------------------------------------------------------------------
-; Level Select
+; Level Select main loop
 ; ---------------------------------------------------------------------------
 
 LevelSelect:
-		move.b	#4,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		bsr.w	LevSelControls
-		bsr.w	RunPLC
-		tst.l	(v_plc_buffer).w
-		bne.s	LevelSelect
+		move.b	#4,(v_vbla_routine).w	; set routine 4 in V-Int
+		bsr.w	WaitForVBla		; wait for V-Blank to finish
+		bsr.w	LevSelControls		; update selected line if necessary
+		bsr.w	RunPLC			; run any potential PLC
+		tst.l	(v_plc_buffer).w	; are any patterns in the PLC still left to be loaded?
+		bne.s	LevelSelect		; if yes, block quitting level select until finished
 		andi.b	#btnABC+btnStart,(v_jpadpress1).w ; is A, B, C, or Start pressed?
-		beq.s	LevelSelect	; if not, branch
-		move.w	(v_levselitem).w,d0
-		cmpi.w	#$14,d0		; have you selected item $14 (sound test)?
+		beq.s	LevelSelect		; if not, loop level select
+
+LevSel_SelectionMade:
+		move.w	(v_levselitem).w,d0	; get currently selected line
+		cmpi.w	#levsel_sndtest_row,d0	; have you selected item $14 (sound test)?
 		bne.s	LevSel_Level_SS	; if not, go to Level/SS subroutine
-		move.w	(v_levselsound).w,d0
-		addi.w	#$80,d0
+		move.w	(v_levselsound).w,d0	; get currently selected sound test entry
+		addi.w	#$80,d0			; make it $80-based
 		tst.b	(f_creditscheat).w ; is Japanese Credits cheat on?
 		beq.s	LevSel_NoCheat	; if not, branch
 		cmpi.w	#$9F,d0		; is sound $9F being played?
 		beq.s	LevSel_Ending	; if yes, branch
 		cmpi.w	#$9E,d0		; is sound $9E being played?
 		beq.s	LevSel_Credits	; if yes, branch
-
 LevSel_NoCheat:
+	if FixBugs=0
 		; This is a workaround for a bug; see PlaySoundID for more.
-		; Once you've fixed the bugs there, comment these four instructions out.
 		cmpi.w	#bgm__Last+1,d0	; is sound $80-$93 being played?
 		blo.s	LevSel_PlaySnd	; if yes, branch
 		cmpi.w	#sfx__First,d0	; is sound $94-$9F being played?
 		blo.s	LevelSelect	; if yes, branch
-
 LevSel_PlaySnd:
-		bsr.w	QueueSound2
-		bra.s	LevelSelect
+	endif
+		bsr.w	QueueSound2		; play selected sound
+		bra.s	LevelSelect		; loop level select
 ; ===========================================================================
 
 LevSel_Ending:
 		move.b	#id_Ending,(v_gamemode).w ; set screen mode to $18 (Ending)
-		move.w	#(id_EndZ<<8),(v_zone).w ; set level to 0600 (Ending)
+		move.w	#(id_EndZ<<8),(v_zone).w  ; set level to 0600 (good Ending)
 		rts	
 ; ===========================================================================
 
 LevSel_Credits:
 		move.b	#id_Credits,(v_gamemode).w ; set screen mode to $1C (Credits)
-		move.b	#bgm_Credits,d0
-		bsr.w	QueueSound2 ; play credits music
-		move.w	#0,(v_creditsnum).w
+		move.b	#bgm_Credits,d0		; set credits music
+		bsr.w	QueueSound2		; play it
+		move.w	#0,(v_creditsnum).w	; start at the first credits page
 		rts	
 ; ===========================================================================
 
 LevSel_Level_SS:
-		add.w	d0,d0
-		move.w	LevSel_Ptrs(pc,d0.w),d0 ; load level number
-		bmi.w	LevelSelect
-		cmpi.w	#id_SS*$100,d0	; check if level is 0700 (Special Stage)
+		add.w	d0,d0			; double selected line for word-based indexing
+		move.w	LevSel_Ptrs(pc,d0.w),d0	; find relevant level pointer from table
+		bmi.w	LevelSelect		; if it's an invalid entry, branch back to main loop
+		cmpi.w	#id_SS<<8,d0		; check if selected level Special Stage (0700 is used as dummy value)
 		bne.s	LevSel_Level	; if not, branch
 		move.b	#id_Special,(v_gamemode).w ; set screen mode to $10 (Special Stage)
 		clr.w	(v_zone).w	; clear level
 		move.b	#3,(v_lives).w	; set lives to 3
-		moveq	#0,d0
+		moveq	#0,d0			; set d0 to 0
 		move.w	d0,(v_rings).w	; clear rings
 		move.l	d0,(v_time).w	; clear time
 		move.l	d0,(v_score).w	; clear score
@@ -2455,13 +2532,13 @@ LevSel_Level_SS:
 ; ===========================================================================
 
 LevSel_Level:
-		andi.w	#$3FFF,d0
-		move.w	d0,(v_zone).w	; set level number
+		andi.w	#$3FFF,d0		; mask out invalid bits of level number
+		move.w	d0,(v_zone).w		; set new level number (zone and act)
 
 PlayLevel:
 		move.b	#id_Level,(v_gamemode).w ; set screen mode to $0C (level)
 		move.b	#3,(v_lives).w	; set lives to 3
-		moveq	#0,d0
+		moveq	#0,d0			; set d0 to 0
 		move.w	d0,(v_rings).w	; clear rings
 		move.l	d0,(v_time).w	; clear time
 		move.l	d0,(v_score).w	; clear score
@@ -2473,7 +2550,7 @@ PlayLevel:
 	if Revision<>0
 		move.l	#5000,(v_scorelife).w ; extra life is awarded at 50000 points
 	endif
-		move.b	#bgm_Fade,d0
+		move.b	#bgm_Fade,d0		; set music fade-out command
 		bsr.w	QueueSound2 ; fade out music
 		rts	
 ; ===========================================================================
@@ -2505,8 +2582,7 @@ LevSel_Ptrs:
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
 		dc.b id_SS, 0		; Special Stage
-		dc.w $8000		; Sound Test
-		even
+		dc.b $80, 0		; Sound Test
 	else
 		; correct level order
 		dc.b id_GHZ, 0
@@ -2529,10 +2605,11 @@ LevSel_Ptrs:
 		dc.b id_LZ, 3		; Scrap Brain Zone 3
 		dc.b id_SBZ, 2		; Final Zone
 		dc.b id_SS, 0		; Special Stage
-		dc.w $8000		; Sound Test
-		even
+		dc.b $80, 0		; Sound Test
 	endif
+LevSel_PtrsEnd:	even
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Level select codes
 ; ---------------------------------------------------------------------------
@@ -2546,8 +2623,8 @@ LevSelCode_J:
 
 LevSelCode_US:	dc.b btnUp,btnDn,btnL,btnR,0,$FF
 		even
-; ===========================================================================
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Demo mode
 ; ---------------------------------------------------------------------------
@@ -2613,39 +2690,37 @@ Demo_Level:
 Demo_Levels:	binclude	"misc/Demo Level Order - Intro.bin"
 		even
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to change what you're selecting in the level select
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 LevSelControls:
-		move.b	(v_jpadpress1).w,d1
-		andi.b	#btnUp+btnDn,d1	; is up/down pressed and held?
+		move.b	(v_jpadpress1).w,d1	; get current button presses
+		andi.b	#btnUp+btnDn,d1		; is up/down pressed this frame?
 		bne.s	LevSel_UpDown	; if yes, branch
-		subq.w	#1,(v_levseldelay).w ; subtract 1 from time to next move
+		subq.w	#1,(v_levseldelay).w	; if held, subtract 1 from delay until next move
 		bpl.s	LevSel_SndTest	; if time remains, branch
 
 LevSel_UpDown:
-		move.w	#$C-1,(v_levseldelay).w ; reset time delay
-		move.b	(v_jpadhold1).w,d1
-		andi.b	#btnUp+btnDn,d1	; is up/down pressed?
+		move.w	#12-1,(v_levseldelay).w	; reset time delay
+		move.b	(v_jpadhold1).w,d1	; get currently held buttons
+		andi.b	#btnUp+btnDn,d1		; is up/down held?
 		beq.s	LevSel_SndTest	; if not, branch
-		move.w	(v_levselitem).w,d0
-		btst	#bitUp,d1	; is up pressed?
+		move.w	(v_levselitem).w,d0	; get currently selected line
+		btst	#bitUp,d1		; is up held?
 		beq.s	LevSel_Down	; if not, branch
 		subq.w	#1,d0		; move up 1 selection
-		bhs.s	LevSel_Down
-		moveq	#$14,d0		; if selection moves below 0, jump to selection $14
+		bhs.s	LevSel_Down		; if entry is still valid, branch
+		moveq	#levsel_line_count-1,d0	; if selection moves below 0, jump to selection last row
 
 LevSel_Down:
-		btst	#bitDn,d1	; is down pressed?
+		btst	#bitDn,d1		; is down held?
 		beq.s	LevSel_Refresh	; if not, branch
 		addq.w	#1,d0		; move down 1 selection
-		cmpi.w	#$15,d0
-		blo.s	LevSel_Refresh
-		moveq	#0,d0		; if selection moves above $14, jump to selection 0
+		cmpi.w	#levsel_line_count,d0	; is selection past the last one now?
+		blo.s	LevSel_Refresh		; if not, branch
+		moveq	#0,d0			; if selection moves past the last row, jump to selection 0
 
 LevSel_Refresh:
 		move.w	d0,(v_levselitem).w ; set new selection
@@ -2654,25 +2729,26 @@ LevSel_Refresh:
 ; ===========================================================================
 
 LevSel_SndTest:
-		cmpi.w	#$14,(v_levselitem).w ; is item $14 selected?
+		cmpi.w	#levsel_sndtest_row,(v_levselitem).w ; is sound test row selected?
 		bne.s	LevSel_NoMove	; if not, branch
-		move.b	(v_jpadpress1).w,d1
+		move.b	(v_jpadpress1).w,d1	; get currently pressed buttons
 		andi.b	#btnR+btnL,d1	; is left/right pressed?
 		beq.s	LevSel_NoMove	; if not, branch
-		move.w	(v_levselsound).w,d0
+
+		move.w	(v_levselsound).w,d0	; get currently selected sound test number
 		btst	#bitL,d1	; is left pressed?
 		beq.s	LevSel_Right	; if not, branch
 		subq.w	#1,d0		; subtract 1 from sound test
-		bhs.s	LevSel_Right
-		moveq	#$4F,d0		; if sound test moves below 0, set to $4F
+		bhs.s	LevSel_Right		; is result still positive? if yes, branch
+		moveq	#sfx__Last-$80,d0 	; if sound test moves below 0, set to last entry (non-$80 based)
 
 LevSel_Right:
 		btst	#bitR,d1	; is right pressed?
 		beq.s	LevSel_Refresh2	; if not, branch
 		addq.w	#1,d0		; add 1 to sound test
-		cmpi.w	#$50,d0
-		blo.s	LevSel_Refresh2
-		moveq	#0,d0		; if sound test moves above $4F, set to 0
+		cmpi.w	#sfx__Last-$80+1,d0	; is result now past the last entry?
+		blo.s	LevSel_Refresh2		; if not, branch
+		moveq	#0,d0			; if sound test moves above last entry, set to 0
 
 LevSel_Refresh2:
 		move.w	d0,(v_levselsound).w ; set sound test number
@@ -2682,101 +2758,103 @@ LevSel_NoMove:
 		rts	
 ; End of function LevSelControls
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to load level select text
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+levsel_line_count:	equ 21	; total number of lines
+levsel_line_length:	equ 24	; characters per line
+levsel_sndtest_row:	equ levsel_line_count-1  ; row index of the sound test
+levsel_sndtest_col:	equ levsel_line_length-8 ; column offset for the sound test number 
 
+levsel_start_row:	equ 4	; top tile offset for start position
+levsel_start_col:	equ 8	; left tile offset for start position
+levsel_vram_main:	equ vram_bg+(levsel_start_row<<7)+(levsel_start_col<<1)	; nametable address in VRAM
+levsel_vram_sndtestnum:	equ levsel_vram_main+(levsel_sndtest_row<<7)+(levsel_sndtest_col<<1) ; nametable address for sound test numbers
+
+levsel_white:		equ make_art_tile(ArtTile_Level_Select_Font,3,TRUE) ; VRAM setting for white text (non-selected lines)
+levsel_yellow:		equ make_art_tile(ArtTile_Level_Select_Font,2,TRUE) ; VRAM setting for yellow text (selected line)
+
+; ---------------------------------------------------------------------------
 
 LevSelTextLoad:
-
-textpos:	= ($40000000+(($E210&$3FFF)<<16)+(($E210&$C000)>>14))
-					; $E210 is a VRAM address
-
-		lea	(LevelMenuText).l,a1
-		lea	(vdp_data_port).l,a6
-		move.l	#textpos,d4	; text position on screen
-		move.w	#$E680,d3	; VRAM setting (4th palette, $680th tile)
-		moveq	#$15-1,d1	; number of lines of text
-
-LevSel_DrawAll:
-		move.l	d4,4(a6)
+		; Write main text in white
+		lea	(LevelMenuText).l,a1	; load menu text offset
+		lea	(vdp_data_port).l,a6	; prepare VDP data write
+		locVRAM	levsel_vram_main,d4	; prepare base VRAM nametable location in d4
+		move.w	#levsel_white,d3	; VRAM setting
+		moveq	#levsel_line_count-1,d1	; number of lines of text to write
+.DrawAll:	move.l	d4,4(a6)		; write to VDP
 		bsr.w	LevSel_ChgLine	; draw line of text
-		addi.l	#$800000,d4	; jump to next line
-		dbf	d1,LevSel_DrawAll
+		addi.l	#$00800000,d4		; jump to next line
+		dbf	d1,.DrawAll		; repeat until all lines are drawn
 
-		moveq	#0,d0
-		move.w	(v_levselitem).w,d0
-		move.w	d0,d1
-		move.l	#textpos,d4
-		lsl.w	#7,d0
-		swap	d0
-		add.l	d0,d4
-		lea	(LevelMenuText).l,a1
-		lsl.w	#3,d1
-		move.w	d1,d0
-		add.w	d1,d1
-		add.w	d0,d1
-		adda.w	d1,a1
-		move.w	#$C680,d3	; VRAM setting (3rd palette, $680th tile)
-		move.l	d4,4(a6)
+		; Draw currently selected line in yellow
+		moveq	#0,d0			; clear d0
+		move.w	(v_levselitem).w,d0	; get currently selected line
+		move.w	d0,d1			; back up selected line
+		locVRAM	levsel_vram_main,d4	; prepare base VRAM nametable location in d4
+		lsl.w	#7,d0			; times $80
+		swap	d0			; swap so that line now becomes VRAM nametable offset
+		add.l	d0,d4			; add that to base VRAM location
+		lea	(LevelMenuText).l,a1	; load menu text offset
+	if levsel_line_length=24
+		lsl.w	#3,d1			; times 8
+		move.w	d1,d0			; copy result
+		add.w	d1,d1			; times...
+		add.w	d0,d1			; ...3 (because default line length 8 x 3 = 24)
+	else
+		; The above calculation assumes 24 as line length, we need a different approach if it changes.
+		mulu.w	#levsel_line_length,d1	; multiply selected line index by line length
+	endif
+		adda.w	d1,a1			; add to menu text offset
+		move.w	#levsel_yellow,d3 	; prepare selected-line VRAM setting
+		move.l	d4,4(a6)		; write to VDP
 		bsr.w	LevSel_ChgLine	; recolour selected line
-		move.w	#$E680,d3
-		cmpi.w	#$14,(v_levselitem).w
-		bne.s	LevSel_DrawSnd
-		move.w	#$C680,d3
 
+		; Write sound test numbers
+		move.w	#levsel_white,d3	; draw numbers in white by default
+		cmpi.w	#levsel_sndtest_row,(v_levselitem).w ; is currently selected line the sound test?
+		bne.s	LevSel_DrawSnd		; if not, branch
+		move.w	#levsel_yellow,d3	; draw numbers in yellow
 LevSel_DrawSnd:
-		locVRAM	vram_bg+$C30		; sound test position on screen
-		move.w	(v_levselsound).w,d0
-		addi.w	#$80,d0
-		move.b	d0,d2
-		lsr.b	#4,d0
+		locVRAM	levsel_vram_sndtestnum	; write sound test number position to VRAM
+		move.w	(v_levselsound).w,d0	; get currently selected sound test number
+		addi.w	#$80,d0			; make sound ID to be drawn $80-based
+		move.b	d0,d2			; backup number
+		lsr.b	#4,d0			; move first digit to lower nybble 
 		bsr.w	LevSel_ChgSnd	; draw 1st digit
-		move.b	d2,d0
+		move.b	d2,d0			; restore backup
 		bsr.w	LevSel_ChgSnd	; draw 2nd digit
 		rts	
-; End of function LevSelTextLoad
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 LevSel_ChgSnd:
-		andi.w	#$F,d0
+		andi.w	#$F,d0			; mask out upper nybble
 		cmpi.b	#$A,d0		; is digit $A-$F?
-		blo.s	LevSel_Numb	; if not, branch
-		addi.b	#7,d0		; use alpha characters
-
-LevSel_Numb:
-		add.w	d3,d0
-		move.w	d0,(a6)
+		blo.s	.DrawNum		; if not, branch
+		addi.b	#7,d0			; use letter characters
+.DrawNum:	add.w	d3,d0			; combine number with VRAM setting (white or yellow)
+		move.w	d0,(a6)			; send to VRAM
 		rts	
-; End of function LevSel_ChgSnd
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 LevSel_ChgLine:
-		moveq	#$18-1,d2	; number of characters per line
+		moveq	#levsel_line_length-1,d2 ; number of characters per line
 
-LevSel_LineLoop:
-		moveq	#0,d0
-		move.b	(a1)+,d0	; get character
-		bpl.s	LevSel_CharOk	; branch if valid
-		move.w	#0,(a6)		; use blank character
-		dbf	d2,LevSel_LineLoop
+.LineLoop:	moveq	#0,d0			; clear d0
+		move.b	(a1)+,d0		; get current character
+		bpl.s	.CharOk			; is it a valid ASCII character? if yes, branch
+		move.w	#0,(a6)			; draw a blank character
+		dbf	d2,.LineLoop		; loop until all characters are drawn
 		rts	
 
-
-LevSel_CharOk:
-		add.w	d3,d0		; combine char with VRAM setting
+.CharOk:	add.w	d3,d0			; combine char with VRAM setting (white or yellow)
 		move.w	d0,(a6)		; send to VRAM
-		dbf	d2,LevSel_LineLoop
+		dbf	d2,.LineLoop		; loop until all characters are drawn
 		rts	
-; End of function LevSel_ChgLine
+; End of function LevSelTextLoad
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -2846,7 +2924,16 @@ LevelMenuText:
 		even
 	endif
 
+	if MOMPASS=1
+		if *-(levsel_line_count*levsel_line_length)<>LevelMenuText
+			warning "LevelMenuText does not match expected line count/length."
+		endif
+		if (LevSel_PtrsEnd-LevSel_Ptrs)/2<>levsel_line_count
+			warning "LevSel_Ptrs does not match expected line count."
+		endif
+	endif
 	charset
+	even
 
 ; ---------------------------------------------------------------------------
 ; Music playlist
@@ -3121,7 +3208,7 @@ Level_MainLoop:
 		jsr	(ExecuteObjects).l
 	if Revision<>0
 		tst.w	(f_restart).w
-		bne	GM_Level
+		bne.w	GM_Level
 	endif
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.s	Level_DoScroll	; if yes, branch
@@ -5405,6 +5492,12 @@ loc_D358:
 ; ===========================================================================
 
 loc_D362:
+	if FixBugs
+		; Correct Drowning bugs
+		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
+		cmpi.b	#$A,(v_player+obRoutine).w	; Has Sonic drowned?
+		beq.s	loc_D348			; If so, run objects a little longer
+	endif
 		moveq	#(v_lvlobjspace-v_objspace)/object_size-1,d7
 		bsr.s	loc_D348
 		moveq	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d7
@@ -5899,6 +5992,13 @@ loc_DA02:
 loc_DA10:
 		bsr.w	loc_DA3C
 		beq.s	loc_DA02
+	if FixBugs
+		; Fix a remember sprite related bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_a_remember_sprite_related_bug
+		tst.b	4(a0)		; was this object a remember state?
+		bpl.s	loc_DA16	; if not, branch
+		subq.b	#1,(a2)		; move right counter back
+	endif
 
 loc_DA16:
 		move.l	a0,(v_opl_data).w
@@ -5928,7 +6028,13 @@ locret_DA3A:
 loc_DA3C:
 		tst.b	4(a0)
 		bpl.s	OPL_MakeItem
+	if FixBugs
+		; Fix a remember sprite related bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_a_remember_sprite_related_bug
+		btst	#7,2(a2,d2.w)
+	else
 		bset	#7,2(a2,d2.w)
+	endif
 		beq.s	OPL_MakeItem
 		addq.w	#6,a0
 		moveq	#0,d0
@@ -5949,6 +6055,11 @@ OPL_MakeItem:
 		move.b	d1,obStatus(a1)
 		move.b	(a0)+,d0
 		bpl.s	loc_DA80
+	if FixBugs
+		; Fix a remember sprite related bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_a_remember_sprite_related_bug
+		bset	#7,2(a2,d2.w)		; set as removed
+	endif
 		andi.b	#$7F,d0
 		move.b	d2,obRespawnNo(a1)
 
@@ -6392,7 +6503,7 @@ loc_14DD0:
 		cmp.w	d0,d1
 		ble.s	loc_14DDE
 		move.b	(v_anglebuffer).w,d3
-		exg	d0,d1
+		exg.l	d0,d1
 
 loc_14DDE:
 		btst	#0,d3
@@ -6701,18 +6812,6 @@ Map_VanP:	include	"_maps/SBZ Vanishing Platforms.asm"
 		include	"_anim/Electrocuter.asm"
 Map_Elec:	include	"_maps/Electrocuter.asm"
 		include	"_incObj/6F SBZ Spin Platform Conveyor.asm"
-		include	"_anim/SBZ Spin Platform Conveyor.asm"
-
-off_164A6:	dc.w word_164B2-off_164A6, word_164C6-off_164A6, word_164DA-off_164A6
-		dc.w word_164EE-off_164A6, word_16502-off_164A6, word_16516-off_164A6
-word_164B2:	dc.w $10, $E80,	$E14, $370, $EEF, $302,	$EEF, $340, $E14, $3AE
-word_164C6:	dc.w $10, $F80,	$F14, $2E0, $FEF, $272,	$FEF, $2B0, $F14, $31E
-word_164DA:	dc.w $10, $1080, $1014,	$270, $10EF, $202, $10EF, $240,	$1014, $2AE
-word_164EE:	dc.w $10, $F80,	$F14, $570, $FEF, $502,	$FEF, $540, $F14, $5AE
-word_16502:	dc.w $10, $1B80, $1B14,	$670, $1BEF, $602, $1BEF, $640,	$1B14, $6AE
-word_16516:	dc.w $10, $1C80, $1C14,	$5E0, $1CEF, $572, $1CEF, $5B0,	$1C14, $61E
-; ===========================================================================
-
 		include	"_incObj/70 Girder Block.asm"
 Map_Gird:	include	"_maps/Girder Block.asm"
 		include	"_incObj/72 Teleporter.asm"
@@ -7460,68 +7559,16 @@ AddPoints:
 .noextralife:
 		rts	
 ; End of function AddPoints
-
-		include	"_inc/HUD_Update.asm"
-
-; ---------------------------------------------------------------------------
-; Subroutine to load countdown numbers on the continue screen
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
-ContScrCounter:
-		locVRAM	ArtTile_Continue_Number*tile_size
-		lea	(vdp_data_port).l,a6
-		lea	(Hud_10).l,a2
-		moveq	#2-1,d6
-		moveq	#0,d4
-		lea	Art_Hud(pc),a1 ; load numbers patterns
-
-ContScr_Loop:
-		moveq	#0,d2
-		move.l	(a2)+,d3
-
-loc_1C95A:
-		sub.l	d3,d1
-		blo.s	loc_1C962
-		addq.w	#1,d2
-		bra.s	loc_1C95A
 ; ===========================================================================
 
-loc_1C962:
-		add.l	d3,d1
-		lsl.w	#6,d2
-		lea	(a1,d2.w),a3
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		dbf	d6,ContScr_Loop	; repeat 1 more time
-
-		rts	
-; End of function ContScrCounter
-
-; ===========================================================================
-
-		include	"_inc/HUD (part 2).asm"
+		include	"_inc/HUD Update.asm"	; includes ContScrCounter
 
 Art_Hud:	binclude	"artunc/HUD Numbers.bin" ; 8x16 pixel numbers on HUD
 		even
 Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers on lives counter
 		even
+
+; ===========================================================================
 
 		include	"_incObj/DebugMode.asm"
 		include	"_inc/DebugList.asm"
@@ -7532,7 +7579,7 @@ Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 		; - in rev00, it starts at $1DC00, which amounts to $EE bytes
 		; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
 		; From a technical standpoint, this padding serves no purpose.
-		if paddingOptimization=0
+		if PaddingOptimization=0
 			align	$200
 			if Revision<>0
 				dc.b	[$300]$FF
@@ -7564,14 +7611,16 @@ Eni_JapNames:	binclude	"tilemaps/Hidden Japanese Credits.eni" ; Japanese credits
 Nem_JapNames:	binclude	"artnem/Hidden Japanese Credits.nem"
 		even
 
-Map_Sonic:	include	"_maps/Sonic.asm"
-SonicDynPLC:	include	"_maps/Sonic - Dynamic Gfx Script.asm"
-
 ; ---------------------------------------------------------------------------
 ; Uncompressed graphics - Sonic
 ; ---------------------------------------------------------------------------
+Map_Sonic:	include	"_maps/Sonic.asm"
+
+SonicDynPLC:	include	"_maps/Sonic - Dynamic Gfx Script.asm"
+
 Art_Sonic:	binclude	"artunc/Sonic.bin"	; Sonic
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------
@@ -7598,11 +7647,11 @@ Nem_Goggle:	binclude	"artnem/Unused - Goggles.nem" ; unused goggles
 		even
 	endif
 
-Map_SSWalls:	include	"_maps/SS Walls.asm"
-
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - special stage
 ; ---------------------------------------------------------------------------
+Map_SSWalls:	include	"_maps/SS Walls.asm"
+
 Nem_SSWalls:	binclude	"artnem/Special Walls.nem" ; special stage walls
 		even
 Eni_SSBg1:	binclude	"tilemaps/SS Background 1.eni" ; special stage background (mappings)
@@ -7647,6 +7696,7 @@ Nem_SSGlass:	binclude	"artnem/Special Glass.nem" ; special stage destroyable gla
 		even
 Nem_ResultEm:	binclude	"artnem/Special Result Emeralds.nem" ; chaos emeralds on special stage results screen
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - GHZ stuff
 ; ---------------------------------------------------------------------------
@@ -7672,6 +7722,7 @@ Nem_GhzWall1:	binclude	"artnem/GHZ Breakable Wall.nem"
 		even
 Nem_GhzWall2:	binclude	"artnem/GHZ Edge Wall.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - LZ stuff
 ; ---------------------------------------------------------------------------
@@ -7707,6 +7758,7 @@ Nem_Cork:	binclude	"artnem/LZ Cork.nem"
 		even
 Nem_LzBlock1:	binclude	"artnem/LZ 32x32 Block.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - MZ stuff
 ; ---------------------------------------------------------------------------
@@ -7726,6 +7778,7 @@ Nem_MzBlock:	binclude	"artnem/MZ Green Pushable Block.nem"
 		even
 Nem_MzUnkBlock:	binclude	"artnem/Unused - MZ Background.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SLZ stuff
 ; ---------------------------------------------------------------------------
@@ -7745,6 +7798,7 @@ Nem_SlzBlock:	binclude	"artnem/SLZ 32x32 Block.nem"
 		even
 Nem_SlzCannon:	binclude	"artnem/SLZ Cannon.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SYZ stuff
 ; ---------------------------------------------------------------------------
@@ -7756,6 +7810,7 @@ Nem_LzSwitch:	binclude	"artnem/Switch.nem"
 		even
 Nem_SyzSpike1:	binclude	"artnem/SYZ Large Spikeball.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SBZ stuff
 ; ---------------------------------------------------------------------------
@@ -7787,6 +7842,7 @@ Nem_SbzDoor2:	binclude	"artnem/SBZ Large Horizontal Door.nem"
 		even
 Nem_Girder:	binclude	"artnem/SBZ Crushing Girder.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - enemies
 ; ---------------------------------------------------------------------------
@@ -7822,6 +7878,7 @@ Nem_Orbinaut:	binclude	"artnem/Enemy Orbinaut.nem"
 		even
 Nem_Cater:	binclude	"artnem/Enemy Caterkiller.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------
@@ -7853,6 +7910,7 @@ Nem_BigFlash:	binclude	"artnem/Giant Ring Flash.nem"
 		even
 Nem_Bonus:	binclude	"artnem/Hidden Bonuses.nem" ; hidden bonuses at end of a level
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - continue screen
 ; ---------------------------------------------------------------------------
@@ -7860,6 +7918,7 @@ Nem_ContSonic:	binclude	"artnem/Continue Screen Sonic.nem"
 		even
 Nem_MiniSonic:	binclude	"artnem/Continue Screen Stuff.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - animals
 ; ---------------------------------------------------------------------------
@@ -7877,6 +7936,7 @@ Nem_Flicky:	binclude	"artnem/Animal Flicky.nem"
 		even
 Nem_Squirrel:	binclude	"artnem/Animal Squirrel.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - primary patterns and block mappings
 ; ---------------------------------------------------------------------------
@@ -7888,12 +7948,14 @@ Nem_GHZ_2nd:	binclude	"artnem/8x8 - GHZ2.nem"	; GHZ secondary patterns
 		even
 Blk128_GHZ:	binclude	"map128/GHZ.kos"
 		even
+
 Blk16_LZ:	binclude	"map16/LZ.eni"
 		even
 Nem_LZ:		binclude	"artnem/8x8 - LZ.nem"	; LZ primary patterns
 		even
 Blk128_LZ:	binclude	"map128/LZ.kos"
 		even
+
 Blk16_MZ:	binclude	"map16/MZ.eni"
 		even
 Nem_MZ:		binclude	"artnem/8x8 - MZ.nem"	; MZ primary patterns
@@ -7906,18 +7968,21 @@ Blk128_MZ:
 		binclude	"map128/MZ (JP1).kos"
 		even
 	endif
+
 Blk16_SLZ:	binclude	"map16/SLZ.eni"
 		even
 Nem_SLZ:	binclude	"artnem/8x8 - SLZ.nem"	; SLZ primary patterns
 		even
 Blk128_SLZ:	binclude	"map128/SLZ.kos"
 		even
+
 Blk16_SYZ:	binclude	"map16/SYZ.eni"
 		even
 Nem_SYZ:	binclude	"artnem/8x8 - SYZ.nem"	; SYZ primary patterns
 		even
 Blk128_SYZ:	binclude	"map128/SYZ.kos"
 		even
+
 Blk16_SBZ:	binclude	"map16/SBZ.eni"
 		even
 Nem_SBZ:	binclude	"artnem/8x8 - SBZ.nem"	; SBZ primary patterns
@@ -7930,6 +7995,7 @@ Blk128_SBZ:
 		binclude	"map128/SBZ (JP1).kos"
 		even
 	endif
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - bosses and ending sequence
 ; ---------------------------------------------------------------------------
@@ -7970,7 +8036,7 @@ Nem_EndStH:	binclude	"artnem/Ending - StH Logo.nem"
 		; AngleMap starts at $62900 in all revisions, which amounts
 		; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
-		if paddingOptimization=0
+		if PaddingOptimization=0
 			if Revision=0
 				dc.b	[$104]$FF
 			else
@@ -7987,30 +8053,40 @@ CollArray1:	binclude	"collide/Collision Array (Normal).bin"
 		even
 CollArray2:	binclude	"collide/Collision Array (Rotated).bin"
 		even
+
+; ---------------------------------------------------------------------------
+; MJ: Collision data for path swappers
+; ---------------------------------------------------------------------------
 Col_GHZ_1:	binclude	"collide/GHZ1.kos"	; GHZ index 1
 		even
 Col_GHZ_2:	binclude	"collide/GHZ2.kos"	; GHZ index 2
 		even
+
 Col_LZ_1:	binclude	"collide/LZ1.kos"	; LZ index 1
 		even
 Col_LZ_2:	binclude	"collide/LZ2.kos"	; LZ index 2
 		even
+
 Col_MZ_1:	binclude	"collide/MZ1.kos"	; MZ index 1
 		even
 Col_MZ_2:	binclude	"collide/MZ2.kos"	; MZ index 2
 		even
+
 Col_SLZ_1:	binclude	"collide/SLZ1.kos"	; SLZ index 1
 		even
 Col_SLZ_2:	binclude	"collide/SLZ2.kos"	; SLZ index 2
 		even
+
 Col_SYZ_1:	binclude	"collide/SYZ1.kos"	; SYZ index 1
 		even
 Col_SYZ_2:	binclude	"collide/SYZ2.kos"	; SYZ index 2
 		even
+
 Col_SBZ_1:	binclude	"collide/SBZ1.kos"	; SBZ index 1
 		even
 Col_SBZ_2:	binclude	"collide/SBZ2.kos"	; SBZ index 2
 		even
+
 ; ---------------------------------------------------------------------------
 ; Special Stage layouts
 ; ---------------------------------------------------------------------------
@@ -8035,6 +8111,7 @@ SS_5:		binclude	"sslayout/5 (JP1).eni"
 SS_6:		binclude	"sslayout/6 (JP1).eni"
 		even
 	endif
+
 ; ---------------------------------------------------------------------------
 ; Animated uncompressed graphics
 ; ---------------------------------------------------------------------------
@@ -8142,13 +8219,16 @@ Level_SBZ2:	binclude	"levels/sbz2.kos"
 Level_End:	binclude	"levels/ending.kos"
 		even
 
+; ---------------------------------------------------------------------------
+; Uncompressed graphics - Giant Rings
+; ---------------------------------------------------------------------------
 Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 		even
 
 		; ObjPos_Index starts at $6B000 in all revisions, which amounts
 		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
-		if paddingOptimization=0
+		if PaddingOptimization=0
 			align	$100
 		endif
 	
@@ -8204,6 +8284,7 @@ ObjPosSBZPlatform_Index:
 		dc.w ObjPos_SBZ1pf5-ObjPos_Index, ObjPos_SBZ1pf6-ObjPos_Index
 		dc.w ObjPos_SBZ1pf1-ObjPos_Index, ObjPos_SBZ1pf2-ObjPos_Index
 		dc.b $FF, $FF, 0, 0, 0,	0
+
 ObjPos_GHZ1:	binclude	"objpos/ghz1.bin"
 		even
 ObjPos_GHZ2:	binclude	"objpos/ghz2.bin"
@@ -8216,6 +8297,7 @@ ObjPos_GHZ3:
 		binclude	"objpos/ghz3 (JP1).bin"
 		even
 	endif
+
 ObjPos_LZ1:
 	if Revision=0
 		binclude	"objpos/lz1.bin"
@@ -8248,6 +8330,7 @@ ObjPos_LZ3pf1:	binclude	"objpos/lz3pf1.bin"
 		even
 ObjPos_LZ3pf2:	binclude	"objpos/lz3pf2.bin"
 		even
+
 ObjPos_MZ1:
 	if Revision=0
 		binclude	"objpos/mz1.bin"
@@ -8260,6 +8343,7 @@ ObjPos_MZ2:	binclude	"objpos/mz2.bin"
 		even
 ObjPos_MZ3:	binclude	"objpos/mz3.bin"
 		even
+
 ObjPos_SLZ1:	binclude	"objpos/slz1.bin"
 		even
 ObjPos_SLZ2:	binclude	"objpos/slz2.bin"
@@ -8278,6 +8362,7 @@ ObjPos_SYZ3:
 		binclude	"objpos/syz3 (JP1).bin"
 		even
 	endif
+
 ObjPos_SBZ1:
 	if Revision=0
 		binclude	"objpos/sbz1.bin"
@@ -8302,8 +8387,10 @@ ObjPos_SBZ1pf5:	binclude	"objpos/sbz1pf5.bin"
 		even
 ObjPos_SBZ1pf6:	binclude	"objpos/sbz1pf6.bin"
 		even
+
 ObjPos_End:	binclude	"objpos/ending.bin"
 		even
+
 ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
 		; SoundDriver starts at $71990 in all revisions, which amounts
@@ -8311,7 +8398,7 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 		; It appears to be placed in such a way that the sound driver
 		; ends right on the $80000 mark in the ROM in all revisions.
 		; From a technical standpoint, this padding serves no purpose.
-		if paddingOptimization=0
+		if PaddingOptimization=0
 			if Revision=0
 				dc.b	[$62A]$FF
 			else

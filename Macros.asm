@@ -138,7 +138,7 @@ startZ80:	macro
 ; ---------------------------------------------------------------------------
 
 disable_ints:	macro
-		move	#$2700,sr
+		move.w	#$2700,sr
 		endm
 
 ; ---------------------------------------------------------------------------
@@ -146,7 +146,7 @@ disable_ints:	macro
 ; ---------------------------------------------------------------------------
 
 enable_ints:	macro
-		move	#$2300,sr
+		move.w	#$2300,sr
 		endm
 
 ; ---------------------------------------------------------------------------
@@ -306,6 +306,14 @@ zonewarning:	macro loc,elementsize
 make_art_tile function addr,pal,pri,((pri&1)<<15)|((pal&3)<<13)|addr
 
 ; ---------------------------------------------------------------------------
+; incbin compatibility macro for AS
+; ---------------------------------------------------------------------------
+
+incbin:		macro path
+		binclude path
+		endm
+
+; ---------------------------------------------------------------------------
 ; Macro to binclude something with an end marker
 ; ---------------------------------------------------------------------------
 
@@ -313,11 +321,3 @@ bincludeEndMarker macro path,{INTLABEL},{GLOBALSYMBOLS}
 __LABEL__:	binclude	path
 __LABEL___end:
 	endm
-
-; ---------------------------------------------------------------------------
-; sprite mappings and DPLCs macros
-; ---------------------------------------------------------------------------
-
-SonicMappingsVer = 1
-SonicDplcVer = 1
-		include	"_maps/MapMacros.asm"

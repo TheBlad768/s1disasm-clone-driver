@@ -39,47 +39,7 @@ LevelSizeLoad:
 ; Level size array
 ; ---------------------------------------------------------------------------
 LevelSizeArray:
-		;    |----------------------------------------Unused
-		;    |      |---------------------------------Left boundary
-		;    |      |      |--------------------------Right boundary
-		;    |      |      |      |-------------------Top boundary
-		;    |      |      |      |      |------------Bottom boundary
-		; GHZ|      |      |      |      |      |-----Vertical screen shift (redundant)
-		dc.w $0004, $0000, $24BF, $0000, $0300, $0060
-		dc.w $0004, $0000, $1EBF, $0000, $0300, $0060
-		dc.w $0004, $0000, $2960, $0000, $0300, $0060
-		dc.w $0004, $0000, $2ABF, $0000, $0300, $0060
-		; LZ
-		dc.w $0004, $0000, $19BF, $0000, $0530, $0060
-		dc.w $0004, $0000, $10AF, $0000, $0720, $0060
-		dc.w $0004, $0000, $202F, $FF00, $0800, $0060
-		dc.w $0004, $0000, $20BF, $0000, $0720, $0060
-		; MZ
-		dc.w $0004, $0000, $17BF, $0000, $01D0, $0060
-		dc.w $0004, $0000, $17BF, $0000, $0520, $0060
-		dc.w $0004, $0000, $1800, $0000, $0720, $0060
-		dc.w $0004, $0000, $16BF, $0000, $0720, $0060
-		; SLZ
-		dc.w $0004, $0000, $1FBF, $0000, $0640, $0060
-		dc.w $0004, $0000, $1FBF, $0000, $0640, $0060
-		dc.w $0004, $0000, $2000, $0000, $06C0, $0060
-		dc.w $0004, $0000, $3EC0, $0000, $0720, $0060
-		; SYZ
-		dc.w $0004, $0000, $22C0, $0000, $0420, $0060
-		dc.w $0004, $0000, $28C0, $0000, $0520, $0060
-		dc.w $0004, $0000, $2C00, $0000, $0620, $0060
-		dc.w $0004, $0000, $2EC0, $0000, $0620, $0060
-		; SBZ
-		dc.w $0004, $0000, $21C0, $0000, $0720, $0060
-		dc.w $0004, $0000, $1E40, $FF00, $0800, $0060
-		dc.w $0004, $2080, $2460, $0510, $0510, $0060
-		dc.w $0004, $0000, $3EC0, $0000, $0720, $0060
-		zonewarning LevelSizeArray,$30
-		; Ending
-		dc.w $0004, $0000, $0500, $0110, $0110, $0060
-		dc.w $0004, $0000, $0DC0, $0110, $0110, $0060
-		dc.w $0004, $0000, $2FFF, $0000, $0320, $0060
-		dc.w $0004, $0000, $2FFF, $0000, $0320, $0060
+		include	"_inc/LevelSizeArray.asm"
 
 ; ---------------------------------------------------------------------------
 ; Ending start location array
@@ -100,6 +60,18 @@ LevSz_ChkLamp:
 ; ===========================================================================
 
 LevSz_StartLoc:
+	if FixBugs
+		; Fix title screen position
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Title_Screen_position_in_Sonic_1#Fix_vertical_position_after_editing_GHZ1
+		cmpi.b	#id_Title,(v_gamemode).w	; is this the title screen?
+		bne.s	LevSz_NotTitle			; if not, branch
+		move.w	#$0050,d1			; X coordinate (this also dictates the little delay before the title screen starts scrolling)
+		move.w	#$03B0,d0			; Y coordinate
+		move.w	d1,(v_player+obX).w		; set X coordinate
+		move.w	d0,(v_player+obY).w		; set Y coordinate
+		bra.s	LevSz_SkipStartPos		; skip normal logic
+LevSz_NotTitle:
+	endif
 		move.w	(v_zone).w,d0
 		lsl.b	#6,d0
 		lsr.w	#4,d0
