@@ -30,7 +30,7 @@ gmake_parent = objoff_3C		; address of parent object
 GMake_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Geyser,obMap(a0)
-		move.w	#ArtTile_MZ_Lava|Tile_Pal3|Tile_Pri,obGfx(a0)
+		move.w	#ArtTile_MZ_Lava|Tile_Pal4|Tile_Prio,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#$38,obActWid(a0)
@@ -171,7 +171,7 @@ Geyser_Main:	; Routine 0
 .makelava:
 		_move.b	#id_LavaGeyser,obID(a1)
 		move.l	#Map_Geyser,obMap(a1)
-		move.w	#ArtTile_MZ_Lava|Tile_Pal3,obGfx(a1)
+		move.w	#ArtTile_MZ_Lava|Tile_Pal4,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#$20,obActWid(a1)
 		move.w	obX(a0),obX(a1)

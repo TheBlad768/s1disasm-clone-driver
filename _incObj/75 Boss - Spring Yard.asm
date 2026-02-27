@@ -566,7 +566,7 @@ loc_195DA:
 
 BossSpringYard_SpikeMain:; Routine 8
 		move.l	#Map_BossItems,obMap(a0)
-		move.w	#ArtTile_Eggman_Weapons|Tile_Pal1,obGfx(a0)
+		move.w	#ArtTile_Eggman_Weapons|Tile_Pal2,obGfx(a0)
 		move.b	#5,obFrame(a0)
 		movea.l	objoff_34(a0),a1
 		cmpi.b	#$A,ob2ndRout(a1)

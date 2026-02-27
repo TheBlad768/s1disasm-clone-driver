@@ -84,7 +84,7 @@ BossPlasma_Loop:
 		move.w	obX(a0),obX(a1)
 		move.w	#boss_fz_y+$2C,obY(a1)
 		move.b	#8,obRoutine(a1)
-		move.w	#ArtTile_FZ_Boss|Tile_Pal1,obGfx(a1)
+		move.w	#ArtTile_FZ_Boss|Tile_Pal2,obGfx(a1)
 		move.l	#Map_Plasma,obMap(a1)
 		move.b	#$C,obHeight(a1)
 		move.b	#$C,obWidth(a1)

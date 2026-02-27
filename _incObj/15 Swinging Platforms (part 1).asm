@@ -21,7 +21,7 @@ swing_origY = objoff_38		; original y-axis position
 Swing_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Swing_GHZ,obMap(a0) ; GHZ and MZ specific code
-		move.w	#ArtTile_GHZ_MZ_Swing|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_GHZ_MZ_Swing|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$18,obActWid(a0)
@@ -32,7 +32,7 @@ Swing_Main:	; Routine 0
 		bne.s	.notSLZ
 
 		move.l	#Map_Swing_SLZ,obMap(a0) ; SLZ specific code
-		move.w	#ArtTile_SLZ_Swing|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_SLZ_Swing|Tile_Pal3,obGfx(a0)
 		move.b	#$20,obActWid(a0)
 		move.b	#$10,obHeight(a0)
 		move.b	#$99,obColType(a0)
@@ -106,7 +106,7 @@ Swing_Main:	; Routine 0
 		btst	#4,d1		; is object type $1X ?
 		beq.s	.not1X	; if not, branch
 		move.l	#Map_GBall,obMap(a0) ; use GHZ ball mappings
-		move.w	#ArtTile_GHZ_Giant_Ball|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_GHZ_Giant_Ball|Tile_Pal3,obGfx(a0)
 		move.b	#1,obFrame(a0)
 		move.b	#2,obPriority(a0)
 		move.b	#$81,obColType(a0) ; make object hurt when touched

@@ -3583,7 +3583,7 @@ SS_ToLevel:
 SS_BGLoad:
 		lea	(v_ssbuffer1&$FFFFFF).l,a1
 		lea	(Eni_SSBg1).l,a0 ; load mappings for the birds and fish
-		move.w	#ArtTile_SS_Background_Fish|Tile_Pal2,d0
+		move.w	#ArtTile_SS_Background_Fish|Tile_Pal3,d0
 		bsr.w	EniDec
 		locVRAM	ArtTile_SS_Plane_1*tile_size+plane_size_64x32,d3
 		lea	((v_ssbuffer1+$80)&$FFFFFF).l,a2
@@ -3636,7 +3636,7 @@ loc_491C:
 
 		lea	(v_ssbuffer1&$FFFFFF).l,a1
 		lea	(Eni_SSBg2).l,a0 ; load mappings for the clouds
-		move.w	#ArtTile_SS_Background_Clouds|Tile_Pal2,d0
+		move.w	#ArtTile_SS_Background_Clouds|Tile_Pal3,d0
 		bsr.w	EniDec
 		copyTilemap	v_ssbuffer1&$FFFFFF,ArtTile_SS_Plane_5*tile_size,64,32
 		copyTilemap	v_ssbuffer1&$FFFFFF,ArtTile_SS_Plane_5*tile_size+plane_size_64x32,64,64

@@ -33,7 +33,7 @@ CSon_ChkLand:	; Routine 2
 		addq.b	#2,obRoutine(a0)
 		clr.w	obVelY(a0)	; stop Sonic falling
 		move.l	#Map_ContScr,obMap(a0)
-		move.w	#ArtTile_Continue_Sonic|Tile_Pri,obGfx(a0)
+		move.w	#ArtTile_Continue_Sonic|Tile_Prio,obGfx(a0)
 		move.b	#id_Walk,obAnim(a0)
 		bra.s	CSon_Animate
 

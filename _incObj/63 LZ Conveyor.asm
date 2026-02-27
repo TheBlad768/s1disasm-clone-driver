@@ -38,7 +38,7 @@ LCon_Main:	; Routine 0
 		bmi.w	loc_12460
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_LConv,obMap(a0)
-		move.w	#ArtTile_LZ_Conveyor_Belt|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_LZ_Conveyor_Belt|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$10,obActWid(a0)
 		move.b	#4,obPriority(a0)

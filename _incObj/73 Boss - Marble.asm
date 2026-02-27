@@ -438,7 +438,7 @@ BossMarble_TubeMain:	; Routine 8
 
 loc_18688:
 		move.l	#Map_BossItems,obMap(a0)
-		move.w	#ArtTile_Eggman_Weapons|Tile_Pal1,obGfx(a0)
+		move.w	#ArtTile_Eggman_Weapons|Tile_Pal2,obGfx(a0)
 		move.b	#4,obFrame(a0)
 		bra.s	loc_1864A
 ; ===========================================================================

@@ -19,7 +19,7 @@ spin_timelen = objoff_32	; time between changes (general)
 Spin_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Trap,obMap(a0)
-		move.w	#ArtTile_SBZ_Trap_Door|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_SBZ_Trap_Door|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$80,obActWid(a0)
 		moveq	#0,d0

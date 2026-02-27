@@ -17,7 +17,7 @@ Plat_Index:	dc.w Plat_Main-Plat_Index
 
 Plat_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.w	#ArtTile_Level|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a0)
 		move.l	#Map_Plat_GHZ,obMap(a0)
 		move.b	#$20,obActWid(a0)
 		cmpi.b	#id_SYZ,(v_zone).w ; check if level is SYZ
@@ -31,7 +31,7 @@ Plat_Main:	; Routine 0
 		bne.s	.notSLZ
 		move.l	#Map_Plat_SLZ,obMap(a0) ; SLZ specific code
 		move.b	#$20,obActWid(a0)
-		move.w	#ArtTile_Level|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a0)
 		move.b	#3,obSubtype(a0)
 
 .notSLZ:

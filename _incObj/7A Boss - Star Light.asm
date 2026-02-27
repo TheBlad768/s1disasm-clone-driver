@@ -431,6 +431,6 @@ BossStarLight_TubeMain:	; Routine 8
 
 loc_18CB8:
 		move.l	#Map_BossItems,obMap(a0)
-		move.w	#ArtTile_Eggman_Weapons|Tile_Pal1,obGfx(a0)
+		move.w	#ArtTile_Eggman_Weapons|Tile_Pal2,obGfx(a0)
 		move.b	#3,obFrame(a0)
 		bra.s	loc_18C78

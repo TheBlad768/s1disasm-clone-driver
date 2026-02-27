@@ -79,7 +79,7 @@ Sign_Spin:	; Routine 4
 		add.w	obY(a0),d0
 		move.w	d0,obY(a1)
 		move.l	#Map_Ring,obMap(a1)
-		move.w	#ArtTile_Ring|Tile_Pal1,obGfx(a1)
+		move.w	#ArtTile_Ring|Tile_Pal2,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#2,obPriority(a1)
 		move.b	#8,obActWid(a1)

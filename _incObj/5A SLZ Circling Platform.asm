@@ -22,7 +22,7 @@ Circ_Index:	dc.w Circ_Main-Circ_Index
 Circ_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Circ,obMap(a0)
-		move.w	#ArtTile_Level|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$18,obActWid(a0)

@@ -35,7 +35,7 @@ id_Drown_AirLeft = ptr_Drown_AirLeft-Drown_Index		; $C
 Drown_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Bub,obMap(a0)
-		move.w	#ArtTile_LZ_Bubbles|Tile_Pri,obGfx(a0)
+		move.w	#ArtTile_LZ_Bubbles|Tile_Prio,obGfx(a0)
 		move.b	#$84,obRender(a0)
 		move.b	#$10,obActWid(a0)
 		move.b	#1,obPriority(a0)

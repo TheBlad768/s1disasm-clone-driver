@@ -30,10 +30,10 @@ FBlock_Var:	; width/2, height/2
 FBlock_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_FBlock,obMap(a0)
-		move.w	#ArtTile_Level|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a0)
 		cmpi.b	#id_LZ,(v_zone).w ; check if level is LZ
 		bne.s	.notLZ
-		move.w	#ArtTile_LZ_Door|Tile_Pal2,obGfx(a0) ; LZ specific code
+		move.w	#ArtTile_LZ_Door|Tile_Pal3,obGfx(a0) ; LZ specific code
 
 .notLZ:
 		move.b	#4,obRender(a0)

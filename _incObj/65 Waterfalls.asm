@@ -18,7 +18,7 @@ WFall_Index:	dc.w WFall_Main-WFall_Index
 WFall_Main:	; Routine 0
 		addq.b	#4,obRoutine(a0)
 		move.l	#Map_WFall,obMap(a0)
-		move.w	#ArtTile_LZ_Splash|Tile_Pal2,obGfx(a0)
+		move.w	#ArtTile_LZ_Splash|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#$18,obActWid(a0)
 		move.b	#1,obPriority(a0)

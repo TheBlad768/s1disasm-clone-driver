@@ -33,7 +33,7 @@ PSB_Main:	; Routine 0
 		cmpi.b	#3,obFrame(a0)	; is the object "TM"?
 		bne.s	PSB_Exit	; if not, branch
 
-		move.w	#ArtTile_Title_Trademark|Tile_Pal1,obGfx(a0) ; "TM" specific code
+		move.w	#ArtTile_Title_Trademark|Tile_Pal2,obGfx(a0) ; "TM" specific code
 	if FixBugs
 		; Fix title screen position
 		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Title_Screen_position_in_Sonic_1

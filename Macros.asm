@@ -319,6 +319,7 @@ zonewarning:	macro loc,elementsize
 ; ---------------------------------------------------------------------------
 ; binclude compatibility macro for asm68k
 ; ---------------------------------------------------------------------------
+
 binclude:	macro path
 		incbin \path
 		endm

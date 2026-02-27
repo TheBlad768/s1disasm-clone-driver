@@ -29,7 +29,7 @@ BossBlock_Loop:
 BossBlock_MakeBlock:
 		move.b	#id_BossBlock,obID(a1)
 		move.l	#Map_BossBlock,obMap(a1)
-		move.w	#ArtTile_Level|Tile_Pal2,obGfx(a1)
+		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#$10,obActWid(a1)
 		move.b	#$10,obHeight(a1)

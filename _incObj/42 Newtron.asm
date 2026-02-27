@@ -55,7 +55,7 @@ Newt_Action:	; Routine 2
 		tst.b	obSubtype(a0)	; check object type
 		beq.s	.istype00	; if type is 00, branch
 
-		move.w	#ArtTile_Newtron|Tile_Pal1,obGfx(a0)
+		move.w	#ArtTile_Newtron|Tile_Pal2,obGfx(a0)
 		move.b	#8,ob2ndRout(a0) ; goto .type01 next
 		move.b	#4,obAnim(a0)	; use different animation
 

@@ -55,7 +55,7 @@ loc_17B60:
 GBall_MakeBall:
 		move.b	#8,obRoutine(a1)
 		move.l	#Map_GBall,obMap(a1) ; load different mappings for final link
-		move.w	#ArtTile_GHZ_Giant_Ball|Tile_Pal2,obGfx(a1) ; use different graphics
+		move.w	#ArtTile_GHZ_Giant_Ball|Tile_Pal3,obGfx(a1) ; use different graphics
 		move.b	#1,obFrame(a1)
 		move.b	#5,obPriority(a1)
 		move.b	#$81,obColType(a1) ; make object hurt Sonic

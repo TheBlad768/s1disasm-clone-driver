@@ -35,7 +35,7 @@ Bonus_Main:	; Routine 0
 		bne.s	.chkdel
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Bonus,obMap(a0)
-		move.w	#ArtTile_Hidden_Points|Tile_Pri,obGfx(a0)
+		move.w	#ArtTile_Hidden_Points|Tile_Prio,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#0,obPriority(a0)
 		move.b	#$10,obActWid(a0)
