@@ -306,6 +306,14 @@ zonewarning:	macro loc,elementsize
 make_art_tile function addr,pal,pri,((pri&1)<<15)|((pal&3)<<13)|addr
 
 ; ---------------------------------------------------------------------------
+; incbin compatibility macro for AS
+; ---------------------------------------------------------------------------
+
+incbin:		macro path
+		binclude path
+		endm
+
+; ---------------------------------------------------------------------------
 ; Macro to binclude something with an end marker
 ; ---------------------------------------------------------------------------
 

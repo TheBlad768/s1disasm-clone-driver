@@ -919,7 +919,7 @@ VBla_12:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; VBlank 16 - Continue Screen
+; VBlank 16 - Continue Screen and Special Stage finish loop
 ; ---------------------------------------------------------------------------
 
 VBla_16:
@@ -2081,23 +2081,23 @@ PalLoad_Water:
 
 Pal_SegaBG:		bincludeEndMarker	"palette/Sega Background.bin"
 Pal_Title:		bincludeEndMarker	"palette/Title Screen.bin"
-Pal_LevelSel:	bincludeEndMarker	"palette/Level Select.bin"
+Pal_LevelSel:		bincludeEndMarker	"palette/Level Select.bin"
 Pal_Sonic:		bincludeEndMarker	"palette/Sonic.bin"
 Pal_GHZ:		bincludeEndMarker	"palette/Green Hill Zone.bin"
 Pal_LZ:			bincludeEndMarker	"palette/Labyrinth Zone.bin"
-Pal_LZWater:	bincludeEndMarker	"palette/Labyrinth Zone Underwater.bin"
+Pal_LZWater:		bincludeEndMarker	"palette/Labyrinth Zone Underwater.bin"
 Pal_MZ:			bincludeEndMarker	"palette/Marble Zone.bin"
 Pal_SLZ:		bincludeEndMarker	"palette/Star Light Zone.bin"
 Pal_SYZ:		bincludeEndMarker	"palette/Spring Yard Zone.bin"
 Pal_SBZ1:		bincludeEndMarker	"palette/SBZ Act 1.bin"
 Pal_SBZ2:		bincludeEndMarker	"palette/SBZ Act 2.bin"
-Pal_Special:	bincludeEndMarker	"palette/Special Stage.bin"
+Pal_Special:		bincludeEndMarker	"palette/Special Stage.bin"
 Pal_SBZ3:		bincludeEndMarker	"palette/SBZ Act 3.bin"
-Pal_SBZ3Water:	bincludeEndMarker	"palette/SBZ Act 3 Underwater.bin"
-Pal_LZSonWater:	bincludeEndMarker	"palette/Sonic - LZ Underwater.bin"
-Pal_SBZ3SonWat:	bincludeEndMarker	"palette/Sonic - SBZ3 Underwater.bin"
-Pal_SSResult:	bincludeEndMarker	"palette/Special Stage Results.bin"
-Pal_Continue:	bincludeEndMarker	"palette/Special Stage Continue Bonus.bin"
+Pal_SBZ3Water:		bincludeEndMarker	"palette/SBZ Act 3 Underwater.bin"
+Pal_LZSonWater:		bincludeEndMarker	"palette/Sonic - LZ Underwater.bin"
+Pal_SBZ3SonWat:		bincludeEndMarker	"palette/Sonic - SBZ3 Underwater.bin"
+Pal_SSResult:		bincludeEndMarker	"palette/Special Stage Results.bin"
+Pal_Continue:		bincludeEndMarker	"palette/Special Stage Continue Bonus.bin"
 Pal_Ending:		bincludeEndMarker	"palette/Ending.bin"
 
 ; ---------------------------------------------------------------------------
@@ -7574,68 +7574,16 @@ AddPoints:
 .noextralife:
 		rts
 ; End of function AddPoints
-
-		include	"_inc/HUD_Update.asm"
-
-; ---------------------------------------------------------------------------
-; Subroutine to load countdown numbers on the continue screen
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
-ContScrCounter:
-		locVRAM	ArtTile_Continue_Number*tile_size
-		lea	(vdp_data_port).l,a6
-		lea	(Hud_10).l,a2
-		moveq	#2-1,d6
-		moveq	#0,d4
-		lea	Art_Hud(pc),a1 ; load numbers patterns
-
-ContScr_Loop:
-		moveq	#0,d2
-		move.l	(a2)+,d3
-
-loc_1C95A:
-		sub.l	d3,d1
-		blo.s	loc_1C962
-		addq.w	#1,d2
-		bra.s	loc_1C95A
 ; ===========================================================================
 
-loc_1C962:
-		add.l	d3,d1
-		lsl.w	#6,d2
-		lea	(a1,d2.w),a3
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		move.l	(a3)+,(a6)
-		dbf	d6,ContScr_Loop	; repeat 1 more time
-
-		rts
-; End of function ContScrCounter
-
-; ===========================================================================
-
-		include	"_inc/HUD (part 2).asm"
+		include	"_inc/HUD Update.asm"	; includes ContScrCounter
 
 Art_Hud:	binclude	"artunc/HUD Numbers.bin" ; 8x16 pixel numbers on HUD
 		even
 Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers on lives counter
 		even
+
+; ===========================================================================
 
 		include	"_incObj/DebugMode.asm"
 		include	"_inc/DebugList.asm"
@@ -7678,14 +7626,16 @@ Eni_JapNames:	binclude	"tilemaps/Hidden Japanese Credits.eni" ; Japanese credits
 Nem_JapNames:	binclude	"artnem/Hidden Japanese Credits.nem"
 		even
 
-Map_Sonic:	include	"_maps/Sonic.asm"
-SonicDynPLC:	include	"_maps/Sonic - Dynamic Gfx Script.asm"
-
 ; ---------------------------------------------------------------------------
 ; Uncompressed graphics - Sonic
 ; ---------------------------------------------------------------------------
+Map_Sonic:	include	"_maps/Sonic.asm"
+
+SonicDynPLC:	include	"_maps/Sonic - Dynamic Gfx Script.asm"
+
 Art_Sonic:	binclude	"artunc/Sonic.bin"	; Sonic
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------
@@ -7712,11 +7662,11 @@ Nem_Goggle:	binclude	"artnem/Unused - Goggles.nem" ; unused goggles
 		even
 	endif
 
-Map_SSWalls:	include	"_maps/SS Walls.asm"
-
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - special stage
 ; ---------------------------------------------------------------------------
+Map_SSWalls:	include	"_maps/SS Walls.asm"
+
 Nem_SSWalls:	binclude	"artnem/Special Walls.nem" ; special stage walls
 		even
 Eni_SSBg1:	binclude	"tilemaps/SS Background 1.eni" ; special stage background (mappings)
@@ -7761,6 +7711,7 @@ Nem_SSGlass:	binclude	"artnem/Special Glass.nem" ; special stage destroyable gla
 		even
 Nem_ResultEm:	binclude	"artnem/Special Result Emeralds.nem" ; chaos emeralds on special stage results screen
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - GHZ stuff
 ; ---------------------------------------------------------------------------
@@ -7786,6 +7737,7 @@ Nem_GhzWall1:	binclude	"artnem/GHZ Breakable Wall.nem"
 		even
 Nem_GhzWall2:	binclude	"artnem/GHZ Edge Wall.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - LZ stuff
 ; ---------------------------------------------------------------------------
@@ -7821,6 +7773,7 @@ Nem_Cork:	binclude	"artnem/LZ Cork.nem"
 		even
 Nem_LzBlock1:	binclude	"artnem/LZ 32x32 Block.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - MZ stuff
 ; ---------------------------------------------------------------------------
@@ -7840,6 +7793,7 @@ Nem_MzBlock:	binclude	"artnem/MZ Green Pushable Block.nem"
 		even
 Nem_MzUnkBlock:	binclude	"artnem/Unused - MZ Background.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SLZ stuff
 ; ---------------------------------------------------------------------------
@@ -7859,6 +7813,7 @@ Nem_SlzBlock:	binclude	"artnem/SLZ 32x32 Block.nem"
 		even
 Nem_SlzCannon:	binclude	"artnem/SLZ Cannon.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SYZ stuff
 ; ---------------------------------------------------------------------------
@@ -7870,6 +7825,7 @@ Nem_LzSwitch:	binclude	"artnem/Switch.nem"
 		even
 Nem_SyzSpike1:	binclude	"artnem/SYZ Large Spikeball.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SBZ stuff
 ; ---------------------------------------------------------------------------
@@ -7901,6 +7857,7 @@ Nem_SbzDoor2:	binclude	"artnem/SBZ Large Horizontal Door.nem"
 		even
 Nem_Girder:	binclude	"artnem/SBZ Crushing Girder.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - enemies
 ; ---------------------------------------------------------------------------
@@ -7936,6 +7893,7 @@ Nem_Orbinaut:	binclude	"artnem/Enemy Orbinaut.nem"
 		even
 Nem_Cater:	binclude	"artnem/Enemy Caterkiller.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------
@@ -7967,6 +7925,7 @@ Nem_BigFlash:	binclude	"artnem/Giant Ring Flash.nem"
 		even
 Nem_Bonus:	binclude	"artnem/Hidden Bonuses.nem" ; hidden bonuses at end of a level
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - continue screen
 ; ---------------------------------------------------------------------------
@@ -7974,6 +7933,7 @@ Nem_ContSonic:	binclude	"artnem/Continue Screen Sonic.nem"
 		even
 Nem_MiniSonic:	binclude	"artnem/Continue Screen Stuff.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - animals
 ; ---------------------------------------------------------------------------
@@ -7991,6 +7951,7 @@ Nem_Flicky:	binclude	"artnem/Animal Flicky.nem"
 		even
 Nem_Squirrel:	binclude	"artnem/Animal Squirrel.nem"
 		even
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - primary patterns and block mappings
 ; ---------------------------------------------------------------------------
@@ -8002,12 +7963,14 @@ Nem_GHZ_2nd:	binclude	"artnem/8x8 - GHZ2.nem"	; GHZ secondary patterns
 		even
 Blk256_GHZ:	binclude	"map256/GHZ.kos"
 		even
+
 Blk16_LZ:	binclude	"map16/LZ.eni"
 		even
 Nem_LZ:		binclude	"artnem/8x8 - LZ.nem"	; LZ primary patterns
 		even
 Blk256_LZ:	binclude	"map256/LZ.kos"
 		even
+
 Blk16_MZ:	binclude	"map16/MZ.eni"
 		even
 Nem_MZ:		binclude	"artnem/8x8 - MZ.nem"	; MZ primary patterns
@@ -8020,18 +7983,21 @@ Blk256_MZ:
 		binclude	"map256/MZ (JP1).kos"
 		even
 	endif
+
 Blk16_SLZ:	binclude	"map16/SLZ.eni"
 		even
 Nem_SLZ:	binclude	"artnem/8x8 - SLZ.nem"	; SLZ primary patterns
 		even
 Blk256_SLZ:	binclude	"map256/SLZ.kos"
 		even
+
 Blk16_SYZ:	binclude	"map16/SYZ.eni"
 		even
 Nem_SYZ:	binclude	"artnem/8x8 - SYZ.nem"	; SYZ primary patterns
 		even
 Blk256_SYZ:	binclude	"map256/SYZ.kos"
 		even
+
 Blk16_SBZ:	binclude	"map16/SBZ.eni"
 		even
 Nem_SBZ:	binclude	"artnem/8x8 - SBZ.nem"	; SBZ primary patterns
@@ -8044,6 +8010,7 @@ Blk256_SBZ:
 		binclude	"map256/SBZ (JP1).kos"
 		even
 	endif
+
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - bosses and ending sequence
 ; ---------------------------------------------------------------------------
@@ -8113,6 +8080,7 @@ Col_SYZ:	binclude	"collide/SYZ.bin"	; SYZ index
 		even
 Col_SBZ:	binclude	"collide/SBZ.bin"	; SBZ index
 		even
+
 ; ---------------------------------------------------------------------------
 ; Special Stage layouts
 ; ---------------------------------------------------------------------------
@@ -8137,6 +8105,7 @@ SS_5:		binclude	"sslayout/5 (JP1).eni"
 SS_6:		binclude	"sslayout/6 (JP1).eni"
 		even
 	endif
+
 ; ---------------------------------------------------------------------------
 ; Animated uncompressed graphics
 ; ---------------------------------------------------------------------------
@@ -8157,72 +8126,73 @@ Art_SbzSmoke:	binclude	"artunc/SBZ Background Smoke.bin"
 
 ; ---------------------------------------------------------------------------
 ; Level layout index
+; Format: foreground, background, leftover/unused
 ; ---------------------------------------------------------------------------
 Level_Index:
 		; GHZ
-		dc.w Level_GHZ1-Level_Index, Level_GHZbg-Level_Index, byte_68D70-Level_Index
-		dc.w Level_GHZ2-Level_Index, Level_GHZbg-Level_Index, byte_68E3C-Level_Index
-		dc.w Level_GHZ3-Level_Index, Level_GHZbg-Level_Index, byte_68F84-Level_Index
-		dc.w byte_68F88-Level_Index, byte_68F88-Level_Index, byte_68F88-Level_Index
+		dc.w Level_GHZ1-Level_Index, Level_GHZbg-Level_Index, Level_GHZ1Unk-Level_Index
+		dc.w Level_GHZ2-Level_Index, Level_GHZbg-Level_Index, Level_GHZ2Unk-Level_Index
+		dc.w Level_GHZ3-Level_Index, Level_GHZbg-Level_Index, Level_GHZ3Unk-Level_Index
+		dc.w Level_GHZ4Unk-Level_Index, Level_GHZ4Unk-Level_Index, Level_GHZ4Unk-Level_Index
 		; LZ
-		dc.w Level_LZ1-Level_Index, Level_LZbg-Level_Index, byte_69190-Level_Index
-		dc.w Level_LZ2-Level_Index, Level_LZbg-Level_Index, byte_6922E-Level_Index
-		dc.w Level_LZ3-Level_Index, Level_LZbg-Level_Index, byte_6934C-Level_Index
-		dc.w Level_SBZ3-Level_Index, Level_LZbg-Level_Index, byte_6940A-Level_Index
+		dc.w Level_LZ1-Level_Index, Level_LZbg-Level_Index, Level_LZ1Unk-Level_Index
+		dc.w Level_LZ2-Level_Index, Level_LZbg-Level_Index, Level_LZ2Unk-Level_Index
+		dc.w Level_LZ3-Level_Index, Level_LZbg-Level_Index, Level_LZ3Unk-Level_Index
+		dc.w Level_SBZ3-Level_Index, Level_LZbg-Level_Index, Level_SBZ3Unk-Level_Index
 		; MZ
 		dc.w Level_MZ1-Level_Index, Level_MZ1bg-Level_Index, Level_MZ1-Level_Index
-		dc.w Level_MZ2-Level_Index, Level_MZ2bg-Level_Index, byte_6965C-Level_Index
-		dc.w Level_MZ3-Level_Index, Level_MZ3bg-Level_Index, byte_697E6-Level_Index
-		dc.w byte_697EA-Level_Index, byte_697EA-Level_Index, byte_697EA-Level_Index
+		dc.w Level_MZ2-Level_Index, Level_MZ2bg-Level_Index, Level_MZ2Unk-Level_Index
+		dc.w Level_MZ3-Level_Index, Level_MZ3bg-Level_Index, Level_MZ3Unk-Level_Index
+		dc.w Level_MZ4Unk-Level_Index, Level_MZ4Unk-Level_Index, Level_MZ4Unk-Level_Index
 		; SLZ
-		dc.w Level_SLZ1-Level_Index, Level_SLZbg-Level_Index, byte_69B84-Level_Index
-		dc.w Level_SLZ2-Level_Index, Level_SLZbg-Level_Index, byte_69B84-Level_Index
-		dc.w Level_SLZ3-Level_Index, Level_SLZbg-Level_Index, byte_69B84-Level_Index
-		dc.w byte_69B84-Level_Index, byte_69B84-Level_Index, byte_69B84-Level_Index
+		dc.w Level_SLZ1-Level_Index, Level_SLZbg-Level_Index, Level_SLZ1Unk-Level_Index
+		dc.w Level_SLZ2-Level_Index, Level_SLZbg-Level_Index, Level_SLZ1Unk-Level_Index
+		dc.w Level_SLZ3-Level_Index, Level_SLZbg-Level_Index, Level_SLZ1Unk-Level_Index
+		dc.w Level_SLZ1Unk-Level_Index, Level_SLZ1Unk-Level_Index, Level_SLZ1Unk-Level_Index
 		; SYZ
-		dc.w Level_SYZ1-Level_Index, Level_SYZbg-Level_Index, byte_69C7E-Level_Index
-		dc.w Level_SYZ2-Level_Index, Level_SYZbg-Level_Index, byte_69D86-Level_Index
-		dc.w Level_SYZ3-Level_Index, Level_SYZbg-Level_Index, byte_69EE4-Level_Index
-		dc.w byte_69EE8-Level_Index, byte_69EE8-Level_Index, byte_69EE8-Level_Index
+		dc.w Level_SYZ1-Level_Index, Level_SYZbg-Level_Index, Level_SYZ1Unk-Level_Index
+		dc.w Level_SYZ2-Level_Index, Level_SYZbg-Level_Index, Level_SYZ2Unk-Level_Index
+		dc.w Level_SYZ3-Level_Index, Level_SYZbg-Level_Index, Level_SYZ3Unk-Level_Index
+		dc.w Level_SYZ4Unk-Level_Index, Level_SYZ4Unk-Level_Index, Level_SYZ4Unk-Level_Index
 		; SBZ
 		dc.w Level_SBZ1-Level_Index, Level_SBZ1bg-Level_Index, Level_SBZ1bg-Level_Index
 		dc.w Level_SBZ2-Level_Index, Level_SBZ2bg-Level_Index, Level_SBZ2bg-Level_Index
-		dc.w Level_SBZ2-Level_Index, Level_SBZ2bg-Level_Index, byte_6A2F8-Level_Index
-		dc.w byte_6A2FC-Level_Index, byte_6A2FC-Level_Index, byte_6A2FC-Level_Index
+		dc.w Level_SBZ2-Level_Index, Level_SBZ2bg-Level_Index, Level_SBZ2Unk-Level_Index
+		dc.w Level_SBZ4Unk-Level_Index, Level_SBZ4Unk-Level_Index, Level_SBZ4Unk-Level_Index
 		zonewarning Level_Index,24
 		; Ending
-		dc.w Level_End-Level_Index, Level_GHZbg-Level_Index, byte_6A320-Level_Index
-		dc.w Level_End-Level_Index, Level_GHZbg-Level_Index, byte_6A320-Level_Index
-		dc.w byte_6A320-Level_Index, byte_6A320-Level_Index, byte_6A320-Level_Index
-		dc.w byte_6A320-Level_Index, byte_6A320-Level_Index, byte_6A320-Level_Index
+		dc.w Level_End-Level_Index, Level_GHZbg-Level_Index, Level_EndUnk-Level_Index
+		dc.w Level_End-Level_Index, Level_GHZbg-Level_Index, Level_EndUnk-Level_Index
+		dc.w Level_EndUnk-Level_Index, Level_EndUnk-Level_Index, Level_EndUnk-Level_Index
+		dc.w Level_EndUnk-Level_Index, Level_EndUnk-Level_Index, Level_EndUnk-Level_Index
 
 Level_GHZ1:	binclude	"levels/ghz1.bin"
 		even
-byte_68D70:	dc.b 0,	0, 0, 0
+Level_GHZ1Unk:	dc.l 0
 Level_GHZ2:	binclude	"levels/ghz2.bin"
 		even
-byte_68E3C:	dc.b 0,	0, 0, 0
+Level_GHZ2Unk:	dc.l 0
 Level_GHZ3:	binclude	"levels/ghz3.bin"
 		even
 Level_GHZbg:	binclude	"levels/ghzbg.bin"
 		even
-byte_68F84:	dc.b 0,	0, 0, 0
-byte_68F88:	dc.b 0,	0, 0, 0
+Level_GHZ3Unk:	dc.l 0
+Level_GHZ4Unk:	dc.l 0
 
 Level_LZ1:	binclude	"levels/lz1.bin"
 		even
 Level_LZbg:	binclude	"levels/lzbg.bin"
 		even
-byte_69190:	dc.b 0,	0, 0, 0
+Level_LZ1Unk:	dc.l 0
 Level_LZ2:	binclude	"levels/lz2.bin"
 		even
-byte_6922E:	dc.b 0,	0, 0, 0
+Level_LZ2Unk:	dc.l 0
 Level_LZ3:	binclude	"levels/lz3.bin"
 		even
-byte_6934C:	dc.b 0,	0, 0, 0
+Level_LZ3Unk:	dc.l 0
 Level_SBZ3:	binclude	"levels/sbz3.bin"
 		even
-byte_6940A:	dc.b 0,	0, 0, 0
+Level_SBZ3Unk:	dc.l 0
 
 Level_MZ1:	binclude	"levels/mz1.bin"
 		even
@@ -8232,13 +8202,13 @@ Level_MZ2:	binclude	"levels/mz2.bin"
 		even
 Level_MZ2bg:	binclude	"levels/mz2bg.bin"
 		even
-byte_6965C:	dc.b 0,	0, 0, 0
+Level_MZ2Unk:	dc.l 0
 Level_MZ3:	binclude	"levels/mz3.bin"
 		even
 Level_MZ3bg:	binclude	"levels/mz3bg.bin"
 		even
-byte_697E6:	dc.b 0,	0, 0, 0
-byte_697EA:	dc.b 0,	0, 0, 0
+Level_MZ3Unk:	dc.l 0
+Level_MZ4Unk:	dc.l 0
 
 Level_SLZ1:	binclude	"levels/slz1.bin"
 		even
@@ -8248,7 +8218,7 @@ Level_SLZ2:	binclude	"levels/slz2.bin"
 		even
 Level_SLZ3:	binclude	"levels/slz3.bin"
 		even
-byte_69B84:	dc.b 0,	0, 0, 0
+Level_SLZ1Unk:	dc.l 0
 
 Level_SYZ1:	binclude	"levels/syz1.bin"
 		even
@@ -8259,14 +8229,14 @@ Level_SYZbg:
 		binclude	"levels/syzbg (JP1).bin"
 	endif
 		even
-byte_69C7E:	dc.b 0,	0, 0, 0
+Level_SYZ1Unk:	dc.l 0
 Level_SYZ2:	binclude	"levels/syz2.bin"
 		even
-byte_69D86:	dc.b 0,	0, 0, 0
+Level_SYZ2Unk:	dc.l 0
 Level_SYZ3:	binclude	"levels/syz3.bin"
 		even
-byte_69EE4:	dc.b 0,	0, 0, 0
-byte_69EE8:	dc.b 0,	0, 0, 0
+Level_SYZ3Unk:	dc.l 0
+Level_SYZ4Unk:	dc.l 0
 
 Level_SBZ1:	binclude	"levels/sbz1.bin"
 		even
@@ -8276,13 +8246,15 @@ Level_SBZ2:	binclude	"levels/sbz2.bin"
 		even
 Level_SBZ2bg:	binclude	"levels/sbz2bg.bin"
 		even
-byte_6A2F8:	dc.b 0,	0, 0, 0
-byte_6A2FC:	dc.b 0,	0, 0, 0
+Level_SBZ2Unk:	dc.l 0
+Level_SBZ4Unk:	dc.l 0
 Level_End:	binclude	"levels/ending.bin"
 		even
-byte_6A320:	dc.b 0,	0, 0, 0
+Level_EndUnk:	dc.l 0
 
-
+; ---------------------------------------------------------------------------
+; Uncompressed graphics - Giant Rings
+; ---------------------------------------------------------------------------
 Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 		even
 
@@ -8345,6 +8317,7 @@ ObjPosSBZPlatform_Index:
 		dc.w ObjPos_SBZ1pf5-ObjPos_Index, ObjPos_SBZ1pf6-ObjPos_Index
 		dc.w ObjPos_SBZ1pf1-ObjPos_Index, ObjPos_SBZ1pf2-ObjPos_Index
 		dc.b $FF, $FF, 0, 0, 0,	0
+
 ObjPos_GHZ1:	binclude	"objpos/ghz1.bin"
 		even
 ObjPos_GHZ2:	binclude	"objpos/ghz2.bin"
@@ -8357,6 +8330,7 @@ ObjPos_GHZ3:
 		binclude	"objpos/ghz3 (JP1).bin"
 		even
 	endif
+
 ObjPos_LZ1:
 	if Revision=0
 		binclude	"objpos/lz1.bin"
@@ -8389,6 +8363,7 @@ ObjPos_LZ3pf1:	binclude	"objpos/lz3pf1.bin"
 		even
 ObjPos_LZ3pf2:	binclude	"objpos/lz3pf2.bin"
 		even
+
 ObjPos_MZ1:
 	if Revision=0
 		binclude	"objpos/mz1.bin"
@@ -8401,6 +8376,7 @@ ObjPos_MZ2:	binclude	"objpos/mz2.bin"
 		even
 ObjPos_MZ3:	binclude	"objpos/mz3.bin"
 		even
+
 ObjPos_SLZ1:	binclude	"objpos/slz1.bin"
 		even
 ObjPos_SLZ2:	binclude	"objpos/slz2.bin"
@@ -8419,6 +8395,7 @@ ObjPos_SYZ3:
 		binclude	"objpos/syz3 (JP1).bin"
 		even
 	endif
+
 ObjPos_SBZ1:
 	if Revision=0
 		binclude	"objpos/sbz1.bin"
@@ -8443,8 +8420,10 @@ ObjPos_SBZ1pf5:	binclude	"objpos/sbz1pf5.bin"
 		even
 ObjPos_SBZ1pf6:	binclude	"objpos/sbz1pf6.bin"
 		even
+
 ObjPos_End:	binclude	"objpos/ending.bin"
 		even
+
 ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
 		; SoundDriver starts at $71990 in all revisions, which amounts
