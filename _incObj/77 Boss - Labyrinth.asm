@@ -187,8 +187,8 @@ loc_1801E:
 		move.w	#-$80,obVelY(a0)
 		tst.b	objoff_3D(a0)
 		beq.s	loc_18046
-		asl	obVelX(a0)
-		asl	obVelY(a0)
+		asl.w	obVelX(a0)
+		asl.w	obVelY(a0)
 
 loc_18046:
 		addq.b	#2,ob2ndRout(a0)

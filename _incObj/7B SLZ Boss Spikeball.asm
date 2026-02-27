@@ -290,7 +290,7 @@ loc_18FA2:
 		neg.w	obVelY(a2)
 		cmpi.b	#1,obFrame(a1)
 		bne.s	loc_18FDC
-		asr	obVelY(a2)
+		asr.w	obVelY(a2)
 
 loc_18FDC:
 		bset	#1,obStatus(a2)

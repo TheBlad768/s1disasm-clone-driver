@@ -231,7 +231,7 @@ loc_19348:
 		move.w	#-$800,obVelY(a0)
 		tst.w	objoff_36(a0)
 		bne.s	loc_19362
-		asr	obVelY(a0)
+		asr.w	obVelY(a0)
 
 loc_19362:
 		moveq	#0,d0

@@ -137,7 +137,7 @@ loc_19EA8:
 		addq.w	#2,d1
 		tst.l	d0		; is random result negative?
 		bpl.s	loc_19EC6	; if not, branch
-		exg	d1,d0		; swap, Eggman's target cylinder
+		exg.l	d1,d0		; swap, Eggman's target cylinder
 
 loc_19EC6:
 		lea	BossFinal_CylinderPairs(pc),a1

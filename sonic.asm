@@ -3206,7 +3206,7 @@ Level_MainLoop:
 		jsr	(ExecuteObjects).l
 	if Revision<>0
 		tst.w	(f_restart).w
-		bne	GM_Level
+		bne.w	GM_Level
 	endif
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.s	Level_DoScroll	; if yes, branch
@@ -6508,7 +6508,7 @@ loc_14DD0:
 		cmp.w	d0,d1
 		ble.s	loc_14DDE
 		move.b	(v_anglebuffer).w,d3
-		exg	d0,d1
+		exg.l	d0,d1
 
 loc_14DDE:
 		btst	#0,d3

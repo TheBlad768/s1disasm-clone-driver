@@ -643,7 +643,7 @@ Obj09_UPblock:
 		move.b	#$1E,objoff_36(a0)
 		btst	#6,(v_ssrotate+1).w
 		beq.s	Obj09_UPsnd
-		asl	(v_ssrotate).w	; increase stage rotation speed
+		asl.w	(v_ssrotate).w	; increase stage rotation speed
 		movea.l	objoff_32(a0),a1
 		subq.l	#1,a1
 		move.b	#$2A,(a1)	; change item to a "DOWN" block
@@ -661,7 +661,7 @@ Obj09_DOWNblock:
 		move.b	#$1E,objoff_36(a0)
 		btst	#6,(v_ssrotate+1).w
 		bne.s	Obj09_DOWNsnd
-		asr	(v_ssrotate).w	; reduce stage rotation speed
+		asr.w	(v_ssrotate).w	; reduce stage rotation speed
 		movea.l	objoff_32(a0),a1
 		subq.l	#1,a1
 		move.b	#$29,(a1)	; change item to an "UP" block
