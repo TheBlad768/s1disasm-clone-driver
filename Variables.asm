@@ -3,9 +3,11 @@
 ; Variables (v) and Flags (f)
 
     obj $FFFF0000 ;"obj" is the ASM68K equivalent of "phase"
-v_ram_start:
+v_ram_start_def:
+v_ram_start:		equ	v_ram_start_def&$FFFFFF	; 24-bit addressing
 
-v_256x256:		ds.b	$52*$200	; 256x256 tile mappings ($52 chunks)
+v_256x256_def:		ds.b	$52*chunk_size		; 256x256 tile mappings ($52 chunks)
+v_256x256:		equ	v_256x256_def&$FFFFFF	; 24-bit addressing
 v_256x256_end:
 
 v_lvllayout:		ds.b	$400		; level and background layouts
@@ -455,14 +457,14 @@ v_ram_end:
 	objend
 
 ; Special stage
-v_ssbuffer1:		equ	v_256x256
+v_ssbuffer1:		equ	v_ram_start
 v_ssblockbuffer:	equ	v_ssbuffer1+$1020 ; ($2000 bytes)
 v_ssblockbuffer_end:	equ	v_ssblockbuffer+$80*$40
-v_ssbuffer2:		equ	v_256x256+$4000
+v_ssbuffer2:		equ	v_ram_start+$4000
 v_ssblocktypes:		equ	v_ssbuffer2
 v_ssitembuffer:		equ	v_ssbuffer2+$400 ; ($100 bytes)
 v_ssitembuffer_end:	equ	v_ssitembuffer+$100
-v_ssbuffer3:		equ	v_256x256+$8000
+v_ssbuffer3:		equ	v_ram_start_def+$8000
 v_ssscroll_buffer:	equ	v_ngfx_buffer+$100
 
 	obj v_objstate

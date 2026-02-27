@@ -8,8 +8,8 @@ Size_of_SegaPCM:		equ $6978
 vdp_data_port:		equ $C00000
 vdp_control_port:	equ $C00004
 vdp_counter:		equ $C00008
-
 psg_input:		equ $C00011
+debug_reg:		equ $C0001C
 
 ; Z80 addresses
 z80_ram:		equ $A00000	; start of Z80 RAM
@@ -17,20 +17,28 @@ z80_dac3_pitch:		equ $A000EA
 z80_dac_status:		equ $A01FFD
 z80_dac_sample:		equ $A01FFF
 z80_ram_end:		equ $A02000	; end of non-reserved Z80 RAM
-z80_version:		equ $A10001
-z80_port_1_data:	equ $A10002
-z80_port_1_control:	equ $A10008
-z80_port_2_control:	equ $A1000A
-z80_expansion_control:	equ $A1000C
-z80_bus_request:	equ $A11100
-z80_reset:		equ $A11200
 ym2612_a0:		equ $A04000
 ym2612_d0:		equ $A04001
 ym2612_a1:		equ $A04002
 ym2612_d1:		equ $A04003
+z80_bus_request:	equ $A11100
+z80_reset:		equ $A11200
 
+; I/O addresses
+console_version:	equ $A10001
+port_1_data_hi:		equ $A10002
+port_1_data:		equ $A10003
+port_2_data_hi:		equ $A10004
+port_2_data:		equ $A10005
+port_1_control_hi:	equ $A10008
+port_1_control:		equ $A10009
+port_2_control_hi:	equ $A1000A
+port_2_control:		equ $A1000B
+expansion_control_hi:	equ $A1000C
+expansion_control:	equ $A1000D
+
+; Misc addresses
 sram_port:		equ $A130F1
-
 security_addr:		equ $A14000
 
 ; VRAM data
@@ -38,8 +46,10 @@ vram_fg:	equ $C000	; foreground namespace
 vram_bg:	equ $E000	; background namespace
 vram_sprites:	equ $F800	; sprite table
 vram_hscroll:	equ $FC00	; horizontal scroll table
-tile_size:	equ 8*8/2
-plane_size_64x32:	equ 64*32*2
+
+tile_size:	equ 8*8/2	; size of a single 8x8 tile
+chunk_size:	equ $200	; size of a single 256x256 chunk
+plane_size_64x32: equ 64*32*2	; size of plane in 512x256 mode
 
 ; Game modes
 id_Sega:	equ ptr_GM_Sega-GameModeArray	; $00
@@ -379,13 +389,13 @@ boss_fz_x:	equ $2450		; Final Zone
 boss_fz_y:	equ $510
 boss_fz_end:	equ boss_fz_x+$2B0
 
-
 ; Tile flags (ASM68K-specific, replaces "make_art_tile" function from AS)
 Tile_Prio:	equ	1<<15
 Tile_Pal1:	equ	0<<13
 Tile_Pal2:	equ	1<<13
 Tile_Pal3:	equ	2<<13
 Tile_Pal4:	equ	3<<13
+
 
 ; Tile VRAM Locations
 
