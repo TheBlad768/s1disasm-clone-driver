@@ -379,9 +379,9 @@ CheckSumOk:
 		move.l	#'init',(v_init).w ; set flag so checksum won't run again
 
 GameInit:
-		lea	(v_ram_start&$FFFFFF).l,a6
+		lea	(v_ram_start).l,a6
 		moveq	#0,d7
-		move.w	#(v_crossresetram-v_ram_start)/4-1,d6
+		move.w	#(v_crossresetram-v_ram_start_def)/4-1,d6
 .clearRAM:
 		move.l	d7,(a6)+
 		dbf	d6,.clearRAM	; clear RAM ($0000-$FDFF)
@@ -2147,18 +2147,18 @@ GM_Sega:
 		locVRAM	ArtTile_Sega_Tiles*tile_size
 		lea	(Nem_SegaLogo).l,a0 ; load Sega logo patterns
 		bsr.w	NemDec
-		lea	(v_256x256&$FFFFFF).l,a1
+		lea	(v_ram_start).l,a1
 		lea	(Eni_SegaLogo).l,a0 ; load Sega logo mappings
 		move.w	#make_art_tile(ArtTile_Sega_Tiles,0,FALSE),d0
 		bsr.w	EniDec
 
-		copyTilemap	v_256x256&$FFFFFF,vram_bg+$510,24,8
-		copyTilemap	(v_256x256+24*8*2)&$FFFFFF,vram_fg,40,28
+		copyTilemap	v_ram_start,vram_bg+$510,24,8
+		copyTilemap	v_ram_start+24*8*2,vram_fg,40,28
 
 	if Revision<>0
 		tst.b	(v_megadrive).w	; is console Japanese?
 		bmi.s	.loadpal
-		copyTilemap	(v_256x256+$A40)&$FFFFFF,vram_fg+$53A,3,2 ; hide "TM" with a white rectangle
+		copyTilemap	v_ram_start+$A40,vram_fg+$53A,3,2 ; hide "TM" with a white rectangle
 	endif
 
 .loadpal:
@@ -2225,12 +2225,12 @@ GM_Title:
 		locVRAM	ArtTile_Sonic_Team_Font*tile_size
 		lea	(Nem_CreditText).l,a0 ; load alphabet
 		bsr.w	NemDec
-		lea	(v_256x256&$FFFFFF).l,a1
+		lea	(v_ram_start).l,a1
 		lea	(Eni_JapNames).l,a0 ; load mappings for Japanese credits
 		move.w	#make_art_tile(ArtTile_Title_Japanese_Text,0,FALSE),d0
 		bsr.w	EniDec
 
-		copyTilemap	v_256x256&$FFFFFF,vram_fg,40,28
+		copyTilemap	v_ram_start,vram_fg,40,28
 
 		clearRAM v_palette_fading
 
@@ -2272,7 +2272,7 @@ Tit_LoadText:
 		move.w	#make_art_tile(ArtTile_Level,0,FALSE),d0
 		bsr.w	EniDec
 		lea	(Blk256_GHZ).l,a0 ; load GHZ 256x256 mappings
-		lea	(v_256x256&$FFFFFF).l,a1
+		lea	(v_256x256).l,a1
 		bsr.w	KosDec
 		bsr.w	LevelLayoutLoad
 		bsr.w	PaletteFadeOut
@@ -2284,7 +2284,7 @@ Tit_LoadText:
 		lea	(v_lvllayout+$40).w,a4
 		move.w	#$6000,d2
 		bsr.w	DrawChunks
-		lea	(v_256x256&$FFFFFF).l,a1
+		lea	(v_ram_start).l,a1 ; overwriting unused chunk RAM
 		lea	(Eni_Title).l,a0 ; load title screen mappings
 		move.w	#0,d0
 		bsr.w	EniDec
@@ -2292,9 +2292,9 @@ Tit_LoadText:
 	if FixBugs
 		; Fix title screen position
 		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Title_Screen_position_in_Sonic_1
-		copyTilemap	v_256x256&$FFFFFF,vram_fg+$208,34,22
+		copyTilemap	v_ram_start,vram_fg+$208,34,22
 	else
-		copyTilemap	v_256x256&$FFFFFF,vram_fg+$206,34,22
+		copyTilemap	v_ram_start,vram_fg+$206,34,22
 	endif
 
 		locVRAM	ArtTile_Level*tile_size
@@ -3582,12 +3582,12 @@ SS_ToLevel:
 
 
 SS_BGLoad:
-		lea	(v_ssbuffer1&$FFFFFF).l,a1
+		lea	(v_ssbuffer1).l,a1
 		lea	(Eni_SSBg1).l,a0 ; load mappings for the birds and fish
 		move.w	#make_art_tile(ArtTile_SS_Background_Fish,2,0),d0
 		bsr.w	EniDec
 		locVRAM	ArtTile_SS_Plane_1*tile_size+plane_size_64x32,d3
-		lea	((v_ssbuffer1+$80)&$FFFFFF).l,a2
+		lea	(v_ssbuffer1+$80).l,a2
 		moveq	#7-1,d7 ; $5000, $6000, $7000, $8000, $9000, $A000, $B000.
 
 loc_48BE:
@@ -3608,7 +3608,7 @@ loc_48CE:
 		cmpi.w	#6,d7
 		bne.s	loc_48F2
 
-		lea	(v_ssbuffer1&$FFFFFF).l,a1
+		lea	(v_ssbuffer1).l,a1
 
 loc_48E2:
 		movem.l	d0-d4,-(sp)
@@ -3635,12 +3635,12 @@ loc_491C:
 		adda.w	#$80,a2
 		dbf	d7,loc_48BE
 
-		lea	(v_ssbuffer1&$FFFFFF).l,a1
+		lea	(v_ssbuffer1).l,a1
 		lea	(Eni_SSBg2).l,a0 ; load mappings for the clouds
 		move.w	#make_art_tile(ArtTile_SS_Background_Clouds,2,0),d0
 		bsr.w	EniDec
-		copyTilemap	v_ssbuffer1&$FFFFFF,ArtTile_SS_Plane_5*tile_size,64,32
-		copyTilemap	v_ssbuffer1&$FFFFFF,ArtTile_SS_Plane_5*tile_size+plane_size_64x32,64,64
+		copyTilemap	v_ssbuffer1,ArtTile_SS_Plane_5*tile_size,64,32
+		copyTilemap	v_ssbuffer1,ArtTile_SS_Plane_5*tile_size+plane_size_64x32,64,64
 		rts
 ; End of function SS_BGLoad
 
@@ -4058,7 +4058,7 @@ End_LoadData:
 		move.l	#Col_GHZ,(v_collindex).w ; load collision index
 		enable_ints
 		lea	(Kos_EndFlowers).l,a0 ; load extra flower patterns
-		lea	(v_256x256_end-$1000).w,a1 ; RAM address to buffer the patterns
+		lea	(v_256x256+$4A*chunk_size).w,a1 ; RAM address to buffer the patterns (overwriting unused chunk RAM)
 		bsr.w	KosDec
 		moveq	#palid_Sonic,d0
 		bsr.w	PalLoad_Fade	; load Sonic's palette
@@ -4459,7 +4459,7 @@ LevelDataLoad:
 		move.w	#make_art_tile(ArtTile_Level,0,FALSE),d0
 		bsr.w	EniDec
 		movea.l	(a2)+,a0
-		lea	(v_256x256&$FFFFFF).l,a1 ; RAM address for 256x256 mappings
+		lea	(v_256x256).l,a1 ; RAM address for 256x256 mappings
 		bsr.w	KosDec
 		bsr.w	LevelLayoutLoad
 		move.w	(a2)+,d0
@@ -7009,7 +7009,7 @@ loc_1B1C0:
 		dbf	d7,loc_1B19E
 
 		move.w	(sp)+,d5
-		lea	(v_ssbuffer1&$FFFFFF).l,a0
+		lea	(v_ssbuffer1).l,a0
 		moveq	#0,d0
 		move.w	(v_screenposy).w,d0
 		divu.w	#$18,d0
@@ -7043,7 +7043,7 @@ loc_1B210:
 		blo.s	loc_1B268
 		cmpi.w	#$170,d2
 		bhs.s	loc_1B268
-		lea	(v_ssblocktypes&$FFFFFF).l,a5
+		lea	(v_ssblocktypes).l,a5
 		lsl.w	#3,d0
 		lea	(a5,d0.w),a5
 		movea.l	(a5)+,a1
@@ -7084,7 +7084,7 @@ loc_1B288:
 
 
 SS_AniWallsRings:
-		lea	((v_ssblocktypes+$C)&$FFFFFF).l,a1
+		lea	(v_ssblocktypes+$C).l,a1
 		moveq	#0,d0
 		move.b	(v_ssangle).w,d0
 		lsr.b	#2,d0
@@ -7096,7 +7096,7 @@ loc_1B2A4:
 		addq.w	#8,a1
 		dbf	d1,loc_1B2A4
 
-		lea	((v_ssblocktypes+5)&$FFFFFF).l,a1
+		lea	(v_ssblocktypes+5).l,a1
 		subq.b	#1,(v_ani1_time).w
 		bpl.s	loc_1B2C8
 		move.b	#7,(v_ani1_time).w
@@ -7142,7 +7142,7 @@ loc_1B326:
 		andi.b	#7,(v_ani0_frame).w
 
 loc_1B350:
-		lea	((v_ssblocktypes+$16)&$FFFFFF).l,a1
+		lea	(v_ssblocktypes+$16).l,a1
 		lea	(SS_WaRiVramSet).l,a0
 		moveq	#0,d0
 		move.b	(v_ani0_frame).w,d0
@@ -7208,7 +7208,7 @@ SS_WaRiVramSet:	dc.w $142, $6142, $142,	$142, $142, $142, $142,	$6142
 
 
 SS_RemoveCollectedItem:
-		lea	(v_ssitembuffer&$FFFFFF).l,a2
+		lea	(v_ssitembuffer).l,a2
 		move.w	#(v_ssitembuffer_end-v_ssitembuffer)/8-1,d0
 
 loc_1B4C4:
@@ -7229,7 +7229,7 @@ locret_1B4CE:
 
 
 SS_AniItems:
-		lea	(v_ssitembuffer&$FFFFFF).l,a0
+		lea	(v_ssitembuffer).l,a0
 		move.w	#(v_ssitembuffer_end-v_ssitembuffer)/8-1,d7
 
 loc_1B4DA:
@@ -7450,12 +7450,12 @@ SS_LoadData:
 
 		; Load layout data
 		movea.l	SS_LayoutIndex(pc,d0.w),a0
-		lea	(v_ssbuffer2&$FFFFFF).l,a1
+		lea	(v_ssbuffer2).l,a1
 		move.w	#make_art_tile(ArtTile_SS_Background_Clouds,0,FALSE),d0
 		jsr	(EniDec).l
 
 		; Clear everything from v_ssbuffer1 to v_ssbuffer2
-		lea	(v_ssbuffer1&$FFFFFF).l,a1
+		lea	(v_ssbuffer1).l,a1
 		move.w	#(v_ssbuffer2-v_ssbuffer1)/4-1,d0
 
 SS_ClrRAM3:
@@ -7464,8 +7464,8 @@ SS_ClrRAM3:
 
 		; Copy $1000 of data from v_ssbuffer2 to v_ssblockbuffer,
 		; inserting $40 bytes of padding for every $40 bytes copied.
-		lea	(v_ssblockbuffer&$FFFFFF).l,a1
-		lea	(v_ssbuffer2&$FFFFFF).l,a0
+		lea	(v_ssblockbuffer).l,a1
+		lea	(v_ssbuffer2).l,a0
 		moveq	#(v_ssblockbuffer_end-v_ssblockbuffer)/$80-1,d1
 
 loc_1B6F6:
@@ -7478,7 +7478,7 @@ loc_1B6F8:
 		lea	$40(a1),a1
 		dbf	d1,loc_1B6F6
 
-		lea	((v_ssblocktypes+8)&$FFFFFF).l,a1
+		lea	(v_ssblocktypes+8).l,a1
 		lea	(SS_MapIndex).l,a0
 		moveq	#(SS_MapIndex_End-SS_MapIndex)/6-1,d1
 
@@ -7489,7 +7489,7 @@ loc_1B714:
 		move.w	(a0)+,(a1)+
 		dbf	d1,loc_1B714
 
-		lea	(v_ssitembuffer&$FFFFFF).l,a1
+		lea	(v_ssitembuffer).l,a1
 		move.w	#(v_ssitembuffer_end-v_ssitembuffer)/4-1,d1
 
 loc_1B730:

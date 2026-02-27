@@ -381,7 +381,7 @@ loc_1BCD4:
 
 
 sub_1BCE8:
-		lea	(v_ssbuffer1&$FFFFFF).l,a1
+		lea	(v_ssbuffer1).l,a1
 		moveq	#0,d4
 		swap	d2
 		move.w	d2,d4
@@ -440,7 +440,7 @@ loc_1BD46:
 
 
 Obj09_ChkItems:
-		lea	(v_ssbuffer1&$FFFFFF).l,a1
+		lea	(v_ssbuffer1).l,a1
 		moveq	#0,d4
 		move.w	obY(a0),d4
 		addi.w	#$50,d4
@@ -547,7 +547,7 @@ Obj09_NoGhost:
 Obj09_MakeGhostSolid:
 		cmpi.b	#2,objoff_3A(a0)	; is the ghost marked as "solid"?
 		bne.s	Obj09_GhostNotSolid ; if not, branch
-		lea	(v_ssblockbuffer&$FFFFFF).l,a1
+		lea	(v_ssblockbuffer).l,a1
 		moveq	#(v_ssblockbuffer_end-v_ssblockbuffer)/$80-1,d1
 
 Obj09_GhostLoop2:

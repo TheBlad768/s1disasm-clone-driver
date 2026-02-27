@@ -51,8 +51,10 @@ vram_fg:	equ $C000	; foreground namespace
 vram_bg:	equ $E000	; background namespace
 vram_sprites:	equ $F800	; sprite table
 vram_hscroll:	equ $FC00	; horizontal scroll table
-tile_size:	equ 8*8/2
-plane_size_64x32:	equ 64*32*2
+
+tile_size:	equ 8*8/2	; size of a single 8x8 tile
+chunk_size:	equ $200	; size of a single 256x256 chunk
+plane_size_64x32: equ 64*32*2	; size of plane in 512x256 mode
 
 ; Game modes
 id_Sega:	equ ptr_GM_Sega-GameModeArray	; $00
@@ -392,13 +394,13 @@ boss_fz_x:	equ $2450		; Final Zone
 boss_fz_y:	equ $510
 boss_fz_end:	equ boss_fz_x+$2B0
 
-
 ; Tile flags (ASM68K-specific, replaces "make_art_tile" function from AS, added here for cross-compatibility)
 Tile_Prio:	equ	1<<15
 Tile_Pal1:	equ	0<<13
 Tile_Pal2:	equ	1<<13
 Tile_Pal3:	equ	2<<13
 Tile_Pal4:	equ	3<<13
+
 
 ; Tile VRAM Locations
 
