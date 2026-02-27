@@ -176,8 +176,8 @@ React_Enemy:
 
 		neg.w	obVelX(a0)	; repel Sonic
 		neg.w	obVelY(a0)
-		asr	obVelX(a0)
-		asr	obVelY(a0)
+		asr.w	obVelX(a0)
+		asr.w	obVelY(a0)
 		move.b	#0,obColType(a1)
 		subq.b	#1,obColProp(a1)
 		bne.s	.flagnotclear
@@ -336,7 +336,13 @@ KillSonic:
 		move.w	#-$700,obVelY(a0)
 		move.w	#0,obVelX(a0)
 		move.w	#0,obInertia(a0)
+	if FixBugs=0
+		; Leftover line from the prototype, where objoff_38 was used to respawn Sonic at his last y position.
+		; sticktoconvex gets overwritten with the high byte of Sonic's y position.
+		; It is made redundant as Sonic doesn't react to solids when he dies.
+		; It was removed in the CENSOR prototype of Sonic 2 onwards.
 		move.w	obY(a0),objoff_38(a0)
+	endif
 		move.b	#id_Death,obAnim(a0)
 		bset	#7,obGfx(a0)
 	if FixBugs

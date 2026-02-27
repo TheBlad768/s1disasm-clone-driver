@@ -74,7 +74,7 @@ Circ_Types:
 		btst	#1,obSubtype(a0)
 		beq.s	.noshift00b
 		neg.w	d1
-		exg	d1,d2
+		exg.l	d1,d2
 
 .noshift00b:
 		add.w	circ_origX(a0),d1
@@ -100,7 +100,7 @@ Circ_Types:
 		btst	#1,obSubtype(a0)
 		beq.s	.noshift04b
 		neg.w	d1
-		exg	d1,d2
+		exg.l	d1,d2
 
 .noshift04b:
 		neg.w	d1
