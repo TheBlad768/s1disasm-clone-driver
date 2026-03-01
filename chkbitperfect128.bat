@@ -4,6 +4,8 @@ setlocal EnableDelayedExpansion
 REM // To easily verify that merging the main AS branch doesn't break Project128. "Revision" must be set to 1.
 REM // If engine changes are made to this branch, be sure to update the hash in this script!
 
+call build
+
 if exist s1built.bin (
 	REM // Hash the ROM.
 	for /f "tokens=1" %%H in ('
@@ -15,7 +17,7 @@ if exist s1built.bin (
 	if /I "!HASH!"=="E925D91813F9290816F4DC986630F342" (
 		echo ROM is bit-perfect with latest stable Project1TwoEight build.
 	) else (
-		echo ROM is NOT bit-perfect with REV00, REV01, or REVXB!
+		echo ROM is NOT bit-perfect with latest stable Project1TwoEight build!
 	)
 )
 
