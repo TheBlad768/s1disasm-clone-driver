@@ -203,7 +203,7 @@ jcc:		macro loc
 		endm
 
 jhs:		macro loc
-		jcc	loc
+		jcc	\loc
 		endm
 
 jls:		macro loc
@@ -219,7 +219,7 @@ jcs:		macro loc
 		endm
 
 jlo:		macro loc
-		jcs	loc
+		jcs	\loc
 		endm
 
 jeq:		macro loc
