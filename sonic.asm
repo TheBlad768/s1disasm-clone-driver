@@ -5521,7 +5521,7 @@ loc_D37C:
 ; ---------------------------------------------------------------------------
 ; Object pointers
 ; ---------------------------------------------------------------------------
-Obj_Index:
+; Obj_Index:
 		include	"_inc/Object Pointers.asm"
 
 		include	"_incObj/sub ObjectFall.asm"
