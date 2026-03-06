@@ -1444,7 +1444,13 @@ Sonic_HurtStop:
 	endif
 		addi.w	#224,d0
 		cmp.w	obY(a0),d0
+	if FixBugs
+		blt.w	KillSonic
+	else
+		; This would cause Sonic to die from the
+		; upper/top boundary of the level, while in hurt state.
 		blo.w	KillSonic
+	endif
 		bsr.w	Sonic_Floor
 		btst	#1,obStatus(a0)
 		bne.s	locret_13860
