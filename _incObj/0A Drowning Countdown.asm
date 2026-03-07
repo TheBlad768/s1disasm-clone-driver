@@ -9,27 +9,18 @@ DrownCount:
 		move.w	Drown_Index(pc,d0.w),d1
 		jmp	Drown_Index(pc,d1.w)
 ; ===========================================================================
-Drown_Index:
-ptr_Drown_Main:		dc.w Drown_Main-Drown_Index
-ptr_Drown_Animate:	dc.w Drown_Animate-Drown_Index
-ptr_Drown_ChkWater:	dc.w Drown_ChkWater-Drown_Index
-ptr_Drown_Display:	dc.w Drown_Display-Drown_Index
-ptr_Drown_Delete:	dc.w Drown_Delete-Drown_Index
-ptr_Drown_Countdown:	dc.w Drown_Countdown-Drown_Index
-ptr_Drown_AirLeft:	dc.w Drown_AirLeft-Drown_Index
-			dc.w Drown_Display-Drown_Index
-			dc.w Drown_Delete-Drown_Index
+Drown_Index:	dc.w Drown_Main-Drown_Index
+		dc.w Drown_Animate-Drown_Index
+		dc.w Drown_ChkWater-Drown_Index
+		dc.w Drown_Display-Drown_Index
+		dc.w Drown_Delete-Drown_Index
+		dc.w Drown_Countdown-Drown_Index
+		dc.w Drown_AirLeft-Drown_Index
+		dc.w Drown_Display-Drown_Index
+		dc.w Drown_Delete-Drown_Index
 
 drown_origX = objoff_30		; original x-axis position
 drown_time = objoff_38		; time between each number changes
-
-id_Drown_Main = ptr_Drown_Main-Drown_Index		; 0
-id_Drown_Animate = ptr_Drown_Animate-Drown_Index		; 2
-id_Drown_ChkWater = ptr_Drown_ChkWater-Drown_Index	; 4
-id_Drown_Display = ptr_Drown_Display-Drown_Index		; 6
-id_Drown_Delete = ptr_Drown_Delete-Drown_Index		; 8
-id_Drown_Countdown = ptr_Drown_Countdown-Drown_Index	; $A
-id_Drown_AirLeft = ptr_Drown_AirLeft-Drown_Index		; $C
 ; ===========================================================================
 
 Drown_Main:	; Routine 0
@@ -64,7 +55,7 @@ Drown_ChkWater:	; Routine 4
 		cmp.w	obY(a0),d0	; has bubble reached the water surface?
 		blo.s	.wobble		; if not, branch
 
-		move.b	#id_Drown_Display,obRoutine(a0) ; goto Drown_Display next
+		move.b	#6,obRoutine(a0) ; goto Drown_Display next
 		addq.b	#7,obAnim(a0)
 		cmpi.b	#$D,obAnim(a0)
 		beq.s	Drown_Display
@@ -111,7 +102,7 @@ Drown_AirLeft:	; Routine $C
 		bhi.s	Drown_AirLeft_Delete		; if higher than $C, branch
 		subq.w	#1,drown_time(a0)
 		bne.s	.display
-		move.b	#id_Drown_Display+8,obRoutine(a0) ; goto Drown_Display next
+		move.b	#6+8,obRoutine(a0) ; goto Drown_Display next (second one)
 		addq.b	#7,obAnim(a0)
 		bra.s	Drown_Display
 ; ===========================================================================
@@ -146,7 +137,7 @@ Drown_ShowNumber:
 		sub.w	(v_screenposy).w,d0
 		addi.w	#$80,d0
 		move.w	d0,obScreenY(a0)
-		move.b	#id_Drown_AirLeft,obRoutine(a0) ; goto Drown_AirLeft next
+		move.b	#$C,obRoutine(a0) ; goto Drown_AirLeft next
 
 .nonumber:
 		rts
