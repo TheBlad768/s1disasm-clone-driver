@@ -299,10 +299,10 @@ PLC_Signpost_end:
 ; ---------------------------------------------------------------------------
 PLC_Warp:
 	if Revision=0
-		plcheader
+PLC_WarpRev0:	plcheader
 		plcm	Nem_Warp,	ArtTile_Warp
+PLC_WarpRev0_end:
 	endif
-PLC_Warp_end:
 
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - special stage
