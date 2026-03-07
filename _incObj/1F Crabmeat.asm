@@ -8,18 +8,11 @@ Crabmeat:
 		move.w	Crab_Index(pc,d0.w),d1
 		jmp	Crab_Index(pc,d1.w)
 ; ===========================================================================
-Crab_Index:
-ptr_Crab_Main:		dc.w Crab_Main-Crab_Index
-ptr_Crab_Action:	dc.w Crab_Action-Crab_Index
-ptr_Crab_Delete:	dc.w Crab_Delete-Crab_Index
-ptr_Crab_BallMain:	dc.w Crab_BallMain-Crab_Index
-ptr_Crab_BallMove:	dc.w Crab_BallMove-Crab_Index
-
-id_Crab_Main = ptr_Crab_Main-Crab_Index	; 0
-id_Crab_Action = ptr_Crab_Action-Crab_Index	; 2
-id_Crab_Delete = ptr_Crab_Delete-Crab_Index	; 4
-id_Crab_BallMain = ptr_Crab_BallMain-Crab_Index	; 6
-id_Crab_BallMove = ptr_Crab_BallMove-Crab_Index	; 8
+Crab_Index:	dc.w Crab_Main-Crab_Index
+		dc.w Crab_Action-Crab_Index
+		dc.w Crab_Delete-Crab_Index
+		dc.w Crab_BallMain-Crab_Index
+		dc.w Crab_BallMove-Crab_Index
 
 crab_timedelay = objoff_30
 crab_mode = objoff_32
@@ -90,7 +83,7 @@ Crab_Action:	; Routine 2
 		bsr.w	FindFreeObj
 		bne.s	.failleft
 		_move.b	#id_Crabmeat,obID(a1) ; load left fireball
-		move.b	#id_Crab_BallMain,obRoutine(a1)
+		move.b	#6,obRoutine(a1) ; set to Crab_BallMain
 		move.w	obX(a0),obX(a1)
 		subi.w	#$10,obX(a1)
 		move.w	obY(a0),obY(a1)
@@ -100,7 +93,7 @@ Crab_Action:	; Routine 2
 		bsr.w	FindFreeObj
 		bne.s	.failright
 		_move.b	#id_Crabmeat,obID(a1) ; load right fireball
-		move.b	#id_Crab_BallMain,obRoutine(a1)
+		move.b	#6,obRoutine(a1) ; set to Crab_BallMain
 		move.w	obX(a0),obX(a1)
 		addi.w	#$10,obX(a1)
 		move.w	obY(a0),obY(a1)
