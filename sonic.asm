@@ -5133,6 +5133,7 @@ Map_Card:	mappingsTable
 	mappingsTableEntry.w	M_Card_SLZ	; Star Light Zone
 	mappingsTableEntry.w	M_Card_SYZ	; Spring Yard Zone
 	mappingsTableEntry.w	M_Card_SBZ	; Scrap Brain Zone
+	zonewarning Map_Card,2
 	mappingsTableEntry.w	M_Card_Zone	; "ZONE" text
 	mappingsTableEntry.w	M_Card_Act1	; Act number 1
 	mappingsTableEntry.w	M_Card_Act2	; Act number 2
