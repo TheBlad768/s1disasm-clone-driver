@@ -21,3 +21,7 @@ You assume any and all responsibility for using this content responsibly. Sonic 
 Check out the Sonic Retro Disassembly:
 
 - https://github.com/sonicretro/s1disasm
+
+## Links
+
+[![Hypercommit](https://img.shields.io/badge/Hypercommit-DB2475)](https://hypercommit.com/s1disasm-clone-driver)
