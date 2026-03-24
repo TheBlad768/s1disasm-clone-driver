@@ -2,7 +2,7 @@
 ; Oscillating number subroutines
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; Initialise the values
 
@@ -14,7 +14,7 @@ OscillateNumInit:
 .loop:
 		move.w	(a2)+,(a1)+	; copy baseline values to RAM
 		dbf	d1,.loop
-		rts	
+		rts
 
 
 ; ===========================================================================
@@ -37,7 +37,7 @@ OscillateNumInit:
 		dc.w $80, 0
 		even
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; Oscillate values
 
@@ -80,7 +80,7 @@ OscillateNumDo:
 		move.w	d3,(v_oscillate).w
 
 .end:
-		rts	
+		rts
 ; End of function OscillateNumDo
 
 ; ===========================================================================

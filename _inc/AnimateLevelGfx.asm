@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	animate	level graphics
+; Subroutine to animate level graphics
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 AnimateLevelGfx:
@@ -17,7 +17,7 @@ AnimateLevelGfx:
 		jmp	AniArt_Index(pc,d0.w)
 
 .ispaused:
-		rts	
+		rts
 
 ; ===========================================================================
 AniArt_Index:	dc.w AniArt_GHZ-AniArt_Index, AniArt_none-AniArt_Index
@@ -39,7 +39,7 @@ AniArt_GHZ_Waterfall:
 		subq.b	#1,(v_lani0_time).w ; decrement timer
 		bpl.s	AniArt_GHZ_Bigflower ; branch if not 0
 
-		move.b	#5,(v_lani0_time).w ; time to display each frame
+		move.b	#6-1,(v_lani0_time).w ; time to display each frame
 		lea	(Art_GhzWater).l,a1 ; load waterfall patterns
 		move.b	(v_lani0_frame).w,d0
 		addq.b	#1,(v_lani0_frame).w ; increment frame counter
@@ -49,7 +49,7 @@ AniArt_GHZ_Waterfall:
 
 .isframe0:
 		locVRAM	ArtTile_GHZ_Waterfall*tile_size		; VRAM address
-		move.w	#.size-1,d1	; number of 8x8	tiles
+		move.w	#.size-1,d1	; number of 8x8 tiles
 		bra.w	LoadTiles
 ; ===========================================================================
 
@@ -60,8 +60,8 @@ AniArt_GHZ_Bigflower:
 		subq.b	#1,(v_lani1_time).w
 		bpl.s	AniArt_GHZ_Smallflower
 
-		move.b	#$F,(v_lani1_time).w
-		lea	(Art_GhzFlower1).l,a1 ;	load big flower	patterns
+		move.b	#$10-1,(v_lani1_time).w
+		lea	(Art_GhzFlower1).l,a1 ; load big flower patterns
 		move.b	(v_lani1_frame).w,d0
 		addq.b	#1,(v_lani1_frame).w
 		andi.w	#1,d0
@@ -81,7 +81,7 @@ AniArt_GHZ_Smallflower:
 		subq.b	#1,(v_lani2_time).w
 		bpl.s	.end
 
-		move.b	#7,(v_lani2_time).w
+		move.b	#8-1,(v_lani2_time).w
 		move.b	(v_lani2_frame).w,d0
 		addq.b	#1,(v_lani2_frame).w ; increment frame counter
 		andi.w	#3,d0		; there are 4 frames
@@ -96,13 +96,13 @@ AniArt_GHZ_Smallflower:
 		add.w	d0,d0
 		add.w	d1,d0		; multiply that by 3 (i.e. frame num times 12 * $20)
 		locVRAM	ArtTile_GHZ_Small_Flower*tile_size
-		lea	(Art_GhzFlower2).l,a1 ;	load small flower patterns
+		lea	(Art_GhzFlower2).l,a1 ; load small flower patterns
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#.size-1,d1
 		bsr.w	LoadTiles
 
 .end:
-		rts	
+		rts
 
 .sequence:	dc.b 0,	1, 2, 1
 ; ===========================================================================
@@ -119,7 +119,7 @@ AniArt_MZ_Lava:
 		subq.b	#1,(v_lani0_time).w ; decrement timer
 		bpl.s	AniArt_MZ_Magma	; branch if not 0
 
-		move.b	#$13,(v_lani0_time).w ; time to display each frame
+		move.b	#$14-1,(v_lani0_time).w ; time to display each frame
 		lea	(Art_MzLava1).l,a1 ; load lava surface patterns
 		moveq	#0,d0
 		move.b	(v_lani0_frame).w,d0
@@ -140,7 +140,7 @@ AniArt_MZ_Magma:
 		subq.b	#1,(v_lani1_time).w ; decrement timer
 		bpl.s	AniArt_MZ_Torch	; branch if not 0
 		
-		move.b	#1,(v_lani1_time).w ; time between each gfx change
+		move.b	#2-1,(v_lani1_time).w ; time between each gfx change
 		moveq	#0,d0
 		move.b	(v_lani0_frame).w,d0 ; get surface lava frame number
 		lea	(Art_MzLava2).l,a4 ; load magma gfx
@@ -165,7 +165,7 @@ AniArt_MZ_Magma:
 		jsr	(a3)
 		addq.w	#4,d3
 		dbf	d2,.loop
-		rts	
+		rts
 ; ===========================================================================
 
 AniArt_MZ_Torch:
@@ -175,8 +175,8 @@ AniArt_MZ_Torch:
 		subq.b	#1,(v_lani2_time).w ; decrement timer
 		bpl.w	.end		; branch if not 0
 		
-		move.b	#7,(v_lani2_time).w ; time to display each frame
-		lea	(Art_MzTorch).l,a1 ; load torch	patterns
+		move.b	#8-1,(v_lani2_time).w ; time to display each frame
+		lea	(Art_MzTorch).l,a1 ; load torch patterns
 		moveq	#0,d0
 		move.b	(v_lani3_frame).w,d0
 		addq.b	#1,(v_lani3_frame).w ; increment frame counter
@@ -188,7 +188,7 @@ AniArt_MZ_Torch:
 		bra.w	LoadTiles
 
 .end:
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Animated pattern routine - Scrap Brain
@@ -209,7 +209,7 @@ AniArt_SBZ:
 		subq.b	#1,(v_lani0_time).w ; decrement timer
 		bpl.s	.chk_smokepuff2 ; branch if not 0
 		
-		move.b	#7,(v_lani0_time).w ; time to display each frame
+		move.b	#8-1,(v_lani0_time).w ; time to display each frame
 		lea	(Art_SbzSmoke).l,a1 ; load smoke patterns
 		locVRAM	ArtTile_SBZ_Smoke_Puff_1*tile_size
 		move.b	(v_lani0_frame).w,d0
@@ -246,7 +246,7 @@ AniArt_SBZ:
 		subq.b	#1,(v_lani1_time).w ; decrement timer
 		bpl.s	.end		; branch if not 0
 		
-		move.b	#7,(v_lani1_time).w ; time to display each frame
+		move.b	#8-1,(v_lani1_time).w ; time to display each frame
 		lea	(Art_SbzSmoke).l,a1 ; load smoke patterns
 		locVRAM	ArtTile_SBZ_Smoke_Puff_2*tile_size
 		move.b	(v_lani1_frame).w,d0
@@ -266,7 +266,7 @@ AniArt_SBZ:
 ; ===========================================================================
 
 .end:
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Animated pattern routine - ending sequence
@@ -281,9 +281,9 @@ AniArt_Ending_BigFlower:
 		subq.b	#1,(v_lani1_time).w ; decrement timer
 		bpl.s	AniArt_Ending_SmallFlower ; branch if not 0
 		
-		move.b	#7,(v_lani1_time).w
-		lea	(Art_GhzFlower1).l,a1 ;	load big flower	patterns
-		lea	(v_256x256_end-$1000).w,a2 ; load 2nd big flower from RAM
+		move.b	#8-1,(v_lani1_time).w
+		lea	(Art_GhzFlower1).l,a1 ; load big flower patterns
+		lea	(v_256x256+$4A*chunk_size).w,a2 ; load 2nd big flower from RAM (overwriting unused chunk RAM)
 		move.b	(v_lani1_frame).w,d0
 		addq.b	#1,(v_lani1_frame).w ; increment frame counter
 		andi.w	#1,d0		; only 2 frames
@@ -308,7 +308,7 @@ AniArt_Ending_SmallFlower:
 		subq.b	#1,(v_lani2_time).w ; decrement timer
 		bpl.s	AniArt_Ending_Flower3 ; branch if not 0
 		
-		move.b	#7,(v_lani2_time).w
+		move.b	#8-1,(v_lani2_time).w
 		move.b	(v_lani2_frame).w,d0
 		addq.b	#1,(v_lani2_frame).w ; increment frame counter
 		andi.w	#7,d0		; max 8 frames
@@ -318,7 +318,7 @@ AniArt_Ending_SmallFlower:
 		add.w	d0,d0
 		add.w	d1,d0		; multiply by 3
 		locVRAM	ArtTile_GHZ_Small_Flower*tile_size
-		lea	(Art_GhzFlower2).l,a1 ;	load small flower patterns
+		lea	(Art_GhzFlower2).l,a1 ; load small flower patterns
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
@@ -333,7 +333,7 @@ AniArt_Ending_Flower3:
 		subq.b	#1,(v_lani4_time).w ; decrement timer
 		bpl.s	AniArt_Ending_Flower4 ; branch if not 0
 		
-		move.b	#$E,(v_lani4_time).w
+		move.b	#$F-1,(v_lani4_time).w
 		move.b	(v_lani4_frame).w,d0
 		addq.b	#1,(v_lani4_frame).w ; increment frame counter
 		andi.w	#3,d0		; max 4 frames
@@ -341,7 +341,7 @@ AniArt_Ending_Flower3:
 		lsl.w	#8,d0		; multiply by $100
 		add.w	d0,d0		; multiply by 2
 		locVRAM	ArtTile_GHZ_Flower_3*tile_size
-		lea	(v_256x256_end-$1000+$400).w,a1 ; load	special	flower patterns	(from RAM)
+		lea	(v_256x256+$4C*chunk_size).w,a1 ; load special flower patterns from RAM (overwriting unused chunk RAM)
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
@@ -356,7 +356,7 @@ AniArt_Ending_Flower4:
 		subq.b	#1,(v_lani5_time).w ; decrement timer
 		bpl.s	.end		; branch if not 0
 		
-		move.b	#$B,(v_lani5_time).w
+		move.b	#$C-1,(v_lani5_time).w
 		move.b	(v_lani5_frame).w,d0
 		addq.b	#1,(v_lani5_frame).w ; increment frame counter
 		andi.w	#3,d0
@@ -364,29 +364,29 @@ AniArt_Ending_Flower4:
 		lsl.w	#8,d0		; multiply by $100
 		add.w	d0,d0		; multiply by 2
 		locVRAM	ArtTile_GHZ_Flower_4*tile_size
-		lea	(v_256x256_end-$1000+$A00).w,a1 ; load	special	flower patterns	(from RAM)
+		lea	(v_256x256+$4F*chunk_size).w,a1 ; load special flower patterns from RAM (overwriting unused chunk RAM)
 		lea	(a1,d0.w),a1	; jump to appropriate tile
 		move.w	#.size-1,d1
 		bra.w	LoadTiles
 ; ===========================================================================
 
 .end:
-		rts	
+		rts
 ; ===========================================================================
 
 AniArt_none:
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	transfer graphics to VRAM
+; Subroutine to transfer graphics to VRAM
 
 ; input:
-;	a1 = source address
-;	a6 = vdp_data_port ($C00000)
-;	d1 = number of tiles to load (minus one)
+; a1 = source address
+; a6 = vdp_data_port ($C00000)
+; d1 = number of tiles to load (minus one)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LoadTiles:
@@ -399,7 +399,7 @@ LoadTiles:
 		move.l	(a1)+,(a6)
 		move.l	(a1)+,(a6)
 		dbf	d1,LoadTiles
-		rts	
+		rts
 ; End of function LoadTiles
 
 ; ===========================================================================
@@ -420,7 +420,7 @@ loc_1C3EE:
 		move.l	(a1),(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C3EE
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C3FA:
@@ -430,14 +430,14 @@ loc_1C3FA:
 		move.l	d0,(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C3FA
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C410:
 		move.l	2(a1),(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C410
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C41E:
@@ -447,14 +447,14 @@ loc_1C41E:
 		move.l	d0,(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C41E
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C434:
 		move.l	4(a1),(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C434
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C442:
@@ -464,14 +464,14 @@ loc_1C442:
 		move.l	d0,(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C442
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C458:
 		move.l	6(a1),(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C458
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C466:
@@ -481,14 +481,14 @@ loc_1C466:
 		move.l	d0,(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C466
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C47C:
 		move.l	8(a1),(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C47C
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C48A:
@@ -498,14 +498,14 @@ loc_1C48A:
 		move.l	d0,(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C48A
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C4A0:
 		move.l	$A(a1),(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C4A0
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C4AE:
@@ -515,14 +515,14 @@ loc_1C4AE:
 		move.l	d0,(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C4AE
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C4C4:
 		move.l	$C(a1),(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C4C4
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C4D2:
@@ -532,7 +532,7 @@ loc_1C4D2:
 		move.l	d0,(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C4D2
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C4E8:
@@ -540,7 +540,7 @@ loc_1C4E8:
 		_move.w	0(a1),(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C4E8
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1C4FA:
@@ -550,13 +550,13 @@ loc_1C4FA:
 		move.l	d0,(a6)
 		lea	$10(a1),a1
 		dbf	d1,loc_1C4FA
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Animated pattern routine - giant ring
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 AniArt_GiantRing:
@@ -565,12 +565,12 @@ AniArt_GiantRing:
 
 		tst.w	(v_gfxbigring).w	; Is there any of the art left to load?
 		bne.s	.loadTiles		; If so, get to work
-		rts	
+		rts
 ; ===========================================================================
 ; loc_1C518:
 .loadTiles:
 		subi.w	#.size*tile_size,(v_gfxbigring).w	; Count-down the 14 tiles we're going to load now
-		lea	(Art_BigRing).l,a1 ; load giant	ring patterns
+		lea	(Art_BigRing).l,a1 ; load giant ring patterns
 		moveq	#0,d0
 		move.w	(v_gfxbigring).w,d0
 		lea	(a1,d0.w),a1

@@ -1,6 +1,6 @@
 ; ---------------------------------------------------------------------------
 ; Object 1D - switch that activates when Sonic touches it
-; (this	is not used anywhere in	the game)
+; (this is not used anywhere in the game)
 ; ---------------------------------------------------------------------------
 
 MagicSwitch:
@@ -31,25 +31,25 @@ Swi_Action:	; Routine 2
 		bsr.w	Swi_ChkTouch	; check if Sonic touches the switch
 		beq.s	Swi_ChkDel	; if not, branch
 
-		addq.w	#2,obY(a0)	; move object 2	pixels
+		addq.w	#2,obY(a0)	; move object 2 pixels
 		moveq	#1,d0
 		move.w	d0,(f_switch).w	; set switch 0 as "pressed"
 
 Swi_ChkDel:
 		bsr.w	DisplaySprite
 		out_of_range.w	Swi_Delete
-		rts	
+		rts
 ; ===========================================================================
 
 Swi_Delete:	; Routine 4
 		bsr.w	DeleteObject
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	check if Sonic touches the object
+; Subroutine to check if Sonic touches the object
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Swi_ChkTouch:
@@ -72,10 +72,10 @@ Swi_ChkTouch:
 		cmpi.w	#-$10,d0
 		blo.s	Swi_NoTouch
 		moveq	#-1,d0		; Sonic has touched it
-		rts	
+		rts
 ; ===========================================================================
 
 Swi_NoTouch:
 		moveq	#0,d0		; Sonic hasn't touched it
-		rts	
+		rts
 ; End of function Swi_ChkTouch

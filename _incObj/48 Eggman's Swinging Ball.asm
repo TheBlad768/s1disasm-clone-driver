@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 48 - ball on a	chain that Eggman swings (GHZ)
+; Object 48 - ball on a chain that Eggman swings (GHZ)
 ; ---------------------------------------------------------------------------
 
 BossBall:
@@ -59,10 +59,10 @@ GBall_MakeBall:
 		move.b	#1,obFrame(a1)
 		move.b	#5,obPriority(a1)
 		move.b	#$81,obColType(a1) ; make object hurt Sonic
-		rts	
+		rts
 ; ===========================================================================
 
-GBall_PosData:	dc.b 0,	$10, $20, $30, $40, $60	; y-position data for links and	giant ball
+GBall_PosData:	dc.b 0,	$10, $20, $30, $40, $60	; y-position data for links and giant ball
 
 ; ===========================================================================
 
@@ -110,7 +110,7 @@ GBall_Display2:	; Routine 4
 		jsr	(Obj48_Move).l
 		jmp	(DisplaySprite).l
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_17C2A:
@@ -131,7 +131,7 @@ loc_17C3C:
 		move.b	#0,obRoutine(a0)
 
 locret_17C66:
-		rts	
+		rts
 ; End of function sub_17C2A
 
 ; ===========================================================================

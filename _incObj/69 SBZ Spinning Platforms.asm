@@ -38,7 +38,7 @@ Spin_Main:	; Routine 0
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object type
 		move.w	d0,d1
-		andi.w	#$F,d0		; read only the	2nd digit
+		andi.w	#$F,d0		; read only the 2nd digit
 		mulu.w	#6,d0		; multiply by 6
 		move.w	d0,spin_timer(a0)
 		move.w	d0,spin_timelen(a0) ; set time delay
@@ -59,7 +59,7 @@ Spin_Trapdoor:	; Routine 2
 		tst.b	obRender(a0)
 		bpl.s	.animate
 		move.w	#sfx_Door,d0
-		jsr	(PlaySound_Special).l	; play door sound
+		jsr	(QueueSound2).l	; play door sound
 
 .animate:
 		lea	(Ani_Spin).l,a1
@@ -105,7 +105,7 @@ Spin_Spinner:	; Routine 4
 .animate:
 		lea	(Ani_Spin).l,a1
 		jsr	(AnimateSprite).l
-		tst.b	obFrame(a0)	; check	if frame number	0 is displayed
+		tst.b	obFrame(a0)	; check if frame number 0 is displayed
 		bne.s	.notsolid2	; if not, branch
 		move.w	#$1B,d1
 		move.w	#7,d2

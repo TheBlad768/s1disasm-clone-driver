@@ -25,7 +25,7 @@ Gar_Main:	; Routine 0
 		move.b	#3,obPriority(a0)
 		move.b	#$10,obActWid(a0)
 		move.b	obSubtype(a0),d0 ; get object type
-		andi.w	#$F,d0		; read only the	2nd digit
+		andi.w	#$F,d0		; read only the 2nd digit
 		move.b	Gar_SpitRate(pc,d0.w),obDelayAni(a0) ; set fireball spit rate
 		move.b	obDelayAni(a0),obTimeFrame(a0)
 		andi.b	#$F,obSubtype(a0)
@@ -47,7 +47,7 @@ Gar_MakeFire:	; Routine 2
 		move.b	obStatus(a0),obStatus(a1)
 
 .nofire:
-		rts	
+		rts
 ; ===========================================================================
 
 Gar_FireBall:	; Routine 4
@@ -69,7 +69,7 @@ Gar_FireBall:	; Routine 4
 
 .noflip:
 		move.w	#sfx_Fireball,d0
-		jsr	(PlaySound_Special).l	; play lava ball sound
+		jsr	(QueueSound2).l	; play lava ball sound
 
 Gar_AniFire:	; Routine 6
 		move.b	(v_framebyte).w,d0
@@ -85,11 +85,11 @@ Gar_AniFire:	; Routine 6
 		bsr.w	ObjHitWallLeft
 		tst.w	d1
 	if FixBugs
-		bmi.s	.delete		; delete if the	fireball hits a	wall
+		bmi.s	.delete		; delete if the fireball hits a wall
 	else
-		bmi.w	DeleteObject	; delete if the	fireball hits a	wall
+		bmi.w	DeleteObject	; delete if the fireball hits a wall
 	endif
-		rts	
+		rts
 
 .isright:
 		moveq	#8,d3
@@ -100,7 +100,7 @@ Gar_AniFire:	; Routine 6
 	else
 		bmi.w	DeleteObject
 	endif
-		rts	
+		rts
 
 	if FixBugs
 		; Avoid returning to Gargoyle to prevent display-and-delete

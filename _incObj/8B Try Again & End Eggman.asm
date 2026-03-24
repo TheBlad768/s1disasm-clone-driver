@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 8B - Eggman on "TRY AGAIN" and "END"	screens
+; Object 8B - Eggman on "TRY AGAIN" and "END" screens
 ; ---------------------------------------------------------------------------
 
 EndEggman:
@@ -67,4 +67,4 @@ EEgg_Wait:	; Routine 6
 		move.b	#2,obRoutine(a0) ; goto EEgg_Animate next
 
 .nochg:
-		rts	
+		rts

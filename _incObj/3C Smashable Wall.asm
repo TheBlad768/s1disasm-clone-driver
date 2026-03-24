@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 3C - smashable	wall (GHZ, SLZ)
+; Object 3C - smashable wall (GHZ, SLZ)
 ; ---------------------------------------------------------------------------
 
 SmashWall:
@@ -36,7 +36,7 @@ Smash_Solid:	; Routine 2
 		bne.s	.chkroll	; if yes, branch
 
 .donothing:
-		rts	
+		rts
 ; ===========================================================================
 
 .chkroll:
@@ -51,12 +51,12 @@ Smash_Solid:	; Routine 2
 		blo.s	.donothing	; if not, branch
 		move.w	smash_speed(a0),obVelX(a1)
 		addq.w	#4,obX(a1)
-		lea	(Smash_FragSpd1).l,a4 ;	use fragments that move	right
+		lea	(Smash_FragSpd1).l,a4 ; use fragments that move right
 		move.w	obX(a0),d0
-		cmp.w	obX(a1),d0	; is Sonic to the right	of the block?
+		cmp.w	obX(a1),d0	; is Sonic to the right of the block?
 		blo.s	.smash		; if yes, branch
 		subq.w	#8,obX(a1)
-		lea	(Smash_FragSpd2).l,a4 ;	use fragments that move	left
+		lea	(Smash_FragSpd2).l,a4 ; use fragments that move left
 
 .smash:
 		move.w	obVelX(a1),obInertia(a1)
@@ -68,8 +68,8 @@ Smash_Solid:	; Routine 2
 
 Smash_FragMove:	; Routine 4
 		bsr.w	SpeedToPos
-		addi.w	#$70,obVelY(a0)	; make fragment	fall faster
+		addi.w	#$70,obVelY(a0)	; make fragment fall faster
 		bsr.w	DisplaySprite
 		tst.b	obRender(a0)
 		bpl.w	DeleteObject
-		rts	
+		rts

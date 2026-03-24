@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	make an	object fall downwards, increasingly fast
+; Subroutine to make an object fall downwards, increasingly fast
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ObjectFall:
@@ -19,6 +19,6 @@ ObjectFall:
 		add.l	d0,d3
 		move.l	d2,obX(a0)
 		move.l	d3,obY(a0)
-		rts	
+		rts
 
 ; End of function ObjectFall

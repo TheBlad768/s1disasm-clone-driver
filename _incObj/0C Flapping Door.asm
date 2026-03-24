@@ -34,7 +34,7 @@ Flap_OpenClose:	; Routine 2
 		tst.b	obRender(a0)
 		bpl.s	.nosound
 		move.w	#sfx_Door,d0
-		jsr	(PlaySound_Special).l	; play door sound
+		jsr	(QueueSound2).l	; play door sound
 
 .wait:
 .nosound:
@@ -52,7 +52,7 @@ Flap_OpenClose:	; Routine 2
 		move.w	d2,d3
 		addq.w	#1,d3
 		move.w	obX(a0),d4
-		bsr.w	SolidObject	; make the door	solid
+		bsr.w	SolidObject	; make the door solid
 
 .display:
 		bra.w	RememberState

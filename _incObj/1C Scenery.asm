@@ -31,7 +31,7 @@ Scen_ChkDel:	; Routine 2
 		bra.w	DisplaySprite
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Variables for	object $1C are stored in an array
+; Variables for object $1C are stored in an array
 ; ---------------------------------------------------------------------------
 Scen_Values:	dc.l Map_Scen                                     ; mappings address
 		dc.w make_art_tile(ArtTile_SLZ_Fireball_Launcher,2,0) ; VRAM setting

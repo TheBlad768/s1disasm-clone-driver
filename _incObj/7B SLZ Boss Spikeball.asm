@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 7B - exploding	spikeys	that Eggman drops (SLZ)
+; Object 7B - exploding spikeys that Eggman drops (SLZ)
 ; ---------------------------------------------------------------------------
 
 BossSpikeball:
@@ -51,7 +51,7 @@ loc_18D68:
 BossSpikeball_Fall:	; Routine 2
 		jsr	(ObjectFall).l
 		movea.l	objoff_3C(a0),a1
-		lea	(word_19018).l,a2
+		lea	(BossSpikeball_SeesawYOffset).l,a2
 		moveq	#0,d0
 		move.b	obFrame(a1),d0
 		move.w	obX(a0),d1
@@ -73,13 +73,13 @@ loc_18D8E:
 
 loc_18DAE:
 		move.w	#$F0,obSubtype(a0)
-		move.b	#10,obDelayAni(a0)	; set frame duration to	10 frames
+		move.b	#10,obDelayAni(a0)	; set frame duration to 10 frames
 		move.b	obDelayAni(a0),obTimeFrame(a0)
 		bra.w	loc_18FA2
 ; ===========================================================================
 
 locret_18DC4:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18DC6:	; Routine 4
@@ -119,7 +119,7 @@ loc_18E16:
 ; ===========================================================================
 
 loc_18E2A:
-		lea	(word_19018).l,a2
+		lea	(BossSpikeball_SeesawYOffset).l,a2
 		moveq	#0,d0
 		move.b	obFrame(a1),d0
 		move.w	#$28,d2
@@ -142,7 +142,7 @@ loc_18E48:
 		bne.s	loc_18E7A
 		move.w	#$20,obSubtype(a0)
 		move.b	#8,obRoutine(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18E7A:
@@ -162,7 +162,7 @@ loc_18E96:
 		move.b	obDelayAni(a0),obTimeFrame(a0)
 
 locret_18EA8:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18EAA:	; Routine 6
@@ -253,7 +253,7 @@ loc_18F58:
 loc_18F5C:
 		jsr	(ObjectFall).l
 		movea.l	objoff_3C(a0),a1
-		lea	(word_19018).l,a2
+		lea	(BossSpikeball_SeesawYOffset).l,a2
 		moveq	#0,d0
 		move.b	obFrame(a1),d0
 		move.w	obX(a0),d1
@@ -290,32 +290,43 @@ loc_18FA2:
 		neg.w	obVelY(a2)
 		cmpi.b	#1,obFrame(a1)
 		bne.s	loc_18FDC
-		asr	obVelY(a2)
+		asr.w	obVelY(a2)
 
 loc_18FDC:
 		bset	#1,obStatus(a2)
 		bclr	#3,obStatus(a2)
-		clr.b	objoff_3C(a2)
+		clr.b	jumping(a2)
 		move.l	a0,-(sp)
 		lea	(a2),a0
 		jsr	(Sonic_ChkRoll).l
 		movea.l	(sp)+,a0
 		move.b	#2,obRoutine(a2)
 		move.w	#sfx_Spring,d0
-		jsr	(PlaySound_Special).l	; play "spring" sound
+		jsr	(QueueSound2).l	; play "spring" sound
 
 loc_19008:
 		clr.w	obVelX(a0)
 		clr.w	obVelY(a0)
 		addq.b	#2,obRoutine(a0)
 		bra.w	loc_18E7A
+
 ; ===========================================================================
-word_19018:	dc.w -8, -$1C, -$2F, -$1C, -8
+BossSpikeball_SeesawYOffset:
+		; Y offset between a falling spike ball and the target seesaw's side,
+		; depending on the current slanting state of the seesaw.
+		; Entries 1-3 are read if ball falls on left side, 3-5 if on right.
+		dc.w -8				; left - seesaw is raised
+		dc.w -$1C			; left - seesaw is flat
+		dc.w -$2F			; shared - seesaw is lowered
+		dc.w -$1C			; right - seesaw is flat
+		dc.w -8				; right - seesaw is raised
 		even
+
 BossSpikeball_BossHitbox:
 		dc.b -$18, $18+$18		; left to right
 		dc.b -$18, $18+$18		; top to bottom
 		even
+
 BossSpikeball_BallHitbox:
 		dc.b 8,	-8-8			; right to left
 		dc.b 8, -8-8			; bottom to top
@@ -327,7 +338,7 @@ BossSpikeball_Explode:	; Routine 8
 		clr.b	obRoutine(a0)
 		cmpi.w	#$20,obSubtype(a0)
 		beq.s	BossSpikeball_MakeFrag
-		rts	
+		rts
 ; ===========================================================================
 
 BossSpikeball_MakeFrag:
@@ -355,7 +366,7 @@ BossSpikeball_Loop:
 loc_1909A:
 		dbf	d1,BossSpikeball_Loop	; repeat sequence 3 more times
 
-		rts	
+		rts
 ; ===========================================================================
 BossSpikeball_FragSpeed:
 		dc.w -$100, -$340	; horizontal, vertical
@@ -375,4 +386,4 @@ BossSpikeball_MoveFrag:	; Routine $A
 		move.b	d0,obFrame(a0)
 		tst.b	obRender(a0)
 		bpl.w	BossStarLight_Delete
-		rts	
+		rts

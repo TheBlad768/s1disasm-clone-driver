@@ -28,7 +28,7 @@ BBall_Main:	; Routine 0
 		move.w	obY(a0),bball_origY(a0)
 		move.b	#$86,obColType(a0)
 		move.b	obSubtype(a0),d1 ; get object type
-		andi.b	#$F0,d1		; read only the	1st digit
+		andi.b	#$F0,d1		; read only the 1st digit
 		ext.w	d1
 		asl.w	#3,d1		; multiply by 8
 		move.w	d1,bball_speed(a0) ; set object speed
@@ -41,7 +41,7 @@ BBall_Main:	; Routine 0
 BBall_Move:	; Routine 2
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object type
-		andi.w	#7,d0		; read only the	2nd digit
+		andi.w	#7,d0		; read only the 2nd digit
 		add.w	d0,d0
 		move.w	.index(pc,d0.w),d1
 		jsr	.index(pc,d1.w)
@@ -55,7 +55,7 @@ BBall_Move:	; Routine 2
 ; ===========================================================================
 
 .type00:
-		rts	
+		rts
 ; ===========================================================================
 
 .type01:
@@ -71,7 +71,7 @@ BBall_Move:	; Routine 2
 		move.w	bball_origX(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obX(a0)	; move object horizontally
-		rts	
+		rts
 ; ===========================================================================
 
 .type02:
@@ -87,7 +87,7 @@ BBall_Move:	; Routine 2
 		move.w	bball_origY(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)	; move object vertically
-		rts	
+		rts
 ; ===========================================================================
 
 .type03:
@@ -108,4 +108,4 @@ BBall_Move:	; Routine 2
 		add.w	d3,d5
 		move.w	d4,obY(a0)	; move object circularly
 		move.w	d5,obX(a0)
-		rts	
+		rts

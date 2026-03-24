@@ -2,7 +2,7 @@
 ; Subroutine to react to obColType(a0)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ReactToItem:
@@ -36,7 +36,7 @@ ReactToItem:
 		dbf	d6,.loop	; repeat $5F more times
 
 		moveq	#0,d0
-		rts	
+		rts
 ; ===========================================================================
 .sizes:		;   width, height
 		dc.b  $14, $14		; $01
@@ -128,14 +128,14 @@ ReactToItem:
 
 		move.b	obColType(a1),d0
 		andi.b	#$3F,d0
-		cmpi.b	#6,d0		; is collision type $46	?
+		cmpi.b	#6,d0		; is collision type $46 ?
 		beq.s	React_Monitor	; if yes, branch
 		cmpi.w	#90,flashtime(a0)	; is Sonic invincible?
 		bhs.w	.invincible	; if yes, branch
 		addq.b	#2,obRoutine(a1) ; advance the object's routine counter
 
 .invincible:
-		rts	
+		rts
 ; ===========================================================================
 
 React_Monitor:
@@ -151,7 +151,7 @@ React_Monitor:
 		tst.b	ob2ndRout(a1)
 		bne.s	.donothing
 		addq.b	#4,ob2ndRout(a1) ; advance the monitor's routine counter
-		rts	
+		rts
 ; ===========================================================================
 
 .movingdown:
@@ -161,7 +161,7 @@ React_Monitor:
 		addq.b	#2,obRoutine(a1) ; advance the monitor's routine counter
 
 .donothing:
-		rts	
+		rts
 ; ===========================================================================
 
 React_Enemy:
@@ -176,15 +176,15 @@ React_Enemy:
 
 		neg.w	obVelX(a0)	; repel Sonic
 		neg.w	obVelY(a0)
-		asr	obVelX(a0)
-		asr	obVelY(a0)
+		asr.w	obVelX(a0)
+		asr.w	obVelY(a0)
 		move.b	#0,obColType(a1)
 		subq.b	#1,obColProp(a1)
 		bne.s	.flagnotclear
 		bset	#7,obStatus(a1)
 
 .flagnotclear:
-		rts	
+		rts
 ; ===========================================================================
 
 .breakenemy:
@@ -214,16 +214,16 @@ React_Enemy:
 		cmp.w	obY(a1),d0
 		bhs.s	.bounceup
 		neg.w	obVelY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .bouncedown:
 		addi.w	#$100,obVelY(a0)
-		rts	
+		rts
 
 .bounceup:
 		subi.w	#$100,obVelY(a0)
-		rts	
+		rts
 
 .points:	dc.w 10, 20, 50, 100	; points awarded div 10
 
@@ -238,7 +238,7 @@ React_ChkHurt:
 
 .isflashing:
 		moveq	#-1,d0
-		rts	
+		rts
 ; ===========================================================================
 
 .notinvincible:
@@ -251,10 +251,10 @@ React_ChkHurt:
 ; continue straight to HurtSonic
 
 ; ---------------------------------------------------------------------------
-; Hurting Sonic	subroutine
+; Hurting Sonic subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 HurtSonic:
@@ -310,24 +310,24 @@ HurtSonic:
 	endif
 
 .sound:
-		jsr	(PlaySound_Special).l
+		jsr	(QueueSound2).l
 		moveq	#-1,d0
-		rts	
+		rts
 ; ===========================================================================
 
 .norings:
-		tst.w	(f_debugmode).w	; is debug mode	cheat on?
+		tst.w	(f_debugmode).w	; is debug mode cheat on?
 		bne.w	.hasshield	; if yes, branch
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	kill Sonic
+; Subroutine to kill Sonic
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 KillSonic:
-		tst.w	(v_debuguse).w	; is debug mode	active?
+		tst.w	(v_debuguse).w	; is debug mode active?
 		bne.s	.dontdie	; if yes, branch
 		move.b	#0,(v_invinc).w	; remove invincibility
 		move.b	#6,obRoutine(a0)
@@ -336,48 +336,54 @@ KillSonic:
 		move.w	#-$700,obVelY(a0)
 		move.w	#0,obVelX(a0)
 		move.w	#0,obInertia(a0)
+	if FixBugs=0
+		; Leftover line from the prototype, where objoff_38 was used to respawn Sonic at his last y position.
+		; sticktoconvex gets overwritten with the high byte of Sonic's y position.
+		; It is made redundant as Sonic doesn't react to solids when he dies.
+		; It was removed in the CENSOR prototype of Sonic 2 onwards.
 		move.w	obY(a0),objoff_38(a0)
+	endif
 		move.b	#id_Death,obAnim(a0)
 		bset	#7,obGfx(a0)
 	if FixBugs
 		move.w	#sfx_HitSpikes,d0 ; play spikes death sound
-		cmpi.b	#id_Spikes,obID(a2)	; check	if you were killed by spikes
+		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
 		beq.s	.sound
-		cmpi.b	#id_Harpoon,obID(a2)	; check	if you were killed by a harpoon
+		cmpi.b	#id_Harpoon,obID(a2)	; check if you were killed by a harpoon
 		beq.s	.sound
 		move.w	#sfx_Death,d0	; play normal death sound
 	else
 		; This fails to check for the harpoon object.
 		move.w	#sfx_Death,d0	; play normal death sound
-		cmpi.b	#id_Spikes,obID(a2)	; check	if you were killed by spikes
+		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
 		bne.s	.sound
 		move.w	#sfx_HitSpikes,d0 ; play spikes death sound
 	endif
 
 .sound:
-		jsr	(PlaySound_Special).l
+		jsr	(QueueSound2).l
 
 .dontdie:
 		moveq	#-1,d0
-		rts	
+		rts
 ; End of function KillSonic
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 React_Special:
 		move.b	obColType(a1),d1
 		andi.b	#$3F,d1
-		cmpi.b	#$B,d1		; is collision type $CB	?
+		cmpi.b	#$B,d1		; is collision type $CB ?
 		beq.s	.caterkiller	; if yes, branch
-		cmpi.b	#$C,d1		; is collision type $CC	?
+		cmpi.b	#$C,d1		; is collision type $CC ?
 		beq.s	.yadrin		; if yes, branch
-		cmpi.b	#$17,d1		; is collision type $D7	?
+		cmpi.b	#$17,d1		; is collision type $D7 ?
 		beq.s	.D7orE1		; if yes, branch
-		cmpi.b	#$21,d1		; is collision type $E1	?
+		cmpi.b	#$21,d1		; is collision type $E1 ?
 		beq.s	.D7orE1		; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 .caterkiller:
@@ -416,5 +422,5 @@ React_Special:
 
 .D7orE1:
 		addq.b	#1,obColProp(a1)
-		rts	
+		rts
 ; End of function React_Special

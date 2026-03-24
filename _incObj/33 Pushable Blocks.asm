@@ -12,7 +12,7 @@ PushB_Index:	dc.w PushB_Main-PushB_Index
 		dc.w loc_BF6E-PushB_Index
 		dc.w loc_C02C-PushB_Index
 
-PushB_Var:	dc.b $10, 0	; object width,	frame number
+PushB_Var:	dc.b $10, 0	; object width, frame number
 		dc.b $40, 1
 ; ===========================================================================
 
@@ -76,11 +76,11 @@ loc_BF6E:	; Routine 2
 		bset	#7,obSubtype(a0)
 
 loc_BFC6:
-		out_of_range.s	loc_ppppp
+		out_of_range.s	loc_BFE6
 		bra.w	DisplaySprite
 ; ===========================================================================
 
-loc_ppppp:
+loc_BFE6:
 		out_of_range.s	loc_C016,objoff_34(a0)
 		move.w	objoff_34(a0),obX(a0)
 		move.w	objoff_36(a0),obY(a0)
@@ -108,7 +108,7 @@ loc_C02C:	; Routine 4
 		clr.w	obVelY(a0)
 
 locret_C044:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_C046:
@@ -190,7 +190,7 @@ loc_C104:
 		lea	(v_player).w,a1
 		bclr	#3,obStatus(a1)
 		bclr	#3,obStatus(a0)
-		bra.w	loc_ppppp
+		bra.w	loc_BFE6
 ; ===========================================================================
 
 PushB_ChkLava:
@@ -203,7 +203,7 @@ PushB_ChkLava:
 		beq.s	PushB_LoadLava
 		cmpi.w	#$BA0,obX(a0)
 		beq.s	PushB_LoadLava
-		rts	
+		rts
 ; ===========================================================================
 
 PushB_ChkLava2:
@@ -216,7 +216,7 @@ PushB_ChkLava2:
 		beq.s	PushB_LoadLava
 
 PushB_NoLava:
-		rts	
+		rts
 ; ===========================================================================
 
 PushB_LoadLava:
@@ -230,7 +230,7 @@ PushB_LoadLava:
 		move.l	a0,objoff_3C(a1)
 
 locret_C184:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_C186:
@@ -242,7 +242,7 @@ loc_C186:
 		btst	#3,obStatus(a1)
 		bne.s	loc_C1A4
 		clr.b	obSolid(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_C1A4:
@@ -272,7 +272,7 @@ loc_C1AA:
 		clr.w	obY+2(a0)
 
 locret_C1F0:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_C1F2:
@@ -284,7 +284,7 @@ loc_C1F2:
 		move.w	obVelX(a0),objoff_30(a0)
 		clr.w	obVelX(a0)
 		subq.b	#2,obSolid(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_C218:
@@ -338,7 +338,7 @@ loc_C294:
 		move.w	#0,obVelX(a1)
 		move.w	d0,-(sp)
 		move.w	#sfx_Push,d0
-		jsr	(PlaySound_Special).l	 ; play pushing sound
+		jsr	(QueueSound2).l	 ; play pushing sound
 		move.w	(sp)+,d0
 		tst.b	obSubtype(a0)
 		bmi.s	locret_C2E4
@@ -361,4 +361,4 @@ loc_C2E0:
 		add.w	d1,obY(a0)
 
 locret_C2E4:
-		rts	
+		rts

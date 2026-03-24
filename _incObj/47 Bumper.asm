@@ -22,7 +22,7 @@ Bump_Main:	; Routine 0
 		move.b	#$D7,obColType(a0)
 
 Bump_Hit:	; Routine 2
-		tst.b	obColProp(a0)	; has Sonic touched the	bumper?
+		tst.b	obColProp(a0)	; has Sonic touched the bumper?
 		beq.w	.display	; if not, branch
 		clr.b	obColProp(a0)
 		lea	(v_player).w,a1
@@ -41,16 +41,16 @@ Bump_Hit:	; Routine 2
 		bset	#1,obStatus(a1)
 		bclr	#4,obStatus(a1)
 		bclr	#5,obStatus(a1)
-		clr.b	objoff_3C(a1)
+		clr.b	jumping(a1)
 		move.b	#1,obAnim(a0)	; use "hit" animation
 		move.w	#sfx_Bumper,d0
-		jsr	(PlaySound_Special).l	; play bumper sound
+		jsr	(QueueSound2).l	; play bumper sound
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
 		move.b	obRespawnNo(a0),d0
 		beq.s	.addscore
 		cmpi.b	#$8A,2(a2,d0.w)	; has bumper been hit 10 times?
-		bhs.s	.display	; if yes, Sonic	gets no	points
+		bhs.s	.display	; if yes, Sonic gets no points
 		addq.b	#1,2(a2,d0.w)
 
 .addscore:

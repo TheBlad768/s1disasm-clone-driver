@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 63 - platforms	on a conveyor belt (LZ)
+; Object 63 - platforms on a conveyor belt (LZ)
 ; ---------------------------------------------------------------------------
 
 LabyrinthConvey:
@@ -135,7 +135,7 @@ loc_124AA:
 		dbf	d1,LCon_Loop
 
 		addq.l	#4,sp
-		rts	
+		rts
 ; ===========================================================================
 
 loc_124B2:	; Routine 2
@@ -172,7 +172,7 @@ loc_124FC:
 		addq.l	#4,sp
 		bra.w	RememberState
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_12502:
@@ -216,11 +216,11 @@ loc_12552:
 
 loc_1256A:
 		bsr.w	SpeedToPos
-		rts	
+		rts
 ; End of function sub_12502
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LCon_ChangeDir:
@@ -258,7 +258,7 @@ loc_125AE:
 		swap	d0
 		move.w	d0,obX+2(a0)
 		clr.w	obY+2(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_125C2:
@@ -276,21 +276,87 @@ loc_125D4:
 		swap	d1
 		move.w	d1,obY+2(a0)
 		clr.w	obX+2(a0)
-		rts	
+		rts
 ; End of function LCon_ChangeDir
 
 ; ===========================================================================
-LCon_Data:	dc.w word_125F4-LCon_Data
-		dc.w word_12610-LCon_Data
-		dc.w word_12628-LCon_Data
-		dc.w word_1263C-LCon_Data
-		dc.w word_12650-LCon_Data
-		dc.w word_12668-LCon_Data
-word_125F4:	dc.w $18, $1070, $1078,	$21A, $10BE, $260, $10BE, $393
-		dc.w $108C, $3C5, $1022, $390, $1022, $244
-word_12610:	dc.w $14, $1280, $127E,	$280, $12CE, $2D0, $12CE, $46E
-		dc.w $1232, $420, $1232, $2CC
-word_12628:	dc.w $10, $D68,	$D22, $482, $D22, $5DE,	$DAE, $5DE, $DAE, $482
-word_1263C:	dc.w $10, $DA0,	$D62, $3A2, $DEE, $3A2,	$DEE, $4DE, $D62, $4DE
-word_12650:	dc.w $14, $D00,	$CAC, $242, $DDE, $242,	$DDE, $3DE, $C52, $3DE,	$C52, $29C
-word_12668:	dc.w $10, $1300, $1252,	$20A, $13DE, $20A, $13DE, $2BE,	$1252, $2BE
+; Conveyor belt corner target coordinate definitions.
+; Each group corresponds to the lower nybble of the given subtype.
+; Format:
+; 	dc.w number of entries, times 4
+; 	dc.w base X position (used for out_of_range check)
+; 	dc.w entries...
+; Entries consist of a target X position and target Y position.
+
+LCon_Data:	dc.w .group0-LCon_Data
+		dc.w .group1-LCon_Data
+		dc.w .group2-LCon_Data
+		dc.w .group3-LCon_Data
+		dc.w .group4-LCon_Data
+		dc.w .group5-LCon_Data
+
+.group0:	
+		.baseX_0: = $1070
+		.baseY_0: = $2F0
+		dc.w 6*4
+		dc.w .baseX_0
+		dc.w .baseX_0+$08, .baseY_0-$D6
+		dc.w .baseX_0+$4E, .baseY_0-$90
+		dc.w .baseX_0+$4E, .baseY_0+$A3
+		dc.w .baseX_0+$1C, .baseY_0+$D5
+		dc.w .baseX_0-$4E, .baseY_0+$A0
+		dc.w .baseX_0-$4E, .baseY_0-$AC
+
+.group1:
+		.baseX_1: = $1280
+		.baseY_1: = $377
+		dc.w 5*4
+		dc.w .baseX_1
+		dc.w .baseX_1-$02, .baseY_1-$F7
+		dc.w .baseX_1+$4E, .baseY_1-$A7
+		dc.w .baseX_1+$4E, .baseY_1+$F7
+		dc.w .baseX_1-$4E, .baseY_1+$A9
+		dc.w .baseX_1-$4E, .baseY_1-$AB
+
+.group2:
+		.baseX_2: = $D68
+		.baseY_2: = $530
+		dc.w 4*4
+		dc.w .baseX_2
+		dc.w .baseX_2-$46, .baseY_2-$AE
+		dc.w .baseX_2-$46, .baseY_2+$AE
+		dc.w .baseX_2+$46, .baseY_2+$AE
+		dc.w .baseX_2+$46, .baseY_2-$AE
+
+.group3:
+		.baseX_3: = $DA0
+		.baseY_3: = $440
+		dc.w 4*4
+		dc.w .baseX_3
+		dc.w .baseX_3-$3E, .baseY_3-$9E
+		dc.w .baseX_3+$4E, .baseY_3-$9E
+		dc.w .baseX_3+$4E, .baseY_3+$9E
+		dc.w .baseX_3-$3E, .baseY_3+$9E
+
+.group4:
+		.baseX_4: = $D00
+		.baseY_4: = $310
+		dc.w 5*4
+		dc.w .baseX_4
+		dc.w .baseX_4-$54, .baseY_4-$CE
+		dc.w .baseX_4+$DE, .baseY_4-$CE
+		dc.w .baseX_4+$DE, .baseY_4+$CE
+		dc.w .baseX_4-$AE, .baseY_4+$CE
+		dc.w .baseX_4-$AE, .baseY_4-$74
+
+.group5:
+		.baseX_5: = $1300
+		.baseY_5: = $264
+		dc.w 4*4
+		dc.w .baseX_5
+		dc.w .baseX_5-$AE, .baseY_5-$5A
+		dc.w .baseX_5+$DE, .baseY_5-$5A
+		dc.w .baseX_5+$DE, .baseY_5+$5A
+		dc.w .baseX_5-$AE, .baseY_5+$5A
+
+		even

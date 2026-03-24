@@ -35,12 +35,12 @@ Map_Monitor_internal:	mappingsTable
 .eggman_End
 
 .sonic:	spriteHeader
-	spritePiece	-8, -$B, 2, 2, $1C, 0, 0, 0, 0	; Sonic	monitor
+	spritePiece	-8, -$B, 2, 2, $1C, 0, 0, 0, 0	; Sonic monitor
 	spritePiece	-$10, -$11, 4, 4, 0, 0, 0, 0, 0
 .sonic_End
 
 .shoes:	spriteHeader
-	spritePiece	-8, -$B, 2, 2, $24, 0, 0, 0, 0	; speed	shoes monitor
+	spritePiece	-8, -$B, 2, 2, $24, 0, 0, 0, 0	; speed shoes monitor
 	spritePiece	-$10, -$11, 4, 4, 0, 0, 0, 0, 0
 .shoes_End
 
@@ -50,7 +50,7 @@ Map_Monitor_internal:	mappingsTable
 .shield_End
 
 .invincible:	spriteHeader
-	spritePiece	-8, -$B, 2, 2, $2C, 0, 0, 0, 0	; invincibility	monitor
+	spritePiece	-8, -$B, 2, 2, $2C, 0, 0, 0, 0	; invincibility monitor
 	spritePiece	-$10, -$11, 4, 4, 0, 0, 0, 0, 0
 .invincible_End
 

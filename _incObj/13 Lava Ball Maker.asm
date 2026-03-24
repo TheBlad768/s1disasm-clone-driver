@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 13 - lava ball	maker (MZ, SLZ)
+; Object 13 - lava ball maker (MZ, SLZ)
 ; ---------------------------------------------------------------------------
 
 LavaMaker:
@@ -35,7 +35,7 @@ LavaM_Main:	; Routine 0
 
 LavaM_MakeLava:	; Routine 2
 		subq.b	#1,obTimeFrame(a0) ; subtract 1 from time delay
-		bne.s	LavaM_Wait	; if time still	remains, branch
+		bne.s	LavaM_Wait	; if time still remains, branch
 		move.b	obDelayAni(a0),obTimeFrame(a0) ; reset time delay
 		bsr.w	ChkObjectVisible
 		bne.s	LavaM_Wait
@@ -47,4 +47,4 @@ LavaM_MakeLava:	; Routine 2
 		move.b	obSubtype(a0),obSubtype(a1)
 
 LavaM_Wait:
-		rts	
+		rts

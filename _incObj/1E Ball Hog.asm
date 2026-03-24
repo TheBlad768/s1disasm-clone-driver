@@ -32,7 +32,7 @@ Hog_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 
 .floornotfound:
-		rts	
+		rts
 ; ===========================================================================
 
 Hog_Action:	; Routine 2
@@ -40,13 +40,13 @@ Hog_Action:	; Routine 2
 		bsr.w	AnimateSprite
 		cmpi.b	#1,obFrame(a0)	; is final frame (01) displayed?
 		bne.s	.setlaunchflag	; if not, branch
-		tst.b	hog_launchflag(a0)	; is it	set to launch cannonball?
+		tst.b	hog_launchflag(a0)	; is it set to launch cannonball?
 		beq.s	.makeball	; if yes, branch
 		bra.s	.remember
 ; ===========================================================================
 
 .setlaunchflag:
-		clr.b	hog_launchflag(a0)	; set to launch	cannonball
+		clr.b	hog_launchflag(a0)	; set to launch cannonball
 
 .remember:
 		bra.w	RememberState
@@ -65,7 +65,7 @@ Hog_Action:	; Routine 2
 		btst	#0,obStatus(a0)	; is Ball Hog facing right?
 		beq.s	.noflip		; if not, branch
 		neg.w	d0
-		neg.w	obVelX(a1)	; cannonball bounces to	the right
+		neg.w	obVelX(a1)	; cannonball bounces to the right
 
 .noflip:
 		add.w	d0,obX(a1)

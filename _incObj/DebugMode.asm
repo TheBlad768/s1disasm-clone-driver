@@ -27,8 +27,8 @@ Debug_Main:	; Routine 0
 		bne.s	.islevel	; if not, branch
 
 		move.w	#0,(v_ssrotate).w ; stop special stage rotating
-		move.w	#0,(v_ssangle).w ; make	special	stage "upright"
-		moveq	#6,d0		; use 6th debug	item list
+		move.w	#0,(v_ssangle).w ; make special stage "upright"
+		moveq	#6,d0		; use 6th debug item list
 		bra.s	.selectlist
 ; ===========================================================================
 
@@ -66,18 +66,18 @@ Debug_Action:	; Routine 2
 		bsr.w	Debug_Control
 		jmp	(DisplaySprite).l
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Debug_Control:
 		moveq	#0,d4
 		move.w	#1,d1
 		move.b	(v_jpadpress1).w,d4
-		andi.w	#btnDir,d4	; is up/down/left/right	pressed?
+		andi.w	#btnDir,d4	; is up/down/left/right pressed?
 		bne.s	.dirpressed	; if yes, branch
 
 		move.b	(v_jpadhold1).w,d0
-		andi.w	#btnDir,d0	; is up/down/left/right	held?
+		andi.w	#btnDir,d0	; is up/down/left/right held?
 		bne.s	.dirheld	; if yes, branch
 
 		move.b	#12,(v_debugspeedtimer).w
@@ -104,14 +104,14 @@ loc_1D01C:
 		asr.l	#4,d1
 		move.l	obY(a0),d2
 		move.l	obX(a0),d3
-		btst	#bitUp,d4	; is up	being pressed?
+		btst	#bitUp,d4	; is up being pressed?
 		beq.s	loc_1D03C	; if not, branch
 		sub.l	d1,d2
 		bcc.s	loc_1D03C
 		moveq	#0,d2
 
 loc_1D03C:
-		btst	#bitDn,d4	; is down being	pressed?
+		btst	#bitDn,d4	; is down being pressed?
 		beq.s	loc_1D052	; if not, branch
 		add.l	d1,d2
 		cmpi.l	#$7FF0000,d2
@@ -172,7 +172,7 @@ Debug_ChgItem:
 		move.b	(v_debugitem).w,d0
 		lsl.w	#3,d0
 		move.b	4(a2,d0.w),obSubtype(a1)
-		rts	
+		rts
 ; ===========================================================================
 
 .backtonormal:
@@ -199,11 +199,11 @@ Debug_ChgItem:
 		bset	#1,(v_player+obStatus).w
 
 .stayindebug:
-		rts	
+		rts
 ; End of function Debug_Control
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Debug_ShowItem:
@@ -213,5 +213,5 @@ Debug_ShowItem:
 		move.l	(a2,d0.w),obMap(a0) ; load mappings for item
 		move.w	6(a2,d0.w),obGfx(a0) ; load VRAM setting for item
 		move.b	5(a2,d0.w),obFrame(a0) ; load frame number for item
-		rts	
+		rts
 ; End of function Debug_ShowItem

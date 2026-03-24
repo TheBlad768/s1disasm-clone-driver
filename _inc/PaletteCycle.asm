@@ -2,7 +2,7 @@
 ; Palette cycling routine loading subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PaletteCycle:
@@ -28,7 +28,7 @@ PalCycle_Index:	dc.w PalCycle_GHZ-PalCycle_Index
 		dc.w PalCycle_GHZ-PalCycle_Index	; Ending
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_Title:
@@ -53,11 +53,11 @@ PCycGHZ_Go:
 		move.l	4(a0,d0.w),(a1)	; copy palette data to RAM
 
 PCycGHZ_Skip:
-		rts	
+		rts
 ; End of function PalCycle_GHZ
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_LZ:
@@ -73,7 +73,7 @@ PalCycle_LZ:
 		lea	(Pal_LZCyc1).l,a0
 		cmpi.b	#3,(v_act).w	; check if level is SBZ3
 		bne.s	PCycLZ_NotSBZ3
-		lea	(Pal_SBZ3Cyc).l,a0 ; load SBZ3	palette instead
+		lea	(Pal_SBZ3Cyc).l,a0 ; load SBZ3 palette instead
 
 PCycLZ_NotSBZ3:
 		lea	(v_palette+$56).w,a1
@@ -122,7 +122,7 @@ loc_1A0A:
 		move.w	4(a0,d0.w),(a1)
 
 PCycLZ_Skip2:
-		rts	
+		rts
 ; End of function PalCycle_LZ
 
 ; ===========================================================================
@@ -130,9 +130,9 @@ PCycLZ_Seq:	dc.b 1,	0, 0, 1, 0, 0, 1, 0
 ; ===========================================================================
 
 PalCycle_MZ:
-		rts	
+		rts
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_SLZ:
@@ -157,11 +157,11 @@ loc_1A60:
 		move.l	2(a0,d0.w),4(a1)
 
 locret_1A80:
-		rts	
+		rts
 ; End of function PalCycle_SLZ
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_SYZ:
@@ -184,11 +184,11 @@ PalCycle_SYZ:
 		move.w	2(a0,d1.w),4(a1)
 
 locret_1AC6:
-		rts	
+		rts
 ; End of function PalCycle_SYZ
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PalCycle_SBZ:
@@ -262,5 +262,5 @@ loc_1B52:
 		move.w	4(a0,d0.w),(a1)
 
 locret_1B64:
-		rts	
+		rts
 ; End of function PalCycle_SBZ

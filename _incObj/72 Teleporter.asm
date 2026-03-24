@@ -8,7 +8,7 @@ Teleport:
 		move.w	Tele_Index(pc,d0.w),d1
 		jsr	Tele_Index(pc,d1.w)
 		out_of_range.s	.delete
-		rts	
+		rts
 
 .delete:
 		jmp	(DeleteObject).l
@@ -68,10 +68,10 @@ loc_1670E:
 		move.w	obY(a0),obY(a1)
 		clr.b	objoff_32(a0)
 		move.w	#sfx_Roll,d0
-		jsr	(PlaySound_Special).l	; play Sonic rolling sound
+		jsr	(QueueSound2).l	; play Sonic rolling sound
 
 locret_1675C:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1675E:	; Routine 4
@@ -88,10 +88,10 @@ loc_1675E:	; Routine 4
 		bsr.w	sub_1681C
 		addq.b	#2,obRoutine(a0)
 		move.w	#sfx_Teleport,d0
-		jsr	(PlaySound_Special).l	; play teleport sound
+		jsr	(QueueSound2).l	; play teleport sound
 
 locret_16796:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_16798:	; Routine 6
@@ -131,7 +131,7 @@ loc_167DA:
 		add.l	d0,d3
 		move.l	d2,obX(a1)
 		move.l	d3,obY(a1)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_16800:
@@ -140,9 +140,9 @@ loc_16800:
 		clr.b	(f_playerctrl).w
 		move.w	#0,obVelX(a1)
 		move.w	#$200,obVelY(a1)
-		rts	
+		rts
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_1681C:
@@ -187,7 +187,7 @@ loc_16866:
 
 loc_16874:
 		move.w	d1,objoff_2E(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1687A:
@@ -212,7 +212,7 @@ loc_16898:
 
 loc_168A6:
 		move.w	d0,objoff_2E(a0)
-		rts	
+		rts
 ; End of function sub_1681C
 
 ; ===========================================================================

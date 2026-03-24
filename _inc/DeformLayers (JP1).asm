@@ -2,13 +2,13 @@
 ; Background layer deformation subroutines
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 DeformLayers:
 		tst.b	(f_nobgscroll).w
 		beq.s	.bgscroll
-		rts	
+		rts
 ; ===========================================================================
 
 	.bgscroll:
@@ -30,7 +30,7 @@ DeformLayers:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Offset index for background layer deformation	code
+; Offset index for background layer deformation code
 ; ---------------------------------------------------------------------------
 Deform_Index:	dc.w Deform_GHZ-Deform_Index, Deform_LZ-Deform_Index
 		dc.w Deform_MZ-Deform_Index, Deform_SLZ-Deform_Index
@@ -38,10 +38,10 @@ Deform_Index:	dc.w Deform_GHZ-Deform_Index, Deform_LZ-Deform_Index
 		zonewarning Deform_Index,2
 		dc.w Deform_GHZ-Deform_Index
 ; ---------------------------------------------------------------------------
-; Green	Hill Zone background layer deformation code
+; Green Hill Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_GHZ:
@@ -84,7 +84,7 @@ Deform_GHZ:
 		addi.l	#$10000,(a2)+
 		addi.l	#$C000,(a2)+
 		addi.l	#$8000,(a2)+
-	; calculate background scroll	
+	; calculate background scroll
 		move.w	(v_bgscroll_buffer).w,d0
 		add.w	(v_bg3screenposx).w,d0
 		neg.w	d0
@@ -153,7 +153,7 @@ Deform_GHZ:
 ; Labyrinth Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_LZ:
@@ -235,7 +235,7 @@ Lz_Scroll_Data:
 ; Marble Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_MZ:
@@ -344,7 +344,7 @@ Deform_MZ:
 ; Star Light Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SLZ:
@@ -443,10 +443,10 @@ Bg_Scroll_X:
 		rts
 
 ; ---------------------------------------------------------------------------
-; Spring Yard Zone background layer deformation	code
+; Spring Yard Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SYZ:
@@ -528,10 +528,10 @@ Deform_SYZ:
 ; End of function Deform_SYZ
 
 ; ---------------------------------------------------------------------------
-; Scrap	Brain Zone background layer deformation	code
+; Scrap Brain Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SBZ:
@@ -651,10 +651,10 @@ Deform_SBZ2:;loc_68A2:
 ; End of function Deform_SBZ
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	scroll the level horizontally as Sonic moves
+; Subroutine to scroll the level horizontally as Sonic moves
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollHoriz:
@@ -671,28 +671,37 @@ ScrollHoriz:
 		bpl.s	.scrollRight
 
 		bset	#2,(v_fg_scroll_flags).w ; screen moves backward
-		rts	
+		rts
 
 	.scrollRight:
 		bset	#3,(v_fg_scroll_flags).w ; screen moves forward
 
 	.return:
-		rts	
+		rts
 ; End of function ScrollHoriz
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 MoveScreenHoriz:
 		move.w	(v_player+obX).w,d0
 		sub.w	(v_screenposx).w,d0 ; Sonic's distance from left edge of screen
-		subi.w	#144,d0		; is distance less than 144px?
+	if FixBugs
+		; Fix horizontal wrap bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_camera_follow_bug
+		subi.w	#(320/2)-16,d0	; is distance less than 144px?
+		blt.s	SH_BehindMid	; if yes, branch
+		subi.w	#16,d0		; is distance more than 160px?
+		bge.s	SH_AheadOfMid	; if yes, branch
+	else
+		subi.w	#(320/2)-16,d0	; is distance less than 144px?
 		bcs.s	SH_BehindMid	; if yes, branch
 		subi.w	#16,d0		; is distance more than 160px?
 		bcc.s	SH_AheadOfMid	; if yes, branch
+	endif
 		clr.w	(v_scrshiftx).w
-		rts	
+		rts
 ; ===========================================================================
 
 SH_AheadOfMid:
@@ -712,10 +721,18 @@ SH_SetScreen:
 		asl.w	#8,d1
 		move.w	d0,(v_screenposx).w ; set new screen position
 		move.w	d1,(v_scrshiftx).w ; set distance for screen movement
-		rts	
+		rts
 ; ===========================================================================
 
 SH_BehindMid:
+	if FixBugs
+		; Fix the camera follow bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_camera_follow_bug
+		cmpi.w	#-16,d0		; is Sonic within -16px of middle area?
+		bgt.s	SH_Behind16	; if yes, branch
+		move.w	#-16,d0		; set to -16 if lower
+SH_Behind16:
+	endif
 		add.w	(v_screenposx).w,d0
 		cmp.w	(v_limitleft2).w,d0
 		bgt.s	SH_SetScreen
@@ -734,10 +751,10 @@ loc_6610:
 		bra.s	SH_AheadOfMid
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	scroll the level vertically as Sonic moves
+; Subroutine to scroll the level vertically as Sonic moves
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollVertical:
@@ -770,7 +787,7 @@ loc_664A:
 
 loc_6656:
 		clr.w	(v_scrshifty).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_665C:
@@ -884,18 +901,18 @@ loc_6724:
 		sub.w	d4,d0
 		bpl.s	.scrollBottom
 		bset	#0,(v_fg_scroll_flags).w
-		rts	
+		rts
 ; ===========================================================================
 
 	.scrollBottom:
 		bset	#1,(v_fg_scroll_flags).w
 
 	.return:
-		rts	
+		rts
 ; End of function ScrollVertical
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 ; Scrolls background and sets redraw flags.
 ; d4 - background x offset * $10000
 ; d5 - background y offset * $10000
@@ -962,7 +979,7 @@ Bg_Scroll_Y:
 		rts
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 BGScroll_YAbsolute:
@@ -985,7 +1002,7 @@ BGScroll_YAbsolute:
 ; End of function BGScroll_YAbsolute
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 ; d6 - bit to set for redraw
 
 BGScroll_Block1:
@@ -1012,7 +1029,7 @@ BGScroll_Block1:
 ; End of function BGScroll_Block1
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 BGScroll_Block2:

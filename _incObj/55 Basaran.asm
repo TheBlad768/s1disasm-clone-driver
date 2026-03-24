@@ -47,7 +47,7 @@ Bas_Action:	; Routine 2
 		bcs.s	.nodrop
 		cmpi.w	#$80,d0		; is Sonic < $80 pixels from basaran?
 		bhs.s	.nodrop		; if not, branch
-		tst.w	(v_debuguse).w	; is debug mode	on?
+		tst.w	(v_debuguse).w	; is debug mode on?
 		bne.s	.nodrop		; if yes, branch
 
 		move.b	(v_vbla_byte).w,d0
@@ -58,7 +58,7 @@ Bas_Action:	; Routine 2
 		addq.b	#2,ob2ndRout(a0)
 
 .nodrop:
-		rts	
+		rts
 ; ===========================================================================
 
 .dropfly:
@@ -77,7 +77,7 @@ Bas_Action:	; Routine 2
 		addq.b	#2,ob2ndRout(a0)
 
 .dropmore:
-		rts	
+		rts
 
 .chkdel:
 		tst.b	obRender(a0)
@@ -91,7 +91,7 @@ Bas_Action:	; Routine 2
 	else
 		bpl.w	DeleteObject
 	endif
-		rts	
+		rts
 ; ===========================================================================
 
 .flapsound:
@@ -99,7 +99,7 @@ Bas_Action:	; Routine 2
 		andi.b	#$F,d0
 		bne.s	.nosound
 		move.w	#sfx_Basaran,d0
-		jsr	(PlaySound_Special).l	; play flapping sound every 16th frame
+		jsr	(QueueSound2).l	; play flapping sound every 16th frame
 
 .nosound:
 		bsr.w	SpeedToPos
@@ -118,7 +118,7 @@ Bas_Action:	; Routine 2
 		addq.b	#2,ob2ndRout(a0)
 
 .dontflyup:
-		rts	
+		rts
 ; ===========================================================================
 
 .flyup:
@@ -135,17 +135,17 @@ Bas_Action:	; Routine 2
 		clr.b	ob2ndRout(a0)
 
 .noceiling:
-		rts	
+		rts
 ; ===========================================================================
 
 ; Subroutine to check Sonic's distance from the basaran
 
 ; input:
-;	d2 = distance to compare
+; d2 = distance to compare
 
 ; output:
-;	d0 = distance between Sonic and basaran
-;	d1 = speed/direction for basaran to fly
+; d0 = distance between Sonic and basaran
+; d1 = speed/direction for basaran to fly
 
 .chkdistance:
 		move.w	#$100,d1
@@ -159,11 +159,11 @@ Bas_Action:	; Routine 2
 
 .right:
 		cmp.w	d2,d0
-		rts	
+		rts
 ; ===========================================================================
 ; unused crap
 		bsr.w	SpeedToPos
 		bsr.w	DisplaySprite
 		tst.b	obRender(a0)
 		bpl.w	DeleteObject
-		rts	
+		rts

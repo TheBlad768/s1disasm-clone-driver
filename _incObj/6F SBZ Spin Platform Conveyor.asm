@@ -47,7 +47,7 @@ SpinC_Main:	; Routine 0
 		move.w	d0,d1
 		lsr.w	#3,d0
 		andi.w	#$1E,d0
-		lea	off_164A6(pc),a2
+		lea	SpinC_Data(pc),a2
 		adda.w	(a2,d0.w),a2
 		move.w	(a2)+,objoff_38(a0)
 		move.w	(a2)+,objoff_30(a0)
@@ -127,7 +127,7 @@ loc_163D0:
 		dbf	d1,SpinC_Loop
 
 		addq.l	#4,sp
-		rts	
+		rts
 ; ===========================================================================
 
 loc_163D8:	; Routine 2
@@ -194,3 +194,85 @@ loc_16480:
 
 loc_16484:
 		jmp	(SpeedToPos).l
+
+; ===========================================================================
+; We need to include animations from here to keep the corner data in this file...
+		include	"_anim/SBZ Spin Platform Conveyor.asm"
+
+; ===========================================================================
+; Conveyor belt corner target coordinate definitions.
+; Each group corresponds to the lower nybble of the given subtype.
+; Format:
+; 	dc.w number of entries, times 4
+; 	dc.w base X position (used for out_of_range check)
+; 	dc.w entries...
+; Entries consist of a target X position and target Y position.
+
+SpinC_Data:	dc.w .group0-SpinC_Data
+		dc.w .group1-SpinC_Data
+		dc.w .group2-SpinC_Data
+		dc.w .group3-SpinC_Data
+		dc.w .group4-SpinC_Data
+		dc.w .group5-SpinC_Data
+
+.group0:
+		.baseX_0: = $E80
+		.baseY_0: = $358
+		dc.w 4*4
+		dc.w .baseX_0
+		dc.w .baseX_0-$6C, .baseY_0+$18
+		dc.w .baseX_0+$6F, .baseY_0-$56
+		dc.w .baseX_0+$6F, .baseY_0-$18
+		dc.w .baseX_0-$6C, .baseY_0+$56
+
+.group1:
+		.baseX_1: = $F80
+		.baseY_1: = $2C8
+		dc.w 4*4
+		dc.w .baseX_1
+		dc.w .baseX_1-$6C, .baseY_1+$18
+		dc.w .baseX_1+$6F, .baseY_1-$56
+		dc.w .baseX_1+$6F, .baseY_1-$18
+		dc.w .baseX_1-$6C, .baseY_1+$56
+
+.group2:
+		.baseX_2: = $1080
+		.baseY_2: = $228
+		dc.w 4*4
+		dc.w .baseX_2
+		dc.w .baseX_2-$6C, .baseY_2+$48
+		dc.w .baseX_2+$6F, .baseY_2-$26
+		dc.w .baseX_2+$6F, .baseY_2+$18
+		dc.w .baseX_2-$6C, .baseY_2+$86
+
+.group3:
+		.baseX_3: = $F80
+		.baseY_3: = $558
+		dc.w 4*4
+		dc.w .baseX_3
+		dc.w .baseX_3-$6C, .baseY_3+$18
+		dc.w .baseX_3+$6F, .baseY_3-$56
+		dc.w .baseX_3+$6F, .baseY_3-$18
+		dc.w .baseX_3-$6C, .baseY_3+$56
+
+.group4:
+		.baseX_4: = $1B80
+		.baseY_4: = $658
+		dc.w 4*4
+		dc.w .baseX_4
+		dc.w .baseX_4-$6C, .baseY_4+$18
+		dc.w .baseX_4+$6F, .baseY_4-$56
+		dc.w .baseX_4+$6F, .baseY_4-$18
+		dc.w .baseX_4-$6C, .baseY_4+$56
+
+.group5:
+		.baseX_5: = $1C80
+		.baseY_5: = $5C8
+		dc.w 4*4
+		dc.w .baseX_5
+		dc.w .baseX_5-$6C, .baseY_5+$18
+		dc.w .baseX_5+$6F, .baseY_5-$56
+		dc.w .baseX_5+$6F, .baseY_5-$18
+		dc.w .baseX_5-$6C, .baseY_5+$56
+
+		even

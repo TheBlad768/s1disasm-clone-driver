@@ -105,7 +105,7 @@ loc_1833E:
 		bne.s	loc_18374
 		move.b	#$28,objoff_3E(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l	; play boss damage sound
+		jsr	(QueueSound2).l	; play boss damage sound
 
 loc_18374:
 		lea	(v_palette+$22).w,a1
@@ -121,7 +121,7 @@ loc_18382:
 		move.b	#$F,obColType(a0)
 
 locret_18390:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18392:
@@ -130,7 +130,7 @@ loc_18392:
 		move.b	#4,ob2ndRout(a0)
 		move.w	#$B4,objoff_3C(a0)
 		clr.w	obVelX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_183AA:
@@ -180,7 +180,7 @@ BossMarble_MakeLava:
 		jsr	(FindFreeObj).l
 		bne.s	loc_1844A
 		_move.b	#id_LavaBall,obID(a1) ; load lava ball object
-		move.w	#boss_mz_y+$D8,obY(a1)	; set Y	position
+		move.w	#boss_mz_y+$D8,obY(a1)	; set Y position
 		jsr	(RandomNumber).l
 		andi.l	#$FFFF,d0
 		divu.w	#$50,d0
@@ -221,7 +221,7 @@ loc_18498:
 		addq.b	#2,obSubtype(a0)
 
 locret_1849C:
-		rts	
+		rts
 ; ===========================================================================
 
 BossMarble_MakeLava2:
@@ -249,7 +249,7 @@ loc_184EA:
 		addq.b	#2,obSubtype(a0)
 
 locret_184F4:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_184F6:
@@ -270,7 +270,7 @@ loc_18500:
 		clr.w	obVelY(a0)
 
 locret_1852A:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1852C:
@@ -306,8 +306,8 @@ loc_18566:
 
 loc_1856C:
 		clr.w	obVelY(a0)
-		move.w	#mus_MZ,d0
-		jsr	(PlaySound).l		; play MZ music
+		move.w	#bgm_MZ,d0
+		jsr	(QueueSound1).l		; play MZ music
 
 loc_1857A:
 		bsr.w	BossMove

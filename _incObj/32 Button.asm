@@ -63,11 +63,11 @@ loc_BDC8:
 		tst.b	(a3)
 		bne.s	loc_BDD6
 		move.w	#sfx_Switch,d0
-		jsr	(PlaySound_Special).l	; play switch sound
+		jsr	(QueueSound2).l	; play switch sound
 
 loc_BDD6:
 		bset	d3,(a3)
-		bset	#0,obFrame(a0)	; use "pressed"	frame
+		bset	#0,obFrame(a0)	; use "pressed" frame
 
 loc_BDDE:
 		btst	#5,obSubtype(a0)
@@ -86,15 +86,15 @@ But_Display:
 	else
 		bsr.w	DisplaySprite
 		out_of_range.w	But_Delete
-		rts	
+		rts
 	endif
 ; ===========================================================================
 
 But_Delete:
 		bsr.w	DeleteObject
-		rts	
+		rts
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 But_MZBlock:
@@ -115,14 +115,14 @@ But_MZLoop:
 		beq.s	loc_BE5E	; if yes, branch
 
 loc_BE4E:
-		lea	object_size(a1),a1	; check	next object
+		lea	object_size(a1),a1	; check next object
 		dbf	d6,But_MZLoop	; repeat $5F times
 
 		move.w	(sp)+,d3
 		moveq	#0,d0
 
 locret_BE5A:
-		rts	
+		rts
 ; ===========================================================================
 But_MZData:	dc.b $10, $10
 ; ===========================================================================
@@ -168,5 +168,5 @@ loc_BE9A:
 loc_BE9E:
 		move.w	(sp)+,d3
 		moveq	#1,d0
-		rts	
+		rts
 ; End of function But_MZBlock

@@ -35,8 +35,8 @@ Pow_Move:	; Routine 2
 		tst.w	obVelY(a0)	; is object moving?
 		bpl.w	Pow_Checks	; if not, branch
 		bsr.w	SpeedToPos
-		addi.w	#$18,obVelY(a0)	; reduce object	speed
-		rts	
+		addi.w	#$18,obVelY(a0)	; reduce object speed
+		rts
 ; ===========================================================================
 
 Pow_Checks:
@@ -47,7 +47,14 @@ Pow_ChkEggman:
 		move.b	obAnim(a0),d0
 		cmpi.b	#1,d0		; does monitor contain Eggman?
 		bne.s	Pow_ChkSonic
-		rts			; Eggman monitor does nothing
+	if FixBugs
+		; Fix the Eggman monitor
+		; https://info.sonicretro.org/SCHG_How-to:Have_a_functional_Eggman_monitor_in_Sonic_1
+		move.w	obX(a0),spik_origX(a0)	; needed to display the icon properly
+		jmp	(Spik_Hurt).l		; use spikes to hurt Sonic
+	else
+		rts		; Eggman monitor does nothing
+	endif
 ; ===========================================================================
 
 Pow_ChkSonic:
@@ -57,8 +64,8 @@ Pow_ChkSonic:
 ExtraLife:
 		addq.b	#1,(v_lives).w	; add 1 to the number of lives you have
 		addq.b	#1,(f_lifecount).w ; update the lives counter
-		move.w	#mus_ExtraLife,d0
-		jmp	(PlaySound).l	; play extra life music
+		move.w	#bgm_ExtraLife,d0
+		jmp	(QueueSound1).l	; play extra life music
 ; ===========================================================================
 
 Pow_ChkShoes:
@@ -66,12 +73,12 @@ Pow_ChkShoes:
 		bne.s	Pow_ChkShield
 
 		move.b	#1,(v_shoes).w	; speed up the BG music
-		move.w	#$4B0,(v_player+$34).w	; time limit for the power-up
+		move.w	#$4B0,(v_player+shoetime).w	; time limit for the power-up
 		move.w	#$C00,(v_sonspeedmax).w ; change Sonic's top speed
 		move.w	#$18,(v_sonspeedacc).w	; change Sonic's acceleration
 		move.w	#$80,(v_sonspeeddec).w	; change Sonic's deceleration
-		move.w	#mus_Speedup,d0
-		jmp	(PlaySound).l		; Speed	up the music
+		move.w	#bgm_Speedup,d0
+		jmp	(PlaySound).l		; Speed up the music
 ; ===========================================================================
 
 Pow_ChkShield:
@@ -81,7 +88,7 @@ Pow_ChkShield:
 		move.b	#1,(v_shield).w	; give Sonic a shield
 		move.b	#id_ShieldItem,(v_shieldobj).w ; load shield object ($38)
 		move.w	#sfx_Shield,d0
-		jmp	(PlaySound).l	; play shield sound
+		jmp	(QueueSound2).l	; play shield sound
 ; ===========================================================================
 
 Pow_ChkInvinc:
@@ -89,7 +96,7 @@ Pow_ChkInvinc:
 		bne.s	Pow_ChkRings
 
 		move.b	#1,(v_invinc).w	; make Sonic invincible
-		move.w	#$4B0,(v_player+$32).w ; time limit for the power-up
+		move.w	#$4B0,(v_player+invtime).w ; time limit for the power-up
 		move.b	#id_ShieldItem,(v_starsobj1).w ; load stars object ($3801)
 		move.b	#1,(v_starsobj1+obAnim).w
 		move.b	#id_ShieldItem,(v_starsobj2).w ; load stars object ($3802)
@@ -100,16 +107,16 @@ Pow_ChkInvinc:
 		move.b	#4,(v_starsobj4+obAnim).w
 		tst.b	(f_lockscreen).w ; is boss mode on?
 		bne.s	Pow_NoMusic	; if yes, branch
-		if Revision<>0
-			cmpi.w	#$C,(v_air).w
-			bls.s	Pow_NoMusic
-		endif
-		move.w	#mus_Invincible,d0
-		jmp	(PlaySound).l ; play invincibility music
+	if Revision<>0
+		cmpi.w	#$C,(v_air).w
+		bls.s	Pow_NoMusic
+	endif
+		move.w	#bgm_Invincible,d0
+		jmp	(QueueSound1).l ; play invincibility music
 ; ===========================================================================
 
 Pow_NoMusic:
-		rts	
+		rts
 ; ===========================================================================
 
 Pow_ChkRings:
@@ -129,19 +136,25 @@ Pow_ChkRings:
 
 Pow_RingSound:
 		move.w	#sfx_Ring,d0
-		jmp	(PlaySound).l	; play ring sound
+		jmp	(QueueSound2).l	; play ring sound
 ; ===========================================================================
 
 Pow_ChkS:
 		cmpi.b	#7,d0		; does monitor contain 'S'?
-		bne.s	Pow_ChkEnd
-		nop	
+		bne.s	Pow_ChkGoggles
+		nop
+
+Pow_ChkGoggles:
+; Uncomment these lines to set up the goggles monitor to work with it
+	;	cmpi.b	#8,d0		; does monitor contain goggles?
+	;	bne.s	Pow_ChkEnd
+	;	nop
 
 Pow_ChkEnd:
-		rts			; 'S' and goggles monitors do nothing
+		rts		; 'S' and goggles monitors do nothing
 ; ===========================================================================
 
 Pow_Delete:	; Routine 4
 		subq.w	#1,obTimeFrame(a0)
 		bmi.w	DeleteObject	; delete after half a second
-		rts	
+		rts

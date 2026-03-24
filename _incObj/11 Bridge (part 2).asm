@@ -8,7 +8,7 @@ Bri_Platform:	; Routine 4
 ; Subroutine allowing Sonic to walk off a bridge
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Bri_WalkOff:
@@ -31,5 +31,5 @@ loc_75B6:
 		bsr.w	Bri_MoveSonic
 
 locret_75BE:
-		rts	
+		rts
 ; End of function Bri_WalkOff

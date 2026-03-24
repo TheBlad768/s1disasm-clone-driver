@@ -149,10 +149,10 @@ Drown_ShowNumber:
 		move.b	#id_Drown_AirLeft,obRoutine(a0) ; goto Drown_AirLeft next
 
 .nonumber:
-		rts	
+		rts
 ; ===========================================================================
 Drown_WobbleData:
-		if Revision=0
+	if Revision=0
 		dc.b 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2
 		dc.b 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
 		dc.b 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2
@@ -161,7 +161,7 @@ Drown_WobbleData:
 		dc.b -3, -3, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4
 		dc.b -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -3
 		dc.b -3, -3, -3, -3, -3, -3, -2, -2, -2, -2, -2, -1, -1, -1, -1, -1
-		else
+	else
 		dc.b 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2
 		dc.b 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
 		dc.b 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2
@@ -178,7 +178,7 @@ Drown_WobbleData:
 		dc.b -3, -3, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4
 		dc.b -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -3
 		dc.b -3, -3, -3, -3, -3, -3, -2, -2, -2, -2, -2, -1, -1, -1, -1, -1
-		endif
+	endif
 ; ===========================================================================
 
 Drown_Countdown:; Routine $A
@@ -198,7 +198,7 @@ Drown_Countdown:; Routine $A
 		move.b	d0,objoff_34(a0)
 		move.w	(v_air).w,d0	; check air remaining
 		cmpi.w	#25,d0
-		beq.s	.warnsound	; play sound if	air is 25
+		beq.s	.warnsound	; play sound if air is 25
 		cmpi.w	#20,d0
 		beq.s	.warnsound
 		cmpi.w	#15,d0
@@ -207,8 +207,8 @@ Drown_Countdown:; Routine $A
 		bhi.s	.reduceair	; if air is above 12, branch
 
 		bne.s	.skipmusic	; if air is less than 12, branch
-		move.w	#mus_Drowning,d0
-		jsr	(PlaySound).l	; play countdown music
+		move.w	#bgm_Drowning,d0
+		jsr	(QueueSound1).l	; play countdown music
 
 .skipmusic:
 		subq.b	#1,objoff_32(a0)
@@ -220,7 +220,7 @@ Drown_Countdown:; Routine $A
 
 .warnsound:
 		move.w	#sfx_Warning,d0
-		jsr	(PlaySound_Special).l	; play "ding-ding" warning sound
+		jsr	(QueueSound2).l	; play "ding-ding" warning sound
 
 .reduceair:
 		subq.w	#1,(v_air).w	; subtract 1 from air remaining
@@ -230,7 +230,7 @@ Drown_Countdown:; Routine $A
 		bsr.w	ResumeMusic
 		move.b	#$81,(f_playerctrl).w ; lock controls and disable object interaction
 		move.w	#sfx_Drown,d0
-		jsr	(PlaySound_Special).l	; play drowning sound
+		jsr	(QueueSound2).l	; play drowning sound
 		move.b	#$A,objoff_34(a0)
 		move.w	#1,objoff_36(a0)
 		move.w	#$78,objoff_2C(a0)
@@ -244,15 +244,27 @@ Drown_Countdown:; Routine $A
 		move.w	#0,obVelX(a0)
 		move.w	#0,obInertia(a0)
 		move.b	#1,(f_nobgscroll).w
+	if FixBugs
+		; Correct Drowning Bugs
+		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
+		move.b	#$A,obRoutine(a0)	; Force the character to drown
+		move.b	#0,(f_timecount).w	; Stop the timer immediately 
+	endif
 		movea.l	(sp)+,a0
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_13F86:
 		subq.w	#1,objoff_2C(a0)
+	if FixBugs
+		; Correct Drowning Bugs
+		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
+		bne.s	.nochange
+	else
 		bne.s	.loc_13F94
+	endif
 		move.b	#6,(v_player+obRoutine).w
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_13F94:
@@ -335,4 +347,4 @@ Drown_Countdown:; Routine $A
 		clr.w	objoff_36(a0)
 
 .nocountdown:
-		rts	
+		rts

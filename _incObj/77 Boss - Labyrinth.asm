@@ -99,7 +99,7 @@ loc_17F48:
 		bne.s	loc_17F70
 		move.b	#$20,objoff_3E(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l
+		jsr	(QueueSound2).l
 
 loc_17F70:
 		lea	(v_palette+$22).w,a1
@@ -115,7 +115,7 @@ loc_17F7E:
 		move.b	#$F,obColType(a0)
 
 locret_17F8C:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_17F8E:
@@ -126,7 +126,7 @@ loc_17F92:
 		moveq	#100,d0
 		bsr.w	AddPoints
 		move.b	#-1,objoff_3D(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_17FA0:
@@ -187,8 +187,8 @@ loc_1801E:
 		move.w	#-$80,obVelY(a0)
 		tst.b	objoff_3D(a0)
 		beq.s	loc_18046
-		asl	obVelX(a0)
-		asl	obVelY(a0)
+		asl.w	obVelX(a0)
+		asl.w	obVelY(a0)
 
 loc_18046:
 		addq.b	#2,ob2ndRout(a0)
@@ -272,11 +272,11 @@ loc_180F6:
 		move.b	#$32,objoff_3C(a0)
 
 loc_18112:
-		move.w	#mus_LZ,d0
-		jsr	(PlaySound).l		; play LZ music
-		if Revision<>0
-			clr.b	(f_lockscreen).w
-		endif
+		move.w	#bgm_LZ,d0
+		jsr	(QueueSound1).l		; play LZ music
+	if Revision<>0
+		clr.b	(f_lockscreen).w
+	endif
 		bset	#0,obStatus(a0)
 		addq.b	#2,ob2ndRout(a0)
 

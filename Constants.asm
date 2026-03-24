@@ -2,8 +2,8 @@
 ; Constants
 ; ---------------------------------------------------------------------------
 
-Size_of_SegaPCM:		equ $6978
-Size_of_DAC_driver_guess:	equ $1760
+;Size_of_SegaPCM:		equ $6978
+;Size_of_DAC_driver_guess:	equ $1760
 
 ; Clocks
 Master_Clock:    equ 53693175
@@ -16,26 +16,34 @@ PSG_Sample_Rate: equ Z80_Clock/16
 vdp_data_port:		equ $C00000
 vdp_control_port:	equ $C00004
 vdp_counter:		equ $C00008
-
 psg_input:		equ $C00011
+debug_reg:		equ $C0001C
 
 ; Z80 addresses
 z80_ram:		equ $A00000	; start of Z80 RAM
 z80_ram_end:		equ $A02000	; end of non-reserved Z80 RAM
-z80_version:		equ $A10001
-z80_port_1_data:	equ $A10002
-z80_port_1_control:	equ $A10008
-z80_port_2_control:	equ $A1000A
-z80_expansion_control:	equ $A1000C
-z80_bus_request:	equ $A11100
-z80_reset:		equ $A11200
 ym2612_a0:		equ $A04000
 ym2612_d0:		equ $A04001
 ym2612_a1:		equ $A04002
 ym2612_d1:		equ $A04003
+z80_bus_request:	equ $A11100
+z80_reset:		equ $A11200
 
+; I/O addresses
+console_version:	equ $A10001
+port_1_data_hi:		equ $A10002
+port_1_data:		equ $A10003
+port_2_data_hi:		equ $A10004
+port_2_data:		equ $A10005
+port_1_control_hi:	equ $A10008
+port_1_control:		equ $A10009
+port_2_control_hi:	equ $A1000A
+port_2_control:		equ $A1000B
+expansion_control_hi:	equ $A1000C
+expansion_control:	equ $A1000D
+
+; Misc addresses
 sram_port:		equ $A130F1
-
 security_addr:		equ $A14000
 
 ; VRAM data
@@ -43,8 +51,10 @@ vram_fg:	equ $C000	; foreground namespace
 vram_bg:	equ $E000	; background namespace
 vram_sprites:	equ $F800	; sprite table
 vram_hscroll:	equ $FC00	; horizontal scroll table
-tile_size:	equ 8*8/2
-plane_size_64x32:	equ 64*32*2
+
+tile_size:	equ 8*8/2	; size of a single 8x8 tile
+chunk_size:	equ $200	; size of a single 256x256 chunk
+plane_size_64x32: equ 64*32*2	; size of plane in 512x256 mode
 
 ; Game modes
 id_Sega:	equ ptr_GM_Sega-GameModeArray	; $00
@@ -123,16 +133,22 @@ obStatus:	equ $22	; orientation or mode
 obRespawnNo:	equ $23	; respawn list index number
 obRoutine:	equ $24	; routine number
 ob2ndRout:	equ $25	; secondary routine number
+obSolid:	equ ob2ndRout ; solid status flag
 obAngle:	equ $26	; angle
 obSubtype:	equ $28	; object subtype
-obSolid:	equ ob2ndRout ; solid status flag
 
 ; Object variables used by Sonic
-flashtime:	equ $30	; time between flashes after getting hit
-invtime:	equ $32	; time left for invincibility
-shoetime:	equ $34	; time left for speed shoes
-stick_to_convex:equ objoff_38
-standonobject:	equ $3D	; object Sonic stands on
+flashtime:	equ $30	; time between flashes after getting hit (2 bytes)
+invtime:	equ $32	; time left for invincibility (2 bytes)
+shoetime:	equ $34	; time left for speed shoes (2 bytes)
+angleright:	equ $36	; angle of floor on Sonic's right side
+angleleft:	equ $37	; angle of floor on Sonic's left side
+sticktoconvex:	equ $38	; flag set while running on an SBZ gear
+;unused:	equ $39	; unused by Sonic
+restartime:	equ $3A	; time left before level restarts after dying (2 bytes)
+jumping:	equ $3C	; flag set while Sonic is jumping
+standonobject:	equ $3D	; object index Sonic stands on
+locktime:	equ $3E	; temporary D-Pad control lock timer (2 bytes)
 
 ; Miscellaneous object scratch-RAM
 objoff_25:	equ $25
@@ -289,6 +305,14 @@ boss_sbz2_y:	equ $510
 boss_fz_x:	equ $2450		; Final Zone
 boss_fz_y:	equ $510
 boss_fz_end:	equ boss_fz_x+$2B0
+
+; Tile flags (ASM68K-specific, replaces "make_art_tile" function from AS, added here for cross-compatibility)
+Tile_Prio:	equ	1<<15
+Tile_Pal1:	equ	0<<13
+Tile_Pal2:	equ	1<<13
+Tile_Pal3:	equ	2<<13
+Tile_Pal4:	equ	3<<13
+
 
 ; Tile VRAM Locations
 

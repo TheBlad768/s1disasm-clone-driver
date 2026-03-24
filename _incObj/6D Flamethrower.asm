@@ -38,12 +38,12 @@ Flame_Main:	; Routine 0
 Flame_Action:	; Routine 2
 		subq.w	#1,objoff_30(a0)	; subtract 1 from time
 		bpl.s	loc_E57A	; if time remains, branch
-		move.w	objoff_34(a0),objoff_30(a0)	; begin	pause time
+		move.w	objoff_34(a0),objoff_30(a0)	; begin pause time
 		bchg	#0,obAnim(a0)
 		beq.s	loc_E57A
-		move.w	objoff_32(a0),objoff_30(a0)	; begin	flaming	time
+		move.w	objoff_32(a0),objoff_30(a0)	; begin flaming time
 		move.w	#sfx_Flamethrower,d0
-		jsr	(PlaySound_Special).l ; play flame sound
+		jsr	(QueueSound2).l ; play flame sound
 
 loc_E57A:
 		lea	(Ani_Flame).l,a1

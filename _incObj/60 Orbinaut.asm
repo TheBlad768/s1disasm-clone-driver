@@ -76,10 +76,10 @@ Orb_Main:	; Routine 0
 		move.w	#-$40,obVelX(a0) ; move orbinaut to the left
 		btst	#0,obStatus(a0)	; is orbinaut facing left??
 		beq.s	.noflip2	; if not, branch
-		neg.w	obVelX(a0)	; move orbinaut	to the right
+		neg.w	obVelX(a0)	; move orbinaut to the right
 
 .noflip2:
-		rts	
+		rts
 ; ===========================================================================
 
 Orb_ChkSonic:	; Routine 2
@@ -89,7 +89,7 @@ Orb_ChkSonic:	; Routine 2
 		neg.w	d0
 
 .isright:
-		cmpi.w	#$A0,d0		; is Sonic within $A0 pixels of	orbinaut?
+		cmpi.w	#$A0,d0		; is Sonic within $A0 pixels of orbinaut?
 		bhs.s	.animate	; if not, branch
 		move.w	(v_player+obY).w,d0
 		sub.w	obY(a0),d0	; is Sonic above the orbinaut?
@@ -97,9 +97,9 @@ Orb_ChkSonic:	; Routine 2
 		neg.w	d0
 
 .isabove:
-		cmpi.w	#$50,d0		; is Sonic within $50 pixels of	orbinaut?
+		cmpi.w	#$50,d0		; is Sonic within $50 pixels of orbinaut?
 		bhs.s	.animate	; if not, branch
-		tst.w	(v_debuguse).w	; is debug mode	on?
+		tst.w	(v_debuguse).w	; is debug mode on?
 		bne.s	.animate	; if yes, branch
 		move.b	#1,obAnim(a0)	; use "angry" animation
 

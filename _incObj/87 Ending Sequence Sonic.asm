@@ -23,7 +23,7 @@ ESon_Main:	; Routine 0
 		beq.s	ESon_Main2	; if yes, branch
 		addi.b	#$10,ob2ndRout(a0) ; else, skip emerald sequence
 		move.w	#216,eson_time(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 ESon_Main2:
@@ -45,18 +45,18 @@ ESon_MakeEmeralds:
 		move.b	#id_EndChaos,(v_endemeralds).w ; load chaos emeralds objects
 
 ESon_Wait:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj87_LookUp:	; Routine 6
 		cmpi.w	#$2000,((v_endemeralds+echa_radius)&$FFFFFF).l
 		bne.s	locret_5480
-		move.w	#1,(f_restart).w ; set level to	restart	(causes	flash)
+		move.w	#1,(f_restart).w ; set level to restart (causes flash)
 		move.w	#90,eson_time(a0)
 		addq.b	#2,ob2ndRout(a0)
 
 locret_5480:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj87_ClrObjRam:
@@ -75,7 +75,7 @@ Obj87_ClrLoop:
 		move.w	#60,eson_time(a0)
 
 ESon_Wait2:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj87_MakeLogo:	; Routine $C
@@ -87,7 +87,7 @@ Obj87_MakeLogo:	; Routine $C
 		move.b	#id_EndSTH,(v_endlogo).w ; load "SONIC THE HEDGEHOG" object
 
 ESon_Wait3:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj87_Animate:	; Rountine 4, $A, $E, $12
@@ -105,10 +105,10 @@ Obj87_Leap:	; Routine $10
 		clr.b	obStatus(a0)
 		move.b	#2,obPriority(a0)
 		move.b	#5,obFrame(a0)
-		move.b	#2,obAnim(a0)	; use "leaping"	animation
+		move.b	#2,obAnim(a0)	; use "leaping" animation
 		move.b	#id_EndSTH,(v_endlogo).w ; load "SONIC THE HEDGEHOG" object
 		bra.s	Obj87_Animate
 ; ===========================================================================
 
 ESon_Wait4:
-		rts	
+		rts

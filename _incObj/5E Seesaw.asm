@@ -74,7 +74,7 @@ See_Slope:	; Routine 2
 		move.w	obVelY(a1),see_speed(a0)
 		move.w	#$30,d1
 		jsr	(SlopeObject).l
-		rts	
+		rts
 ; ===========================================================================
 
 See_Slope2:	; Routine 4
@@ -90,7 +90,7 @@ See_Slope2:	; Routine 4
 		move.w	#$30,d1
 		move.w	obX(a0),d2
 		jsr	(SlopeObject2).l
-		rts	
+		rts
 ; ===========================================================================
 
 See_ChkSide:
@@ -124,7 +124,7 @@ See_ChgFrame:
 		bset	#0,obRender(a0)
 
 .noflip:
-		rts	
+		rts
 ; ===========================================================================
 
 See_Spikeball:	; Routine 6
@@ -198,7 +198,7 @@ loc_1185C:
 		move.w	d2,obX(a0)
 		clr.w	obY+2(a0)
 		clr.w	obX+2(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 See_SpikeFall:	; Routine $A
@@ -212,7 +212,7 @@ See_SpikeFall:	; Routine $A
 		bsr.w	ObjectFall
 
 locret_11898:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1189A:
@@ -252,11 +252,11 @@ See_Spring:
 		neg.w	obVelY(a2)
 		bset	#1,obStatus(a2)
 		bclr	#3,obStatus(a2)
-		clr.b	objoff_3C(a2)
+		clr.b	jumping(a2)
 		move.b	#id_Spring,obAnim(a2) ; change Sonic's animation to "spring" ($10)
 		move.b	#2,obRoutine(a2)
 		move.w	#sfx_Spring,d0
-		jsr	(PlaySound_Special).l	; play spring sound
+		jsr	(QueueSound2).l	; play spring sound
 
 loc_1192C:
 		clr.w	obVelX(a0)
@@ -264,7 +264,7 @@ loc_1192C:
 		subq.b	#2,obRoutine(a0)
 
 locret_11938:
-		rts	
+		rts
 ; ===========================================================================
 See_Speeds:	dc.w -8, -$1C, -$2F, -$1C, -8
 

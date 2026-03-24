@@ -22,7 +22,7 @@ BossFinal_Index:
 		dc.w loc_1A264-BossFinal_Index
 
 BossFinal_ObjData:
-		dc.w $100, $100, make_art_tile(ArtTile_FZ_Eggman_No_Vehicle,0,0)	; X pos, Y pos,	VRAM setting
+		dc.w $100, $100, make_art_tile(ArtTile_FZ_Eggman_No_Vehicle,0,0)	; X pos, Y pos, VRAM setting
 		dc.l Map_SEgg		; mappings pointer
 		dc.w boss_fz_x+$160, boss_fz_y+$80, make_art_tile(ArtTile_FZ_Boss,0,0)
 		dc.l Map_EggCyl
@@ -65,11 +65,11 @@ BossFinal_LoadBoss:
 		move.b	(a3)+,obRoutine(a1)
 		move.b	(a3)+,obAnim(a1)
 		move.b	(a3)+,obPriority(a1)
-		if Revision=0
+	if Revision=0
 		move.b	(a3)+,obWidth(a1)
-		else
-			move.b	(a3)+,obActWid(a1)
-		endif
+	else
+		move.b	(a3)+,obActWid(a1)
+	endif
 		move.b	(a3)+,obHeight(a1)
 		move.b	#4,obRender(a1)
 		bset	#7,obRender(a0)
@@ -124,7 +124,7 @@ loc_19E90:
 
 loc_19EA2:
 		addq.l	#1,(v_random).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_19EA8:
@@ -135,12 +135,12 @@ loc_19EA8:
 		andi.w	#$C,d0
 		move.w	d0,d1
 		addq.w	#2,d1
-		tst.l	d0
-		bpl.s	loc_19EC6
-		exg	d1,d0
+		tst.l	d0		; is random result negative?
+		bpl.s	loc_19EC6	; if not, branch
+		exg.l	d1,d0		; swap, Eggman's target cylinder
 
 loc_19EC6:
-		lea	word_19FD6(pc),a1
+		lea	BossFinal_CylinderPairs(pc),a1
 		move.w	(a1,d0.w),d0
 		move.w	(a1,d1.w),d1
 		move.w	d0,objoff_30(a0)
@@ -156,7 +156,7 @@ loc_19EC6:
 		move.w	#1,objoff_32(a0)
 		clr.b	objoff_35(a0)
 		move.w	#sfx_Rumbling,d0
-		jsr	(PlaySound_Special).l	; play rumbling sound
+		jsr	(QueueSound2).l	; play rumbling sound
 
 loc_19F10:
 		tst.w	objoff_32(a0)
@@ -198,7 +198,7 @@ loc_19F6A:
 		subq.b	#1,obColProp(a0)
 		move.b	#$64,objoff_35(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l	; play boss damage sound
+		jsr	(QueueSound2).l	; play boss damage sound
 
 loc_19F88:
 		subq.b	#1,objoff_35(a0)
@@ -221,21 +221,30 @@ loc_19FA6:
 		addq.b	#2,objoff_34(a0)
 		move.w	#-1,objoff_30(a0)
 		clr.w	objoff_32(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_19FBC:
-		if Revision<>0
-			moveq	#100,d0
-			bsr.w	AddPoints
-		endif
+	if Revision<>0
+		moveq	#100,d0
+		bsr.w	AddPoints
+	endif
 		move.b	#6,objoff_34(a0)
 		move.w	#boss_fz_x+$170,obX(a0)
 		move.w	#boss_fz_y+$2C,obY(a0)
 		move.b	#$14,obHeight(a0)
-		rts	
+		rts
+
 ; ===========================================================================
-word_19FD6:	dc.w 0,	2, 2, 4, 4, 6, 6, 0
+; word_19FD6:
+BossFinal_CylinderPairs:
+		; Possible permutations of the two cylinders that are activated at once.
+		; Two words per pair, first one is (normally) the cylinder Eggman is hiding in.
+		; 0 = top-left -- 2 = top-right -- 4 = bottom-left -- 6 bottom-right
+		dc.w 0, 2
+		dc.w 2, 4
+		dc.w 4, 6
+		dc.w 6, 0
 ; ===========================================================================
 
 loc_19FE6:
@@ -262,20 +271,20 @@ loc_1A00A:
 		clr.w	objoff_32(a0)
 
 locret_1A01E:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1A020:
 		move.w	#sfx_Electric,d0
-		jmp	(PlaySound_Special).l	; play electricity sound
+		jmp	(QueueSound2).l	; play electricity sound
 ; ===========================================================================
 
 loc_1A02A:
-		if Revision=0
+	if Revision=0
 		move.b	#$30,obWidth(a0)
-		else
-			move.b	#$30,obActWid(a0)
-		endif
+	else
+		move.b	#$30,obActWid(a0)
+	endif
 		bset	#0,obStatus(a0)
 		jsr	(SpeedToPos).l
 		move.b	#6,obFrame(a0)
@@ -284,11 +293,11 @@ loc_1A02A:
 		blo.s	loc_1A070
 		move.w	#boss_fz_y+$8C,obY(a0)
 		addq.b	#2,objoff_34(a0)
-		if Revision=0
+	if Revision=0
 		move.b	#$20,obWidth(a0)
-		else
-			move.b	#$20,obActWid(a0)
-		endif
+	else
+		move.b	#$20,obActWid(a0)
+	endif
 		move.w	#$100,obVelX(a0)
 		move.w	#-$100,obVelY(a0)
 		addq.b	#2,(v_dle_routine).w
@@ -390,7 +399,7 @@ loc_1A172:
 ; ===========================================================================
 
 locret_1A190:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1A192:
@@ -419,7 +428,7 @@ loc_1A1D4:
 		bne.s	loc_1A216
 		move.w	#$1E,objoff_30(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l	; play boss damage sound
+		jsr	(QueueSound2).l	; play boss damage sound
 
 loc_1A1FC:
 		subq.w	#1,objoff_30(a0)

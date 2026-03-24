@@ -1,6 +1,6 @@
 ; ---------------------------------------------------------------------------
-; Object 35 - fireball that sits on the	floor (MZ)
-; (appears when	you walk on sinking platforms)
+; Object 35 - fireball that sits on the floor (MZ)
+; (appears when you walk on sinking platforms)
 ; ---------------------------------------------------------------------------
 
 GrassFire:
@@ -26,7 +26,7 @@ GFire_Main:	; Routine 0
 		move.b	#$8B,obColType(a0)
 		move.b	#8,obActWid(a0)
 		move.w	#sfx_Burning,d0
-		jsr	(PlaySound_Special).l	 ; play burning sound
+		jsr	(QueueSound2).l	 ; play burning sound
 		tst.b	obSubtype(a0)
 		beq.s	loc_B238
 		addq.b	#2,obRoutine(a0)

@@ -47,7 +47,7 @@ Saw_Action:	; Routine 2
 ; ===========================================================================
 
 .type00:
-		rts			; doesn't move
+		rts		; doesn't move
 ; ===========================================================================
 
 .type01:
@@ -76,10 +76,10 @@ Saw_Action:	; Routine 2
 		andi.w	#$F,d0
 		bne.s	.nosound01
 		move.w	#sfx_Saw,d0
-		jsr	(PlaySound_Special).l		; play saw sound
+		jsr	(QueueSound2).l		; play saw sound
 
 .nosound01:
-		rts	
+		rts
 ; ===========================================================================
 
 .type02:
@@ -107,10 +107,10 @@ Saw_Action:	; Routine 2
 		cmpi.b	#$18,d0
 		bne.s	.nosound02
 		move.w	#sfx_Saw,d0
-		jsr	(PlaySound_Special).l		; play saw sound
+		jsr	(QueueSound2).l		; play saw sound
 
 .nosound02:
-		rts	
+		rts
 ; ===========================================================================
 
 .type03:
@@ -134,13 +134,13 @@ Saw_Action:	; Routine 2
 		move.b	#$A2,obColType(a0)
 		move.b	#2,obFrame(a0)
 		move.w	#sfx_Saw,d0
-		jsr	(PlaySound_Special).l		; play saw sound
+		jsr	(QueueSound2).l		; play saw sound
 
 .nosaw03x:
 		addq.l	#4,sp
 
 .nosaw03y:
-		rts	
+		rts
 ; ===========================================================================
 
 .here03:
@@ -152,7 +152,7 @@ Saw_Action:	; Routine 2
 		bchg	#0,obFrame(a0)
 
 .sameframe03:
-		rts	
+		rts
 ; ===========================================================================
 
 .type04:
@@ -174,13 +174,13 @@ Saw_Action:	; Routine 2
 		move.b	#$A2,obColType(a0)
 		move.b	#2,obFrame(a0)
 		move.w	#sfx_Saw,d0
-		jsr	(PlaySound_Special).l		; play saw sound
+		jsr	(QueueSound2).l		; play saw sound
 
 .nosaw04x:
 		addq.l	#4,sp
 
 .nosaw04y:
-		rts	
+		rts
 ; ===========================================================================
 
 .here04:
@@ -192,4 +192,4 @@ Saw_Action:	; Routine 2
 		bchg	#0,obFrame(a0)
 
 .sameframe04:
-		rts	
+		rts

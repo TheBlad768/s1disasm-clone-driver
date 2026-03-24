@@ -45,7 +45,7 @@ Fan_Delay:	; Routine 2
 
 .chksonic:
 		addi.w	#$50,d0
-		cmpi.w	#$F0,d0		; is Sonic more	than $A0 pixels	from the fan?
+		cmpi.w	#$F0,d0		; is Sonic more than $A0 pixels from the fan?
 		bhs.s	.animate	; if yes, branch
 		move.w	obY(a1),d1
 		addi.w	#$60,d1
@@ -96,4 +96,4 @@ Fan_Delay:	; Routine 2
 .chkdel:
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
-		rts	
+		rts

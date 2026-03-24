@@ -110,7 +110,7 @@ loc_19202:
 		bne.s	loc_1923A
 		move.b	#$20,objoff_3E(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l	; play boss damage sound
+		jsr	(QueueSound2).l	; play boss damage sound
 
 loc_1923A:
 		lea	(v_palette+$22).w,a1
@@ -126,7 +126,7 @@ loc_19248:
 		move.b	#$F,obColType(a0)
 
 locret_19256:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_19258:
@@ -135,7 +135,7 @@ loc_19258:
 		move.b	#6,ob2ndRout(a0)
 		move.w	#$B4,objoff_3C(a0)
 		clr.w	obVelX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_19270:
@@ -231,7 +231,7 @@ loc_19348:
 		move.w	#-$800,obVelY(a0)
 		tst.w	objoff_36(a0)
 		bne.s	loc_19362
-		asr	obVelY(a0)
+		asr.w	obVelY(a0)
 
 loc_19362:
 		moveq	#0,d0
@@ -340,7 +340,7 @@ loc_19438:
 loc_19446:
 		bra.w	loc_19202
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 BossSpringYard_FindBlocks:
@@ -369,7 +369,7 @@ loc_1946A:
 		dbf	d0,BossSpringYard_FindLoop
 
 locret_19472:
-		rts	
+		rts
 ; End of function BossSpringYard_FindBlocks
 
 ; ===========================================================================
@@ -425,8 +425,8 @@ loc_194DA:
 
 loc_194E0:
 		clr.w	obVelY(a0)
-		move.w	#mus_SYZ,d0
-		jsr	(PlaySound).l		; play SYZ music
+		move.w	#bgm_SYZ,d0
+		jsr	(QueueSound1).l		; play SYZ music
 
 loc_194EE:
 		bra.w	loc_191F2
@@ -483,12 +483,12 @@ off_19546:	dc.w loc_19574-off_19546, loc_19574-off_19546
 
 loc_19552:
 		moveq	#$A,d1
-		rts	
+		rts
 ; ===========================================================================
 
 loc_19556:
 		moveq	#6,d1
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1955A:
@@ -512,7 +512,7 @@ loc_19574:
 		tst.b	obColType(a1)
 		bne.s	loc_1957E
 		moveq	#5,d1
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1957E:
@@ -521,7 +521,7 @@ loc_1957E:
 		moveq	#4,d1
 
 locret_19588:
-		rts	
+		rts
 ; ===========================================================================
 
 BossSpringYard_FlameMain:; Routine 6

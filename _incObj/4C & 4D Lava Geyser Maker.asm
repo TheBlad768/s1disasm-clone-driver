@@ -56,7 +56,7 @@ GMake_Wait:	; Routine 2
 		; double-delete and display-and-delete bugs.
 		out_of_range.w	DeleteObject
 	endif
-		rts	
+		rts
 ; ===========================================================================
 
 GMake_MakeLava:	; Routine 6
@@ -93,7 +93,7 @@ GMake_ChkType:	; Routine 4
 		; double-delete and display-and-delete bugs.
 		out_of_range.w	DeleteObject
 	endif
-		rts	
+		rts
 ; ===========================================================================
 
 GMake_Display:	; Routine 8
@@ -105,7 +105,7 @@ GMake_Display:	; Routine 8
 		lea	(Ani_Geyser).l,a1
 		bsr.w	AnimateSprite
 		bsr.w	DisplaySprite
-		rts	
+		rts
 ; ===========================================================================
 
 GMake_Delete:	; Routine $A
@@ -118,7 +118,7 @@ GMake_Delete:	; Routine $A
 		; double-delete and display-and-delete bugs.
 		out_of_range.w	DeleteObject
 	endif
-		rts	
+		rts
 
 
 ; ---------------------------------------------------------------------------
@@ -185,7 +185,7 @@ Geyser_Main:	; Routine 0
 
 .fail:
 		dbf	d1,.loop
-		rts	
+		rts
 ; ===========================================================================
 
 .activate:
@@ -211,7 +211,7 @@ Geyser_Main:	; Routine 0
 
 .sound:
 		move.w	#sfx_Burning,d0
-		jsr	(PlaySound_Special).l	; play flame sound
+		jsr	(QueueSound2).l	; play flame sound
 
 Geyser_Action:	; Routine 2
 		moveq	#0,d0
@@ -229,7 +229,7 @@ Geyser_ChkDel:
 		; Moved to prevent a delete-and-display bug.
 		bra.w	DisplaySprite
 	else
-		rts	
+		rts
 	endif
 ; ===========================================================================
 Geyser_Types:	dc.w Geyser_Type00-Geyser_Types
@@ -246,7 +246,7 @@ Geyser_Type00:
 		move.b	#3,obAnim(a1)
 
 locret_EFDA:
-		rts	
+		rts
 ; ===========================================================================
 
 Geyser_Type01:
@@ -259,7 +259,7 @@ Geyser_Type01:
 		move.b	#1,obAnim(a1)
 
 locret_EFFA:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_EFFC:	; Routine 4

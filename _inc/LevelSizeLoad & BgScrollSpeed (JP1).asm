@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	load level boundaries and start	locations
+; Subroutine to load level boundaries and start locations
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LevelSizeLoad:
@@ -18,7 +18,7 @@ LevelSizeLoad:
 		move.w	d0,d1
 		add.w	d0,d0
 		add.w	d1,d0
-		lea	LevelSizeArray(pc,d0.w),a0 ; load level	boundaries
+		lea	LevelSizeArray(pc,d0.w),a0 ; load level boundaries
 		move.w	(a0)+,d0
 		move.w	d0,(v_unused11).w
 		move.l	(a0)+,d0
@@ -39,47 +39,7 @@ LevelSizeLoad:
 ; Level size array
 ; ---------------------------------------------------------------------------
 LevelSizeArray:
-		;    |----------------------------------------Unused
-		;    |      |---------------------------------Left boundary
-		;    |      |      |--------------------------Right boundary
-		;    |      |      |      |-------------------Top boundary
-		;    |      |      |      |      |------------Bottom boundary
-		; GHZ|      |      |      |      |      |-----Vertical screen shift (redundant)
-		dc.w $0004, $0000, $24BF, $0000, $0300, $0060
-		dc.w $0004, $0000, $1EBF, $0000, $0300, $0060
-		dc.w $0004, $0000, $2960, $0000, $0300, $0060
-		dc.w $0004, $0000, $2ABF, $0000, $0300, $0060
-		; LZ
-		dc.w $0004, $0000, $19BF, $0000, $0530, $0060
-		dc.w $0004, $0000, $10AF, $0000, $0720, $0060
-		dc.w $0004, $0000, $202F, $FF00, $0800, $0060
-		dc.w $0004, $0000, $20BF, $0000, $0720, $0060
-		; MZ
-		dc.w $0004, $0000, $17BF, $0000, $01D0, $0060
-		dc.w $0004, $0000, $17BF, $0000, $0520, $0060
-		dc.w $0004, $0000, $1800, $0000, $0720, $0060
-		dc.w $0004, $0000, $16BF, $0000, $0720, $0060
-		; SLZ
-		dc.w $0004, $0000, $1FBF, $0000, $0640, $0060
-		dc.w $0004, $0000, $1FBF, $0000, $0640, $0060
-		dc.w $0004, $0000, $2000, $0000, $06C0, $0060
-		dc.w $0004, $0000, $3EC0, $0000, $0720, $0060
-		; SYZ
-		dc.w $0004, $0000, $22C0, $0000, $0420, $0060
-		dc.w $0004, $0000, $28C0, $0000, $0520, $0060
-		dc.w $0004, $0000, $2C00, $0000, $0620, $0060
-		dc.w $0004, $0000, $2EC0, $0000, $0620, $0060
-		; SBZ
-		dc.w $0004, $0000, $21C0, $0000, $0720, $0060
-		dc.w $0004, $0000, $1E40, $FF00, $0800, $0060
-		dc.w $0004, $2080, $2460, $0510, $0510, $0060
-		dc.w $0004, $0000, $3EC0, $0000, $0720, $0060
-		zonewarning LevelSizeArray,$30
-		; Ending
-		dc.w $0004, $0000, $0500, $0110, $0110, $0060
-		dc.w $0004, $0000, $0DC0, $0110, $0110, $0060
-		dc.w $0004, $0000, $2FFF, $0000, $0320, $0060
-		dc.w $0004, $0000, $2FFF, $0000, $0320, $0060
+		include	"_inc/LevelSizeArray.asm"
 
 ; ---------------------------------------------------------------------------
 ; Ending start location array
@@ -100,6 +60,18 @@ LevSz_ChkLamp:
 ; ===========================================================================
 
 LevSz_StartLoc:
+	if FixBugs
+		; Fix title screen position
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Title_Screen_position_in_Sonic_1#Fix_vertical_position_after_editing_GHZ1
+		cmpi.b	#id_Title,(v_gamemode).w	; is this the title screen?
+		bne.s	LevSz_NotTitle			; if not, branch
+		move.w	#$0050,d1			; X coordinate (this also dictates the little delay before the title screen starts scrolling)
+		move.w	#$03B0,d0			; Y coordinate
+		move.w	d1,(v_player+obX).w		; set X coordinate
+		move.w	d0,(v_player+obY).w		; set Y coordinate
+		bra.s	LevSz_SkipStartPos		; skip normal logic
+LevSz_NotTitle:
+	endif
 		move.w	(v_zone).w,d0
 		lsl.b	#6,d0
 		lsr.w	#4,d0
@@ -159,29 +131,29 @@ SetScr_WithinBottom:
 StartLocArray:	include	"_inc/Start Location Array - Levels.asm"
 
 ; ---------------------------------------------------------------------------
-; Which	256x256	tiles contain loops or roll-tunnels
+; Which 256x256 tiles contain loops or roll-tunnels
 ; ---------------------------------------------------------------------------
 
 LoopTileNums:
 
-; 		loop	loop	tunnel	tunnel
+; 			loop	loop	tunnel	tunnel
 
-	dc.b	$B5,	$7F,	$1F,	$20	; Green Hill
-	dc.b	$7F,	$7F,	$7F,	$7F	; Labyrinth
-	dc.b	$7F,	$7F,	$7F,	$7F	; Marble
-	dc.b	$AA,	$B4,	$7F,	$7F	; Star Light
-	dc.b	$7F,	$7F,	$7F,	$7F	; Spring Yard
-	dc.b	$7F,	$7F,	$7F,	$7F	; Scrap Brain
-	zonewarning LoopTileNums,4
-	dc.b	$7F,	$7F,	$7F,	$7F	; Ending (Green Hill)
+		dc.b	$B5,	$7F,	$1F,	$20	; Green Hill
+		dc.b	$7F,	$7F,	$7F,	$7F	; Labyrinth
+		dc.b	$7F,	$7F,	$7F,	$7F	; Marble
+		dc.b	$AA,	$B4,	$7F,	$7F	; Star Light
+		dc.b	$7F,	$7F,	$7F,	$7F	; Spring Yard
+		dc.b	$7F,	$7F,	$7F,	$7F	; Scrap Brain
+		zonewarning LoopTileNums,4
+		dc.b	$7F,	$7F,	$7F,	$7F	; Ending (Green Hill)
 
 		even
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	set scroll speed of some backgrounds
+; Subroutine to set scroll speed of some backgrounds
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 BgScrollSpeed:
@@ -224,11 +196,11 @@ BgScroll_GHZ:
 BgScroll_LZ:
 		asr.l	#1,d0
 		move.w	d0,(v_bgscreenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_MZ:
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SLZ:
@@ -236,7 +208,7 @@ BgScroll_SLZ:
 		addi.w	#$C0,d0
 		move.w	d0,(v_bgscreenposy).w
 		clr.l	(v_bgscreenposx).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SYZ:
@@ -248,7 +220,7 @@ BgScroll_SYZ:
 		addq.w	#1,d0
 		move.w	d0,(v_bgscreenposy).w
 		clr.l	(v_bgscreenposx).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_SBZ:
@@ -256,7 +228,7 @@ BgScroll_SBZ:
 		asr.w	#3,d0
 		addq.w	#1,d0
 		move.w	d0,(v_bgscreenposy).w
-		rts	
+		rts
 ; ===========================================================================
 
 BgScroll_End:

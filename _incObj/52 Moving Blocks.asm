@@ -15,7 +15,7 @@ MBlock_Index:	dc.w MBlock_Main-MBlock_Index
 mblock_origX = objoff_30
 mblock_origY = objoff_32
 
-MBlock_Var:	dc.b $10, 0		; object width,	frame number
+MBlock_Var:	dc.b $10, 0		; object width, frame number
 		dc.b $20, 1
 		dc.b $20, 2
 		dc.b $40, 3
@@ -69,7 +69,7 @@ MBlock_StandOn:	; Routine 4
 	if FixBugs
 		; MBlock_Move manipulates the stack pointer, potentially
 		; resulting in a crash. To avoid this, don't store data on
-		; the stack. We can use obejct scratch RAM instead.
+		; the stack. We can use object scratch RAM instead.
 		move.w	obX(a0),objoff_38(a0)
 	else
 		move.w	obX(a0),-(sp)
@@ -104,7 +104,7 @@ MBlock_TypeIndex:dc.w MBlock_Type00-MBlock_TypeIndex, MBlock_Type01-MBlock_TypeI
 ; ===========================================================================
 
 MBlock_Type00:
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_Type01:
@@ -119,7 +119,7 @@ loc_FF26:
 		move.w	mblock_origX(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_Type02:
@@ -128,7 +128,7 @@ MBlock_Type02:
 		addq.b	#1,obSubtype(a0) ; if yes, add 1 to type
 
 MBlock_02_Wait:
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_Type03:
@@ -137,14 +137,14 @@ MBlock_Type03:
 		bsr.w	ObjHitWallRight
 		tst.w	d1		; has the platform hit a wall?
 		bmi.s	MBlock_03_End	; if yes, branch
-		addq.w	#1,obX(a0)	; move platform	to the right
+		addq.w	#1,obX(a0)	; move platform to the right
 		move.w	obX(a0),mblock_origX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_03_End:
-		clr.b	obSubtype(a0)	; change to type 00 (non-moving	type)
-		rts	
+		clr.b	obSubtype(a0)	; change to type 00 (non-moving type)
+		rts
 ; ===========================================================================
 
 MBlock_Type05:
@@ -153,14 +153,14 @@ MBlock_Type05:
 		bsr.w	ObjHitWallRight
 		tst.w	d1		; has the platform hit a wall?
 		bmi.s	MBlock_05_End	; if yes, branch
-		addq.w	#1,obX(a0)	; move platform	to the right
+		addq.w	#1,obX(a0)	; move platform to the right
 		move.w	obX(a0),mblock_origX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_05_End:
 		addq.b	#1,obSubtype(a0) ; change to type 06 (falling)
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_Type06:
@@ -170,11 +170,11 @@ MBlock_Type06:
 		tst.w	d1		; has platform hit the floor?
 		bpl.w	locret_FFA0	; if not, branch
 		add.w	d1,obY(a0)
-		clr.w	obVelY(a0)	; stop platform	falling
+		clr.w	obVelY(a0)	; stop platform falling
 		clr.b	obSubtype(a0)	; change to type 00 (non-moving)
 
 locret_FFA0:
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_Type07:
@@ -188,7 +188,7 @@ MBlock_07_ChkDel:
 		addq.l	#4,sp
 
 		out_of_range.w	DeleteObject,mblock_origX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_Type08:
@@ -203,7 +203,7 @@ loc_FFE2:
 		move.w	mblock_origY(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_Type0A:
@@ -225,7 +225,7 @@ loc_10004:
 		beq.s	MBlock_0A_Wait
 		add.w	d1,obX(a0)	; move platform
 		move.w	#300,objoff_34(a0)	; set time delay to 5 seconds
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_0A_Wait:
@@ -234,7 +234,7 @@ MBlock_0A_Wait:
 		move.w	#1,objoff_36(a0)	; set platform to move back to its original position
 
 locret_1002E:
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_0A_Back:
@@ -242,10 +242,10 @@ MBlock_0A_Back:
 		sub.w	mblock_origX(a0),d0
 		beq.s	MBlock_0A_Reset
 		sub.w	d1,obX(a0)	; return platform to its original position
-		rts	
+		rts
 ; ===========================================================================
 
 MBlock_0A_Reset:
 		clr.w	objoff_36(a0)
 		subq.b	#1,obSubtype(a0)
-		rts	
+		rts

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 49 - waterfall	sound effect (GHZ)
+; Object 49 - waterfall sound effect (GHZ)
 ; ---------------------------------------------------------------------------
 
 WaterSound:
@@ -21,8 +21,8 @@ WSnd_PlaySnd:	; Routine 2
 		andi.b	#$3F,d0
 		bne.s	WSnd_ChkDel
 		move.w	#sfx_Waterfall,d0
-		jsr	(PlaySound_Special).l	; play waterfall sound
+		jsr	(QueueSound2).l	; play waterfall sound
 
 WSnd_ChkDel:
 		out_of_range.w	DeleteObject
-		rts	
+		rts

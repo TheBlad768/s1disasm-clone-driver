@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - GHZ	collapsing ledge
+; Sprite mappings - GHZ collapsing ledge
 ; ---------------------------------------------------------------------------
 Map_Ledge_internal:	mappingsTable
 	mappingsTableEntry.w	.left
@@ -46,7 +46,7 @@ Map_Ledge_internal:	mappingsTable
 .right_End
 
 .leftsmash:	spriteHeader
-	spritePiece	$20, -$38, 2, 3, $5D, 0, 0, 0, 0 ; ledge facing	left in	pieces
+	spritePiece	$20, -$38, 2, 3, $5D, 0, 0, 0, 0 ; ledge facing left in pieces
 	spritePiece	$10, -$38, 2, 3, $57, 0, 0, 0, 0
 	spritePiece	0, -$30, 2, 2, $67, 0, 0, 0, 0
 	spritePiece	-$10, -$30, 2, 2, $63, 0, 0, 0, 0
@@ -74,7 +74,7 @@ Map_Ledge_internal:	mappingsTable
 .leftsmash_End
 
 .rightsmash:	spriteHeader
-	spritePiece	$20, -$38, 2, 3, $5D, 0, 0, 0, 0 ; ledge facing	right in pieces
+	spritePiece	$20, -$38, 2, 3, $5D, 0, 0, 0, 0 ; ledge facing right in pieces
 	spritePiece	$10, -$38, 2, 3, $57, 0, 0, 0, 0
 	spritePiece	0, -$30, 2, 2, $67, 0, 0, 0, 0
 	spritePiece	-$10, -$30, 2, 2, $63, 0, 0, 0, 0

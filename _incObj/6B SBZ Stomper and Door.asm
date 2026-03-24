@@ -15,7 +15,7 @@ sto_origX = objoff_34		; original x-axis position
 sto_origY = objoff_30		; original y-axis position
 sto_active = objoff_38		; flag set when a switch is pressed
 
-Sto_Var:	dc.b  $40,  $C,	$80,   1 ; width, height, ????,	type number
+Sto_Var:	dc.b  $40,  $C,	$80,   1 ; width, height, ????, type number
 		dc.b  $1C, $20,	$38,   3
 		dc.b  $1C, $20,	$40,   4
 		dc.b  $1C, $20,	$60,   4
@@ -163,7 +163,7 @@ Sto_Action:	; Routine 2
 		move.w	sto_origX(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_15DE0:
@@ -201,7 +201,7 @@ Sto_Action:	; Routine 2
 		move.w	sto_origX(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_15E3C:
@@ -248,7 +248,7 @@ Sto_Action:	; Routine 2
 		move.w	sto_origY(a0),d1
 		add.w	d0,d1
 		move.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .type04:
@@ -291,7 +291,7 @@ Sto_Action:	; Routine 2
 		move.w	sto_origY(a0),d1
 		add.w	d0,d1
 		move.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .type05:
@@ -317,10 +317,10 @@ Sto_Action:	; Routine 2
 		beq.s	.loc_15F5E
 
 .locret_15F5C:
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_15F5E:
 		clr.b	obSubtype(a0)
 		clr.b	sto_active(a0)
-		rts	
+		rts

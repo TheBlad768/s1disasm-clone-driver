@@ -3,7 +3,7 @@
 ; ---------------------------------------------------------------------------
 
 SonicSpecial:
-		tst.w	(v_debuguse).w	; is debug mode	being used?
+		tst.w	(v_debuguse).w	; is debug mode being used?
 		beq.s	Obj09_Normal	; if not, branch
 		bsr.w	SS_FixCamera
 		bra.w	DebugMode
@@ -34,7 +34,7 @@ Obj09_Main:	; Routine 0
 		bset	#1,obStatus(a0)
 
 Obj09_ChkDebug:	; Routine 2
-		tst.w	(f_debugmode).w	; is debug mode	cheat enabled?
+		tst.w	(f_debugmode).w	; is debug mode cheat enabled?
 		beq.s	Obj09_NoDebug	; if not, branch
 		btst	#bitB,(v_jpadpress1).w ; is button B pressed?
 		beq.s	Obj09_NoDebug	; if not, branch
@@ -75,9 +75,9 @@ Obj09_Display:
 		add.w	(v_ssrotate).w,d0
 		move.w	d0,(v_ssangle).w
 		jsr	(Sonic_Animate).l
-		rts	
+		rts
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_Move:
@@ -133,16 +133,16 @@ loc_1BAA8:
 		sub.l	d1,obX(a0)
 		sub.l	d0,obY(a0)
 		move.w	#0,obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BAF2:
 		movem.l	(sp)+,d0-d1
-		rts	
+		rts
 ; End of function Obj09_Move
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_MoveLeft:
@@ -159,7 +159,7 @@ loc_1BB06:
 
 loc_1BB14:
 		move.w	d0,obInertia(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BB1A:
@@ -169,11 +169,11 @@ loc_1BB1A:
 
 loc_1BB22:
 		move.w	d0,obInertia(a0)
-		rts	
+		rts
 ; End of function Obj09_MoveLeft
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_MoveRight:
@@ -199,16 +199,16 @@ loc_1BB50:
 		move.w	d0,obInertia(a0)
 
 locret_1BB54:
-		rts	
+		rts
 ; End of function Obj09_MoveRight
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_Jump:
 		move.b	(v_jpadpress2).w,d0
-		andi.b	#btnABC,d0	; is A,	B or C pressed?
+		andi.b	#btnABC,d0	; is A, B or C pressed?
 		beq.s	Obj09_NoJump	; if not, branch
 		move.b	(v_ssangle).w,d0
 		andi.b	#$FC,d0
@@ -223,18 +223,18 @@ Obj09_Jump:
 		move.w	d0,obVelY(a0)
 		bset	#1,obStatus(a0)
 		move.w	#sfx_Jump,d0
-		jsr	(PlaySound_Special).l	; play jumping sound
+		jsr	(QueueSound2).l	; play jumping sound
 
 Obj09_NoJump:
-		rts	
+		rts
 ; End of function Obj09_Jump
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 nullsub_2:
-		rts	
+		rts
 ; End of function nullsub_2
 
 ; ===========================================================================
@@ -250,12 +250,12 @@ nullsub_2:
 		move.w	d1,obVelY(a0)
 
 locret_1BBB4:
-		rts	
+		rts
 ; ---------------------------------------------------------------------------
-; Subroutine to	fix the	camera on Sonic's position (special stage)
+; Subroutine to fix the camera on Sonic's position (special stage)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 SS_FixCamera:
@@ -275,7 +275,7 @@ loc_1BBCE:
 		sub.w	d0,(v_screenposy).w
 
 locret_1BBDE:
-		rts	
+		rts
 ; End of function SS_FixCamera
 
 ; ===========================================================================
@@ -315,7 +315,7 @@ loc_1BC40:
 		bsr.w	SS_FixCamera
 		jmp	(DisplaySprite).l
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_Fall:
@@ -347,7 +347,7 @@ Obj09_Fall:
 		sub.l	d1,d2
 		moveq	#0,d1
 		move.w	d1,obVelY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BCB0:
@@ -364,7 +364,7 @@ loc_1BCC6:
 		asr.l	#8,d1
 		move.w	d0,obVelX(a0)
 		move.w	d1,obVelY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BCD4:
@@ -373,15 +373,15 @@ loc_1BCD4:
 		move.w	d0,obVelX(a0)
 		move.w	d1,obVelY(a0)
 		bset	#1,obStatus(a0)
-		rts	
+		rts
 ; End of function Obj09_Fall
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_1BCE8:
-		lea	(v_ssbuffer1&$FFFFFF).l,a1
+		lea	(v_ssbuffer1).l,a1
 		moveq	#0,d4
 		swap	d2
 		move.w	d2,d4
@@ -408,11 +408,11 @@ sub_1BCE8:
 		move.b	(a1)+,d4
 		bsr.s	sub_1BD30
 		tst.b	d5
-		rts	
+		rts
 ; End of function sub_1BCE8
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 sub_1BD30:
@@ -425,22 +425,22 @@ sub_1BD30:
 		bhs.s	loc_1BD46
 
 locret_1BD44:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1BD46:
 		move.b	d4,objoff_30(a0)
 		move.l	a1,objoff_32(a0)
 		moveq	#-1,d5
-		rts	
+		rts
 ; End of function sub_1BD30
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_ChkItems:
-		lea	(v_ssbuffer1&$FFFFFF).l,a1
+		lea	(v_ssbuffer1).l,a1
 		moveq	#0,d4
 		move.w	obY(a0),d4
 		addi.w	#$50,d4
@@ -457,11 +457,11 @@ Obj09_ChkItems:
 		tst.b	objoff_3A(a0)
 		bne.w	Obj09_MakeGhostSolid
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_ChkCont:
-		cmpi.b	#$3A,d4		; is the item a	ring?
+		cmpi.b	#$3A,d4		; is the item a ring?
 		bne.s	Obj09_Chk1Up
 		bsr.w	SS_RemoveCollectedItem
 		bne.s	Obj09_GetCont
@@ -476,11 +476,11 @@ Obj09_GetCont:
 		bne.s	Obj09_NoCont
 		addq.b	#1,(v_continues).w ; add 1 to number of continues
 		move.w	#sfx_Continue,d0
-		jsr	(PlaySound).l	; play extra continue sound
+		jsr	(QueueSound2).l	; play extra continue sound
 
 Obj09_NoCont:
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_Chk1Up:
@@ -494,10 +494,10 @@ Obj09_Chk1Up:
 Obj09_Get1Up:
 		addq.b	#1,(v_lives).w	; add 1 to number of lives
 		addq.b	#1,(f_lifecount).w ; update the lives counter
-		move.w	#mus_ExtraLife,d0
-		jsr	(PlaySound).l	; play extra life music
+		move.w	#bgm_ExtraLife,d0
+		jsr	(QueueSound1).l	; play extra life music
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_ChkEmer:
@@ -521,42 +521,42 @@ Obj09_GetEmer:
 		addq.b	#1,(v_emeralds).w ; add 1 to number of emeralds
 
 Obj09_NoEmer:
-		move.w	#mus_Emerald,d0
-		jsr	(PlaySound_Special).l ;	play emerald music
+		move.w	#bgm_Emerald,d0
+		jsr	(QueueSound1).l ; play emerald music
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_ChkGhost:
-		cmpi.b	#$41,d4		; is the item a	ghost block?
+		cmpi.b	#$41,d4		; is the item a ghost block?
 		bne.s	Obj09_ChkGhostTag
 		move.b	#1,objoff_3A(a0)	; mark the ghost block as "passed"
 
 Obj09_ChkGhostTag:
-		cmpi.b	#$4A,d4		; is the item a	switch for ghost blocks?
+		cmpi.b	#$4A,d4		; is the item a switch for ghost blocks?
 		bne.s	Obj09_NoGhost
-		cmpi.b	#1,objoff_3A(a0)	; have the ghost blocks	been passed?
+		cmpi.b	#1,objoff_3A(a0)	; have the ghost blocks been passed?
 		bne.s	Obj09_NoGhost	; if not, branch
-		move.b	#2,objoff_3A(a0)	; mark the ghost blocks	as "solid"
+		move.b	#2,objoff_3A(a0)	; mark the ghost blocks as "solid"
 
 Obj09_NoGhost:
 		moveq	#-1,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_MakeGhostSolid:
 		cmpi.b	#2,objoff_3A(a0)	; is the ghost marked as "solid"?
 		bne.s	Obj09_GhostNotSolid ; if not, branch
-		lea	(v_ssblockbuffer&$FFFFFF).l,a1
+		lea	(v_ssblockbuffer).l,a1
 		moveq	#(v_ssblockbuffer_end-v_ssblockbuffer)/$80-1,d1
 
 Obj09_GhostLoop2:
 		moveq	#$40-1,d2
 
 Obj09_GhostLoop:
-		cmpi.b	#$41,(a1)	; is the item a	ghost block?
+		cmpi.b	#$41,(a1)	; is the item a ghost block?
 		bne.s	Obj09_NoReplace	; if not, branch
-		move.b	#$2C,(a1)	; replace ghost	block with a solid block
+		move.b	#$2C,(a1)	; replace ghost block with a solid block
 
 Obj09_NoReplace:
 		addq.w	#1,a1
@@ -567,11 +567,11 @@ Obj09_NoReplace:
 Obj09_GhostNotSolid:
 		clr.b	objoff_3A(a0)
 		moveq	#0,d4
-		rts	
+		rts
 ; End of function Obj09_ChkItems
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj09_ChkItems2:
@@ -587,11 +587,11 @@ loc_1BEA0:
 		move.b	#0,objoff_37(a0)
 
 locret_1BEAC:
-		rts	
+		rts
 ; ===========================================================================
 
 Obj09_ChkBumper:
-		cmpi.b	#$25,d0		; is the item a	bumper?
+		cmpi.b	#$25,d0		; is the item a bumper?
 		bne.s	Obj09_GOAL
 		move.l	objoff_32(a0),d1
 		subi.l	#$FF0001,d1
@@ -623,16 +623,16 @@ Obj09_ChkBumper:
 
 Obj09_BumpSnd:
 		move.w	#sfx_Bumper,d0
-		jmp	(PlaySound_Special).l	; play bumper sound
+		jmp	(QueueSound2).l	; play bumper sound
 ; ===========================================================================
 
 Obj09_GOAL:
-		cmpi.b	#$27,d0		; is the item a	"GOAL"?
+		cmpi.b	#$27,d0		; is the item a "GOAL"?
 		bne.s	Obj09_UPblock
 		addq.b	#2,obRoutine(a0) ; run routine "Obj09_ExitStage"
 		move.w	#sfx_SSGoal,d0
-		jsr	(PlaySound_Special).l	; play "GOAL" sound
-		rts	
+		jsr	(QueueSound2).l	; play "GOAL" sound
+		rts
 ; ===========================================================================
 
 Obj09_UPblock:
@@ -643,32 +643,32 @@ Obj09_UPblock:
 		move.b	#$1E,objoff_36(a0)
 		btst	#6,(v_ssrotate+1).w
 		beq.s	Obj09_UPsnd
-		asl	(v_ssrotate).w	; increase stage rotation speed
+		asl.w	(v_ssrotate).w	; increase stage rotation speed
 		movea.l	objoff_32(a0),a1
 		subq.l	#1,a1
 		move.b	#$2A,(a1)	; change item to a "DOWN" block
 
 Obj09_UPsnd:
 		move.w	#sfx_SSItem,d0
-		jmp	(PlaySound_Special).l	; play up/down sound
+		jmp	(QueueSound2).l	; play up/down sound
 ; ===========================================================================
 
 Obj09_DOWNblock:
-		cmpi.b	#$2A,d0		; is the item a	"DOWN" block?
+		cmpi.b	#$2A,d0		; is the item a "DOWN" block?
 		bne.s	Obj09_Rblock
 		tst.b	objoff_36(a0)
 		bne.w	Obj09_NoGlass
 		move.b	#$1E,objoff_36(a0)
 		btst	#6,(v_ssrotate+1).w
 		bne.s	Obj09_DOWNsnd
-		asr	(v_ssrotate).w	; reduce stage rotation speed
+		asr.w	(v_ssrotate).w	; reduce stage rotation speed
 		movea.l	objoff_32(a0),a1
 		subq.l	#1,a1
 		move.b	#$29,(a1)	; change item to an "UP" block
 
 Obj09_DOWNsnd:
 		move.w	#sfx_SSItem,d0
-		jmp	(PlaySound_Special).l	; play up/down sound
+		jmp	(QueueSound2).l	; play up/down sound
 ; ===========================================================================
 
 Obj09_Rblock:
@@ -687,11 +687,11 @@ Obj09_Rblock:
 Obj09_RevStage:
 		neg.w	(v_ssrotate).w	; reverse stage rotation
 		move.w	#sfx_SSItem,d0
-		jmp	(PlaySound_Special).l	; play sound
+		jmp	(QueueSound2).l	; play sound
 ; ===========================================================================
 
 Obj09_ChkGlass:
-		cmpi.b	#$2D,d0		; is the item a	glass block?
+		cmpi.b	#$2D,d0		; is the item a glass block?
 		beq.s	Obj09_Glass	; if yes, branch
 		cmpi.b	#$2E,d0
 		beq.s	Obj09_Glass
@@ -710,7 +710,7 @@ Obj09_Glass:
 		move.b	(a1),d0
 		addq.b	#1,d0		; change glass type when touched
 		cmpi.b	#$30,d0
-		bls.s	Obj09_GlassUpdate ; if glass is	still there, branch
+		bls.s	Obj09_GlassUpdate ; if glass is still there, branch
 		clr.b	d0		; remove the glass block when it's destroyed
 
 Obj09_GlassUpdate:
@@ -718,9 +718,9 @@ Obj09_GlassUpdate:
 
 Obj09_GlassSnd:
 		move.w	#sfx_SSGlass,d0
-		jmp	(PlaySound_Special).l	; play glass block sound
+		jmp	(QueueSound2).l	; play glass block sound
 ; ===========================================================================
 
 Obj09_NoGlass:
-		rts	
+		rts
 ; End of function Obj09_ChkItems2

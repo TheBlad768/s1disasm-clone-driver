@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 53 - collapsing floors	(MZ, SLZ, SBZ)
+; Object 53 - collapsing floors (MZ, SLZ, SBZ)
 ; ---------------------------------------------------------------------------
 
 CollapseFloor:
@@ -38,7 +38,7 @@ CFlo_Main:	; Routine 0
 		move.b	#$44,obActWid(a0)
 
 CFlo_Touch:	; Routine 2
-		tst.b	cflo_collapse_flag(a0)	; has Sonic touched the	object?
+		tst.b	cflo_collapse_flag(a0)	; has Sonic touched the object?
 		beq.s	.solid		; if not, branch
 		tst.b	cflo_timedelay(a0)	; has time delay reached zero?
 		beq.w	CFlo_Fragment	; if yes, branch
@@ -64,10 +64,10 @@ CFlo_Touch:	; Routine 2
 CFlo_Collapse:	; Routine 4
 		tst.b	cflo_timedelay(a0)
 		beq.w	loc_8458
-		move.b	#1,cflo_collapse_flag(a0)	; set object as	"touched"
+		move.b	#1,cflo_collapse_flag(a0)	; set object as "touched"
 		subq.b	#1,cflo_timedelay(a0)
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 CFlo_WalkOff:	; Routine $A
@@ -83,7 +83,7 @@ CFlo_WalkOff:	; Routine $A
 CFlo_Display:	; Routine 6
 		tst.b	cflo_timedelay(a0)	; has time delay reached zero?
 		beq.s	CFlo_TimeZero	; if yes, branch
-		tst.b	cflo_collapse_flag(a0)	; has Sonic touched the	object?
+		tst.b	cflo_collapse_flag(a0)	; has Sonic touched the object?
 		bne.w	loc_8402	; if yes, branch
 		subq.b	#1,cflo_timedelay(a0); subtract 1 from time
 		bra.w	DisplaySprite
@@ -106,7 +106,7 @@ loc_842E:
 		move.b	#6,obRoutine(a0) ; run "CFlo_Display" routine
 
 locret_843A:
-		rts	
+		rts
 ; ===========================================================================
 
 CFlo_TimeZero:
@@ -114,12 +114,12 @@ CFlo_TimeZero:
 		bsr.w	DisplaySprite
 		tst.b	obRender(a0)
 		bpl.s	CFlo_Delete
-		rts	
+		rts
 ; ===========================================================================
 
 CFlo_Delete:	; Routine 8
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 CFlo_Fragment:

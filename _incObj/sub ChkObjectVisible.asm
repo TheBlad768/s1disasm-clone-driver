@@ -1,11 +1,11 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	check if an object is off screen
+; Subroutine to check if an object is off screen
 
 ; output:
 ;	d0 = flag set if object is off screen
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ChkObjectVisible:
@@ -22,22 +22,22 @@ ChkObjectVisible:
 		bge.s	.offscreen	; if not, branch
 
 		moveq	#0,d0		; set flag to 0
-		rts	
+		rts
 
 .offscreen:
 		moveq	#1,d0		; set flag to 1
-		rts	
+		rts
 ; End of function ChkObjectVisible
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	check if an object is off screen
+; Subroutine to check if an object is off screen
 ; More precise than above subroutine, taking width into account
 
 ; output:
 ;	d0 = flag set if object is off screen
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ChkPartiallyVisible:
@@ -59,9 +59,9 @@ ChkPartiallyVisible:
 		bge.s	.offscreen2
 
 		moveq	#0,d0
-		rts	
+		rts
 
 .offscreen2:
 		moveq	#1,d0
-		rts	
+		rts
 ; End of function ChkPartiallyVisible

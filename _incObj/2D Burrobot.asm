@@ -49,12 +49,12 @@ Burro_Action:	; Routine 2
 		move.w	#255,burro_timedelay(a0)
 		move.w	#$80,obVelX(a0)
 		move.b	#1,obAnim(a0)
-		bchg	#0,obStatus(a0)	; change direction the Burrobot	is facing
+		bchg	#0,obStatus(a0)	; change direction the Burrobot is facing
 		beq.s	.nochg
-		neg.w	obVelX(a0)	; change direction the Burrobot	is moving
+		neg.w	obVelX(a0)	; change direction the Burrobot is moving
 
 .nochg:
-		rts	
+		rts
 ; ===========================================================================
 
 Burro_Move:
@@ -73,13 +73,13 @@ loc_AD6A:
 		jsr	(ObjFloorDist2).l
 		cmpi.w	#$C,d1
 		bge.s	loc_AD84
-		rts	
+		rts
 ; ===========================================================================
 
 loc_AD78:
 		jsr	(ObjFloorDist).l
 		add.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_AD84:
@@ -89,14 +89,14 @@ loc_AD84:
 		move.w	#59,burro_timedelay(a0)
 		move.w	#0,obVelX(a0)
 		move.b	#0,obAnim(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_ADA4:
 		addq.b	#2,ob2ndRout(a0)
 		move.w	#-$400,obVelY(a0)
 		move.b	#2,obAnim(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Burro_Jump:
@@ -115,7 +115,7 @@ Burro_Jump:
 		bsr.w	Burro_ChkSonic2
 
 locret_ADF0:
-		rts	
+		rts
 ; ===========================================================================
 
 Burro_ChkSonic:
@@ -134,9 +134,9 @@ Burro_ChkSonic:
 		move.w	#-$400,obVelY(a0)
 
 locret_AE20:
-		rts	
+		rts
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Burro_ChkSonic2:
@@ -151,5 +151,5 @@ Burro_ChkSonic2:
 
 loc_AE40:
 		cmp.w	d2,d0
-		rts	
+		rts
 ; End of function Burro_ChkSonic2

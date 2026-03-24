@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	find which tile	the object is standing on
+; Subroutine to find which tile the object is standing on
 
 ; input:
 ;	d2 = y-position of object's bottom edge
@@ -10,7 +10,7 @@
 ;	     (refers to a 16x16 tile number)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 FindNearestTile:
@@ -40,7 +40,7 @@ FindNearestTile:
 
 .blanktile:
 		movea.l	d1,a1
-		rts	
+		rts
 ; ===========================================================================
 
 .specialtile:
@@ -64,5 +64,5 @@ FindNearestTile:
 		andi.w	#$1E,d0
 		add.w	d0,d1
 		movea.l	d1,a1
-		rts	
+		rts
 ; End of function FindNearestTile

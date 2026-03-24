@@ -2,7 +2,7 @@
 ; Dynamic level events
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 DynamicLevelEvents:
@@ -29,7 +29,7 @@ loc_6DA0:
 		move.b	#1,(f_bgscrollvert).w
 
 DLE_NoChg:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_6DAC:
@@ -45,7 +45,7 @@ loc_6DAC:
 loc_6DC4:
 		add.w	d1,(v_limitbtm2).w
 		move.b	#1,(f_bgscrollvert).w
-		rts	
+		rts
 ; End of function DynamicLevelEvents
 
 ; ===========================================================================
@@ -59,7 +59,7 @@ DLE_Index:	dc.w DLE_GHZ-DLE_Index, DLE_LZ-DLE_Index
 		dc.w DLE_Ending-DLE_Index
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Green	Hill Zone dynamic level events
+; Green Hill Zone dynamic level events
 ; ---------------------------------------------------------------------------
 
 DLE_GHZ:
@@ -81,7 +81,7 @@ DLE_GHZ1:
 		move.w	#$400,(v_limitbtm1).w ; set lower y-boundary
 
 locret_6E08:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_GHZ2:
@@ -97,7 +97,7 @@ DLE_GHZ2:
 		move.w	#$300,(v_limitbtm1).w
 
 locret_6E3A:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_GHZ3:
@@ -131,13 +131,13 @@ loc_6E8E:
 		bhs.s	loc_6E98
 
 locret_6E96:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_6E98:
 		move.w	#boss_ghz_y,(v_limitbtm1).w
 		addq.b	#2,(v_dle_routine).w
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_GHZ3boss:
@@ -150,13 +150,13 @@ loc_6EB0:
 		blo.s	locret_6EE8
 		bsr.w	FindFreeObj
 		bne.s	loc_6ED0
-		_move.b	#id_BossGreenHill,obID(a1) ; load GHZ boss	object
+		_move.b	#id_BossGreenHill,obID(a1) ; load GHZ boss object
 		move.w	#boss_ghz_x+$100,obX(a1)
 		move.w	#boss_ghz_y-$80,obY(a1)
 
 loc_6ED0:
-		move.w	#mus_Boss,d0
-		bsr.w	PlaySound	; play boss music
+		move.w	#bgm_Boss,d0
+		bsr.w	QueueSound1	; play boss music
 		move.b	#1,(f_lockscreen).w ; lock screen
 		addq.b	#2,(v_dle_routine).w
 		moveq	#plcid_Boss,d0
@@ -164,12 +164,12 @@ loc_6ED0:
 ; ===========================================================================
 
 locret_6EE8:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_GHZ3end:
 		move.w	(v_screenposx).w,(v_limitleft2).w
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Labyrinth Zone dynamic level events
@@ -189,18 +189,18 @@ DLE_LZx:	dc.w DLE_LZ12-DLE_LZx
 ; ===========================================================================
 
 DLE_LZ12:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_LZ3:
-		tst.b	(f_switch+$F).w	; has switch $F	been pressed?
+		tst.b	(f_switch+$F).w	; has switch $F been pressed?
 		beq.s	loc_6F28	; if not, branch
 		lea	(v_lvllayout+$80*2+6).w,a1
 		cmpi.b	#7,(a1)
 		beq.s	loc_6F28
 		move.b	#7,(a1)		; modify level layout
 		move.w	#sfx_Rumbling,d0
-		bsr.w	PlaySound_Special ; play rumbling sound
+		bsr.w	QueueSound2 ; play rumbling sound
 
 loc_6F28:
 		tst.b	(v_dle_routine).w
@@ -214,8 +214,8 @@ loc_6F28:
 		_move.b	#id_BossLabyrinth,obID(a1) ; load LZ boss object
 
 loc_6F4A:
-		move.w	#mus_Boss,d0
-		bsr.w	PlaySound	; play boss music
+		move.w	#bgm_Boss,d0
+		bsr.w	QueueSound1	; play boss music
 		move.b	#1,(f_lockscreen).w ; lock screen
 		addq.b	#2,(v_dle_routine).w
 		moveq	#plcid_Boss,d0
@@ -223,11 +223,11 @@ loc_6F4A:
 ; ===========================================================================
 
 locret_6F62:
-		rts	
+		rts
 ; ===========================================================================
 
 locret_6F64:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SBZ3:
@@ -241,7 +241,7 @@ DLE_SBZ3:
 		move.b	#1,(f_playerctrl).w ; lock controls
 
 locret_6F8C:
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Marble Zone dynamic level events
@@ -284,14 +284,14 @@ loc_6FBA:
 		addq.b	#2,(v_dle_routine).w
 
 locret_6FE8:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_6FEA:
 		cmpi.w	#$340,(v_screenposy).w
 		bhs.s	loc_6FF8
 		subq.b	#2,(v_dle_routine).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_6FF8:
@@ -308,46 +308,46 @@ loc_6FF8:
 		addq.b	#2,(v_dle_routine).w
 
 locret_702C:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_702E:
 		cmpi.w	#$370,(v_screenposy).w
 		bhs.s	loc_703C
 		subq.b	#2,(v_dle_routine).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_703C:
 		cmpi.w	#$500,(v_screenposy).w
 		blo.s	locret_704E
-		if Revision<>0
-			cmpi.w	#$B80,(v_screenposx).w
-			bcs.s	locret_704E
-		endif
+	if Revision<>0
+		cmpi.w	#$B80,(v_screenposx).w
+		bcs.s	locret_704E
+	endif
 		move.w	#$500,(v_limittop2).w
 		addq.b	#2,(v_dle_routine).w
 
 locret_704E:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_7050:
-		if Revision<>0
-			cmpi.w	#$B80,(v_screenposx).w
-			bcc.s	locj_76B8
-			cmpi.w	#$340,(v_limittop2).w
-			beq.s	locret_7072
-			subq.w	#2,(v_limittop2).w
-			rts
+	if Revision<>0
+		cmpi.w	#$B80,(v_screenposx).w
+		bcc.s	locj_76B8
+		cmpi.w	#$340,(v_limittop2).w
+		beq.s	locret_7072
+		subq.w	#2,(v_limittop2).w
+		rts
 locj_76B8:
-			cmpi.w	#$500,(v_limittop2).w
-			beq.s	locj_76CE
-			cmpi.w	#$500,(v_screenposy).w
-			bcs.s	locret_7072
-			move.w	#$500,(v_limittop2).w
+		cmpi.w	#$500,(v_limittop2).w
+		beq.s	locj_76CE
+		cmpi.w	#$500,(v_screenposy).w
+		bcs.s	locret_7072
+		move.w	#$500,(v_limittop2).w
 locj_76CE:
-		endif
+	endif
 
 		cmpi.w	#$E70,(v_screenposx).w
 		blo.s	locret_7072
@@ -358,7 +358,7 @@ locj_76CE:
 		move.w	#$210,(v_limitbtm1).w
 
 locret_7072:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_MZ2:
@@ -368,7 +368,7 @@ DLE_MZ2:
 		move.w	#$200,(v_limitbtm1).w
 
 locret_7088:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_MZ3:
@@ -395,8 +395,8 @@ DLE_MZ3boss:
 		move.w	#boss_mz_y+$1C,obY(a1)
 
 loc_70D0:
-		move.w	#mus_Boss,d0
-		bsr.w	PlaySound	; play boss music
+		move.w	#bgm_Boss,d0
+		bsr.w	QueueSound1	; play boss music
 		move.b	#1,(f_lockscreen).w ; lock screen
 		addq.b	#2,(v_dle_routine).w
 		moveq	#plcid_Boss,d0
@@ -404,12 +404,12 @@ loc_70D0:
 ; ===========================================================================
 
 locret_70E8:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_MZ3end:
 		move.w	(v_screenposx).w,(v_limitleft2).w
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Star Light Zone dynamic level events
@@ -428,7 +428,7 @@ DLE_SLZx:	dc.w DLE_SLZ12-DLE_SLZx
 ; ===========================================================================
 
 DLE_SLZ12:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SLZ3:
@@ -449,7 +449,7 @@ DLE_SLZ3main:
 		addq.b	#2,(v_dle_routine).w
 
 locret_7130:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SLZ3boss:
@@ -460,8 +460,8 @@ DLE_SLZ3boss:
 		move.b	#id_BossStarLight,obID(a1) ; load SLZ boss object
 
 loc_7144:
-		move.w	#mus_Boss,d0
-		bsr.w	PlaySound	; play boss music
+		move.w	#bgm_Boss,d0
+		bsr.w	QueueSound1	; play boss music
 		move.b	#1,(f_lockscreen).w ; lock screen
 		addq.b	#2,(v_dle_routine).w
 		moveq	#plcid_Boss,d0
@@ -469,7 +469,7 @@ loc_7144:
 ; ===========================================================================
 
 locret_715C:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SLZ3end:
@@ -494,7 +494,7 @@ DLE_SYZx:	dc.w DLE_SYZ1-DLE_SYZx
 ; ===========================================================================
 
 DLE_SYZ1:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SYZ2:
@@ -507,7 +507,7 @@ DLE_SYZ2:
 		move.w	#$520,(v_limitbtm1).w
 
 locret_71A2:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SYZ3:
@@ -530,7 +530,7 @@ DLE_SYZ3main:
 		addq.b	#2,(v_dle_routine).w
 
 locret_71CE:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SYZ3boss:
@@ -543,23 +543,23 @@ DLE_SYZ3boss:
 		addq.b	#2,(v_dle_routine).w
 
 loc_71EC:
-		move.w	#mus_Boss,d0
-		bsr.w	PlaySound	; play boss music
+		move.w	#bgm_Boss,d0
+		bsr.w	QueueSound1	; play boss music
 		move.b	#1,(f_lockscreen).w ; lock screen
 		moveq	#plcid_Boss,d0
 		bra.w	AddPLC		; load boss patterns
 ; ===========================================================================
 
 locret_7200:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SYZ3end:
 		move.w	(v_screenposx).w,(v_limitleft2).w
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Scrap	Brain Zone dynamic level events
+; Scrap Brain Zone dynamic level events
 ; ---------------------------------------------------------------------------
 
 DLE_SBZ:
@@ -584,7 +584,7 @@ DLE_SBZ1:
 		move.w	#$2A0,(v_limitbtm1).w
 
 locret_7242:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SBZ2:
@@ -609,7 +609,7 @@ DLE_SBZ2main:
 		addq.b	#2,(v_dle_routine).w
 
 locret_727A:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SBZ2boss:
@@ -624,7 +624,7 @@ DLE_SBZ2boss:
 ; ===========================================================================
 
 locret_7298:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_SBZ2boss2:
@@ -645,12 +645,12 @@ loc_72B6:
 DLE_SBZ2end:
 		cmpi.w	#boss_sbz2_x,(v_screenposx).w
 		blo.s	loc_72C2
-		rts	
+		rts
 ; ===========================================================================
 
 loc_72C2:
 		move.w	(v_screenposx).w,(v_limitleft2).w
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_FZ:
@@ -698,7 +698,7 @@ loc_7320:
 ; ===========================================================================
 
 locret_7322:
-		rts	
+		rts
 ; ===========================================================================
 
 DLE_FZend2:
@@ -709,4 +709,4 @@ DLE_FZend2:
 ; ---------------------------------------------------------------------------
 
 DLE_Ending:
-		rts	
+		rts

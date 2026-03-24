@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - special stage entry	from beta
+; Sprite mappings - special stage entry from beta
 ; ---------------------------------------------------------------------------
 Map_Vanish_internal:	mappingsTable
 	mappingsTableEntry.w	.flash1

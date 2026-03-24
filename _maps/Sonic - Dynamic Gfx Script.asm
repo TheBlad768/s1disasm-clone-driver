@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Uncompressed graphics	loading	array for Sonic
+; Uncompressed graphics loading array for Sonic
 ; ---------------------------------------------------------------------------
 SonicDynPLC_internal:	mappingsTable
 	mappingsTableEntry.w	SonPLC_Null

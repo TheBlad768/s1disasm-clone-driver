@@ -1,4 +1,4 @@
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Bri_MoveSonic:
@@ -15,11 +15,11 @@ Bri_MoveSonic:
 		move.b	obHeight(a1),d1
 		sub.w	d1,d0
 		move.w	d0,obY(a1)	; change Sonic's position on y-axis
-		rts	
+		rts
 ; End of function Bri_MoveSonic
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Bri_Bend:
@@ -89,13 +89,13 @@ loc_76A4:
 		dbf	d2,loc_76A4
 
 locret_76CA:
-		rts	
+		rts
 ; End of function Bri_Bend
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; GHZ bridge-bending data
-; (Defines how the bridge bends	when Sonic walks across	it)
+; (Defines how the bridge bends when Sonic walks across it)
 ; ---------------------------------------------------------------------------
 Obj11_BendData:	binclude	"misc/ghzbend1.bin"
 		even
@@ -106,13 +106,13 @@ Obj11_BendData2:binclude	"misc/ghzbend2.bin"
 
 Bri_ChkDel:
 		out_of_range.w	.deletebridge
-		rts	
+		rts
 ; ===========================================================================
 
 .deletebridge:
 		moveq	#0,d2
 		lea	obSubtype(a0),a2 ; load bridge length
-		move.b	(a2)+,d2	; move bridge length to	d2
+		move.b	(a2)+,d2	; move bridge length to d2
 		subq.b	#1,d2		; subtract 1
 		bcs.s	.delparent
 
@@ -131,14 +131,14 @@ Bri_ChkDel:
 
 .delparent:
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Bri_Delete:	; Routine 6, 8
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Bri_Display:	; Routine $A
 		bsr.w	DisplaySprite
-		rts	
+		rts

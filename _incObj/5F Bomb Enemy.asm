@@ -28,7 +28,7 @@ Bom_Main:	; Routine 0
 		move.b	obSubtype(a0),d0
 		beq.s	loc_11A3C
 		move.b	d0,obRoutine(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_11A3C:
@@ -62,7 +62,7 @@ Bom_Action:	; Routine 2
 		neg.w	obVelX(a0)	; change direction
 
 .noflip:
-		rts	
+		rts
 ; ===========================================================================
 
 .wait:
@@ -70,7 +70,7 @@ Bom_Action:	; Routine 2
 		subq.w	#1,bom_time(a0)	; subtract 1 from time delay
 		bmi.s	.stopwalking	; if time expires, branch
 		bsr.w	SpeedToPos
-		rts	
+		rts
 ; ===========================================================================
 
 .stopwalking:
@@ -78,7 +78,7 @@ Bom_Action:	; Routine 2
 		move.w	#179,bom_time(a0) ; set time delay to 3 seconds
 		clr.w	obVelX(a0)	; stop walking
 		move.b	#0,obAnim(a0)	; use waiting animation
-		rts	
+		rts
 ; ===========================================================================
 
 .explode:
@@ -88,7 +88,7 @@ Bom_Action:	; Routine 2
 		move.b	#0,obRoutine(a0)
 
 .noexplode:
-		rts	
+		rts
 ; ===========================================================================
 
 .chksonic:
@@ -134,7 +134,7 @@ Bom_Action:	; Routine 2
 		move.l	a0,bom_parent(a1)
 
 .outofrange:
-		rts	
+		rts
 ; ===========================================================================
 
 Bom_Display:	; Routine 4
@@ -148,7 +148,7 @@ loc_11B70:
 		subq.w	#1,bom_time(a0)
 		bmi.s	loc_11B7C
 		bsr.w	SpeedToPos
-		rts	
+		rts
 ; ===========================================================================
 
 loc_11B7C:
@@ -171,7 +171,7 @@ loc_11B7C:
 		bne.s	.fail
 
 .makeshrapnel:
-		_move.b	#id_Bomb,obID(a1)	; load shrapnel	object
+		_move.b	#id_Bomb,obID(a1)	; load shrapnel object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	#6,obSubtype(a1)
@@ -182,7 +182,7 @@ loc_11B7C:
 		bset	#7,obRender(a1)
 
 .fail:
-		dbf	d1,.loop	; repeat 3 more	times
+		dbf	d1,.loop	; repeat 3 more times
 
 		move.b	#6,obRoutine(a0)
 

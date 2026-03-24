@@ -16,7 +16,13 @@ TSon_Index:	dc.w TSon_Main-TSon_Index
 
 TSon_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
+	if FixBugs
+		; Fix title screen position
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Title_Screen_position_in_Sonic_1
+		move.w	#$F0+8,obX(a0)
+	else
 		move.w	#$F0,obX(a0)
+	endif
 		move.w	#$DE,obScreenY(a0) ; position is fixed to screen
 		move.l	#Map_TSon,obMap(a0)
 		move.w	#make_art_tile(ArtTile_Title_Sonic,1,0),obGfx(a0)
@@ -32,7 +38,7 @@ TSon_Delay:	;Routine 2
 		bra.w	DisplaySprite
 
 .wait:
-		rts	
+		rts
 ; ===========================================================================
 
 TSon_Move:	; Routine 4
@@ -44,7 +50,7 @@ TSon_Move:	; Routine 4
 .display:
 		bra.w	DisplaySprite
 
-		rts	
+		rts
 ; ===========================================================================
 
 TSon_Animate:	; Routine 6
@@ -52,4 +58,4 @@ TSon_Animate:	; Routine 6
 		bsr.w	AnimateSprite
 		bra.w	DisplaySprite
 
-		rts	
+		rts

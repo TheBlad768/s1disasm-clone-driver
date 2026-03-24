@@ -5,7 +5,7 @@
 ;	a1 = free position in object RAM
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 FindFreeObj:
@@ -13,13 +13,13 @@ FindFreeObj:
 		move.w	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d0
 
 FFree_Loop:
-		tst.b	obID(a1)		; is object RAM	slot empty?
+		tst.b	obID(a1)		; is object RAM slot empty?
 		beq.s	FFree_Found	; if yes, branch
 		lea	object_size(a1),a1	; goto next object RAM slot
 		dbf	d0,FFree_Loop	; repeat $5F times
 
 FFree_Found:
-		rts	
+		rts
 
 ; End of function FindFreeObj
 
@@ -31,7 +31,7 @@ FFree_Found:
 ;	a1 = free position in object RAM
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 FindNextFreeObj:
@@ -49,6 +49,6 @@ NFree_Loop:
 		dbf	d0,NFree_Loop
 
 NFree_Found:
-		rts	
+		rts
 
 ; End of function FindNextFreeObj

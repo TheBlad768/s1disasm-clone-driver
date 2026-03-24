@@ -1,4 +1,4 @@
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Yad_ChkWall:
@@ -16,7 +16,7 @@ Yad_ChkWall:
 
 loc_F828:
 		moveq	#1,d0
-		rts	
+		rts
 ; ===========================================================================
 
 loc_F82C:
@@ -27,7 +27,7 @@ loc_F82C:
 
 loc_F836:
 		moveq	#0,d0
-		rts	
+		rts
 ; End of function Yad_ChkWall
 
 ; ===========================================================================
@@ -60,13 +60,13 @@ Yad_Main:	; Routine 0
 		bsr.w	ObjFloorDist
 		tst.w	d1
 		bpl.s	locret_F89E
-		add.w	d1,obY(a0)	; match	object's position with the floor
+		add.w	d1,obY(a0)	; match object's position with the floor
 		move.w	#0,obVelY(a0)
 		addq.b	#2,obRoutine(a0)
 		bchg	#0,obStatus(a0)
 
 locret_F89E:
-		rts	
+		rts
 ; ===========================================================================
 
 Yad_Action:	; Routine 2
@@ -93,7 +93,7 @@ Yad_Move:
 		neg.w	obVelX(a0)	; change direction
 
 locret_F8E2:
-		rts	
+		rts
 ; ===========================================================================
 
 Yad_FixToFloor:
@@ -103,10 +103,10 @@ Yad_FixToFloor:
 		blt.s	Yad_Pause
 		cmpi.w	#$C,d1
 		bge.s	Yad_Pause
-		add.w	d1,obY(a0)	; match	object's position to the floor
+		add.w	d1,obY(a0)	; match object's position to the floor
 		bsr.w	Yad_ChkWall
 		bne.s	Yad_Pause
-		rts	
+		rts
 ; ===========================================================================
 
 Yad_Pause:
@@ -114,4 +114,4 @@ Yad_Pause:
 		move.w	#59,yad_timedelay(a0) ; set pause time to 1 second
 		move.w	#0,obVelX(a0)
 		move.b	#0,obAnim(a0)
-		rts	
+		rts

@@ -1,14 +1,14 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	do special water effects in Labyrinth Zone
+; Subroutine to do special water effects in Labyrinth Zone
 ; ---------------------------------------------------------------------------
 
 LZWaterFeatures:
 		cmpi.b	#id_LZ,(v_zone).w ; check if level is LZ
 		bne.s	.notlabyrinth	; if not, branch
-		if Revision<>0
-			tst.b   (f_nobgscroll).w
-			bne.s	.setheight
-		endif
+	if Revision<>0
+		tst.b   (f_nobgscroll).w
+		bne.s	.setheight
+	endif
 		cmpi.b	#6,(v_player+obRoutine).w ; has Sonic just died?
 		bhs.s	.setheight	; if yes, skip other effects
 
@@ -41,7 +41,7 @@ LZWaterFeatures:
 		move.b	d0,(v_hbla_line).w ; set water surface as on-screen
 
 .notlabyrinth:
-		rts	
+		rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Initial water heights
@@ -75,7 +75,7 @@ LZDynamicWater:
 		add.w	d1,(v_waterpos2).w ; move water up/down
 
 .exit:
-		rts	
+		rts
 ; ===========================================================================
 DynWater_Index:	dc.w DynWater_LZ1-DynWater_Index
 		dc.w DynWater_LZ2-DynWater_Index
@@ -109,7 +109,7 @@ DynWater_LZ1:
 
 .setwater:
 		move.w	d1,(v_waterpos3).w
-		rts	
+		rts
 ; ===========================================================================
 
 .sonicishigh:
@@ -137,7 +137,7 @@ DynWater_LZ1:
 		move.w	d1,(v_waterpos3).w
 
 .skip:
-		rts	
+		rts
 ; ===========================================================================
 
 DynWater_LZ2:
@@ -152,7 +152,7 @@ DynWater_LZ2:
 
 .setwater:
 		move.w	d1,(v_waterpos3).w
-		rts	
+		rts
 ; ===========================================================================
 
 DynWater_LZ3:
@@ -172,12 +172,12 @@ DynWater_LZ3:
 		move.b	#$4B,(v_lvllayout+$80*2+6).w ; update level layout
 		move.b	#1,(v_wtr_routine).w ; use second routine next
 		move.w	#sfx_Rumbling,d0
-		bsr.w	PlaySound_Special ; play sound $B7 (rumbling)
+		bsr.w	QueueSound2 ; play sound $B7 (rumbling)
 
 .setwaterlz3:
 		move.w	d1,(v_waterpos3).w
 		move.w	d1,(v_waterpos2).w ; change water height instantly
-		rts	
+		rts
 ; ===========================================================================
 
 .routine2:
@@ -205,7 +205,7 @@ DynWater_LZ3:
 
 .setwater2:
 		move.w	d1,(v_waterpos3).w
-		rts	
+		rts
 ; ===========================================================================
 
 .routine3:
@@ -225,7 +225,7 @@ DynWater_LZ3:
 
 .setwater3:
 		move.w	d1,(v_waterpos3).w
-		rts	
+		rts
 ; ===========================================================================
 
 .routine4:
@@ -241,13 +241,13 @@ DynWater_LZ3:
 		move.w	#$608,(v_waterpos3).w
 		move.w	#$7C0,(v_waterpos2).w
 		move.b	#1,(f_switch+8).w
-		rts	
+		rts
 ; ===========================================================================
 
 .setwater4:
 		move.w	d1,(v_waterpos3).w
 		move.w	d1,(v_waterpos2).w
-		rts	
+		rts
 ; ===========================================================================
 
 .routine5:
@@ -256,7 +256,7 @@ DynWater_LZ3:
 		move.w	#$128,(v_waterpos3).w
 
 .dontset:
-		rts	
+		rts
 ; ===========================================================================
 
 DynWater_SBZ3:
@@ -270,14 +270,14 @@ DynWater_SBZ3:
 		rts
 
 ; ---------------------------------------------------------------------------
-; Labyrinth Zone "wind tunnels"	subroutine
+; Labyrinth Zone "wind tunnels" subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LZWindTunnels:
-		tst.w	(v_debuguse).w	; is debug mode	being used?
+		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.w	.quit	; if yes, branch
 		lea	(LZWind_Data+8).l,a2
 		moveq	#0,d0
@@ -316,7 +316,7 @@ LZWindTunnels:
 		andi.b	#$3F,d0		; does VInt counter fall on 0, $40, $80 or $C0?
 		bne.s	.skipsound	; if not, branch
 		move.w	#sfx_Waterfall,d0
-		jsr	(PlaySound_Special).l	; play rushing water sound (only every $40 frames)
+		jsr	(QueueSound2).l	; play rushing water sound (only every $40 frames)
 
 .skipsound:
 		tst.b	(f_wtunnelallow).w ; are wind tunnels disabled?
@@ -355,7 +355,7 @@ LZWindTunnels:
 		addq.w	#1,obY(a1)	; move Sonic down on pole
 
 .end:
-		rts	
+		rts
 ; ===========================================================================
 
 .chknext:
@@ -369,7 +369,7 @@ LZWindTunnels:
 		clr.b	(f_wtunnelmode).w ; finish tunnel
 
 .quit:
-		rts	
+		rts
 ; End of function LZWindTunnels
 
 ; ===========================================================================
@@ -386,7 +386,7 @@ LZWind_Data:	dc.w $A80, $300, $C10,  $380 ; act 1 values (set 1)
 ; Labyrinth Zone water slide subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LZWaterSlides:
@@ -412,11 +412,11 @@ loc_3F62:
 loc_3F6A:
 		tst.b	(f_slidemode).w
 		beq.s	locret_3F7A
-		move.w	#5,objoff_3E(a1)
+		move.w	#5,locktime(a1)	; lock D-Pad for 5 frames
 		clr.b	(f_slidemode).w
 
 locret_3F7A:
-		rts	
+		rts
 ; ===========================================================================
 
 LZSlide_Move:
@@ -439,10 +439,10 @@ loc_3F9A:
 		andi.b	#$1F,d0
 		bne.s	locret_3FBE
 		move.w	#sfx_Waterfall,d0
-		jsr	(PlaySound_Special).l	; play water sound
+		jsr	(QueueSound2).l	; play water sound
 
 locret_3FBE:
-		rts	
+		rts
 ; End of function LZWaterSlides
 
 ; ===========================================================================

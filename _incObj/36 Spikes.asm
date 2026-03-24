@@ -14,7 +14,7 @@ Spik_Index:	dc.w Spik_Main-Spik_Index
 spik_origX = objoff_30		; start X position
 spik_origY = objoff_32		; start Y position
 
-Spik_Var:	dc.b 0,	$14		; frame	number,	object width
+Spik_Var:	dc.b 0,	$14		; frame number, object width
 		dc.b 1,	$10
 		dc.b 2,	4
 		dc.b 3,	$1C
@@ -48,7 +48,7 @@ Spik_Solid:	; Routine 2
 		bne.s	Spik_Upright	; if not, branch
 		move.w	#$14,d2
 
-; Spikes types $1x and $5x face	sideways
+; Spikes types $1x and $5x face sideways
 
 Spik_SideWays:
 		move.w	#$1B,d1
@@ -63,7 +63,7 @@ Spik_SideWays:
 		bra.s	Spik_Display
 ; ===========================================================================
 
-; Spikes types $0x, $2x, $3x and $4x face up or	down
+; Spikes types $0x, $2x, $3x and $4x face up or down
 
 Spik_Upright:
 		moveq	#0,d1
@@ -81,23 +81,35 @@ Spik_Upright:
 Spik_Hurt:
 		tst.b	(v_invinc).w	; is Sonic invincible?
 		bne.s	Spik_Display	; if yes, branch
+	if FixBugs
+		; (Proper) Spike Bug Fix
+		; https://info.sonicretro.org/SCHG_How-to:Change_Spike_behavior_in_Sonic_1
+		tst.w	(v_player+flashtime).w	; is Sonic invulnerable?
+		bne.s	Spik_Display		; if yes, branch
+	endif
 		move.l	a0,-(sp)
 		movea.l	a0,a2
 		lea	(v_player).w,a0
 		cmpi.b	#4,obRoutine(a0)
 		bhs.s	loc_CF20
-	if Revision<>2
+
+	if Revision<>2|FixBugs
 		move.l	obY(a0),d3
 		move.w	obVelY(a0),d0
 		ext.l	d0
 		asl.l	#8,d0
 	else
-		; This fixes the infamous "spike bug"
+		; --- REVXB ("Revision 2") Spike Bug Fix ---
+		; REVXB is a mod of REV01 created for Sonic Mega Collection (2002), and
+		; the only change made is this dirty spike bug fix. The above code was
+		; relocated to unused vector entries at the start of the ROM (see "loc_E0"). 
+		; Consider enabling "FixBugs" for a clean solution (see above).
 		tst.w	flashtime(a0)	; Is Sonic flashing after being hurt?
 		bne.s	loc_CF20	; If so, skip getting hurt
 		jmp	(loc_E0).l	; This is a copy of the above code that was pushed aside for this
 loc_D5A2:
 	endif
+
 		sub.l	d0,d3
 		move.l	d3,obY(a0)
 		jsr	(HurtSonic).l
@@ -108,7 +120,7 @@ loc_CF20:
 Spik_Display:
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject,spik_origX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Spik_Type0x:
@@ -124,7 +136,7 @@ Spik_TypeIndex:	dc.w Spik_Type00-Spik_TypeIndex
 ; ===========================================================================
 
 Spik_Type00:
-		rts			; don't move the object
+		rts		; don't move the object
 ; ===========================================================================
 
 Spik_Type01:
@@ -133,7 +145,7 @@ Spik_Type01:
 		move.b	objoff_34(a0),d0
 		add.w	spik_origY(a0),d0
 		move.w	d0,obY(a0)	; move the object vertically
-		rts	
+		rts
 ; ===========================================================================
 
 Spik_Type02:
@@ -142,18 +154,18 @@ Spik_Type02:
 		move.b	objoff_34(a0),d0
 		add.w	spik_origX(a0),d0
 		move.w	d0,obX(a0)	; move the object horizontally
-		rts	
+		rts
 ; ===========================================================================
 
 Spik_Wait:
-		tst.w	objoff_38(a0)		; is time delay	= zero?
+		tst.w	objoff_38(a0)		; is time delay = zero?
 		beq.s	loc_CFA4	; if yes, branch
 		subq.w	#1,objoff_38(a0)	; subtract 1 from time delay
 		bne.s	locret_CFE6
 		tst.b	obRender(a0)
 		bpl.s	locret_CFE6
 		move.w	#sfx_SpikesMove,d0
-		jsr	(PlaySound_Special).l	; play "spikes moving" sound
+		jsr	(QueueSound2).l	; play "spikes moving" sound
 		bra.s	locret_CFE6
 ; ===========================================================================
 
@@ -177,4 +189,4 @@ loc_CFC6:
 		move.w	#60,objoff_38(a0)	; set time delay to 1 second
 
 locret_CFE6:
-		rts	
+		rts

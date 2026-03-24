@@ -2,13 +2,13 @@
 ; Background layer deformation subroutines
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 DeformLayers:
 		tst.b	(f_nobgscroll).w
 		beq.s	.bgscroll
-		rts	
+		rts
 ; ===========================================================================
 
 	.bgscroll:
@@ -34,7 +34,7 @@ DeformLayers:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Offset index for background layer deformation	code
+; Offset index for background layer deformation code
 ; ---------------------------------------------------------------------------
 Deform_Index:	dc.w Deform_GHZ-Deform_Index, Deform_LZ-Deform_Index
 		dc.w Deform_MZ-Deform_Index, Deform_SLZ-Deform_Index
@@ -42,10 +42,10 @@ Deform_Index:	dc.w Deform_GHZ-Deform_Index, Deform_LZ-Deform_Index
 		zonewarning Deform_Index,2
 		dc.w Deform_GHZ-Deform_Index
 ; ---------------------------------------------------------------------------
-; Green	Hill Zone background layer deformation code
+; Green Hill Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_GHZ:
@@ -114,14 +114,14 @@ loc_6384:
 		add.l	d2,d3
 		swap	d3
 		dbf	d1,loc_6384
-		rts	
+		rts
 ; End of function Deform_GHZ
 
 ; ---------------------------------------------------------------------------
 ; Labyrinth Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_LZ:
@@ -146,14 +146,14 @@ loc_63C6:
 		dbf	d1,loc_63C6
 		move.w	(v_waterpos1).w,d0
 		sub.w	(v_screenposy).w,d0
-		rts	
+		rts
 ; End of function Deform_LZ
 
 ; ---------------------------------------------------------------------------
 ; Marble Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_MZ:
@@ -190,14 +190,14 @@ loc_6402:
 loc_6426:
 		move.l	d0,(a1)+
 		dbf	d1,loc_6426
-		rts	
+		rts
 ; End of function Deform_MZ
 
 ; ---------------------------------------------------------------------------
 ; Star Light Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SLZ:
@@ -249,11 +249,11 @@ loc_6482:
 		move.l	d0,(a1)+
 		move.l	d0,(a1)+
 		dbf	d1,loc_6480
-		rts	
+		rts
 ; End of function Deform_SLZ
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SLZ_2:
@@ -300,14 +300,14 @@ loc_64F0:
 loc_64FE:
 		move.w	d0,(a1)+
 		dbf	d1,loc_64FE
-		rts	
+		rts
 ; End of function Deform_SLZ_2
 
 ; ---------------------------------------------------------------------------
-; Spring Yard Zone background layer deformation	code
+; Spring Yard Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SYZ:
@@ -333,14 +333,14 @@ Deform_SYZ:
 loc_653C:
 		move.l	d0,(a1)+
 		dbf	d1,loc_653C
-		rts	
+		rts
 ; End of function Deform_SYZ
 
 ; ---------------------------------------------------------------------------
-; Scrap	Brain Zone background layer deformation	code
+; Scrap Brain Zone background layer deformation code
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Deform_SBZ:
@@ -364,14 +364,14 @@ Deform_SBZ:
 loc_6576:
 		move.l	d0,(a1)+
 		dbf	d1,loc_6576
-		rts	
+		rts
 ; End of function Deform_SBZ
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	scroll the level horizontally as Sonic moves
+; Subroutine to scroll the level horizontally as Sonic moves
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollHoriz:
@@ -388,28 +388,37 @@ ScrollHoriz:
 		bpl.s	SH_Forward
 
 		bset	#2,(v_fg_scroll_flags).w ; screen moves backward
-		rts	
+		rts
 
 SH_Forward:
 		bset	#3,(v_fg_scroll_flags).w ; screen moves forward
 
 locret_65B0:
-		rts	
+		rts
 ; End of function ScrollHoriz
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 MoveScreenHoriz:
 		move.w	(v_player+obX).w,d0
 		sub.w	(v_screenposx).w,d0 ; Sonic's distance from left edge of screen
-		subi.w	#144,d0		; is distance less than 144px?
+	if FixBugs
+		; Fix horizontal wrap bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_camera_follow_bug
+		subi.w	#(320/2)-16,d0	; is distance less than 144px?
+		blt.s	SH_BehindMid	; if yes, branch
+		subi.w	#16,d0		; is distance more than 160px?
+		bge.s	SH_AheadOfMid	; if yes, branch
+	else
+		subi.w	#(320/2)-16,d0	; is distance less than 144px?
 		bcs.s	SH_BehindMid	; if yes, branch
 		subi.w	#16,d0		; is distance more than 160px?
 		bcc.s	SH_AheadOfMid	; if yes, branch
+	endif
 		clr.w	(v_scrshiftx).w
-		rts	
+		rts
 ; ===========================================================================
 
 SH_AheadOfMid:
@@ -429,10 +438,18 @@ SH_SetScreen:
 		asl.w	#8,d1
 		move.w	d0,(v_screenposx).w ; set new screen position
 		move.w	d1,(v_scrshiftx).w ; set distance for screen movement
-		rts	
+		rts
 ; ===========================================================================
 
 SH_BehindMid:
+	if FixBugs
+		; Fix the camera follow bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_camera_follow_bug
+		cmpi.w	#-16,d0		; is Sonic within -16px of middle area?
+		bgt.s	SH_Behind16	; if yes, branch
+		move.w	#-16,d0		; set to -16 if lower
+SH_Behind16:
+	endif
 		add.w	(v_screenposx).w,d0
 		cmp.w	(v_limitleft2).w,d0
 		bgt.s	SH_SetScreen
@@ -451,10 +468,10 @@ loc_6610:
 		bra.s	SH_AheadOfMid
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	scroll the level vertically as Sonic moves
+; Subroutine to scroll the level vertically as Sonic moves
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollVertical:
@@ -487,7 +504,7 @@ loc_664A:
 
 loc_6656:
 		clr.w	(v_scrshifty).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_665C:
@@ -601,18 +618,18 @@ loc_6724:
 		sub.w	d4,d0
 		bpl.s	loc_6760
 		bset	#0,(v_fg_scroll_flags).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_6760:
 		bset	#1,(v_fg_scroll_flags).w
 
 locret_6766:
-		rts	
+		rts
 ; End of function ScrollVertical
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollBlock1:
@@ -651,18 +668,18 @@ loc_679C:
 		sub.l	d3,d0
 		bpl.s	loc_67CA
 		bset	#0,(v_bg1_scroll_flags).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_67CA:
 		bset	#1,(v_bg1_scroll_flags).w
 
 locret_67D0:
-		rts	
+		rts
 ; End of function ScrollBlock1
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollBlock2:
@@ -684,18 +701,18 @@ ScrollBlock2:
 		sub.l	d3,d0
 		bpl.s	loc_680C
 		bset	#0,(v_bg1_scroll_flags).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_680C:
 		bset	#1,(v_bg1_scroll_flags).w
 
 locret_6812:
-		rts	
+		rts
 ; End of function ScrollBlock2
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollBlock3:
@@ -710,18 +727,18 @@ ScrollBlock3:
 		sub.w	d3,d0
 		bpl.s	loc_683C
 		bset	#0,(v_bg1_scroll_flags).w
-		rts	
+		rts
 ; ===========================================================================
 
 loc_683C:
 		bset	#1,(v_bg1_scroll_flags).w
 
 locret_6842:
-		rts	
+		rts
 ; End of function ScrollBlock3
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ScrollBlock4:
@@ -748,5 +765,5 @@ loc_687E:
 		bset	#3,(v_bg2_scroll_flags).w
 
 locret_6884:
-		rts	
+		rts
 ; End of function ScrollBlock4

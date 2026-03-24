@@ -15,7 +15,7 @@
 ; See http://www.segaretro.org/Enigma_compression for format description
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 EniDec:
@@ -136,7 +136,7 @@ EniDec_Done:
 ; loc_17D6:
 .evenbyte:
 		movem.l	(sp)+,d0-d7/a1-a5
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Part of the Enigma decompressor
@@ -211,7 +211,7 @@ EniDec_FetchInlineValue:
 		move.b	(a0)+,d5
 		lsl.w	#8,d5
 		move.b	(a0)+,d5	; get next word
-		rts	
+		rts
 ; ===========================================================================
 ; loc_1856:
 .enoughbits:
@@ -236,7 +236,7 @@ EniDec_Masks:
 		dc.w  $1FF, $3FF, $7FF, $FFF
 		dc.w $1FFF,$3FFF,$7FFF,$FFFF
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_188C:
 EniDec_FetchByte:
@@ -247,5 +247,5 @@ EniDec_FetchByte:
 		asl.w	#8,d5
 		move.b	(a0)+,d5
 .locret:
-		rts	
+		rts
 ; End of function EniDec_FetchByte

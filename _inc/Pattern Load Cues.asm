@@ -41,9 +41,9 @@ ptr_PLC_EggmanSBZ2:	dc.w PLC_EggmanSBZ2-ArtLoadCues
 ptr_PLC_FZBoss:		dc.w PLC_FZBoss-ArtLoadCues
 
 plcm:	macro gfx,vram
-	dc.l gfx
-	dc.w (vram)*$20
-	endm
+		dc.l gfx
+		dc.w (vram)*$20
+		endm
 
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - standard block 1
@@ -70,7 +70,7 @@ PLC_Explode:	dc.w ((PLC_Explodeend-PLC_Explode-2)/6)-1
 		plcm	Nem_Explode, ArtTile_Explosion ; explosion
 PLC_Explodeend:
 ; ---------------------------------------------------------------------------
-; Pattern load cues - game/time	over
+; Pattern load cues - game/time over
 ; ---------------------------------------------------------------------------
 PLC_GameOver:	dc.w ((PLC_GameOverend-PLC_GameOver-2)/6)-1
 		plcm	Nem_GameOver, ArtTile_Game_Over ; game/time over

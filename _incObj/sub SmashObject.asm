@@ -1,8 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	smash a	block (GHZ walls and MZ	blocks)
+; Subroutine to smash a block (GHZ walls and MZ blocks)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 SmashObject:
@@ -50,6 +50,6 @@ SmashObject:
 
 .playsnd:
 		move.w	#sfx_WallSmash,d0
-		jmp	(PlaySound_Special).l ; play smashing sound
+		jmp	(QueueSound2).l ; play smashing sound
 
 ; End of function SmashObject

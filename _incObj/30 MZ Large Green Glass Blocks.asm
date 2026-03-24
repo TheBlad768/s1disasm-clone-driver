@@ -23,7 +23,7 @@ Glass_Index:	dc.w Glass_Main-Glass_Index
 glass_dist = objoff_32		; distance block moves when switch is pressed
 glass_parent = objoff_3C		; address of parent object
 
-Glass_Vars1:	dc.b 2,	0, 0	; routine num, y-axis dist from	origin,	frame num
+Glass_Vars1:	dc.b 2,	0, 0	; routine num, y-axis dist from origin, frame num
 		dc.b 4,	0, 1
 Glass_Vars2:	dc.b 6,	0, 2
 		dc.b 8,	0, 1
@@ -109,7 +109,7 @@ Glass_Reflect34:
 		move.w	obY(a1),objoff_30(a0)
 		bra.w	Glass_Types
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Glass_Types:
@@ -130,7 +130,7 @@ Glass_TypeIndex:dc.w Glass_Type00-Glass_TypeIndex
 ; ===========================================================================
 
 Glass_Type00:
-		rts	
+		rts
 ; ===========================================================================
 
 Glass_Type01:
@@ -222,7 +222,7 @@ Glass_ChkSwitch:
 		lea	(f_switch).w,a2
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; load object type number
-		lsr.w	#4,d0		; read only the	first nybble
+		lsr.w	#4,d0		; read only the first nybble
 		tst.b	(a2,d0.w)	; has switch number d0 been pressed?
 		beq.s	loc_B5EA	; if not, branch
 		move.b	#1,objoff_34(a0)
@@ -239,4 +239,4 @@ loc_B5EE:
 		move.w	objoff_30(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)
-		rts	
+		rts

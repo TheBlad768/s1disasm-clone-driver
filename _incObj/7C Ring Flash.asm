@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 7C - flash effect when	you collect the	giant ring
+; Object 7C - flash effect when you collect the giant ring
 ; ---------------------------------------------------------------------------
 
 RingFlash:
@@ -27,7 +27,7 @@ Flash_ChkDel:	; Routine 2
 		out_of_range.w	DeleteObject
 		bra.w	DisplaySprite
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Flash_Collect:
@@ -35,26 +35,26 @@ Flash_Collect:
 		bpl.s	locret_9F76
 		move.b	#1,obTimeFrame(a0)
 		addq.b	#1,obFrame(a0)
-		cmpi.b	#8,obFrame(a0)	; has animation	finished?
+		cmpi.b	#8,obFrame(a0)	; has animation finished?
 		bhs.s	Flash_End	; if yes, branch
 		cmpi.b	#3,obFrame(a0)	; is 3rd frame displayed?
 		bne.s	locret_9F76	; if not, branch
 		movea.l	objoff_3C(a0),a1	; get parent object address
 		move.b	#6,obRoutine(a1) ; delete parent object
 		move.b	#id_Null,(v_player+obAnim).w ; make Sonic invisible
-		move.b	#1,(f_bigring).w ; stop	Sonic getting bonuses
+		move.b	#1,(f_bigring).w ; stop Sonic getting bonuses
 		clr.b	(v_invinc).w	; remove invincibility
 		clr.b	(v_shield).w	; remove shield
 
 locret_9F76:
-		rts	
+		rts
 ; ===========================================================================
 
 Flash_End:
 		addq.b	#2,obRoutine(a0)
 		move.w	#0,(v_player).w ; remove Sonic object
 		addq.l	#4,sp
-		rts	
+		rts
 ; End of function Flash_Collect
 
 ; ===========================================================================

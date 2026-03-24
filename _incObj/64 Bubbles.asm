@@ -32,7 +32,7 @@ Bub_Main:	; Routine 0
 		bpl.s	.bubble		; if type is $0-$7F, branch
 
 		addq.b	#8,obRoutine(a0) ; goto Bub_BblMaker next
-		andi.w	#$7F,d0		; read only last 7 bits	(deduct	$80)
+		andi.w	#$7F,d0		; read only last 7 bits (deduct $80)
 		move.b	d0,bub_time(a0)
 		move.b	d0,bub_freq(a0)	; set bubble frequency
 		move.b	#6,obAnim(a0)
@@ -76,19 +76,19 @@ Bub_ChkWater:	; Routine 4
 		move.w	d0,obX(a0)	; change bubble's x-axis position
 		tst.b	bub_inhalable(a0)
 		beq.s	.display
-		bsr.w	Bub_ChkSonic	; has Sonic touched the	bubble?
+		bsr.w	Bub_ChkSonic	; has Sonic touched the bubble?
 		beq.s	.display	; if not, branch
 
 		bsr.w	ResumeMusic	; cancel countdown music
 		move.w	#sfx_Bubble,d0
-		jsr	(PlaySound_Special).l	; play collecting bubble sound
+		jsr	(QueueSound2).l	; play collecting bubble sound
 		lea	(v_player).w,a1
 		clr.w	obVelX(a1)
 		clr.w	obVelY(a1)
 		clr.w	obInertia(a1)	; stop Sonic
 		move.b	#id_GetAir,obAnim(a1) ; use bubble-collecting animation
-		move.w	#$23,objoff_3E(a1)
-		move.b	#0,objoff_3C(a1)
+		move.w	#35,locktime(a1)
+		move.b	#0,jumping(a1)
 		bclr	#5,obStatus(a1)
 		bclr	#4,obStatus(a1)
 		btst	#2,obStatus(a1)
@@ -213,11 +213,11 @@ Bub_BblMaker:	; Routine $A
 		move.w	(v_waterpos1).w,d0
 		cmp.w	obY(a0),d0
 		blo.w	DisplaySprite
-		rts	
+		rts
 ; ===========================================================================
 ; bubble production sequence
 
-; 0 = small bubble, 1 =	large bubble
+; 0 = small bubble, 1 = large bubble
 
 Bub_BblTypes:	dc.b 0,	1, 0, 0, 0, 0, 1, 0, 0,	0, 0, 1, 0, 1, 0, 0, 1,	0
 
@@ -243,9 +243,9 @@ Bub_ChkSonic:
 		cmp.w	d0,d1
 		blo.s	.loc_12998
 		moveq	#1,d0
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_12998:
 		moveq	#0,d0
-		rts	
+		rts

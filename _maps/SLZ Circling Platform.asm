@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - platforms that move	in circles (SLZ)
+; Sprite mappings - platforms that move in circles (SLZ)
 ; ---------------------------------------------------------------------------
 Map_Circ_internal:	mappingsTable
 	mappingsTableEntry.w	.platform

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 23 - missile that Buzz	Bomber throws
+; Object 23 - missile that Buzz Bomber throws
 ; ---------------------------------------------------------------------------
 
 Missile:
@@ -27,7 +27,7 @@ Msl_Main:	; Routine 0
 		move.b	#3,obPriority(a0)
 		move.b	#8,obActWid(a0)
 		andi.b	#3,obStatus(a0)
-		tst.b	obSubtype(a0)	; was object created by	a Newtron?
+		tst.b	obSubtype(a0)	; was object created by a Newtron?
 		beq.s	Msl_Animate	; if not, branch
 
 		move.b	#8,obRoutine(a0) ; run "Msl_FromNewt" routine
@@ -53,10 +53,10 @@ Msl_Animate:	; Routine 2
 		bra.w	DisplaySprite
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	check if the Buzz Bomber which fired the missile has been
-; destroyed, and if it has, then cancel	the missile
+; Subroutine to check if the Buzz Bomber which fired the missile has been
+; destroyed, and if it has, then cancel the missile
 ; ---------------------------------------------------------------------------
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Msl_ChkCancel:
@@ -73,7 +73,7 @@ Msl_ChkCancel:
 	else
 		beq.s	Msl_Delete	; if yes, branch
 	endif
-		rts	
+		rts
 ; End of function Msl_ChkCancel
 
 ; ===========================================================================
@@ -85,7 +85,7 @@ Msl_FromBuzz:	; Routine 4
 		move.b	#1,obAnim(a0)
 		bsr.w	SpeedToPos
 
-	if ~~FixBugs
+	if FixBugs=0
 		; Object should not call DisplaySprite and DeleteObject on
 		; the same frame, or else cause a null-pointer dereference.
 		lea	(Ani_Missile).l,a1
@@ -103,7 +103,7 @@ Msl_FromBuzz:	; Routine 4
 		bsr.w	AnimateSprite
 		bra.w	DisplaySprite
 	else
-		rts	
+		rts
 	endif
 ; ===========================================================================
 
@@ -115,7 +115,7 @@ Msl_FromBuzz:	; Routine 4
 
 Msl_Delete:	; Routine 6
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Msl_FromNewt:	; Routine 8
@@ -127,4 +127,4 @@ Msl_Animate2:
 		lea	(Ani_Missile).l,a1
 		bsr.w	AnimateSprite
 		bsr.w	DisplaySprite
-		rts	
+		rts

@@ -135,7 +135,7 @@ loc_189FE:
 		bne.s	loc_18A28
 		move.b	#$20,objoff_3E(a0)
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l	; play boss damage sound
+		jsr	(QueueSound2).l	; play boss damage sound
 
 loc_18A28:
 		lea	(v_palette+$22).w,a1
@@ -151,7 +151,7 @@ loc_18A36:
 		move.b	#$F,obColType(a0)
 
 locret_18A44:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18A46:
@@ -160,7 +160,7 @@ loc_18A46:
 		move.b	#6,ob2ndRout(a0)
 		move.b	#$78,objoff_3C(a0)
 		clr.w	obVelX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 loc_18A5E:
@@ -316,8 +316,8 @@ loc_18BAE:
 
 loc_18BB4:
 		clr.w	obVelY(a0)
-		move.w	#mus_SLZ,d0
-		jsr	(PlaySound).l		; play SLZ music
+		move.w	#bgm_SLZ,d0
+		jsr	(QueueSound1).l		; play SLZ music
 
 loc_18BC2:
 		bra.w	loc_189EE

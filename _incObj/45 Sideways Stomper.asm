@@ -105,9 +105,9 @@ SStom_Display:	; Routine 6
 
 SStom_ChkDel:
 		out_of_range.w	DeleteObject,objoff_3A(a0)
-		rts	
+		rts
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 SStom_Move:
@@ -163,4 +163,4 @@ loc_BB3C:
 		neg.w	d0
 		add.w	objoff_30(a0),d0
 		move.w	d0,obX(a0)
-		rts	
+		rts

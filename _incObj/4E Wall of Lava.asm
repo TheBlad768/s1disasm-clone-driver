@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 4E - advancing	wall of	lava (MZ)
+; Object 4E - advancing wall of lava (MZ)
 ; ---------------------------------------------------------------------------
 
 LavaWall:
@@ -69,7 +69,7 @@ LWall_Action:	; Routine 4
 ; ===========================================================================
 
 .movewall:
-		tst.b	lwall_flag(a0)	; is object set	to move?
+		tst.b	lwall_flag(a0)	; is object set to move?
 		beq.s	LWall_Solid	; if not, branch
 		move.w	#$180,obVelX(a0) ; set object speed
 		subq.b	#2,obRoutine(a0)
@@ -104,7 +104,7 @@ LWall_Solid:	; Routine 2
 		out_of_range.s	.chkgone
 
 .moving:
-		rts	
+		rts
 ; ===========================================================================
 
 .chkgone:
@@ -113,7 +113,7 @@ LWall_Solid:	; Routine 2
 		move.b	obRespawnNo(a0),d0
 		bclr	#7,2(a2,d0.w)
 		move.b	#8,obRoutine(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 LWall_Move:	; Routine 6

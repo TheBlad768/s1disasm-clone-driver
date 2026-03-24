@@ -26,7 +26,7 @@ ssr_mainX = objoff_30		; position for card to display on
 SSR_ChkPLC:	; Routine 0
 		tst.l	(v_plc_buffer).w ; are the pattern load cues empty?
 		beq.s	SSR_Main	; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 SSR_Main:
@@ -35,7 +35,7 @@ SSR_Main:
 		moveq	#3,d1
 		cmpi.w	#50,(v_rings).w	; do you have 50 or more rings?
 		blo.s	SSR_Loop	; if no, branch
-		addq.w	#1,d1		; if yes, add 1	to d1 (number of sprites)
+		addq.w	#1,d1		; if yes, add 1 to d1 (number of sprites)
 
 SSR_Loop:
 		_move.b	#id_SSResult,obID(a1)
@@ -54,7 +54,7 @@ SSR_Loop:
 		move.b	(v_emeralds).w,d1
 		beq.s	loc_C842
 		moveq	#0,d0
-		cmpi.b	#6,d1		; do you have all chaos	emeralds?
+		cmpi.b	#6,d1		; do you have all chaos emeralds?
 		bne.s	loc_C842	; if not, branch
 		moveq	#8,d0		; load "Sonic got them all" text
 		move.w	#$18,obX(a0)
@@ -77,13 +77,13 @@ SSR_ChgPos:
 loc_C85A:
 		move.w	obX(a0),d0
 		bmi.s	locret_C86A
-		cmpi.w	#$200,d0	; has item moved beyond	$200 on	x-axis?
+		cmpi.w	#$200,d0	; has item moved beyond $200 on x-axis?
 		bhs.s	locret_C86A	; if yes, branch
 		bra.w	DisplaySprite
 ; ===========================================================================
 
 locret_C86A:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_C86C:
@@ -105,7 +105,7 @@ SSR_Display:
 SSR_RingBonus:	; Routine 6
 		bsr.w	DisplaySprite
 		move.b	#1,(f_endactbonus).w ; set ring bonus update flag
-		tst.w	(v_ringbonus).w	; is ring bonus	= zero?
+		tst.w	(v_ringbonus).w	; is ring bonus = zero?
 		beq.s	loc_C8C4	; if yes, branch
 		subi.w	#10,(v_ringbonus).w ; subtract 10 from ring bonus
 		moveq	#10,d0		; add 10 to score
@@ -114,12 +114,12 @@ SSR_RingBonus:	; Routine 6
 		andi.b	#3,d0
 		bne.s	locret_C8EA
 		move.w	#sfx_Switch,d0
-		jmp	(PlaySound_Special).l	; play "blip" sound
+		jmp	(QueueSound2).l	; play "blip" sound
 ; ===========================================================================
 
 loc_C8C4:
 		move.w	#sfx_Cash,d0
-		jsr	(PlaySound_Special).l	; play "ker-ching" sound
+		jsr	(QueueSound2).l	; play "ker-ching" sound
 		addq.b	#2,obRoutine(a0)
 		move.w	#180,obTimeFrame(a0) ; set time delay to 3 seconds
 		cmpi.w	#50,(v_rings).w	; do you have at least 50 rings?
@@ -128,7 +128,7 @@ loc_C8C4:
 		addq.b	#4,obRoutine(a0) ; goto "SSR_Continue" routine
 
 locret_C8EA:
-		rts	
+		rts
 ; ===========================================================================
 
 SSR_Exit:	; Routine $A, $12
@@ -140,7 +140,7 @@ SSR_Continue:	; Routine $E
 		move.b	#4,(v_ssrescontinue+obFrame).w
 		move.b	#$14,(v_ssrescontinue+obRoutine).w
 		move.w	#sfx_Continue,d0
-		jsr	(PlaySound_Special).l	; play continues jingle
+		jsr	(QueueSound2).l	; play continues jingle
 		addq.b	#2,obRoutine(a0)
 		move.w	#360,obTimeFrame(a0) ; set time delay to 6 seconds
 		bra.w	DisplaySprite
@@ -155,7 +155,7 @@ loc_C91A:	; Routine $14
 SSR_Display2:
 		bra.w	DisplaySprite
 ; ===========================================================================
-SSR_Config:	dc.w $20, $120,	$C4	; start	x-pos, main x-pos, y-pos
+SSR_Config:	dc.w $20, $120,	$C4	; start x-pos, main x-pos, y-pos
 		dc.b 2,	0		; rountine number, frame number
 		dc.w $320, $120, $118
 		dc.b 2,	1

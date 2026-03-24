@@ -76,7 +76,7 @@ loc_17984:
 		move.b	#1,(v_bossstatus).w
 
 locret_179AA:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_179AC:
@@ -109,8 +109,8 @@ loc_179DA:
 
 loc_179E0:
 		clr.w	obVelY(a0)
-		move.w	#mus_GHZ,d0
-		jsr	(PlaySound).l		; play GHZ music
+		move.w	#bgm_GHZ,d0
+		jsr	(QueueSound1).l		; play GHZ music
 
 loc_179EE:
 		bsr.w	BossMove

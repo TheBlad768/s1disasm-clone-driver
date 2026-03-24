@@ -89,8 +89,8 @@ Jun_Action:	; Routine 2
 		bsr.w	Jun_ChgPos
 		add.w	d2,obX(a1)
 		add.w	d3,obY(a1)
-		asr	obX(a1)
-		asr	obY(a1)
+		asr.w	obX(a1)
+		asr.w	obY(a1)
 
 Jun_Display:	; Routine 4
 		bra.w	RememberState
@@ -123,7 +123,7 @@ Jun_Release:	; Routine 6
 		bsr.s	Jun_ChgPos
 		bra.w	RememberState
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Jun_ChkSwitch:
@@ -133,7 +133,7 @@ Jun_ChkSwitch:
 		btst	#0,(a2,d0.w)	; is switch pressed?
 		beq.s	.unpressed	; if not, branch
 
-		tst.b	jun_reverse(a0)	; has switch previously	been pressed?
+		tst.b	jun_reverse(a0)	; has switch previously been pressed?
 		bne.s	.animate	; if yes, branch
 		neg.b	jun_frame(a0)
 		move.b	#1,jun_reverse(a0) ; set to "previously pressed"
@@ -154,11 +154,11 @@ Jun_ChkSwitch:
 		move.b	d0,obFrame(a0)	; update frame
 
 .nochange:
-		rts	
+		rts
 ; End of function Jun_ChkSwitch
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Jun_ChgPos:
@@ -175,7 +175,7 @@ Jun_ChgPos:
 		ext.w	d0
 		add.w	obY(a0),d0
 		move.w	d0,obY(a1)
-		rts	
+		rts
 
 
 .data:		dc.b -$20,    0, -$1E,   $E ; disc x-pos, Sonic x-pos, disc y-pos, Sonic y-pos

@@ -53,21 +53,21 @@ FBlock_Main:	; Routine 0
 		move.b	(a2),d0
 		add.w	d0,d0
 		move.w	d0,fb_height(a0)
-		if Revision<>0
-			cmpi.b	#$37,obSubtype(a0)
-			bne.s	.dontdelete
-			cmpi.w	#$1BB8,obX(a0)
-			bne.s	.notatpos
-			tst.b	(f_obj56).w
-			beq.s	.dontdelete
-			jmp	(DeleteObject).l
+	if Revision<>0
+		cmpi.b	#$37,obSubtype(a0)
+		bne.s	.dontdelete
+		cmpi.w	#$1BB8,obX(a0)
+		bne.s	.notatpos
+		tst.b	(f_obj56).w
+		beq.s	.dontdelete
+		jmp	(DeleteObject).l
 .notatpos:
-			clr.b	obSubtype(a0)
-			tst.b	(f_obj56).w
-			bne.s	.dontdelete
-			jmp	(DeleteObject).l
+		clr.b	obSubtype(a0)
+		tst.b	(f_obj56).w
+		bne.s	.dontdelete
+		jmp	(DeleteObject).l
 .dontdelete:
-		endif
+	endif
 		moveq	#0,d0
 		cmpi.b	#id_LZ,(v_zone).w ; check if level is LZ
 		beq.s	.stillnotLZ
@@ -108,7 +108,7 @@ FBlock_Action:	; Routine 2
 		move.w	obX(a0),-(sp)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object subtype
-		andi.w	#$F,d0		; read only the	2nd digit
+		andi.w	#$F,d0		; read only the 2nd digit
 		add.w	d0,d0
 		move.w	.index(pc,d0.w),d1
 		jsr	.index(pc,d1.w)	; move block subroutines
@@ -125,21 +125,21 @@ FBlock_Action:	; Routine 2
 		bsr.w	SolidObject
 
 .chkdel:
-		if Revision=0
+	if Revision=0
 		out_of_range.w	DeleteObject,fb_origX(a0)
 		bra.w	DisplaySprite
-		else
-			out_of_range.s	.chkdel2,fb_origX(a0)
+	else
+		out_of_range.s	.chkdel2,fb_origX(a0)
 .display:
-			bra.w	DisplaySprite
+		bra.w	DisplaySprite
 .chkdel2:
-			cmpi.b	#$37,obSubtype(a0)
-			bne.s	.delete
-			tst.b	objoff_38(a0)
-			bne.s	.display
+		cmpi.b	#$37,obSubtype(a0)
+		bne.s	.delete
+		tst.b	objoff_38(a0)
+		bne.s	.display
 .delete:
-			jmp	(DeleteObject).l
-		endif
+		jmp	(DeleteObject).l
+	endif
 ; ===========================================================================
 .index:		dc.w .type00-.index, .type01-.index
 		dc.w .type02-.index, .type03-.index
@@ -152,7 +152,7 @@ FBlock_Action:	; Routine 2
 
 .type00:
 ; doesn't move
-		rts	
+		rts
 ; ===========================================================================
 
 .type01:
@@ -179,7 +179,7 @@ FBlock_Action:	; Routine 2
 		move.w	fb_origX(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obX(a0)	; move object horizontally
-		rts	
+		rts
 ; ===========================================================================
 
 .type03:
@@ -206,7 +206,7 @@ FBlock_Action:	; Routine 2
 		move.w	fb_origY(a0),d1
 		sub.w	d0,d1
 		move.w	d1,obY(a0)	; move object vertically
-		rts	
+		rts
 ; ===========================================================================
 
 .type05:
@@ -253,7 +253,7 @@ FBlock_Action:	; Routine 2
 		move.w	fb_origY(a0),d1
 		add.w	d0,d1
 		move.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_104C8:
@@ -295,7 +295,7 @@ FBlock_Action:	; Routine 2
 		move.w	fb_origY(a0),d1
 		add.w	d0,d1
 		move.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_1052C:
@@ -323,14 +323,14 @@ FBlock_Action:	; Routine 2
 		addq.w	#1,fb_height(a0)
 		cmpi.w	#$380,fb_height(a0)
 		bne.s	.locret_10578
-		if Revision<>0
-			move.b	#1,(f_obj56).w
-			clr.b	objoff_38(a0)
-		endif
+	if Revision<>0
+		move.b	#1,(f_obj56).w
+		clr.b	objoff_38(a0)
+	endif
 		clr.b	obSubtype(a0)
 
 .locret_10578:
-		rts	
+		rts
 ; ===========================================================================
 
 .type0C:
@@ -359,7 +359,7 @@ FBlock_Action:	; Routine 2
 		move.w	fb_origX(a0),d1
 		add.w	d0,d1
 		move.w	d1,obX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_105C0:
@@ -400,7 +400,7 @@ FBlock_Action:	; Routine 2
 		move.w	fb_origX(a0),d1
 		add.w	d0,d1
 		move.w	d1,obX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_10624:
@@ -461,7 +461,7 @@ FBlock_Action:	; Routine 2
 		neg.w	d1
 		add.w	fb_origY(a0),d1
 		move.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_106AE:
@@ -475,7 +475,7 @@ FBlock_Action:	; Routine 2
 		addq.w	#1,d1
 		add.w	fb_origX(a0),d1
 		move.w	d1,obX(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_106CC:
@@ -489,7 +489,7 @@ FBlock_Action:	; Routine 2
 		addq.w	#1,d1
 		add.w	fb_origY(a0),d1
 		move.w	d1,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 .loc_106EA:
@@ -499,4 +499,4 @@ FBlock_Action:	; Routine 2
 		neg.w	d1
 		add.w	fb_origX(a0),d1
 		move.w	d1,obX(a0)
-		rts	
+		rts

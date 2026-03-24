@@ -25,7 +25,7 @@ Cbal_Main:	; Routine 0
 		move.b	#8,obActWid(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; move subtype to d0
-		mulu.w	#60,d0		; multiply by 60 frames	(1 second)
+		mulu.w	#60,d0		; multiply by 60 frames (1 second)
 		move.w	d0,cbal_time(a0) ; set explosion time
 		move.b	#4,obFrame(a0)
 
@@ -59,7 +59,7 @@ Cbal_ChkExplode:
 
 Cbal_Explode:
 		_move.b	#id_MissileDissolve,obID(a0)
-		_move.b	#id_ExplosionBomb,obID(a0)	; change object	to an explosion	($3F)
+		_move.b	#id_ExplosionBomb,obID(a0)	; change object to an explosion ($3F)
 		move.b	#0,obRoutine(a0) ; reset routine counter
 		bra.w	ExplosionBomb	; jump to explosion code
 ; ===========================================================================
@@ -71,16 +71,16 @@ Cbal_Animate:
 		bchg	#0,obFrame(a0)	; change frame
 
 Cbal_Display:
-	if ~~FixBugs
+	if FixBugs=0
 		; Moved to prevent a display-and-delete bug.
 		bsr.w	DisplaySprite
 	endif
 		move.w	(v_limitbtm2).w,d0
 		addi.w	#$E0,d0
-		cmp.w	obY(a0),d0	; has object fallen off	the level?
+		cmp.w	obY(a0),d0	; has object fallen off the level?
 		blo.w	DeleteObject	; if yes, branch
 	if FixBugs
 		bra.w	DisplaySprite
 	else
-		rts	
+		rts
 	endif

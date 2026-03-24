@@ -42,7 +42,7 @@ Bonus_Main:	; Routine 0
 		move.b	obSubtype(a0),obFrame(a0)
 		move.w	#119,bonus_timelen(a0) ; set display time to 2 seconds
 		move.w	#sfx_Bonus,d0
-		jsr	(PlaySound_Special).l	; play bonus sound
+		jsr	(QueueSound2).l	; play bonus sound
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
 		add.w	d0,d0
@@ -51,16 +51,18 @@ Bonus_Main:	; Routine 0
 
 .chkdel:
 		out_of_range.s	.delete
-		rts	
+		rts
 
 .delete:
 		jmp	(DeleteObject).l
 
 ; ===========================================================================
-.points:	dc.w 0			; Bonus	points array
+.points:	dc.w 0			; Bonus points array
 		dc.w 1000
 		dc.w 100
 	if FixBugs
+		; Fix the Hidden Points bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Hidden_Points_bug_in_Sonic_1
 		dc.w 10
 	else
 		dc.w 1 ; This is the wrong number of points.

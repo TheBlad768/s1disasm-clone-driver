@@ -39,7 +39,7 @@ SBall_Main:	; Routine 0
 
 .notlz:
 		move.b	obSubtype(a0),d1 ; get object type
-		andi.b	#$F0,d1		; read only the	1st digit
+		andi.b	#$F0,d1		; read only the 1st digit
 		ext.w	d1
 		asl.w	#3,d1		; multiply by 8
 		move.w	d1,sball_speed(a0) ; set object twirl speed
@@ -49,7 +49,7 @@ SBall_Main:	; Routine 0
 		move.b	d0,obAngle(a0)
 		lea	sball_childs(a0),a2
 		move.b	obSubtype(a0),d1 ; get object type
-		andi.w	#7,d1		; read only the	2nd digit
+		andi.w	#7,d1		; read only the 2nd digit
 		move.b	#0,(a2)+
 		move.w	d1,d3
 		lsl.w	#4,d3
@@ -107,7 +107,7 @@ SBall_Main:	; Routine 0
 		bne.s	SBall_Move
 
 		move.b	#$8B,obColType(a0) ; if yes, make last spikeball larger
-		move.b	#1,obFrame(a0)	; use different	frame
+		move.b	#1,obFrame(a0)	; use different frame
 
 SBall_Move:	; Routine 2
 		bsr.w	.movesub
@@ -143,7 +143,7 @@ SBall_Move:	; Routine 2
 		move.w	d4,obY(a1)
 		move.w	d5,obX(a1)
 		dbf	d6,.loop
-		rts	
+		rts
 ; ===========================================================================
 
 .chkdel:
@@ -163,9 +163,9 @@ SBall_Move:	; Routine 2
 		addi.l	#v_objspace&$FFFFFF,d0
 		movea.l	d0,a1
 		bsr.w	DeleteChild
-		dbf	d2,.deleteloop ; delete all pieces of	chain
+		dbf	d2,.deleteloop ; delete all pieces of chain
 
-		rts	
+		rts
 ; ===========================================================================
 
 SBall_Display:	; Routine 4

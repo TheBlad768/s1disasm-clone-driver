@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Subroutine calculate a square root (only available in REV00)
+; Subroutine calculate a square root (only available in REV00 and unused)
 
 ; input:
 ;	d0 = number
@@ -8,7 +8,7 @@
 ;	d0 = square root of number
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 CalcSqrt:
@@ -19,7 +19,7 @@ CalcSqrt:
 		move.w	d0,d1
 		moveq	#7,d2
 
-	loc_2C80:
+loc_2C80:
 		rol.l	#2,d1
 		add.w	d0,d0
 		addq.w	#1,d0
@@ -30,13 +30,13 @@ CalcSqrt:
 		dbf	d2,loc_2C80
 		lsr.w	#1,d0
 		movem.l	(sp)+,d1-d2
-		rts	
+		rts
 ; ===========================================================================
 
-	loc_2C9A:
+loc_2C9A:
 		addq.w	#1,d0
 		dbf	d2,loc_2C80
 		lsr.w	#1,d0
 		movem.l	(sp)+,d1-d2
-		rts	
+		rts
 ; End of function CalcSqrt

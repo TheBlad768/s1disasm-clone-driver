@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Solid	object subroutine (includes spikes, blocks, rocks etc)
+; Solid object subroutine (includes spikes, blocks, rocks etc)
 ;
 ; input:
 ;	d1 = width
@@ -8,7 +8,7 @@
 ;	d4 = x-axis position
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 SolidObject:
@@ -31,13 +31,13 @@ SolidObject:
 		bclr	#3,obStatus(a0)	; clear object's standing flag
 		clr.b	obSolid(a0)
 		moveq	#0,d4
-		rts	
+		rts
 
 .stand:
 		move.w	d4,d2
 		bsr.w	MvSonicOnPtfm
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 SolidObject71:
@@ -60,13 +60,13 @@ SolidObject71:
 		bclr	#3,obStatus(a0)
 		clr.b	obSolid(a0)
 		moveq	#0,d4
-		rts	
+		rts
 
 .stand:
 		move.w	d4,d2
 		bsr.w	MvSonicOnPtfm
 		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 SolidObject2F:
@@ -140,11 +140,11 @@ loc_FB0E:
 		tst.b	(f_playerctrl).w ; are object interactions disabled?
 		bmi.w	Solid_Ignore	; if yes, branch
 		cmpi.b	#6,(v_player+obRoutine).w ; is Sonic dying?
-		if Revision=0
+	if Revision=0
 		bcc.w	Solid_Ignore	; if yes, branch
-		else
-			bcc.w	Solid_Debug
-		endif
+	else
+		bcc.w	Solid_Debug
+	endif
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.w	Solid_Debug	; if yes, branch
 		move.w	d0,d5
@@ -193,18 +193,29 @@ Solid_Centre:
 		bset	#5,obStatus(a1)	; make Sonic push object
 		bset	#5,obStatus(a0)	; make object be pushed
 		moveq	#1,d4		; return side collision
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_SideAir:
 		bsr.s	Solid_NotPushing
 		moveq	#1,d4		; return side collision
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_Ignore:
 		btst	#5,obStatus(a0)	; is Sonic pushing?
 		beq.s	Solid_Debug	; if not, branch
+	if FixBugs
+		; Fix the Walk-Jump bug
+		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Walk-Jump_Bug_in_Sonic_1
+		move.b	obAnim(a1),d4		; get Sonic's current animation
+		cmpi.b	#id_Roll,d4		; is Sonic in his jumping/rolling animation?
+		beq.s	Solid_NotPushing	; if so, branch
+		cmpi.b	#id_Drown,d4		; is Sonic in his drowning animation?
+		beq.s	Solid_NotPushing	; if so, branch
+		cmpi.b	#id_Hurt,d4		; is Sonic in his hurt animation?
+		beq.s	Solid_NotPushing	; if so, branch
+	endif
 		move.w	#id_Run,obAnim(a1) ; use running animation
 
 Solid_NotPushing:
@@ -213,7 +224,7 @@ Solid_NotPushing:
 
 Solid_Debug:
 		moveq	#0,d4		; return no collision
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_TopBottom:
@@ -235,7 +246,7 @@ Solid_Below:
 
 Solid_TopBtmAir:
 		moveq	#-1,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_Squash:
@@ -246,7 +257,7 @@ Solid_Squash:
 		jsr	(KillSonic).l	; kill Sonic
 		movea.l	(sp)+,a0
 		moveq	#-1,d4
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_Landed:
@@ -268,16 +279,16 @@ Solid_Landed:
 		move.b	#2,obSolid(a0) ; set standing flags
 		bset	#3,obStatus(a0)
 		moveq	#-1,d4		; return top/bottom collision
-		rts	
+		rts
 ; ===========================================================================
 
 Solid_Miss:
 		moveq	#0,d4
-		rts	
+		rts
 ; End of function SolidObject
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Solid_ResetFloor:
@@ -311,5 +322,5 @@ Solid_ResetFloor:
 .notinair:
 		bset	#3,obStatus(a1)	; set object standing flag
 		bset	#3,obStatus(a0)	; set Sonic standing on object flag
-		rts	
+		rts
 ; End of function Solid_ResetFloor

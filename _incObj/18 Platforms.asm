@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 18 - platforms	(GHZ, SYZ, SLZ)
+; Object 18 - platforms (GHZ, SYZ, SLZ)
 ; ---------------------------------------------------------------------------
 
 BasicPlatform:
@@ -88,10 +88,10 @@ loc_7F06:
 		rts
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	move platform slightly when you	stand on it
+; Subroutine to move platform slightly when you stand on it
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Plat_Nudge:
@@ -102,14 +102,14 @@ Plat_Nudge:
 		swap	d0
 		add.w	objoff_2C(a0),d0
 		move.w	d0,obY(a0)
-		rts	
+		rts
 ; End of function Plat_Nudge
 
 ; ---------------------------------------------------------------------------
-; Subroutine to	move platforms
+; Subroutine to move platforms
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Plat_Move:
@@ -132,7 +132,7 @@ Plat_Move:
 ; ===========================================================================
 
 .type00:
-		rts			; platform 00 doesn't move
+		rts		; platform 00 doesn't move
 ; ===========================================================================
 
 .type05:
@@ -191,21 +191,21 @@ Plat_Move:
 ; ===========================================================================
 
 .type03:
-		tst.w	objoff_3A(a0)		; is time delay	set?
+		tst.w	objoff_3A(a0)		; is time delay set?
 		bne.s	.type03_wait	; if yes, branch
 		btst	#3,obStatus(a0)	; is Sonic standing on the platform?
 		beq.s	.type03_nomove	; if not, branch
-		move.w	#30,objoff_3A(a0)	; set time delay to 0.5	seconds
+		move.w	#30,objoff_3A(a0)	; set time delay to 0.5 seconds
 
 .type03_nomove:
-		rts	
+		rts
 
 .type03_wait:
 		subq.w	#1,objoff_3A(a0)	; subtract 1 from time
 		bne.s	.type03_nomove	; if time is > 0, branch
 		move.w	#32,objoff_3A(a0)
 		addq.b	#1,obSubtype(a0) ; change to type 04 (falling)
-		rts	
+		rts
 ; ===========================================================================
 
 .type04:
@@ -240,32 +240,32 @@ Plat_Move:
 		move.b	#6,obRoutine(a0)
 
 .locret_8074:
-		rts	
+		rts
 ; ===========================================================================
 
 .type07:
-		tst.w	objoff_3A(a0)		; is time delay	set?
+		tst.w	objoff_3A(a0)		; is time delay set?
 		bne.s	.type07_wait	; if yes, branch
 		lea	(f_switch).w,a2	; load switch statuses
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; move object type ($x7) to d0
-		lsr.w	#4,d0		; divide d0 by 8, round	down
+		lsr.w	#4,d0		; divide d0 by 8, round down
 		tst.b	(a2,d0.w)	; has switch no. d0 been pressed?
 		beq.s	.type07_nomove	; if not, branch
 		move.w	#60,objoff_3A(a0)	; set time delay to 1 second
 
 .type07_nomove:
-		rts	
+		rts
 
 .type07_wait:
 		subq.w	#1,objoff_3A(a0)	; subtract 1 from time delay
 		bne.s	.type07_nomove	; if time is > 0, branch
 		addq.b	#1,obSubtype(a0) ; change to type 08
-		rts	
+		rts
 ; ===========================================================================
 
 .type08:
-		subq.w	#2,objoff_2C(a0)	; move platform	up
+		subq.w	#2,objoff_2C(a0)	; move platform up
 		move.w	objoff_34(a0),d0
 		subi.w	#$200,d0
 		cmp.w	objoff_2C(a0),d0	; has platform moved $200 pixels?
@@ -273,7 +273,7 @@ Plat_Move:
 		clr.b	obSubtype(a0)	; change to type 00 (stop moving)
 
 .type08_nostop:
-		rts	
+		rts
 ; ===========================================================================
 
 .type0A:
@@ -287,12 +287,12 @@ Plat_Move:
 
 .chgmotion:
 		move.b	(v_oscillate+$1A).w,objoff_26(a0) ; update platform-movement variable
-		rts	
+		rts
 ; ===========================================================================
 
 Plat_ChkDel:
 		out_of_range.s	Plat_Delete,objoff_32(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Plat_Delete:	; Routine 6

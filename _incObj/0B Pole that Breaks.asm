@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 0B - pole that	breaks (LZ)
+; Object 0B - pole that breaks (LZ)
 ; ---------------------------------------------------------------------------
 
 Pole:
@@ -36,7 +36,7 @@ Pole_Action:	; Routine 2
 		beq.s	.moveup
 		subq.w	#1,pole_time(a0) ; decrement time until break
 		bne.s	.moveup
-		move.b	#1,obFrame(a0)	; break	the pole
+		move.b	#1,obFrame(a0)	; break the pole
 		bra.s	.release
 ; ===========================================================================
 
@@ -75,7 +75,7 @@ Pole_Action:	; Routine 2
 ; ===========================================================================
 
 .grab:
-		tst.b	obColProp(a0)	; has Sonic touched the	pole?
+		tst.b	obColProp(a0)	; has Sonic touched the pole?
 		beq.s	Pole_Display	; if not, branch
 		lea	(v_player).w,a1
 		move.w	obX(a0),d0

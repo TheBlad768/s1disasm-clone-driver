@@ -1,4 +1,4 @@
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Swing_Move:
@@ -14,7 +14,7 @@ loc_7B78:
 ; End of function Swing_Move
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Obj48_Move:
@@ -44,7 +44,7 @@ loc_7BB6:
 ; End of function Obj48_Move
 
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Swing_Move2:
@@ -73,14 +73,14 @@ loc_7BCE:
 		move.w	d4,obY(a1)
 		move.w	d5,obX(a1)
 		dbf	d6,loc_7BCE
-		rts	
+		rts
 ; End of function Swing_Move2
 
 ; ===========================================================================
 
 Swing_ChkDel:
 		out_of_range.w	Swing_DelAll,objoff_3A(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 Swing_DelAll:
@@ -95,13 +95,13 @@ Swing_DelLoop:
 		addi.l	#v_objspace&$FFFFFF,d0
 		movea.l	d0,a1
 		bsr.w	DeleteChild
-		dbf	d2,Swing_DelLoop ; repeat for length of	chain
-		rts	
+		dbf	d2,Swing_DelLoop ; repeat for length of chain
+		rts
 ; ===========================================================================
 
 Swing_Delete:	; Routine 6, 8
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Swing_Display:	; Routine $A

@@ -7,28 +7,28 @@ ptrsize :=	4
 idstart :=	1
 ; $00 is reserved for silence
 
-mus__First = idstart
-mus_GHZ =			SMPS_id(ptr_mus81)
-mus_LZ =			SMPS_id(ptr_mus82)
-mus_MZ =			SMPS_id(ptr_mus83)
-mus_SLZ =			SMPS_id(ptr_mus84)
-mus_SYZ =			SMPS_id(ptr_mus85)
-mus_SBZ =			SMPS_id(ptr_mus86)
-mus_Invincible =		SMPS_id(ptr_mus87)
-mus_ExtraLife =			SMPS_id(ptr_mus88)
-mus_SS =			SMPS_id(ptr_mus89)
-mus_Title =			SMPS_id(ptr_mus8A)
-mus_Ending =			SMPS_id(ptr_mus8B)
-mus_Boss =			SMPS_id(ptr_mus8C)
-mus_FZ =			SMPS_id(ptr_mus8D)
-mus_GotThrough =		SMPS_id(ptr_mus8E)
-mus_GameOver =			SMPS_id(ptr_mus8F)
-mus_Continue =			SMPS_id(ptr_mus90)
-mus_Credits =			SMPS_id(ptr_mus91)
-mus_Drowning =			SMPS_id(ptr_mus92)
-mus_Emerald =			SMPS_id(ptr_mus93)
+bgm__First = idstart
+bgm_GHZ =			SMPS_id(ptr_mus81)
+bgm_LZ =			SMPS_id(ptr_mus82)
+bgm_MZ =			SMPS_id(ptr_mus83)
+bgm_SLZ =			SMPS_id(ptr_mus84)
+bgm_SYZ =			SMPS_id(ptr_mus85)
+bgm_SBZ =			SMPS_id(ptr_mus86)
+bgm_Invincible =		SMPS_id(ptr_mus87)
+bgm_ExtraLife =			SMPS_id(ptr_mus88)
+bgm_SS =			SMPS_id(ptr_mus89)
+bgm_Title =			SMPS_id(ptr_mus8A)
+bgm_Ending =			SMPS_id(ptr_mus8B)
+bgm_Boss =			SMPS_id(ptr_mus8C)
+bgm_FZ =			SMPS_id(ptr_mus8D)
+bgm_GotThrough =		SMPS_id(ptr_mus8E)
+bgm_GameOver =			SMPS_id(ptr_mus8F)
+bgm_Continue =			SMPS_id(ptr_mus90)
+bgm_Credits =			SMPS_id(ptr_mus91)
+bgm_Drowning =			SMPS_id(ptr_mus92)
+bgm_Emerald =			SMPS_id(ptr_mus93)
 
-mus__Last =			SMPS_id(ptr_musend)-1
+bgm__End =			SMPS_id(ptr_musend)-1
 
 ; Sound effects
 offset :=	SoundIndex
@@ -84,16 +84,16 @@ sfx_Spring =			SMPS_id(ptr_sndCC)
 sfx_Switch =			SMPS_id(ptr_sndCD)
 sfx_RingLeft =			SMPS_id(ptr_sndCE)
 sfx_Signpost =			SMPS_id(ptr_sndCF)
-sfx__Last =			SMPS_id(ptr_sndend)-1
+sfx__End =			SMPS_id(ptr_sndend)-1
 
 ; Special sound effects
 offset :=	SpecSoundIndex
 ptrsize :=	4
-idstart :=	sfx__Last+1
+idstart :=	sfx__End+1
 
 spec__First = idstart
 sfx_Waterfall =			SMPS_id(ptr_sndD0)
-spec__Last =			SMPS_id(ptr_specend)-1
+spec__End =			SMPS_id(ptr_specend)-1
 
 ; Sound commands
 offset :=	Sound_ExIndex
@@ -103,9 +103,9 @@ idstart :=	$F9
 flg__First = idstart
 specsfx_Stop =			SMPS_id(ptr_flgF9)
 sfx_Stop =			SMPS_id(ptr_flgFA)
-mus_Fade =			SMPS_id(ptr_flgFB)
-sfx_Sega =			SMPS_id(ptr_flgFC)
-mus_Speedup =			SMPS_id(ptr_flgFD)
-mus_Slowdown =			SMPS_id(ptr_flgFE)
-mus_Stop =			SMPS_id(ptr_flgFF)
-flg__Last =			SMPS_id(ptr_flgend)-1
+bgm_Fade =			SMPS_id(ptr_flgFB)
+bgm_Sega =			SMPS_id(ptr_flgFC)
+bgm_Speedup =			SMPS_id(ptr_flgFD)
+bgm_Slowdown =			SMPS_id(ptr_flgFE)
+bgm_Stop =			SMPS_id(ptr_flgFF)
+flg__End =			SMPS_id(ptr_flgend)-1

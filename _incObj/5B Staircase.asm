@@ -94,7 +94,7 @@ loc_10F92:
 		move.b	#1,objoff_36(a2)
 
 locret_10FA0:
-		rts	
+		rts
 ; ===========================================================================
 Stair_TypeIndex:dc.w Stair_Type00-Stair_TypeIndex
 		dc.w Stair_Type01-Stair_TypeIndex
@@ -110,14 +110,14 @@ Stair_Type00:
 		move.w	#$1E,objoff_34(a0)
 
 locret_10FBE:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_10FC0:
 		subq.w	#1,objoff_34(a0)
 		bne.s	locret_10FBE
 		addq.b	#1,obSubtype(a0) ; add 1 to type
-		rts	
+		rts
 ; ===========================================================================
 
 Stair_Type02:
@@ -128,14 +128,14 @@ Stair_Type02:
 		move.w	#$3C,objoff_34(a0)
 
 locret_10FDE:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_10FE0:
 		subq.w	#1,objoff_34(a0)
 		bne.s	loc_10FEC
 		addq.b	#1,obSubtype(a0) ; add 1 to type
-		rts	
+		rts
 ; ===========================================================================
 
 loc_10FEC:
@@ -150,7 +150,7 @@ loc_10FEC:
 		move.b	d0,(a1)+
 		eori.b	#1,d0
 		move.b	d0,(a1)+
-		rts	
+		rts
 ; ===========================================================================
 
 Stair_Type01:
@@ -174,5 +174,5 @@ Stair_Type01:
 		move.b	d1,(a1)+
 
 locret_11038:
-		rts	
-		rts	
+		rts
+		rts

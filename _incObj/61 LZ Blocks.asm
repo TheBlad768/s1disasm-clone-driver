@@ -79,7 +79,7 @@ LBlk_Action:	; Routine 2
 ; ===========================================================================
 
 .type00:
-		rts	
+		rts
 ; ===========================================================================
 
 .type01:
@@ -91,7 +91,7 @@ LBlk_Action:	; Routine 2
 		move.w	#30,lblk_time(a0) ; wait for half second
 
 .donothing01:
-		rts	
+		rts
 ; ===========================================================================
 
 .wait01:
@@ -99,7 +99,7 @@ LBlk_Action:	; Routine 2
 		bne.s	.donothing01	; if time remains, branch
 		addq.b	#1,obSubtype(a0) ; goto .type02 or .type04
 		clr.b	lblk_untouched(a0) ; flag block as touched
-		rts	
+		rts
 ; ===========================================================================
 
 .type02:
@@ -115,7 +115,7 @@ LBlk_Action:	; Routine 2
 		clr.b	obSubtype(a0)	; set type to 00 (non-moving type)
 
 .nofloor02:
-		rts	
+		rts
 ; ===========================================================================
 
 .type04:
@@ -129,17 +129,17 @@ LBlk_Action:	; Routine 2
 		clr.b	obSubtype(a0)	; set type to 00 (non-moving type)
 
 .noceiling04:
-		rts	
+		rts
 ; ===========================================================================
 
 .type05:
-		cmpi.b	#1,objoff_3F(a0)	; is Sonic touching the	block?
+		cmpi.b	#1,objoff_3F(a0)	; is Sonic touching the block?
 		bne.s	.notouch05	; if not, branch
 		addq.b	#1,obSubtype(a0) ; goto .type06
 		clr.b	lblk_untouched(a0)
 
 .notouch05:
-		rts	
+		rts
 ; ===========================================================================
 
 .type07:
@@ -159,7 +159,7 @@ LBlk_Action:	; Routine 2
 		sub.w	d1,obY(a0)	; stop block
 
 .noceiling07:
-		rts	
+		rts
 ; ===========================================================================
 
 .fall07:
@@ -176,7 +176,7 @@ LBlk_Action:	; Routine 2
 		add.w	d1,obY(a0)
 
 .stop07:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_12180:
@@ -205,4 +205,4 @@ loc_121A6:
 		move.w	d0,obY(a0)
 
 locret_121C0:
-		rts	
+		rts

@@ -5,9 +5,11 @@ ramaddr function x,(-(x&$80000000)<<1)|x
 ; Variables (v) and Flags (f)
 
 	phase ramaddr ( $FFFF0000 )
-v_ram_start:
+v_ram_start_def:
+v_ram_start:		equ	v_ram_start_def&$FFFFFF	; 24-bit addressing
 
-v_256x256:		ds.b	$52*$200	; 256x256 tile mappings ($52 chunks)
+v_256x256_def:		ds.b	$52*chunk_size		; 256x256 tile mappings ($52 chunks)
+v_256x256:		equ	v_256x256_def&$FFFFFF	; 24-bit addressing
 v_256x256_end:
 
 v_lvllayout:		ds.b	$400		; level and background layouts
@@ -98,12 +100,11 @@ v_endeggman	= v_objspace+object_size*2	; object variable space for Eggman after 
 v_tryagain	= v_objspace+object_size*3	; object variable space for the "TRY AGAIN" text ($40 bytes)
 v_eggmanchaos	= v_objspace+object_size*32	; object variable space for the emeralds juggled by Eggman ($180 bytes)
 
-Snd_driver_RAM:		ds.b $5C0		; sound driver state
-			ds.b $40		; unused
+Snd_driver_RAM:			ds.b $400	; $FFFFF100-$FFFFF5FF ; unused, leftover from the Sonic 1 sound driver (and used by it when you port it to Sonic 2)
+Snd_driver_RAM_end		= *
+SegaCD_Mode:		= Snd_driver_RAM+$3F0
 
-SegaCD_Mode		= Snd_driver_RAM+$580
-
-Snd_driver_RAM_end	= *
+			ds.b	$200		; unused
 
 v_gamemode:		ds.b	1		; game mode (00=Sega; 04=Title; 08=Demo; 0C=Level; 10=SS; 14=Cont; 18=End; 1C=Credit; +8C=PreLevel)
 			ds.b	1		; unused
@@ -112,9 +113,9 @@ v_jpadpress2:		ds.b	1		; joypad input - pressed, duplicate
 v_jpadhold1:		ds.b	1		; joypad input - held
 v_jpadpress1:		ds.b	1		; joypad input - pressed
 			ds.b	6		; unused
-v_vdp_buffer1:		ds.w	1		; VDP instruction buffer
+v_vdp_buffer1:		ds.w	1		; VDP instruction buffer of register $81 (used for enabling/disabling display)
 			ds.b	6		; unused
-v_demolength:		ds.w	1		; the length of a demo in frames
+v_generictimer:		ds.w	1		; generic timer, decrements to 0 in vblank (word)
 v_scrposy_vdp:		ds.w	1		; screen position y (VDP)
 v_bgscrposy_vdp:	ds.w	1		; background screen position y (VDP)
 v_scrposx_vdp:		ds.w	1		; screen position x (VDP)
@@ -291,13 +292,30 @@ v_levelvariables_end:
 
 v_spritetablebuffer:	ds.b	$280		; sprite table (last $80 bytes are overwritten by v_palette_water_fading)
 v_spritetablebuffer_end:
+
 v_palette_water_fading = v_spritetablebuffer_end-$80	; duplicate underwater palette, used for transitions ($80 bytes)
-v_palette_water:	ds.b	$80		; main underwater palette
+
+v_palette_water:	; main underwater palette
+v_palette_water_line_1:	ds.b $20
+v_palette_water_line_2:	ds.b $20
+v_palette_water_line_3:	ds.b $20
+v_palette_water_line_4:	ds.b $20
 v_palette_water_end:
-v_palette:		ds.b	$80		; main palette
+
+v_palette:		; main palette
+v_palette_line_1:	ds.b $20
+v_palette_line_2:	ds.b $20
+v_palette_line_3:	ds.b $20
+v_palette_line_4:	ds.b $20
 v_palette_end:
-v_palette_fading:	ds.b	$80		; duplicate palette, used for transitions
+
+v_palette_fading:	; duplicate palette, used for transitions
+v_palette_fading_line_1:ds.b $20
+v_palette_fading_line_2:ds.b $20
+v_palette_fading_line_3:ds.b $20
+v_palette_fading_line_4:ds.b $20
 v_palette_fading_end:
+
 v_objstate:		ds.b	$C0		; object state list
 v_objstate_end:
 			ds.b	$140		; stack
@@ -389,7 +407,7 @@ v_timingvariables_end:
 
 v_chunk0collision:	ds.w	1		; very subtly (and perhaps unintentionally) used by FindNearestTile when encountering chunk 0
 	if v_chunk0collision<>ramaddr($FFFFFF00)
-		fatal "v_chunk0collision needs to be at address $FFFFFF00 so that FindNearestTile works correctly."
+		fatal "v_chunk0collision needs to be at address $FFFFFF00 so that FindNearestTile works correctly (currently offset by \{signedToString(v_chunk0collision-ramaddr($FFFFFF00))} bytes) ."
 	endif
 			ds.b	$E		; unused
 v_screenposx_dup:	ds.l	1		; screen position x (duplicate)
@@ -444,14 +462,14 @@ v_ram_end:
 	dephase
 
 ; Special stage
-v_ssbuffer1		= v_256x256
+v_ssbuffer1		= v_ram_start
 v_ssblockbuffer		= v_ssbuffer1+$1020 ; ($2000 bytes)
 v_ssblockbuffer_end	= v_ssblockbuffer+$80*$40
-v_ssbuffer2		= v_256x256+$4000
+v_ssbuffer2		= v_ram_start+$4000
 v_ssblocktypes		= v_ssbuffer2
 v_ssitembuffer		= v_ssbuffer2+$400 ; ($100 bytes)
 v_ssitembuffer_end	= v_ssitembuffer+$100
-v_ssbuffer3		= v_256x256+$8000
+v_ssbuffer3		= v_ram_start_def+$8000
 v_ssscroll_buffer	= v_ngfx_buffer+$100
 
 ; Error handler

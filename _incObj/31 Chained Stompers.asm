@@ -14,7 +14,7 @@ CStom_Index:	dc.w CStom_Main-CStom_Index
 		dc.w CStom_Display2-CStom_Index
 		dc.w loc_B7E2-CStom_Index
 
-CStom_switch = objoff_3A			; switch number for the current stomper
+CStom_switch = objoff_3A		; switch number for the current stomper
 
 CStom_SwchNums:	dc.b 0,	0		; switch number, obj number
 		dc.b 1,	0
@@ -24,10 +24,14 @@ CStom_Var:	dc.b 2,	0, 0		; routine number, y-position, frame number
 		dc.b 8,	$CC, 3
 		dc.b 6,	$F0, 2
 
-word_B6A4:	dc.w $7000, $A000
-		dc.w $5000, $7800
-		dc.w $3800, $5800
-		dc.w $B800
+CStom_Lengths:	; chain lengths based on subtype
+		dc.b $70, 0		
+		dc.b $A0, 0
+		dc.b $50, 0
+		dc.b $78, 0
+		dc.b $38, 0
+		dc.b $58, 0
+		dc.b $B8, 0
 ; ===========================================================================
 
 CStom_Main:	; Routine 0
@@ -44,7 +48,7 @@ CStom_Main:	; Routine 0
 loc_B6CE:
 		andi.b	#$F,d0
 		add.w	d0,d0
-		move.w	word_B6A4(pc,d0.w),d2
+		move.w	CStom_Lengths(pc,d0.w),d2
 		tst.w	d0
 		bne.s	loc_B6E0
 		move.w	d2,objoff_32(a0)
@@ -129,7 +133,7 @@ loc_B798:	; Routine 2
 		movea.l	a2,a0
 
 CStom_Display:
-	if ~~FixBugs
+	if FixBugs=0
 		bsr.w	DisplaySprite
 	endif
 		bra.w	CStom_ChkDel
@@ -152,7 +156,7 @@ loc_B7FE:	; Routine 4
 		move.w	d0,obY(a0)
 
 CStom_Display2:	; Routine 6
-	if ~~FixBugs
+	if FixBugs=0
 		bsr.w	DisplaySprite
 	endif
 
@@ -163,7 +167,7 @@ CStom_ChkDel:
 		; the same frame or else cause a null-pointer dereference.
 		bra.w	DisplaySprite
 	else
-		rts	
+		rts
 	endif
 ; ===========================================================================
 
@@ -203,7 +207,7 @@ loc_B872:
 		tst.b	obRender(a0)
 		bpl.s	loc_B892
 		move.w	#sfx_ChainRise,d0
-		jsr	(PlaySound_Special).l	; play rising chain sound
+		jsr	(QueueSound2).l	; play rising chain sound
 
 loc_B892:
 		subi.w	#$80,objoff_32(a0)
@@ -229,14 +233,14 @@ loc_B8A8:
 		tst.b	obRender(a0)
 		bpl.s	CStom_Restart
 		move.w	#sfx_ChainStomp,d0
-		jsr	(PlaySound_Special).l	; play stomping sound
+		jsr	(QueueSound2).l	; play stomping sound
 
 CStom_Restart:
 		moveq	#0,d0
 		move.b	objoff_32(a0),d0
 		add.w	objoff_30(a0),d0
 		move.w	d0,obY(a0)
-		rts	
+		rts
 ; ===========================================================================
 
 CStom_Type01:
@@ -255,7 +259,7 @@ loc_B902:
 		tst.b	obRender(a0)
 		bpl.s	loc_B91C
 		move.w	#sfx_ChainRise,d0
-		jsr	(PlaySound_Special).l	; play rising chain sound
+		jsr	(QueueSound2).l	; play rising chain sound
 
 loc_B91C:
 		subi.w	#$80,objoff_32(a0)
@@ -282,7 +286,7 @@ loc_B938:
 		tst.b	obRender(a0)
 		bpl.s	loc_B97C
 		move.w	#sfx_ChainStomp,d0
-		jsr	(PlaySound_Special).l	; play stomping sound
+		jsr	(QueueSound2).l	; play stomping sound
 
 loc_B97C:
 		bra.w	CStom_Restart

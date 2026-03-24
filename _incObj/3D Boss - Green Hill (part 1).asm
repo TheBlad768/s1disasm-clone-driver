@@ -95,9 +95,9 @@ loc_177E6:
 		bne.s	locret_1784A
 		tst.b	objoff_3E(a0)
 		bne.s	BGHZ_ShipFlash
-		move.b	#$20,objoff_3E(a0)	; set number of	times for ship to flash
+		move.b	#$20,objoff_3E(a0)	; set number of times for ship to flash
 		move.w	#sfx_HitBoss,d0
-		jsr	(PlaySound_Special).l	; play boss damage sound
+		jsr	(QueueSound2).l	; play boss damage sound
 
 BGHZ_ShipFlash:
 		lea	(v_palette+$22).w,a1 ; load 2nd palette, 2nd entry
@@ -107,13 +107,13 @@ BGHZ_ShipFlash:
 		move.w	#cWhite,d0	; move 0EEE (white) to d0
 
 loc_1783C:
-		move.w	d0,(a1)		; load colour stored in	d0
+		move.w	d0,(a1)		; load colour stored in d0
 		subq.b	#1,objoff_3E(a0)
 		bne.s	locret_1784A
 		move.b	#$F,obColType(a0)
 
 locret_1784A:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_1784C:
@@ -121,4 +121,4 @@ loc_1784C:
 		bsr.w	AddPoints
 		move.b	#8,ob2ndRout(a0)
 		move.w	#$B3,objoff_3C(a0)
-		rts	
+		rts

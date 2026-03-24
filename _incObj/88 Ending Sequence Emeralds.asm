@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 88 - chaos emeralds on	the ending sequence
+; Object 88 - chaos emeralds on the ending sequence
 ; ---------------------------------------------------------------------------
 
 EndChaos:
@@ -22,7 +22,7 @@ ECha_Main:	; Routine 0
 		cmpi.b	#2,(v_player+obFrame).w ; this isn't `fr_Wait1`: `v_player` is Object 88, which has its own frames
 		beq.s	ECha_CreateEms
 		addq.l	#4,sp
-		rts	
+		rts
 ; ===========================================================================
 
 ECha_CreateEms:
@@ -82,4 +82,4 @@ ECha_Rise:
 		subq.w	#1,echa_origY(a0) ; make circle rise
 
 ECha_End:
-		rts	
+		rts

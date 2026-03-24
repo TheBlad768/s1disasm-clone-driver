@@ -18,7 +18,7 @@ van_time = objoff_30		; time for Sonic to disappear
 Van_Main:	; Routine 0
 		tst.l	(v_plc_buffer).w ; are pattern load cues empty?
 		beq.s	.isempty	; if yes, branch
-		rts	
+		rts
 
 .isempty:
 		addq.b	#2,obRoutine(a0)
@@ -41,7 +41,7 @@ Van_RmvSonic:	; Routine 2
 		beq.s	.display
 		move.b	#0,(v_player).w	; remove Sonic
 		move.w	#sfx_SSGoal,d0
-		jsr	(PlaySound_Special).l	; play Special Stage "GOAL" sound
+		jsr	(QueueSound2).l	; play Special Stage "GOAL" sound
 
 .display:
 		jmp	(DisplaySprite).l
@@ -54,4 +54,4 @@ Van_LoadSonic:	; Routine 4
 		jmp	(DeleteObject).l
 
 .wait:
-		rts	
+		rts

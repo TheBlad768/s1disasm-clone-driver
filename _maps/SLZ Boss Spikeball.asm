@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - exploding spikeys that the SLZ boss	drops
+; Sprite mappings - exploding spikeys that the SLZ boss drops
 ; ---------------------------------------------------------------------------
 Map_BSBall_internal:	mappingsTable
 	mappingsTableEntry.w	.fireball1

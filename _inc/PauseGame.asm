@@ -1,18 +1,18 @@
 ; ---------------------------------------------------------------------------
-; Subroutine to	pause the game
+; Subroutine to pause the game
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 PauseGame:
 		nop	
-		tst.b	(v_lives).w	; do you have any lives	left?
-		beq.s	Unpause		; if not, branch
+		tst.b	(v_lives).w	; do you have any lives left?
+		beq.w	Unpause		; if not, branch
 		tst.w	(f_pause).w	; is game already paused?
 		bne.s	Pause_StopGame	; if yes, branch
 		btst	#bitStart,(v_jpadpress1).w ; is Start button pressed?
-		beq.s	Pause_DoNothing	; if not, branch
+		beq.w	Pause_DoNothing	; if not, branch
 
 Pause_StopGame:
 		move.w	#1,(f_pause).w	; freeze time
@@ -47,11 +47,11 @@ Unpause:
 		move.w	#0,(f_pause).w	; unpause the game
 
 Pause_DoNothing:
-		rts	
+		rts
 ; ===========================================================================
 
 Pause_SlowMo:
 		move.w	#1,(f_pause).w
 		SMPS_UnpauseMusic	; Unpause the music
-		rts	
+		rts
 ; End of function PauseGame

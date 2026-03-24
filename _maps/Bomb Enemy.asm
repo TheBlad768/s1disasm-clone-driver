@@ -62,7 +62,7 @@ Map_Bomb_internal:	mappingsTable
 .activate2_End
 
 .fuse1:	spriteHeader
-	spritePiece	-4, -$19, 1, 2, $23, 0, 0, 0, 0 ; fuse	(just before it	explodes)
+	spritePiece	-4, -$19, 1, 2, $23, 0, 0, 0, 0 ; fuse (just before it explodes)
 .fuse1_End
 
 .fuse2:	spriteHeader

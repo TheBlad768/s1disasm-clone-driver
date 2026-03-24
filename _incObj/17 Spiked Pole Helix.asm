@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 17 - helix of spikes on a pole	(GHZ)
+; Object 17 - helix of spikes on a pole (GHZ)
 ; ---------------------------------------------------------------------------
 
 Helix:
@@ -16,7 +16,7 @@ Hel_Index:	dc.w Hel_Main-Hel_Index
 
 hel_frame = objoff_3E		; start frame (different for each spike)
 
-;		$29-38 are used for child object addresses
+;  $29-38 are used for child object addresses
 ; ===========================================================================
 
 Hel_Main:	; Routine 0
@@ -81,7 +81,7 @@ Hel_Action:	; Routine 2, 4
 		bsr.w	DisplaySprite
 		bra.w	Hel_ChkDel
 
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 Hel_RotateSpikes:
@@ -94,14 +94,14 @@ Hel_RotateSpikes:
 		move.b	#$84,obColType(a0) ; make object harmful
 
 locret_7DA6:
-		rts	
+		rts
 ; End of function Hel_RotateSpikes
 
 ; ===========================================================================
 
 Hel_ChkDel:
 		out_of_range.w	Hel_DelAll
-		rts	
+		rts
 ; ===========================================================================
 
 Hel_DelAll:
@@ -122,7 +122,7 @@ Hel_DelLoop:
 
 Hel_Delete:	; Routine 6
 		bsr.w	DeleteObject
-		rts	
+		rts
 ; ===========================================================================
 
 Hel_Display:	; Routine 8

@@ -25,7 +25,7 @@ GRing_Main:	; Routine 0
 		beq.w	GRing_Delete	; if yes, branch
 		cmpi.w	#50,(v_rings).w	; do you have at least 50 rings?
 		bhs.s	GRing_Okay	; if yes, branch
-		rts	
+		rts
 ; ===========================================================================
 
 GRing_Okay:
@@ -52,11 +52,11 @@ GRing_Collect:	; Routine 4
 		move.w	(v_player+obX).w,d0
 		cmp.w	obX(a0),d0	; has Sonic come from the left?
 		blo.s	GRing_PlaySnd	; if yes, branch
-		bset	#0,obRender(a1)	; reverse flash	object
+		bset	#0,obRender(a1)	; reverse flash object
 
 GRing_PlaySnd:
 		move.w	#sfx_GiantRing,d0
-		jsr	(PlaySound_Special).l	; play giant ring sound
+		jsr	(QueueSound2).l	; play giant ring sound
 		bra.s	GRing_Animate
 ; ===========================================================================
 
