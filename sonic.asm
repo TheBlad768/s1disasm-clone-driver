@@ -470,7 +470,10 @@ VBlank:
 
 		move.w	#$700,d0
 .waitPAL:
-		dbf	d0,.waitPAL ; wait here in a loop doing nothing for a while...
+		; Wait here in a loop doing nothing for a while.
+		; This seems to be a pretty harsh attempt to push CRAM dots outside of the visable view area
+		; due to Sonic 1 not using all the avaiable screen space PAL offers, you would be able to seem them at the bottem.
+		dbf	d0,.waitPAL 
 
 .notPAL:
 		move.b	(v_vbla_routine).w,d0
@@ -525,6 +528,8 @@ VBla_00:
 
 		move.w	#$700,d0
 .waitPAL:
+		; Same as above, this time during a lag frame.
+		; However this only happens if the level is LZ, Sonic 2/3/&K changed this so it runs in any level.
 		dbf	d0,.waitPAL
 
 .notPAL:
