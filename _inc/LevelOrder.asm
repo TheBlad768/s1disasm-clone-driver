@@ -4,40 +4,43 @@
 ; ---------------------------------------------------------------------------
 
 		; Green Hill Zone
-		dc.b id_GHZ, 1	; Act 1
-		dc.b id_GHZ, 2	; Act 2
-		dc.b id_MZ, 0	; Act 3
-		dc.b 0, 0
+		dc.w id_GHZ_act2	; Act 1
+		dc.w id_GHZ_act3	; Act 2
+		dc.w id_MZ_act1		; Act 3
+		dc.w 0			; Act 4 (unused)
 
 		; Labyrinth Zone
-		dc.b id_LZ, 1	; Act 1
-		dc.b id_LZ, 2	; Act 2
-		dc.b id_SLZ, 0	; Act 3
-		dc.b id_SBZ, 2	; Scrap Brain Zone Act 3
+		dc.w id_LZ_act2		; Act 1
+		dc.w id_LZ_act3		; Act 2
+		dc.w id_SLZ_act1	; Act 3
+		dc.w id_FZ		; Act 4 (Scrap Brain Zone Act 3)
 
 		; Marble Zone
-		dc.b id_MZ, 1	; Act 1
-		dc.b id_MZ, 2	; Act 2
-		dc.b id_SYZ, 0	; Act 3
-		dc.b 0, 0
+		dc.w id_MZ_act2		; Act 1
+		dc.w id_MZ_act3		; Act 2
+		dc.w id_SYZ_act1	; Act 3
+		dc.w 0			; Act 4 (unused)
 
 		; Star Light Zone
-		dc.b id_SLZ, 1	; Act 1
-		dc.b id_SLZ, 2	; Act 2
-		dc.b id_SBZ, 0	; Act 3
-		dc.b 0, 0
+		dc.w id_SLZ_act2	; Act 1
+		dc.w id_SLZ_act3	; Act 2
+		dc.w id_SBZ_act1	; Act 3
+		dc.w 0			; Act 4 (unused)
 
 		; Spring Yard Zone
-		dc.b id_SYZ, 1	; Act 1
-		dc.b id_SYZ, 2	; Act 2
-		dc.b id_LZ, 0	; Act 3
-		dc.b 0, 0
+		dc.w id_SYZ_act2	; Act 1
+		dc.w id_SYZ_act3	; Act 2
+		dc.w id_LZ_act1		; Act 3
+		dc.w 0			; Act 4 (unused)
 
 		; Scrap Brain Zone
-		dc.b id_SBZ, 1	; Act 1
-		dc.b id_LZ, 3	; Act 2
-		dc.b 0, 0	; Final Zone
-		dc.b 0, 0
-		even
+		dc.w id_SBZ_act2	; Act 1
+		dc.w id_LZ_act4		; Act 2
+		dc.w 0			; Act 3 (Final Zone)
+		dc.w 0			; Act 4 (unused)
+
+; Note: Even though this array properly defines the level order for SBZ2/SBZ3/FZ,
+; those transitions are not handled here, as they were hardcoded elsewhere.
 
 		zonewarning LevelOrder,8
+		even

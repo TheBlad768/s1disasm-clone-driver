@@ -137,7 +137,7 @@ Sonic_Display:
 		blo.s	.removeinvincible
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
-		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; check if level is SBZ3
+		cmpi.w	#id_LZ_act4,(v_zone).w ; check if level is SBZ3 (LZ4)
 		bne.s	.music
 		moveq	#5,d0		; play SBZ music
 
@@ -860,13 +860,13 @@ Sonic_LevelBound:
 
 ; Boundary_Bottom
 .bottom:
-		cmpi.w	#(id_SBZ<<8)+1,(v_zone).w ; is level SBZ2 ?
+		cmpi.w	#id_SBZ_act2,(v_zone).w ; is level SBZ2?
 		bne.w	KillSonic	; if not, kill Sonic
 		cmpi.w	#$2000,(v_player+obX).w
 		blo.w	KillSonic
 		clr.b	(v_lastlamp).w	; clear lamppost counter
 		move.w	#1,(f_restart).w ; restart the level
-		move.w	#(id_LZ<<8)+3,(v_zone).w ; set level to SBZ3 (LZ4)
+		move.w	#id_LZ_act4,(v_zone).w ; set level to SBZ3 (LZ4)
 		rts
 ; ===========================================================================
 
@@ -1444,7 +1444,13 @@ Sonic_HurtStop:
 	endif
 		addi.w	#224,d0
 		cmp.w	obY(a0),d0
+	if FixBugs
+		blt.w	KillSonic
+	else
+		; This would cause Sonic to die from the
+		; upper/top boundary of the level, while in hurt state.
 		blo.w	KillSonic
+	endif
 		bsr.w	Sonic_Floor
 		btst	#1,obStatus(a0)
 		bne.s	locret_13860

@@ -119,9 +119,9 @@ Got_ChkBonus:
 		move.w	#sfx_Cash,d0
 		jsr	(QueueSound2).l	; play "ker-ching" sound
 		addq.b	#2,obRoutine(a0)
-		cmpi.w	#(id_SBZ<<8)+1,(v_zone).w
-		bne.s	Got_SetDelay
-		addq.b	#4,obRoutine(a0)
+		cmpi.w	#id_SBZ_act2,(v_zone).w	; is level SBZ2?
+		bne.s	Got_SetDelay		; if not, branch
+		addq.b	#4,obRoutine(a0)	; prepare SBZ3 transition cutscene
 
 Got_SetDelay:
 		move.w	#180,obTimeFrame(a0) ; set time delay to 3 seconds

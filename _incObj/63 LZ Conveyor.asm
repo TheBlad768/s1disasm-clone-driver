@@ -14,7 +14,7 @@ LCon_Display:
 ; ===========================================================================
 
 loc_1236A:
-		cmpi.b	#2,(v_act).w
+		cmpi.b	#act3,(v_act).w
 		bne.s	loc_12378
 		cmpi.w	#-$80,d0
 		bhs.s	LCon_Display
