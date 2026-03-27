@@ -618,15 +618,14 @@ VBlank:
 		move.w	(vdp_control_port).l,d0
 		move.l	#$40000010,(vdp_control_port).l
 		move.l	(v_scrposy_vdp).w,(vdp_data_port).l ; send screen y-axis pos. to VSRAM
+
+		; Wait here in a loop doing nothing for a while. This seems to be a pretty harsh attempt
+		; to push CRAM dots outside of the visable view area, due to Sonic 1 not using all
+		; the available screen space PAL offers, as they would otherwise be seen at the bottom.
 		btst	#6,(v_megadrive).w ; is Megadrive PAL?
 		beq.s	.notPAL		; if not, branch
-
 		move.w	#$700,d0
-.waitPAL:
-		; Wait here in a loop doing nothing for a while.
-		; This seems to be a pretty harsh attempt to push CRAM dots outside of the visable view area
-		; due to Sonic 1 not using all the avaiable screen space PAL offers, you would be able to seem them at the bottem.
-		dbf	d0,.waitPAL 
+.waitPAL:	dbf	d0,.waitPAL 
 
 .notPAL:
 		move.b	(v_vbla_routine).w,d0
@@ -666,8 +665,8 @@ VBla_Index:	dc.w VBla_00-VBla_Index	; (lag frame)
 
 ; loc_B88:
 VBla_00:
-		cmpi.b	#$80+id_Level,(v_gamemode).w
-		beq.s	.islevel
+		cmpi.b	#$80+id_Level,(v_gamemode).w ; is pre level sequence active?
+		beq.s	.islevel	; if not, branch
 		cmpi.b	#id_Level,(v_gamemode).w ; is game on a level?
 		bne.w	VBla_Music	; if not, branch
 
@@ -675,15 +674,13 @@ VBla_00:
 		cmpi.b	#id_LZ,(v_zone).w ; is level LZ ?
 		bne.w	VBla_Music	; if not, branch
 
+		; Same as in the opening block of the VBlank routine, this time during a lag frame.
+		; This only happens if the level is LZ (note, Sonic 2/3/&K would change this so it runs in any level).
 		move.w	(vdp_control_port).l,d0
 		btst	#6,(v_megadrive).w ; is Megadrive PAL?
 		beq.s	.notPAL		; if not, branch
-
 		move.w	#$700,d0
-.waitPAL:
-		; Same as above, this time during a lag frame.
-		; However this only happens if the level is LZ, Sonic 2/3/&K changed this so it runs in any level.
-		dbf	d0,.waitPAL
+.waitPAL:	dbf	d0,.waitPAL
 
 .notPAL:
 		move.w	#1,(f_hbla_pal).w ; set HBlank flag
