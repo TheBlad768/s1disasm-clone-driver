@@ -403,23 +403,22 @@ MainGameLoop:
 
 GameModeArray:
 
-ptr_GM_Sega:	bra.w	GM_Sega		; Sega Screen ($00)
+gmptr:		macro gamemode,{INTLABEL},{GLOBALSYMBOLS}
+__LABEL__: =	(*-GameModeArray)
+		bra.w	gamemode
+		endm
 
-ptr_GM_Title:	bra.w	GM_Title	; Title Screen ($04)
+id_Sega:	gmptr	GM_Sega		; Sega Screen ($00)
+id_Title:	gmptr	GM_Title	; Title Screen ($04)
+id_Demo:	gmptr	GM_Level	; Demo Mode ($08)
+id_Level:	gmptr	GM_Level	; Normal Level ($0C)
+id_Special:	gmptr	GM_Special	; Special Stage ($10)
+id_Continue:	gmptr	GM_Continue	; Continue Screen ($14)
+id_Ending:	gmptr	GM_Ending	; End of game sequence ($18)
+id_Credits:	gmptr	GM_Credits	; Credits ($1C)
 
-ptr_GM_Demo:	bra.w	GM_Level	; Demo Mode ($08)
+		rts	; redundant rts
 
-ptr_GM_Level:	bra.w	GM_Level	; Normal Level ($0C)
-
-ptr_GM_Special:	bra.w	GM_Special	; Special Stage ($10)
-
-ptr_GM_Cont:	bra.w	GM_Continue	; Continue Screen ($14)
-
-ptr_GM_Ending:	bra.w	GM_Ending	; End of game sequence ($18)
-
-ptr_GM_Credits:	bra.w	GM_Credits	; Credits ($1C)
-
-		rts
 ; ===========================================================================
 	if SkipChecksumCheck=0
 CheckSumError:
