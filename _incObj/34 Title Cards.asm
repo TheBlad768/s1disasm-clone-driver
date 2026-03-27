@@ -21,13 +21,13 @@ Card_CheckSBZ3:	; Routine 0
 		movea.l	a0,a1
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
-		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; check if level is SBZ 3
+		cmpi.w	#id_LZ_act4,(v_zone).w ; check if level is SBZ3 (LZ4)
 		bne.s	Card_CheckFZ
 		moveq	#5,d0		; load title card number 5 (SBZ)
 
 Card_CheckFZ:
 		move.w	d0,d2
-		cmpi.w	#(id_SBZ<<8)+2,(v_zone).w ; check if level is FZ
+		cmpi.w	#id_FZ,(v_zone).w ; check if level is FZ
 		bne.s	Card_LoadConfig
 		moveq	#6,d0		; load title card number 6 (FZ)
 		moveq	#$B,d2		; use "FINAL" mappings
@@ -51,12 +51,12 @@ Card_Loop:
 		move.b	d2,d0
 
 Card_ActNumber:
-		cmpi.b	#7,d0
-		bne.s	Card_MakeSprite
-		add.b	(v_act).w,d0
-		cmpi.b	#3,(v_act).w
-		bne.s	Card_MakeSprite
-		subq.b	#1,d0
+		cmpi.b	#7,d0		; is this the act number object?
+		bne.s	Card_MakeSprite	; if not, branch
+		add.b	(v_act).w,d0	; use appropriate act number art for current act
+		cmpi.b	#act4,(v_act).w	; check if on act 4 (for SBZ3/LZ4)
+		bne.s	Card_MakeSprite	; if not, branch
+		subq.b	#1,d0		; keep using "3" art for act number
 
 Card_MakeSprite:
 		move.b	d0,obFrame(a1)	; display frame number d0

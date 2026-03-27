@@ -56,7 +56,7 @@ tile_size:	equ 8*8/2	; size of a single 8x8 tile
 chunk_size:	equ $200	; size of a single 256x256 chunk
 plane_size_64x32: equ 64*32*2	; size of plane in 512x256 mode
 
-; Levels
+; Levels (zones)
 id_GHZ:		equ 0
 id_LZ:		equ 1
 id_MZ:		equ 2
@@ -64,7 +64,42 @@ id_SLZ:		equ 3
 id_SYZ:		equ 4
 id_SBZ:		equ 5
 id_EndZ:	equ 6
-id_SS:		equ 7
+id_SS:		equ 7	; only used for level select
+
+; Levels (zone/act word combos)
+act1:		equ 0
+act2:		equ 1
+act3:		equ 2
+act4:		equ 3	; only used for SBZ3/LZ4
+
+id_GHZ_act1:	equ (id_GHZ<<8)+act1	; $0000
+id_GHZ_act2:	equ (id_GHZ<<8)+act2	; $0001
+id_GHZ_act3:	equ (id_GHZ<<8)+act3	; $0002
+
+id_LZ_act1:	equ (id_LZ<<8)+act1	; $0100
+id_LZ_act2:	equ (id_LZ<<8)+act2	; $0101
+id_LZ_act3:	equ (id_LZ<<8)+act3	; $0102
+
+id_MZ_act1:	equ (id_MZ<<8)+act1	; $0200
+id_MZ_act2:	equ (id_MZ<<8)+act2	; $0201
+id_MZ_act3:	equ (id_MZ<<8)+act3	; $0202
+
+id_SLZ_act1:	equ (id_SLZ<<8)+act1	; $0300
+id_SLZ_act2:	equ (id_SLZ<<8)+act2	; $0301
+id_SLZ_act3:	equ (id_SLZ<<8)+act3	; $0302
+
+id_SYZ_act1:	equ (id_SYZ<<8)+act1	; $0400
+id_SYZ_act2:	equ (id_SYZ<<8)+act2	; $0401
+id_SYZ_act3:	equ (id_SYZ<<8)+act3	; $0402
+
+id_SBZ_act1:	equ (id_SBZ<<8)+act1	; $0500
+id_SBZ_act2:	equ (id_SBZ<<8)+act2	; $0501
+;id_SBZ_act3 is ambiguous, could mean LZ4 or FZ
+id_LZ_act4:	equ (id_LZ<<8)+act4	; $0103 (SBZ3)
+id_FZ:		equ (id_SBZ<<8)+act3	; $0502 (real SBZ3)
+
+id_EndZ_good:	equ (id_EndZ<<8)+act1	; $0600 (good ending, all emeralds)
+id_EndZ_bad:	equ (id_EndZ<<8)+act2	; $0601 (bad ending, not all emeralds)
 
 ; Colours
 cBlack:		equ $000		; colour black
