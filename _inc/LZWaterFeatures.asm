@@ -332,7 +332,7 @@ LZWindTunnels:
 		cmp.w	(a2),d0
 		bhs.s	.movesonic
 		moveq	#2,d0
-		cmpi.b	#1,(v_act).w	; is act number 2?
+		cmpi.b	#act2,(v_act).w	; is act number 2?
 		bne.s	.notact2	; if not, branch
 		neg.w	d0
 

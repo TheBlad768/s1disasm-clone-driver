@@ -71,7 +71,7 @@ PalCycle_LZ:
 		andi.w	#3,d0		; if cycle > 3, reset to 0
 		lsl.w	#3,d0
 		lea	(Pal_LZCyc1).l,a0
-		cmpi.b	#3,(v_act).w	; check if level is SBZ3
+		cmpi.b	#act4,(v_act).w	; check if on act 4 (SBZ3)
 		bne.s	PCycLZ_NotSBZ3
 		lea	(Pal_SBZ3Cyc).l,a0 ; load SBZ3 palette instead
 
