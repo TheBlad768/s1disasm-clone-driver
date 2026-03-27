@@ -61,7 +61,7 @@ loc_BF6E:	; Routine 2
 		move.w	#$11,d3
 		move.w	obX(a0),d4
 		bsr.w	loc_C186
-		cmpi.w	#(id_MZ<<8)+0,(v_zone).w ; is the level MZ act 1?
+		cmpi.w	#id_MZ_act1,(v_zone).w ; is the level MZ act 1?
 		bne.s	loc_BFC6	; if not, branch
 		bclr	#7,obSubtype(a0)
 		move.w	obX(a0),d0
@@ -194,7 +194,7 @@ loc_C104:
 ; ===========================================================================
 
 PushB_ChkLava:
-		cmpi.w	#(id_MZ<<8)+1,(v_zone).w ; is the level MZ act 2?
+		cmpi.w	#id_MZ_act2,(v_zone).w ; is the level MZ act 2?
 		bne.s	PushB_ChkLava2	; if not, branch
 		move.w	#-$20,d2
 		cmpi.w	#$DD0,obX(a0)
@@ -207,7 +207,7 @@ PushB_ChkLava:
 ; ===========================================================================
 
 PushB_ChkLava2:
-		cmpi.w	#(id_MZ<<8)+2,(v_zone).w ; is the level MZ act 3?
+		cmpi.w	#id_MZ_act3,(v_zone).w ; is the level MZ act 3?
 		bne.s	PushB_NoLava	; if not, branch
 		move.w	#$20,d2
 		cmpi.w	#$560,obX(a0)

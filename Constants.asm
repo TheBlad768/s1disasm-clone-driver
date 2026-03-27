@@ -56,17 +56,7 @@ tile_size:	equ 8*8/2	; size of a single 8x8 tile
 chunk_size_128:	equ $80		; size of a single 128x128 chunk
 plane_size_64x32: equ 64*32*2	; size of plane in 512x256 mode
 
-; Game modes
-id_Sega:	equ ptr_GM_Sega-GameModeArray	; $00
-id_Title:	equ ptr_GM_Title-GameModeArray	; $04
-id_Demo:	equ ptr_GM_Demo-GameModeArray	; $08
-id_Level:	equ ptr_GM_Level-GameModeArray	; $0C
-id_Special:	equ ptr_GM_Special-GameModeArray; $10
-id_Continue:	equ ptr_GM_Cont-GameModeArray	; $14
-id_Ending:	equ ptr_GM_Ending-GameModeArray	; $18
-id_Credits:	equ ptr_GM_Credits-GameModeArray; $1C
-
-; Levels
+; Levels (zones)
 id_GHZ:		equ 0
 id_LZ:		equ 1
 id_MZ:		equ 2
@@ -74,7 +64,42 @@ id_SLZ:		equ 3
 id_SYZ:		equ 4
 id_SBZ:		equ 5
 id_EndZ:	equ 6
-id_SS:		equ 7
+id_SS:		equ 7	; only used for level select
+
+; Levels (zone/act word combos)
+act1:		equ 0
+act2:		equ 1
+act3:		equ 2
+act4:		equ 3	; only used for SBZ3/LZ4
+
+id_GHZ_act1:	equ (id_GHZ<<8)+act1	; $0000
+id_GHZ_act2:	equ (id_GHZ<<8)+act2	; $0001
+id_GHZ_act3:	equ (id_GHZ<<8)+act3	; $0002
+
+id_LZ_act1:	equ (id_LZ<<8)+act1	; $0100
+id_LZ_act2:	equ (id_LZ<<8)+act2	; $0101
+id_LZ_act3:	equ (id_LZ<<8)+act3	; $0102
+
+id_MZ_act1:	equ (id_MZ<<8)+act1	; $0200
+id_MZ_act2:	equ (id_MZ<<8)+act2	; $0201
+id_MZ_act3:	equ (id_MZ<<8)+act3	; $0202
+
+id_SLZ_act1:	equ (id_SLZ<<8)+act1	; $0300
+id_SLZ_act2:	equ (id_SLZ<<8)+act2	; $0301
+id_SLZ_act3:	equ (id_SLZ<<8)+act3	; $0302
+
+id_SYZ_act1:	equ (id_SYZ<<8)+act1	; $0400
+id_SYZ_act2:	equ (id_SYZ<<8)+act2	; $0401
+id_SYZ_act3:	equ (id_SYZ<<8)+act3	; $0402
+
+id_SBZ_act1:	equ (id_SBZ<<8)+act1	; $0500
+id_SBZ_act2:	equ (id_SBZ<<8)+act2	; $0501
+;id_SBZ_act3 is ambiguous, could mean LZ4 or FZ
+id_LZ_act4:	equ (id_LZ<<8)+act4	; $0103 (SBZ3)
+id_FZ:		equ (id_SBZ<<8)+act3	; $0502 (real SBZ3)
+
+id_EndZ_good:	equ (id_EndZ<<8)+act1	; $0600 (good ending, all emeralds)
+id_EndZ_bad:	equ (id_EndZ<<8)+act2	; $0601 (bad ending, not all emeralds)
 
 ; Colours
 cBlack:		equ $000		; colour black
@@ -160,6 +185,7 @@ objoff_2C:	equ $2C
 objoff_2E:	equ $2E
 objoff_2F:	equ $2F
 objoff_30:	equ $30
+objoff_31:	equ $31
 objoff_32:	equ $32
 objoff_33:	equ $33
 objoff_34:	equ $34
@@ -273,96 +299,6 @@ bgm_Speedup:	equ ((ptr_flgE2-Sound_ExIndex)/4)+flg__First
 bgm_Slowdown:	equ ((ptr_flgE3-Sound_ExIndex)/4)+flg__First
 bgm_Stop:	equ ((ptr_flgE4-Sound_ExIndex)/4)+flg__First
 flg__Last:	equ ((ptr_flgend-Sound_ExIndex-4)/4)+flg__First
-
-; Sonic frame IDs
-fr_Null:	equ 0
-fr_Stand:	equ 1
-fr_Wait1:	equ 2
-fr_Wait2:	equ 3
-fr_Wait3:	equ 4
-fr_LookUp:	equ 5
-fr_Walk11:	equ 6
-fr_Walk12:	equ 7
-fr_Walk13:	equ 8
-fr_Walk14:	equ 9
-fr_Walk15:	equ $A
-fr_Walk16:	equ $B
-fr_Walk21:	equ $C
-fr_Walk22:	equ $D
-fr_Walk23:	equ $E
-fr_Walk24:	equ $F
-fr_Walk25:	equ $10
-fr_Walk26:	equ $11
-fr_Walk31:	equ $12
-fr_Walk32:	equ $13
-fr_Walk33:	equ $14
-fr_Walk34:	equ $15
-fr_Walk35:	equ $16
-fr_Walk36:	equ $17
-fr_Walk41:	equ $18
-fr_Walk42:	equ $19
-fr_Walk43:	equ $1A
-fr_Walk44:	equ $1B
-fr_Walk45:	equ $1C
-fr_Walk46:	equ $1D
-fr_Run11:	equ $1E
-fr_Run12:	equ $1F
-fr_Run13:	equ $20
-fr_Run14:	equ $21
-fr_Run21:	equ $22
-fr_Run22:	equ $23
-fr_Run23:	equ $24
-fr_Run24:	equ $25
-fr_Run31:	equ $26
-fr_Run32:	equ $27
-fr_Run33:	equ $28
-fr_Run34:	equ $29
-fr_Run41:	equ $2A
-fr_Run42:	equ $2B
-fr_Run43:	equ $2C
-fr_Run44:	equ $2D
-fr_Roll1:	equ $2E
-fr_Roll2:	equ $2F
-fr_Roll3:	equ $30
-fr_Roll4:	equ $31
-fr_Roll5:	equ $32
-fr_Warp1:	equ $33
-fr_Warp2:	equ $34
-fr_Warp3:	equ $35
-fr_Warp4:	equ $36
-fr_Stop1:	equ $37
-fr_Stop2:	equ $38
-fr_Duck:	equ $39
-fr_Balance1:	equ $3A
-fr_Balance2:	equ $3B
-fr_Float1:	equ $3C
-fr_Float2:	equ $3D
-fr_Float3:	equ $3E
-fr_Float4:	equ $3F
-fr_Spring:	equ $40
-fr_Hang1:	equ $41
-fr_Hang2:	equ $42
-fr_Leap1:	equ $43
-fr_Leap2:	equ $44
-fr_Push1:	equ $45
-fr_Push2:	equ $46
-fr_Push3:	equ $47
-fr_Push4:	equ $48
-fr_Surf:	equ $49
-fr_BubStand:	equ $4A
-fr_Burnt:	equ $4B
-fr_Drown:	equ $4C
-fr_Death:	equ $4D
-fr_Shrink1:	equ $4E
-fr_Shrink2:	equ $4F
-fr_Shrink3:	equ $50
-fr_Shrink4:	equ $51
-fr_Shrink5:	equ $52
-fr_Float5:	equ $53
-fr_Float6:	equ $54
-fr_Injury:	equ $55
-fr_GetAir:	equ $56
-fr_WaterSlide:	equ $57
 
 ; Boss locations
 ; The main values are based on where the camera boundaries mainly lie

@@ -26,6 +26,7 @@ Anml_VarIndex:	dc.b 0,	5 ; Green Hill Zone
 		dc.b 4, 5 ; Star Light Zone
 		dc.b 4, 1 ; Spring Yard Zone
 		dc.b 0, 1 ; Scrap Brain Zone
+		zonewarning Anml_VarIndex,2
 
 Anml_Variables:	dc.w -$200, -$400
 		dc.l Map_Animal1

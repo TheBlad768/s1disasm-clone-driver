@@ -85,7 +85,7 @@ Vectors:
 		dc.l ChkInstr			; CHK exception
 		dc.l TrapvInstr			; TRAPV exception (8)
 		dc.l PrivilegeViol		; Privilege violation
-		dc.l Trace				; TRACE exception
+		dc.l Trace			; TRACE exception
 		dc.l Line1010Emu		; Line-A emulator
 		dc.l Line1111Emu		; Line-F emulator (12)
 		dc.l ErrorExcept		; Unused (reserved)
@@ -104,9 +104,9 @@ Vectors:
 		dc.l ErrorTrap			; IRQ level 1
 		dc.l ErrorTrap			; IRQ level 2
 		dc.l ErrorTrap			; IRQ level 3 (28)
-		dc.l HBlank				; IRQ level 4 (horizontal retrace interrupt)
+		dc.l HBlank			; IRQ level 4 (horizontal retrace interrupt)
 		dc.l ErrorTrap			; IRQ level 5
-		dc.l VBlank				; IRQ level 6 (vertical retrace interrupt)
+		dc.l VBlank			; IRQ level 6 (vertical retrace interrupt)
 		dc.l ErrorTrap			; IRQ level 7 (32)
 		dc.l ErrorTrap			; TRAP #00 exception
 		dc.l ErrorTrap			; TRAP #01 exception
@@ -405,23 +405,22 @@ MainGameLoop:
 
 GameModeArray:
 
-ptr_GM_Sega:	bra.w	GM_Sega		; Sega Screen ($00)
+gmptr:		macro gamemode,{INTLABEL},{GLOBALSYMBOLS}
+__LABEL__: =	(*-GameModeArray)
+		bra.w	gamemode
+		endm
 
-ptr_GM_Title:	bra.w	GM_Title	; Title Screen ($04)
+id_Sega:	gmptr	GM_Sega		; Sega Screen ($00)
+id_Title:	gmptr	GM_Title	; Title Screen ($04)
+id_Demo:	gmptr	GM_Level	; Demo Mode ($08)
+id_Level:	gmptr	GM_Level	; Normal Level ($0C)
+id_Special:	gmptr	GM_Special	; Special Stage ($10)
+id_Continue:	gmptr	GM_Continue	; Continue Screen ($14)
+id_Ending:	gmptr	GM_Ending	; End of game sequence ($18)
+id_Credits:	gmptr	GM_Credits	; Credits ($1C)
 
-ptr_GM_Demo:	bra.w	GM_Level	; Demo Mode ($08)
+		rts	; redundant rts
 
-ptr_GM_Level:	bra.w	GM_Level	; Normal Level ($0C)
-
-ptr_GM_Special:	bra.w	GM_Special	; Special Stage ($10)
-
-ptr_GM_Cont:	bra.w	GM_Continue	; Continue Screen ($14)
-
-ptr_GM_Ending:	bra.w	GM_Ending	; End of game sequence ($18)
-
-ptr_GM_Credits:	bra.w	GM_Credits	; Credits ($1C)
-
-		rts	
 ; ===========================================================================
 	if SkipChecksumCheck=0
 CheckSumError:
@@ -621,12 +620,14 @@ VBlank:
 		move.w	(vdp_control_port).l,d0
 		move.l	#$40000010,(vdp_control_port).l
 		move.l	(v_scrposy_vdp).w,(vdp_data_port).l ; send screen y-axis pos. to VSRAM
+
+		; Wait here in a loop doing nothing for a while. This seems to be a pretty harsh attempt
+		; to push CRAM dots outside of the visable view area, due to Sonic 1 not using all
+		; the available screen space PAL offers, as they would otherwise be seen at the bottom.
 		btst	#6,(v_megadrive).w ; is Megadrive PAL?
 		beq.s	.notPAL		; if not, branch
-
 		move.w	#$700,d0
-.waitPAL:
-		dbf	d0,.waitPAL ; wait here in a loop doing nothing for a while...
+.waitPAL:	dbf	d0,.waitPAL 
 
 .notPAL:
 		move.b	(v_vbla_routine).w,d0
@@ -666,8 +667,8 @@ VBla_Index:	dc.w VBla_00-VBla_Index	; (lag frame)
 
 ; loc_B88:
 VBla_00:
-		cmpi.b	#$80+id_Level,(v_gamemode).w
-		beq.s	.islevel
+		cmpi.b	#$80+id_Level,(v_gamemode).w ; is pre level sequence active?
+		beq.s	.islevel	; if not, branch
 		cmpi.b	#id_Level,(v_gamemode).w ; is game on a level?
 		bne.w	VBla_Music	; if not, branch
 
@@ -675,13 +676,13 @@ VBla_00:
 		cmpi.b	#id_LZ,(v_zone).w ; is level LZ ?
 		bne.w	VBla_Music	; if not, branch
 
+		; Same as in the opening block of the VBlank routine, this time during a lag frame.
+		; This only happens if the level is LZ (note, Sonic 2/3/&K would change this so it runs in any level).
 		move.w	(vdp_control_port).l,d0
 		btst	#6,(v_megadrive).w ; is Megadrive PAL?
 		beq.s	.notPAL		; if not, branch
-
 		move.w	#$700,d0
-.waitPAL:
-		dbf	d0,.waitPAL
+.waitPAL:	dbf	d0,.waitPAL
 
 .notPAL:
 		move.w	#1,(f_hbla_pal).w ; set HBlank flag
@@ -2265,7 +2266,7 @@ Tit_LoadText:
 		move.w	#0,(v_debuguse).w ; disable debug item placement mode
 		move.w	#0,(f_demo).w	; disable debug mode
 		move.w	#0,(v_unused2).w ; unused variable
-		move.w	#(id_GHZ<<8),(v_zone).w	; set level to GHZ (00)
+		move.w	#id_GHZ_act1,(v_zone).w	; set level to GHZ1 (000)
 		move.w	#0,(v_pcyc_time).w ; disable palette cycling
 		bsr.w	LevelSizeLoad
 		bsr.w	DeformLayers
@@ -2499,7 +2500,7 @@ LevSel_PlaySnd:
 
 LevSel_Ending:
 		move.b	#id_Ending,(v_gamemode).w ; set screen mode to $18 (Ending)
-		move.w	#(id_EndZ<<8),(v_zone).w  ; set level to 0600 (good Ending)
+		move.w	#id_EndZ_good,(v_zone).w  ; set level to 0600 (good Ending)
 		rts	
 ; ===========================================================================
 
@@ -2561,50 +2562,50 @@ PlayLevel:
 LevSel_Ptrs:
 	if Revision=0
 		; old level order
-		dc.b id_GHZ, 0
-		dc.b id_GHZ, 1
-		dc.b id_GHZ, 2
-		dc.b id_LZ, 0
-		dc.b id_LZ, 1
-		dc.b id_LZ, 2
-		dc.b id_MZ, 0
-		dc.b id_MZ, 1
-		dc.b id_MZ, 2
-		dc.b id_SLZ, 0
-		dc.b id_SLZ, 1
-		dc.b id_SLZ, 2
-		dc.b id_SYZ, 0
-		dc.b id_SYZ, 1
-		dc.b id_SYZ, 2
-		dc.b id_SBZ, 0
-		dc.b id_SBZ, 1
-		dc.b id_LZ, 3		; Scrap Brain Zone 3
-		dc.b id_SBZ, 2		; Final Zone
-		dc.b id_SS, 0		; Special Stage
-		dc.b $80, 0		; Sound Test
+		dc.w id_GHZ_act1
+		dc.w id_GHZ_act2
+		dc.w id_GHZ_act3
+		dc.w id_LZ_act1
+		dc.w id_LZ_act2
+		dc.w id_LZ_act3
+		dc.w id_MZ_act1
+		dc.w id_MZ_act2
+		dc.w id_MZ_act3
+		dc.w id_SLZ_act1
+		dc.w id_SLZ_act2
+		dc.w id_SLZ_act3
+		dc.w id_SYZ_act1
+		dc.w id_SYZ_act2
+		dc.w id_SYZ_act3
+		dc.w id_SBZ_act1
+		dc.w id_SBZ_act2
+		dc.w id_LZ_act4		; Scrap Brain Zone 3
+		dc.w id_FZ		; Final Zone
+		dc.w id_SS<<8		; Special Stage (dummy value)
+		dc.w $8000		; Sound Test
 	else
 		; correct level order
-		dc.b id_GHZ, 0
-		dc.b id_GHZ, 1
-		dc.b id_GHZ, 2
-		dc.b id_MZ, 0
-		dc.b id_MZ, 1
-		dc.b id_MZ, 2
-		dc.b id_SYZ, 0
-		dc.b id_SYZ, 1
-		dc.b id_SYZ, 2
-		dc.b id_LZ, 0
-		dc.b id_LZ, 1
-		dc.b id_LZ, 2
-		dc.b id_SLZ, 0
-		dc.b id_SLZ, 1
-		dc.b id_SLZ, 2
-		dc.b id_SBZ, 0
-		dc.b id_SBZ, 1
-		dc.b id_LZ, 3		; Scrap Brain Zone 3
-		dc.b id_SBZ, 2		; Final Zone
-		dc.b id_SS, 0		; Special Stage
-		dc.b $80, 0		; Sound Test
+		dc.w id_GHZ_act1
+		dc.w id_GHZ_act2
+		dc.w id_GHZ_act3
+		dc.w id_MZ_act1
+		dc.w id_MZ_act2
+		dc.w id_MZ_act3
+		dc.w id_SYZ_act1
+		dc.w id_SYZ_act2
+		dc.w id_SYZ_act3
+		dc.w id_LZ_act1
+		dc.w id_LZ_act2
+		dc.w id_LZ_act3
+		dc.w id_SLZ_act1
+		dc.w id_SLZ_act2
+		dc.w id_SLZ_act3
+		dc.w id_SBZ_act1
+		dc.w id_SBZ_act2
+		dc.w id_LZ_act4		; Scrap Brain Zone 3
+		dc.w id_FZ		; Final Zone
+		dc.w id_SS<<8		; Special Stage (dummy value)
+		dc.w $8000		; Sound Test
 	endif
 LevSel_PtrsEnd:	even
 
@@ -3027,7 +3028,7 @@ Level_LoadPal:
 		bne.s	Level_GetBgm	; if not, branch
 
 		moveq	#palid_LZSonWater,d0 ; palette number $F (LZ)
-		cmpi.b	#3,(v_act).w	; is act number 3?
+		cmpi.b	#act4,(v_act).w	; check if on act 4 (for SBZ3/LZ4)?
 		bne.s	Level_WaterPal	; if not, branch
 		moveq	#palid_SBZ3SonWat,d0 ; palette number $10 (SBZ3)
 
@@ -3042,12 +3043,12 @@ Level_GetBgm:
 		bmi.s	Level_SkipTtlCard
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
-		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; is level SBZ3?
+		cmpi.w	#id_LZ_act4,(v_zone).w ; is level SBZ3 (LZ4)?
 		bne.s	Level_BgmNotLZ4	; if not, branch
 		moveq	#5,d0		; use 5th music (SBZ)
 
 Level_BgmNotLZ4:
-		cmpi.w	#(id_SBZ<<8)+2,(v_zone).w ; is level FZ?
+		cmpi.w	#id_FZ,(v_zone).w ; is level FZ?
 		bne.s	Level_PlayBgm	; if not, branch
 		moveq	#6,d0		; use 6th music (FZ)
 
@@ -3156,7 +3157,7 @@ Level_ChkWaterPal:
 		cmpi.b	#id_LZ,(v_zone).w ; is level LZ/SBZ3?
 		bne.s	Level_Delay	; if not, branch
 		moveq	#palid_LZWater,d0 ; palette $B (LZ underwater)
-		cmpi.b	#3,(v_act).w	; is level SBZ3?
+		cmpi.b	#act4,(v_act).w	; check if on act 4 (for SBZ3/LZ4)
 		bne.s	Level_WtrNotSbz	; if not, branch
 		moveq	#palid_SBZ3Water,d0 ; palette $D (SBZ3 underwater)
 
@@ -3321,8 +3322,8 @@ ColPointers:	dc.l Col_GHZ_1	; MJ: each zone now has two entries
 		dc.l Col_SBZ_1
 		dc.l Col_SBZ_2
 		zonewarning ColPointers,8
-;  dc.l Col_GHZ_1 ; Pointers for Ending are missing by default.
-;  dc.l Col_GHZ_2
+		;dc.l Col_GHZ_1 ; Pointers for Ending are missing by default.
+		;dc.l Col_GHZ_2
 
 		include	"_inc/Oscillatory Routines.asm"
 
@@ -3388,8 +3389,8 @@ SyncEnd:
 SignpostArtLoad:
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.w	.exit		; if yes, branch
-		cmpi.b	#2,(v_act).w	; is act number 02 (act 3)?
-		beq.s	.exit		; if yes, branch
+		cmpi.b	#act3,(v_act).w	; is this a third act?
+		beq.s	.exit		; if yes, don't load art (due to the boss fight)
 
 		move.w	(v_screenposx).w,d0
 		move.w	(v_limitright2).w,d1
@@ -3506,9 +3507,9 @@ SS_ChkEnd:
 		bne.w	SS_ToLevel
 	endif
 		move.b	#id_Level,(v_gamemode).w ; set screen mode to $0C (level)
-		cmpi.w	#(id_SBZ<<8)+3,(v_zone).w ; is level number higher than FZ?
+		cmpi.w	#id_FZ+1,(v_zone).w ; is level number higher than FZ (0502)?
 		blo.s	SS_Finish	; if not, branch
-		clr.w	(v_zone).w	; set to GHZ1
+		clr.w	(v_zone).w	; set to GHZ1 (possibly as a failsafe)
 
 SS_Finish:
 		move.w	#60,(v_generictimer).w ; set delay time to 1 second
@@ -4057,10 +4058,10 @@ GM_Ending:
 		move.w	#$8A00+223,(v_hbla_hreg).w ; set palette change position (for water)
 		move.w	(v_hbla_hreg).w,(a6)
 		move.w	#30,(v_air).w
-		move.w	#id_EndZ<<8,(v_zone).w ; set level number to 0600 (extra flowers)
+		move.w	#id_EndZ_good,(v_zone).w ; set level number to 0600 (extra flowers)
 		cmpi.b	#6,(v_emeralds).w ; do you have all 6 emeralds?
 		beq.s	End_LoadData	; if yes, branch
-		move.w	#(id_EndZ<<8)+1,(v_zone).w ; set level number to 0601 (no flowers)
+		move.w	#id_EndZ_bad,(v_zone).w ; set level number to 0601 (no flowers)
 
 End_LoadData:
 		moveq	#plcid_Ending,d0
@@ -4487,14 +4488,14 @@ LevelDataLoad:
 		move.w	(a2)+,d0
 		move.w	(a2),d0
 		andi.w	#$FF,d0
-		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; is level SBZ3 (LZ4) ?
+		cmpi.w	#id_LZ_act4,(v_zone).w ; is level SBZ3 (LZ4)?
 		bne.s	.notSBZ3	; if not, branch
 		moveq	#palid_SBZ3,d0	; use SB3 palette
 
 .notSBZ3:
-		cmpi.w	#(id_SBZ<<8)+1,(v_zone).w ; is level SBZ2?
+		cmpi.w	#id_SBZ_act2,(v_zone).w ; is level SBZ2?
 		beq.s	.isSBZorFZ	; if yes, branch
-		cmpi.w	#(id_SBZ<<8)+2,(v_zone).w ; is level FZ?
+		cmpi.w	#id_FZ,(v_zone).w ; is level FZ?
 		bne.s	.normalpal	; if not, branch
 
 .isSBZorFZ:
@@ -5110,6 +5111,7 @@ Map_Card:	mappingsTable
 	mappingsTableEntry.w	M_Card_SLZ	; Star Light Zone
 	mappingsTableEntry.w	M_Card_SYZ	; Spring Yard Zone
 	mappingsTableEntry.w	M_Card_SBZ	; Scrap Brain Zone
+	zonewarning Map_Card,2
 	mappingsTableEntry.w	M_Card_Zone	; "ZONE" text
 	mappingsTableEntry.w	M_Card_Act1	; Act number 1
 	mappingsTableEntry.w	M_Card_Act2	; Act number 2
@@ -6211,7 +6213,7 @@ ResumeMusic:
 		cmpi.w	#12,(v_air).w	; more than 12 seconds of air left?
 		bhi.s	.over12		; if yes, branch
 		move.w	#bgm_LZ,d0	; play LZ music
-		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; check if level is 0103 (SBZ3)
+		cmpi.w	#id_LZ_act4,(v_zone).w ; check if level is SBZ3 (LZ4)
 		bne.s	.notsbz
 		move.w	#bgm_SBZ,d0	; play SBZ music
 
@@ -6941,7 +6943,7 @@ SS_ShowLayout:
 		bsr.w	SS_AniWallsRings
 		bsr.w	SS_AniItems
 		move.w	d5,-(sp)
-		lea	(v_ssbuffer3&$FFFFFF).l,a1
+		lea	(v_ssbuffer3).l,a1
 		move.b	(v_ssangle).w,d0
 		andi.b	#$FC,d0
 		jsr	(CalcSine).l
@@ -7004,7 +7006,7 @@ loc_1B1C0:
 		move.w	(v_screenposx).w,d0
 		divu.w	#$18,d0
 		adda.w	d0,a0
-		lea	(v_ssbuffer3&$FFFFFF).l,a4
+		lea	(v_ssbuffer3).l,a4
 		move.w	#$10-1,d7
 
 loc_1B20C:

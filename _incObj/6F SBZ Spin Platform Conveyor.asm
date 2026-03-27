@@ -14,7 +14,7 @@ SpinC_Display:
 ; ===========================================================================
 
 loc_1629A:
-		cmpi.b	#2,(v_act).w	; check if act is 3
+		cmpi.b	#act3,(v_act).w	; check if act is 3
 		bne.s	SpinC_Act1or2	; if not, branch
 		cmpi.w	#-$80,d0
 		bhs.s	SpinC_Display
