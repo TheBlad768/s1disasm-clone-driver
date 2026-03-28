@@ -2,6 +2,13 @@
 ; Object 82 - Eggman (SBZ2)
 ; ---------------------------------------------------------------------------
 
+; loc_1982C:
+FalseFloor_Delete:
+		; This is part of Object 82, but it is only ever called
+		; from Object 83 (the collapsing floor)
+		jmp	(DeleteObject).l
+; ===========================================================================
+
 ScrapEggman:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0

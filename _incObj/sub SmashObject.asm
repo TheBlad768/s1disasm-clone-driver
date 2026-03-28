@@ -53,3 +53,24 @@ SmashObject:
 		jmp	(QueueSound2).l ; play smashing sound
 
 ; End of function SmashObject
+
+; ===========================================================================
+; Smashed block fragment speeds
+;
+Smash_FragSpd1:	dc.w $400, -$500	; x-move speed, y-move speed
+		dc.w $600, -$100
+		dc.w $600, $100
+		dc.w $400, $500
+		dc.w $600, -$600
+		dc.w $800, -$200
+		dc.w $800, $200
+		dc.w $600, $600
+
+Smash_FragSpd2:	dc.w -$600, -$600
+		dc.w -$800, -$200
+		dc.w -$800, $200
+		dc.w -$600, $600
+		dc.w -$400, -$500
+		dc.w -$600, -$100
+		dc.w -$600, $100
+		dc.w -$400, $500

@@ -146,3 +146,158 @@ Swing_Action2:	; Routine 4
 		bra.w	Swing_ChkDel
 
 		rts
+
+
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to	update Sonic's position when standing on a platform
+; (shared by other platform objects)
+; ---------------------------------------------------------------------------
+
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+
+
+MvSonicOnPtfm:	; platform height is taken from d3
+		lea	(v_player).w,a1
+		move.w	obY(a0),d0
+		sub.w	d3,d0
+		bra.s	MvSonic2
+; ===========================================================================
+
+MvSonicOnPtfm2:	; platform height is assumed to be 9
+		lea	(v_player).w,a1
+		move.w	obY(a0),d0
+		subi.w	#9,d0
+
+MvSonic2:
+		tst.b	(f_playerctrl).w
+		bmi.s	.return
+		cmpi.b	#6,(v_player+obRoutine).w
+		bhs.s	.return
+		tst.w	(v_debuguse).w
+		bne.s	.return
+		moveq	#0,d1
+		move.b	obHeight(a1),d1
+		sub.w	d1,d0
+		move.w	d0,obY(a1)
+		sub.w	obX(a0),d2
+		sub.w	d2,obX(a1)
+
+	.return:
+		rts
+; End of function MvSonicOnPtfm
+
+
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Object 15 (part 2)
+; ---------------------------------------------------------------------------
+
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+
+
+Swing_Move:
+		move.b	(v_oscillate+$1A).w,d0
+		move.w	#$80,d1
+		btst	#0,obStatus(a0)
+		beq.s	loc_7B78
+		neg.w	d0
+		add.w	d1,d0
+
+loc_7B78:
+		bra.s	Swing_Move2
+; End of function Swing_Move
+
+
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+
+
+Obj48_Move:
+		tst.b	objoff_3D(a0)
+		bne.s	loc_7B9C
+		move.w	objoff_3E(a0),d0
+		addq.w	#8,d0
+		move.w	d0,objoff_3E(a0)
+		add.w	d0,obAngle(a0)
+		cmpi.w	#$200,d0
+		bne.s	loc_7BB6
+		move.b	#1,objoff_3D(a0)
+		bra.s	loc_7BB6
+; ===========================================================================
+
+loc_7B9C:
+		move.w	objoff_3E(a0),d0
+		subq.w	#8,d0
+		move.w	d0,objoff_3E(a0)
+		add.w	d0,obAngle(a0)
+		cmpi.w	#-$200,d0
+		bne.s	loc_7BB6
+		move.b	#0,objoff_3D(a0)
+
+loc_7BB6:
+		move.b	obAngle(a0),d0
+; End of function Obj48_Move
+
+
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+
+
+Swing_Move2:
+		bsr.w	CalcSine
+		move.w	objoff_38(a0),d2
+		move.w	objoff_3A(a0),d3
+		lea	obSubtype(a0),a2
+		moveq	#0,d6
+		move.b	(a2)+,d6
+
+loc_7BCE:
+		moveq	#0,d4
+		move.b	(a2)+,d4
+		lsl.w	#object_size_bits,d4
+		addi.l	#v_objspace&$FFFFFF,d4
+		movea.l	d4,a1
+		moveq	#0,d4
+		move.b	objoff_3C(a1),d4
+		move.l	d4,d5
+		muls.w	d0,d4
+		asr.l	#8,d4
+		muls.w	d1,d5
+		asr.l	#8,d5
+		add.w	d2,d4
+		add.w	d3,d5
+		move.w	d4,obY(a1)
+		move.w	d5,obX(a1)
+		dbf	d6,loc_7BCE
+		rts
+; End of function Swing_Move2
+
+; ===========================================================================
+
+Swing_ChkDel:
+		out_of_range.w	Swing_DelAll,objoff_3A(a0)
+		rts
+; ===========================================================================
+
+Swing_DelAll:
+		moveq	#0,d2
+		lea	obSubtype(a0),a2
+		move.b	(a2)+,d2
+
+Swing_DelLoop:
+		moveq	#0,d0
+		move.b	(a2)+,d0
+		lsl.w	#object_size_bits,d0
+		addi.l	#v_objspace&$FFFFFF,d0
+		movea.l	d0,a1
+		bsr.w	DeleteChild
+		dbf	d2,Swing_DelLoop ; repeat for length of chain
+		rts
+; ===========================================================================
+
+Swing_Delete:	; Routine 6, 8
+		bsr.w	DeleteObject
+		rts
+; ===========================================================================
+
+Swing_Display:	; Routine $A
+		bra.w	DisplaySprite

@@ -2,6 +2,10 @@
 ; Object 7A - Eggman (SLZ)
 ; ---------------------------------------------------------------------------
 
+BossStarLight_Delete:
+		jmp	(DeleteObject).l
+; ===========================================================================
+
 BossStarLight:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0

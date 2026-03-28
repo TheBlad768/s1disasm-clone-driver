@@ -39,3 +39,30 @@ palid_SSResult:		makePalEntry	Pal_SSResult, 		v_palette_line_1
 palid_Continue:		makePalEntry	Pal_Continue, 		v_palette_line_1
 palid_Ending:		makePalEntry	Pal_Ending, 		v_palette_line_1
 	even
+
+
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Palette data bincludes
+; ---------------------------------------------------------------------------
+
+Pal_SegaBG:		bincludeEndMarker	"palette/Sega Background.bin"
+Pal_Title:		bincludeEndMarker	"palette/Title Screen.bin"
+Pal_LevelSel:		bincludeEndMarker	"palette/Level Select.bin"
+Pal_Sonic:		bincludeEndMarker	"palette/Sonic.bin"
+Pal_GHZ:		bincludeEndMarker	"palette/Green Hill Zone.bin"
+Pal_LZ:			bincludeEndMarker	"palette/Labyrinth Zone.bin"
+Pal_LZWater:		bincludeEndMarker	"palette/Labyrinth Zone Underwater.bin"
+Pal_MZ:			bincludeEndMarker	"palette/Marble Zone.bin"
+Pal_SLZ:		bincludeEndMarker	"palette/Star Light Zone.bin"
+Pal_SYZ:		bincludeEndMarker	"palette/Spring Yard Zone.bin"
+Pal_SBZ1:		bincludeEndMarker	"palette/SBZ Act 1.bin"
+Pal_SBZ2:		bincludeEndMarker	"palette/SBZ Act 2.bin"
+Pal_Special:		bincludeEndMarker	"palette/Special Stage.bin"
+Pal_SBZ3:		bincludeEndMarker	"palette/SBZ Act 3.bin"
+Pal_SBZ3Water:		bincludeEndMarker	"palette/SBZ Act 3 Underwater.bin"
+Pal_LZSonWater:		bincludeEndMarker	"palette/Sonic - LZ Underwater.bin"
+Pal_SBZ3SonWat:		bincludeEndMarker	"palette/Sonic - SBZ3 Underwater.bin"
+Pal_SSResult:		bincludeEndMarker	"palette/Special Stage Results.bin"
+Pal_Continue:		bincludeEndMarker	"palette/Special Stage Continue Bonus.bin"
+Pal_Ending:		bincludeEndMarker	"palette/Ending.bin"
