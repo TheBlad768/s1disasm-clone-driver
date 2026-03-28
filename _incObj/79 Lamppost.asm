@@ -189,18 +189,21 @@ Lamp_LoadInfo:
 		move.w	(v_lamp_bg2scry).w,(v_bg2screenposy).w
 		move.w	(v_lamp_bg3scrx).w,(v_bg3screenposx).w
 		move.w	(v_lamp_bg3scry).w,(v_bg3screenposy).w
-		cmpi.b	#id_LZ,(v_zone).w	; is this Labyrinth Zone?
-		bne.s	.notlabyrinth	; if not, branch
 
+		cmpi.b	#id_LZ,(v_zone).w	; is this Labyrinth Zone?
+		bne.s	.notlabyrinth		; if not, branch
 		move.w	(v_lamp_wtrpos).w,(v_waterpos2).w
 		move.b	(v_lamp_wtrrout).w,(v_wtr_routine).w
 		move.b	(v_lamp_wtrstat).w,(f_wtr_state).w
-
 .notlabyrinth:
+
+		; This sets the left level boundary to be just before the respawn position,
+		; if the last lamp ID had bit 7 set. However, this isn't used anywhere in the game.
+		; Perhaps this once was used to prevent backtracking before bosses.
 		tst.b	(v_lastlamp).w
 		bpl.s	locret_170F6
 		move.w	(v_lamp_xpos).w,d0
-		subi.w	#$A0,d0
+		subi.w	#320/2,d0
 		move.w	d0,(v_limitleft2).w
 
 locret_170F6:
