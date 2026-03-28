@@ -264,3 +264,20 @@ loc_1B52:
 locret_1B64:
 		rts
 ; End of function PalCycle_SBZ
+
+
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Palette cycle data bincludes
+; ---------------------------------------------------------------------------
+
+Pal_TitleCyc:	binclude	"palette/Cycle - Title Screen Water.bin"
+Pal_GHZCyc:	binclude	"palette/Cycle - GHZ.bin"
+Pal_LZCyc1:	binclude	"palette/Cycle - LZ Waterfall.bin"
+Pal_LZCyc2:	binclude	"palette/Cycle - LZ Conveyor Belt.bin"
+Pal_LZCyc3:	binclude	"palette/Cycle - LZ Conveyor Belt Underwater.bin"
+Pal_SBZ3Cyc:	binclude	"palette/Cycle - SBZ3 Waterfall.bin"
+Pal_MZCyc:	binclude	"palette/Cycle - MZ (Unused).bin"
+Pal_SLZCyc:	binclude	"palette/Cycle - SLZ.bin"
+Pal_SYZCyc1:	binclude	"palette/Cycle - SYZ1.bin"
+Pal_SYZCyc2:	binclude	"palette/Cycle - SYZ2.bin"

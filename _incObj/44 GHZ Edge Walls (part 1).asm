@@ -30,7 +30,7 @@ Edge_Main:	; Routine 0
 Edge_Solid:	; Routine 2
 		move.w	#$13,d1
 		move.w	#$28,d2
-		bsr.w	Obj44_SolidWall
+		bsr.w	EdgeWall_SolidWall
 
 Edge_Display:	; Routine 4
 	if FixBugs
