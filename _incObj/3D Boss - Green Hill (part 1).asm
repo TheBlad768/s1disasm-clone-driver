@@ -65,10 +65,10 @@ BGHZ_ShipMain:	; Routine 2
 BGHZ_ShipIndex:	dc.w BGHZ_ShipStart-BGHZ_ShipIndex
 		dc.w BGHZ_MakeBall-BGHZ_ShipIndex
 		dc.w BGHZ_ShipMove-BGHZ_ShipIndex
-		dc.w loc_17954-BGHZ_ShipIndex
-		dc.w loc_1797A-BGHZ_ShipIndex
-		dc.w loc_179AC-BGHZ_ShipIndex
-		dc.w loc_179F6-BGHZ_ShipIndex
+		dc.w BGHZ_ChgDir-BGHZ_ShipIndex
+		dc.w BGHZ_Explode-BGHZ_ShipIndex
+		dc.w BGHZ_Recover-BGHZ_ShipIndex
+		dc.w BGHZ_Escape-BGHZ_ShipIndex
 ; ===========================================================================
 
 BGHZ_ShipStart:

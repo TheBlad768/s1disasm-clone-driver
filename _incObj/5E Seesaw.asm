@@ -30,7 +30,6 @@ See_Index:	dc.w See_Main-See_Index
 		dc.w See_Spikeball-See_Index
 		dc.w See_MoveSpike-See_Index
 		dc.w See_SpikeFall-See_Index
-
 ; ===========================================================================
 
 See_Main:	; Routine 0

@@ -35,7 +35,12 @@ SolidObject:
 
 .stand:
 		move.w	d4,d2
+	if FixBugs
+		jsr	(MvSonicOnPtfm).l
+	else
+		; Goes out of range just from enabling FixBugs
 		bsr.w	MvSonicOnPtfm
+	endif
 		moveq	#0,d4
 		rts
 ; ===========================================================================
@@ -64,7 +69,12 @@ SolidObject71:
 
 .stand:
 		move.w	d4,d2
+	if FixBugs
+		jsr	(MvSonicOnPtfm).l
+	else
+		; Goes out of range just from enabling FixBugs
 		bsr.w	MvSonicOnPtfm
+	endif
 		moveq	#0,d4
 		rts
 ; ===========================================================================

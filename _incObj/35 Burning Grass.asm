@@ -10,7 +10,7 @@ GrassFire:
 		jmp	GFire_Index(pc,d1.w)
 ; ===========================================================================
 GFire_Index:	dc.w GFire_Main-GFire_Index
-		dc.w loc_B238-GFire_Index
+		dc.w GFire_Spread-GFire_Index
 		dc.w GFire_Move-GFire_Index
 
 gfire_origX = objoff_2A
@@ -28,12 +28,13 @@ GFire_Main:	; Routine 0
 		move.w	#sfx_Burning,d0
 		jsr	(QueueSound2).l	 ; play burning sound
 		tst.b	obSubtype(a0)
-		beq.s	loc_B238
+		beq.s	GFire_Spread
 		addq.b	#2,obRoutine(a0)
 		bra.w	GFire_Move
 ; ===========================================================================
 
-loc_B238:	; Routine 2
+; loc_B238:
+GFire_Spread:	; Routine 2
 		movea.l	objoff_30(a0),a1
 		move.w	obX(a0),d1
 		sub.w	gfire_origX(a0),d1

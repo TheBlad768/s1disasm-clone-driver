@@ -8,9 +8,12 @@ Bridge:
 		move.w	Bri_Index(pc,d0.w),d1
 		jmp	Bri_Index(pc,d1.w)
 ; ===========================================================================
-Bri_Index:	dc.w Bri_Main-Bri_Index, Bri_Action-Bri_Index
-		dc.w Bri_Platform-Bri_Index, Bri_Delete-Bri_Index
-		dc.w Bri_Delete-Bri_Index, Bri_Display-Bri_Index
+Bri_Index:	dc.w Bri_Main-Bri_Index
+		dc.w Bri_Action-Bri_Index
+		dc.w Bri_Platform-Bri_Index
+		dc.w Bri_Delete-Bri_Index
+		dc.w Bri_Delete-Bri_Index
+		dc.w Bri_Display-Bri_Index
 ; ===========================================================================
 
 Bri_Main:	; Routine 0

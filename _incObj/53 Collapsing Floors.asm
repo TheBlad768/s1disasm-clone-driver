@@ -8,9 +8,12 @@ CollapseFloor:
 		move.w	CFlo_Index(pc,d0.w),d1
 		jmp	CFlo_Index(pc,d1.w)
 ; ===========================================================================
-CFlo_Index:	dc.w CFlo_Main-CFlo_Index, CFlo_Touch-CFlo_Index
-		dc.w CFlo_Collapse-CFlo_Index, CFlo_Display-CFlo_Index
-		dc.w CFlo_Delete-CFlo_Index, CFlo_WalkOff-CFlo_Index
+CFlo_Index:	dc.w CFlo_Main-CFlo_Index
+		dc.w CFlo_Touch-CFlo_Index
+		dc.w CFlo_Collapse-CFlo_Index
+		dc.w CFlo_Display-CFlo_Index
+		dc.w CFlo_Delete-CFlo_Index
+		dc.w CFlo_WalkOff-CFlo_Index
 
 cflo_timedelay = objoff_38
 cflo_collapse_flag = objoff_3A

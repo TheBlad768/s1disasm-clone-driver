@@ -15,11 +15,11 @@ BossFinal:
 BossFinal_Index:
 		dc.w BossFinal_Main-BossFinal_Index
 		dc.w BossFinal_Eggman-BossFinal_Index
-		dc.w loc_1A38E-BossFinal_Index
-		dc.w loc_1A346-BossFinal_Index
-		dc.w loc_1A2C6-BossFinal_Index
-		dc.w loc_1A3AC-BossFinal_Index
-		dc.w loc_1A264-BossFinal_Index
+		dc.w BossFinal_Panel-BossFinal_Index
+		dc.w BossFinal_Legs-BossFinal_Index
+		dc.w BossFinal_Cockpit-BossFinal_Index
+		dc.w BossFinal_EmptyShip-BossFinal_Index
+		dc.w BossFinal_Flame-BossFinal_Index
 
 BossFinal_ObjData:
 		dc.w $100, $100, make_art_tile(ArtTile_FZ_Eggman_No_Vehicle,0,0)	; X pos, Y pos, VRAM setting
@@ -109,13 +109,18 @@ BossFinal_Eggman:	; Routine 2
 		jsr	off_19E80(pc,d0.w)
 		jmp	(DisplaySprite).l
 ; ===========================================================================
-off_19E80:	dc.w loc_19E90-off_19E80, loc_19EA8-off_19E80
-		dc.w loc_19FE6-off_19E80, loc_1A02A-off_19E80
-		dc.w loc_1A074-off_19E80, loc_1A112-off_19E80
-		dc.w loc_1A192-off_19E80, loc_1A1D4-off_19E80
+off_19E80:	dc.w BossFinal_Eggman_Wait-off_19E80
+		dc.w BossFinal_Eggman_Crush-off_19E80
+		dc.w BossFinal_Eggman_Plasma-off_19E80
+		dc.w BossFinal_Eggman_Fall-off_19E80
+		dc.w BossFinal_Eggman_Run-off_19E80
+		dc.w BossFinal_Eggman_Jump-off_19E80
+		dc.w BossFinal_Eggman_Ship-off_19E80
+		dc.w BossFinal_Eggman_Escape-off_19E80
 ; ===========================================================================
 
-loc_19E90:
+; loc_19E90:
+BossFinal_Eggman_Wait:
 		tst.l	(v_plc_buffer).w
 		bne.s	loc_19EA2
 		cmpi.w	#boss_fz_x,(v_screenposx).w
@@ -127,7 +132,8 @@ loc_19EA2:
 		rts
 ; ===========================================================================
 
-loc_19EA8:
+; loc_19EA8:
+BossFinal_Eggman_Crush:
 		tst.w	objoff_30(a0)
 		bpl.s	loc_19F10
 		clr.w	objoff_30(a0)
@@ -247,7 +253,8 @@ BossFinal_CylinderPairs:
 		dc.w 6, 0
 ; ===========================================================================
 
-loc_19FE6:
+; loc_19FE6:
+BossFinal_Eggman_Plasma:
 		moveq	#-1,d0
 		move.w	objoff_36(a0),d0
 		movea.l	d0,a1
@@ -279,7 +286,8 @@ loc_1A020:
 		jmp	(QueueSound2).l	; play electricity sound
 ; ===========================================================================
 
-loc_1A02A:
+; loc_1A02A:
+BossFinal_Eggman_Fall:
 	if Revision=0
 		move.b	#$30,obWidth(a0)
 	else
@@ -306,7 +314,8 @@ loc_1A070:
 		bra.w	loc_1A166
 ; ===========================================================================
 
-loc_1A074:
+; loc_1A074:
+BossFinal_Eggman_Run:
 		bset	#0,obStatus(a0)
 		move.b	#4,obAnim(a0)
 		jsr	(SpeedToPos).l
@@ -356,7 +365,8 @@ loc_1A110:
 		bra.s	loc_1A15C
 ; ===========================================================================
 
-loc_1A112:
+; loc_1A112:
+BossFinal_Eggman_Jump:
 		jsr	(SpeedToPos).l
 		cmpi.w	#boss_fz_x+$290,obX(a0)
 		blo.s	loc_1A124
@@ -402,7 +412,8 @@ locret_1A190:
 		rts
 ; ===========================================================================
 
-loc_1A192:
+; loc_1A192:
+BossFinal_Eggman_Ship:
 		move.l	#Map_Eggman,obMap(a0)
 		move.w	#make_art_tile(ArtTile_Eggman,0,0),obGfx(a0)
 		move.b	#0,obAnim(a0)
@@ -419,7 +430,8 @@ loc_1A1D0:
 		bra.w	loc_1A15C
 ; ===========================================================================
 
-loc_1A1D4:
+; loc_1A1D4:
+BossFinal_Eggman_Escape:
 		bset	#0,obStatus(a0)
 		jsr	(SpeedToPos).l
 		tst.w	objoff_30(a0)
@@ -470,7 +482,8 @@ loc_1A260:
 		bra.w	loc_1A15C
 ; ===========================================================================
 
-loc_1A264:	; Routine 4
+; loc_1A264:
+BossFinal_Flame: ; Routine 4
 		movea.l	objoff_34(a0),a1
 		move.b	(a1),d0
 		cmp.b	(a0),d0
@@ -505,7 +518,8 @@ loc_1A2A6:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-loc_1A2C6:	; Routine 6
+; loc_1A2C6:
+BossFinal_Cockpit: ; Routine 6
 		movea.l	objoff_34(a0),a1
 		move.b	(a1),d0
 		cmp.b	(a0),d0
@@ -541,7 +555,8 @@ loc_1A312:
 		bra.w	loc_1A296
 ; ===========================================================================
 
-loc_1A346:	; Routine 8
+; loc_1A346:
+BossFinal_Legs:	; Routine 8
 		bset	#0,obStatus(a0)
 		movea.l	objoff_34(a0),a1
 		cmpi.l	#Map_Eggman,obMap(a1)
@@ -567,7 +582,8 @@ loc_1A38A:
 		bra.w	loc_1A296
 ; ===========================================================================
 
-loc_1A38E:	; Routine $A
+; loc_1A38E:
+BossFinal_Panel:	; Routine $A
 		move.b	#$B,obFrame(a0)
 		move.w	(v_player+obX).w,d0
 		sub.w	obX(a0),d0
@@ -579,7 +595,8 @@ loc_1A3A6:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-loc_1A3AC:	; Routine $C
+; loc_1A3AC:
+BossFinal_EmptyShip: ; Routine $C
 		move.b	#0,obFrame(a0)
 		bset	#0,obStatus(a0)
 		movea.l	objoff_34(a0),a1

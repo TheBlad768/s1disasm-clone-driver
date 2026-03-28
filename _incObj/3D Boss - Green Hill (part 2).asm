@@ -42,7 +42,8 @@ loc_17950:
 		bra.w	loc_177E6
 ; ===========================================================================
 
-loc_17954:
+; loc_17954:
+BGHZ_ChgDir:
 		subq.w	#1,objoff_3C(a0)
 		bmi.s	loc_17960
 		bsr.w	BossMove
@@ -59,7 +60,8 @@ loc_17976:
 		bra.w	loc_177E6
 ; ===========================================================================
 
-loc_1797A:
+; loc_1797A:
+BGHZ_Explode:
 		subq.w	#1,objoff_3C(a0)
 		bmi.s	loc_17984
 		bra.w	BossDefeated
@@ -79,7 +81,8 @@ locret_179AA:
 		rts
 ; ===========================================================================
 
-loc_179AC:
+; loc_179AC:
+BGHZ_Recover:
 		addq.w	#1,objoff_3C(a0)
 		beq.s	loc_179BC
 		bpl.s	loc_179C2
@@ -117,7 +120,8 @@ loc_179EE:
 		bra.w	loc_177E6
 ; ===========================================================================
 
-loc_179F6:
+; loc_179F6:
+BGHZ_Escape:
 		move.w	#$400,obVelX(a0)
 		move.w	#-$40,obVelY(a0)
 		cmpi.w	#boss_ghz_end,(v_limitright2).w

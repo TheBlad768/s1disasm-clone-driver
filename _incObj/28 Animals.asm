@@ -8,19 +8,31 @@ Animals:
 		move.w	Anml_Index(pc,d0.w),d1
 		jmp	Anml_Index(pc,d1.w)
 ; ===========================================================================
-Anml_Index:	dc.w Anml_Ending-Anml_Index, loc_912A-Anml_Index
-		dc.w loc_9184-Anml_Index, loc_91C0-Anml_Index
-		dc.w loc_9184-Anml_Index, loc_9184-Anml_Index
-		dc.w loc_9184-Anml_Index, loc_91C0-Anml_Index
-		dc.w loc_9184-Anml_Index, loc_9240-Anml_Index
-		dc.w loc_9260-Anml_Index, loc_9260-Anml_Index
-		dc.w loc_9280-Anml_Index, loc_92BA-Anml_Index
-		dc.w loc_9314-Anml_Index, loc_9332-Anml_Index
-		dc.w loc_9314-Anml_Index, loc_9332-Anml_Index
-		dc.w loc_9314-Anml_Index, loc_9370-Anml_Index
-		dc.w loc_92D6-Anml_Index
+Anml_Index:	dc.w Anml_Main-Anml_Index
+		dc.w Anml_ChkFloor-Anml_Index
+		dc.w Anml_Type0-Anml_Index
+		dc.w Anml_Type1-Anml_Index
+		dc.w Anml_Type0-Anml_Index
+		dc.w Anml_Type0-Anml_Index
+		dc.w Anml_Type0-Anml_Index
+		dc.w Anml_Type1-Anml_Index
+		dc.w Anml_Type0-Anml_Index
+		dc.w Anml_FromPrison-Anml_Index
+		dc.w Anml_End_0A-Anml_Index
+		dc.w Anml_End_0A-Anml_Index
+		dc.w Anml_End_0C-Anml_Index
+		dc.w Anml_End_0D-Anml_Index
+		dc.w Anml_End_0E-Anml_Index
+		dc.w Anml_End_0F-Anml_Index
+		dc.w Anml_End_0E-Anml_Index
+		dc.w Anml_End_0F-Anml_Index
+		dc.w Anml_End_0E-Anml_Index
+		dc.w Anml_End_13-Anml_Index
+		dc.w Anml_End_14-Anml_Index
+; ===========================================================================
 
-Anml_VarIndex:	dc.b 0,	5 ; Green Hill Zone
+Anml_VarIndex:	; two index IDs for Anml_Variables
+		dc.b 0,	5 ; Green Hill Zone
 		dc.b 2, 3 ; Labyrinth Zone
 		dc.b 6, 3 ; Marble Zone
 		dc.b 4, 5 ; Star Light Zone
@@ -28,43 +40,67 @@ Anml_VarIndex:	dc.b 0,	5 ; Green Hill Zone
 		dc.b 0, 1 ; Scrap Brain Zone
 		zonewarning Anml_VarIndex,2
 
-Anml_Variables:	dc.w -$200, -$400
-		dc.l Map_Animal1
-		dc.w -$200, -$300	; horizontal speed, vertical speed
-		dc.l Map_Animal2	; mappings address
-		dc.w -$180, -$300
-		dc.l Map_Animal1
-		dc.w -$140, -$180
-		dc.l Map_Animal2
-		dc.w -$1C0, -$300
-		dc.l Map_Animal3
-		dc.w -$300, -$400
-		dc.l Map_Animal2
-		dc.w -$280, -$380
-		dc.l Map_Animal3
-
-Anml_EndSpeed:	dc.w -$440, -$400, -$440, -$400, -$440, -$400, -$300, -$400
-		dc.w -$300, -$400, -$180, -$300, -$180, -$300, -$140, -$180
-		dc.w -$1C0, -$300, -$200, -$300, -$280, -$380
-
-Anml_EndMap:	dc.l Map_Animal2, Map_Animal2, Map_Animal2, Map_Animal1, Map_Animal1
-		dc.l Map_Animal1, Map_Animal1, Map_Animal2, Map_Animal3, Map_Animal2
+Anml_Variables:	; horizontal speed, vertical speed, mappings
+		dc.w -$200, -$400	; type 0 - GHZ/SBZ
+		dc.l Map_Animal1 
+		dc.w -$200, -$300	; type 1 - SYZ/SBZ
+		dc.l Map_Animal2 
+		dc.w -$180, -$300	; type 2 - LZ
+		dc.l Map_Animal1 
+		dc.w -$140, -$180	; type 3 - MZ/LZ
+		dc.l Map_Animal2 
+		dc.w -$1C0, -$300	; type 4 - SYZ/SLZ
+		dc.l Map_Animal3 
+		dc.w -$300, -$400	; type 5 - GHZ/SLZ
+		dc.l Map_Animal2 
+		dc.w -$280, -$380	; type 6 - MZ
 		dc.l Map_Animal3
 
-Anml_EndVram:	dc.w make_art_tile(ArtTile_Ending_Flicky,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Flicky,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Flicky,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Rabbit,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Rabbit,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Penguin,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Penguin,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Seal,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Pig,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Chicken,0,0)
-		dc.w make_art_tile(ArtTile_Ending_Squirrel,0,0)
+; ---------------------------------------------------------------------------
+
+; Each entry corresponds to one ending sequence animal,
+; using subtype ID as index, starting at $A
+
+Anml_EndSpeed:	; horizontal speed, vertical speed
+		dc.w -$440, -$400		; $A
+		dc.w -$440, -$400		; $B - unused
+		dc.w -$440, -$400		; $C
+		dc.w -$300, -$400		; $D
+		dc.w -$300, -$400		; $E
+		dc.w -$180, -$300		; $F
+		dc.w -$180, -$300		; $10 - unused
+		dc.w -$140, -$180		; $11 - unused
+		dc.w -$1C0, -$300		; $12 - unused
+		dc.w -$200, -$300		; $13
+		dc.w -$280, -$380		; $14
+
+Anml_EndMap:	dc.l Map_Animal2		; $A
+		dc.l Map_Animal2		; $B - unused
+		dc.l Map_Animal2		; $C
+		dc.l Map_Animal1		; $D
+		dc.l Map_Animal1		; $E
+		dc.l Map_Animal1		; $F
+		dc.l Map_Animal1		; $10 - unused
+		dc.l Map_Animal2		; $11 - unused
+		dc.l Map_Animal3		; $12 - unused
+		dc.l Map_Animal2		; $13
+		dc.l Map_Animal3		; $14
+
+Anml_EndVram:	dc.w ArtTile_Ending_Flicky	; $A
+		dc.w ArtTile_Ending_Flicky      ; $B - unused
+		dc.w ArtTile_Ending_Flicky      ; $C
+		dc.w ArtTile_Ending_Rabbit      ; $D
+		dc.w ArtTile_Ending_Rabbit      ; $E
+		dc.w ArtTile_Ending_Penguin     ; $F
+		dc.w ArtTile_Ending_Penguin     ; $10 - unused
+		dc.w ArtTile_Ending_Seal        ; $11 - unused
+		dc.w ArtTile_Ending_Pig         ; $12 - unused
+		dc.w ArtTile_Ending_Chicken     ; $13
+		dc.w ArtTile_Ending_Squirrel    ; $14
 ; ===========================================================================
 
-Anml_Ending:	; Routine 0
+; Anml_Ending: <- old misnomer!
+Anml_Main:	; Routine 0
 		tst.b	obSubtype(a0)	; did animal come from a destroyed enemy?
 		beq.w	Anml_FromEnemy	; if yes, branch
 		moveq	#0,d0
@@ -141,7 +177,8 @@ loc_911C:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
-loc_912A:
+; loc_912A:
+Anml_ChkFloor:
 		tst.b	obRender(a0)
 		bpl.w	DeleteObject
 		bsr.w	ObjectFall
@@ -169,7 +206,8 @@ loc_9180:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
-loc_9184:
+; loc_9184:
+Anml_Type0:
 		bsr.w	ObjectFall
 		move.b	#1,obFrame(a0)
 		tst.w	obVelY(a0)
@@ -189,7 +227,8 @@ loc_91AE:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
-loc_91C0:
+; loc_91C0:
+Anml_Type1:
 		bsr.w	SpeedToPos
 		addi.w	#$18,obVelY(a0)
 		tst.w	obVelY(a0)
@@ -234,7 +273,8 @@ loc_923C:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
-loc_9240:
+; loc_9240:
+Anml_FromPrison:
 		tst.b	obRender(a0)
 		bpl.w	DeleteObject
 		subq.w	#1,objoff_36(a0)
@@ -246,20 +286,22 @@ loc_925C:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
-loc_9260:
+; loc_9260:
+Anml_End_0A:
 		bsr.w	sub_9404
 		bcc.s	loc_927C
 		move.w	objoff_32(a0),obVelX(a0)
 		move.w	objoff_34(a0),obVelY(a0)
 		move.b	#$E,obRoutine(a0)
-		bra.w	loc_91C0
+		bra.w	Anml_Type1
 ; ===========================================================================
 
 loc_927C:
 		bra.w	loc_9224
 ; ===========================================================================
 
-loc_9280:
+; loc_9280:
+Anml_End_0C:
 		bsr.w	sub_9404
 		bpl.s	loc_92B6
 		clr.w	obVelX(a0)
@@ -278,16 +320,18 @@ loc_92B6:
 		bra.w	loc_9224
 ; ===========================================================================
 
-loc_92BA:
+; loc_92BA:
+Anml_End_0D:
 		bsr.w	sub_9404
 		bpl.s	loc_9310
 		move.w	objoff_32(a0),obVelX(a0)
 		move.w	objoff_34(a0),obVelY(a0)
 		move.b	#4,obRoutine(a0)
-		bra.w	loc_9184
+		bra.w	Anml_Type0
 ; ===========================================================================
 
-loc_92D6:
+; loc_92D6:
+Anml_End_14:
 		bsr.w	ObjectFall
 		move.b	#1,obFrame(a0)
 		tst.w	obVelY(a0)
@@ -309,7 +353,8 @@ loc_9310:
 		bra.w	loc_9224
 ; ===========================================================================
 
-loc_9314:
+; loc_9314:
+Anml_End_0E:
 		bsr.w	sub_9404
 		bpl.s	loc_932E
 		clr.w	obVelX(a0)
@@ -322,7 +367,8 @@ loc_932E:
 		bra.w	loc_9224
 ; ===========================================================================
 
-loc_9332:
+; loc_9332:
+Anml_End_0F:
 		bsr.w	sub_9404
 		bpl.s	loc_936C
 		bsr.w	ObjectFall
@@ -342,7 +388,8 @@ loc_936C:
 		bra.w	loc_9224
 ; ===========================================================================
 
-loc_9370:
+; loc_9370:
+Anml_End_13:
 		bsr.w	sub_9404
 		bpl.s	loc_93C0
 		bsr.w	SpeedToPos

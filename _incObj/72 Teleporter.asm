@@ -14,9 +14,9 @@ Teleport:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 Tele_Index:	dc.w Tele_Main-Tele_Index
-		dc.w loc_166C8-Tele_Index
-		dc.w loc_1675E-Tele_Index
-		dc.w loc_16798-Tele_Index
+		dc.w Tele_Action-Tele_Index
+		dc.w Tele_Bump-Tele_Index
+		dc.w Tele_Bend-Tele_Index
 ; ===========================================================================
 
 Tele_Main:	; Routine 0
@@ -31,7 +31,8 @@ Tele_Main:	; Routine 0
 		move.w	(a2)+,objoff_36(a0)
 		move.w	(a2)+,objoff_38(a0)
 
-loc_166C8:	; Routine 2
+; loc_166C8:
+Tele_Action:	; Routine 2
 		lea	(v_player).w,a1
 		move.w	obX(a1),d0
 		sub.w	obX(a0),d0
@@ -74,7 +75,8 @@ locret_1675C:
 		rts
 ; ===========================================================================
 
-loc_1675E:	; Routine 4
+; loc_1675E:
+Tele_Bump:	; Routine 4
 		lea	(v_player).w,a1
 		move.b	objoff_32(a0),d0
 		addq.b	#2,objoff_32(a0)
@@ -94,7 +96,8 @@ locret_16796:
 		rts
 ; ===========================================================================
 
-loc_16798:	; Routine 6
+; loc_16798:
+Tele_Bend:	; Routine 6
 		addq.l	#4,sp
 		lea	(v_player).w,a1
 		subq.b	#1,objoff_2E(a0)
@@ -216,26 +219,39 @@ loc_168A6:
 ; End of function sub_1681C
 
 ; ===========================================================================
-Tele_Data:	dc.w .type00-Tele_Data, .type01-Tele_Data, .type02-Tele_Data
-		dc.w .type03-Tele_Data, .type04-Tele_Data, .type05-Tele_Data
-		dc.w .type06-Tele_Data, .type07-Tele_Data
+Tele_Data:	dc.w .type00-Tele_Data
+		dc.w .type01-Tele_Data
+		dc.w .type02-Tele_Data
+		dc.w .type03-Tele_Data
+		dc.w .type04-Tele_Data
+		dc.w .type05-Tele_Data
+		dc.w .type06-Tele_Data
+		dc.w .type07-Tele_Data
+
 .type00:	dc.w 4,	$794, $98C
+
 .type01:	dc.w 4,	$94, $38C
+
 .type02:	dc.w $1C, $794,	$2E8
 		dc.w $7A4, $2C0, $7D0
 		dc.w $2AC, $858, $2AC
 		dc.w $884, $298, $894
 		dc.w $270, $894, $190
+
 .type03:	dc.w 4,	$894, $690
+
 .type04:	dc.w $1C, $1194, $470
 		dc.w $1184, $498, $1158
 		dc.w $4AC, $FD0, $4AC
 		dc.w $FA4, $4C0, $F94
 		dc.w $4E8, $F94, $590
+
 .type05:	dc.w 4,	$1294, $490
+
 .type06:	dc.w $1C, $1594, $FFE8
 		dc.w $1584, $FFC0, $1560
 		dc.w $FFAC, $14D0, $FFAC
 		dc.w $14A4, $FF98, $1494
 		dc.w $FF70, $1494, $FD90
+
 .type07:	dc.w 4,	$894, $90

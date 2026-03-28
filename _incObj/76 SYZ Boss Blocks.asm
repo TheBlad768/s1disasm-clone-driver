@@ -11,7 +11,7 @@ BossBlock:
 BossBlock_Index:
 		dc.w BossBlock_Main-BossBlock_Index
 		dc.w BossBlock_Action-BossBlock_Index
-		dc.w loc_19762-BossBlock_Index
+		dc.w BossBlock_Frag-BossBlock_Index
 ; ===========================================================================
 
 BossBlock_Main:	; Routine 0
@@ -85,7 +85,8 @@ BossBlock_Display:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-loc_19762:	; Routine 4
+; loc_19762:
+BossBlock_Frag:	; Routine 4
 		tst.b	obRender(a0)
 		bpl.s	BossBlock_Delete
 		jsr	(ObjectFall).l

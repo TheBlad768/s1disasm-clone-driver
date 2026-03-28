@@ -472,7 +472,7 @@ VBlank:
 		btst	#6,(v_megadrive).w ; is Megadrive PAL?
 		beq.s	.notPAL		; if not, branch
 		move.w	#$700,d0
-.waitPAL:	dbf	d0,.waitPAL 
+.waitPAL:	dbf	d0,.waitPAL
 
 .notPAL:
 		move.b	(v_vbla_routine).w,d0

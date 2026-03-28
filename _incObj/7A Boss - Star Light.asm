@@ -93,15 +93,16 @@ BossStarLight_ShipMain:	; Routine 2
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 BossStarLight_ShipIndex:
-		dc.w loc_189B8-BossStarLight_ShipIndex
-		dc.w loc_18A5E-BossStarLight_ShipIndex
-		dc.w BossStarLight_MakeBall-BossStarLight_ShipIndex
-		dc.w loc_18B48-BossStarLight_ShipIndex
-		dc.w loc_18B80-BossStarLight_ShipIndex
-		dc.w loc_18BC6-BossStarLight_ShipIndex
+		dc.w BSLZ_ShipStart-BossStarLight_ShipIndex
+		dc.w BSLZ_ShipMove-BossStarLight_ShipIndex
+		dc.w BSLZ_MakeBall-BossStarLight_ShipIndex
+		dc.w BSLZ_Explode-BossStarLight_ShipIndex
+		dc.w BSLZ_Recover-BossStarLight_ShipIndex
+		dc.w BSLZ_Escape-BossStarLight_ShipIndex
 ; ===========================================================================
 
-loc_189B8:
+; loc_189B8:
+BSLZ_ShipStart:
 		move.w	#-$100,obVelX(a0)
 		cmpi.w	#boss_slz_x+$120,objoff_30(a0)
 		bhs.s	loc_189CA
@@ -163,7 +164,8 @@ loc_18A46:
 		rts
 ; ===========================================================================
 
-loc_18A5E:
+; loc_18A5E:
+BSLZ_ShipMove:
 		move.w	objoff_30(a0),d0
 		move.w	#$200,obVelX(a0)
 		btst	#0,obStatus(a0)
@@ -215,7 +217,8 @@ loc_18AC0:
 		bra.w	loc_189CA
 ; ===========================================================================
 
-BossStarLight_MakeBall:
+; BossStarLight_MakeBall:
+BSLZ_MakeBall:
 		cmpi.b	#$28,objoff_3C(a0)
 		bne.s	loc_18B36
 		moveq	#-1,d0
@@ -265,7 +268,8 @@ loc_18B40:
 		bra.w	loc_189CA
 ; ===========================================================================
 
-loc_18B48:
+; loc_18B48:
+BSLZ_Explode:
 		subq.b	#1,objoff_3C(a0)
 		bmi.s	loc_18B52
 		bra.w	BossDefeated
@@ -286,7 +290,8 @@ loc_18B7C:
 		bra.w	loc_189FE
 ; ===========================================================================
 
-loc_18B80:
+; loc_18B80:
+BSLZ_Recover:
 		addq.b	#1,objoff_3C(a0)
 		beq.s	loc_18B90
 		bpl.s	loc_18B96
@@ -323,7 +328,8 @@ loc_18BC2:
 		bra.w	loc_189EE
 ; ===========================================================================
 
-loc_18BC6:
+; loc_18BC6:
+BSLZ_Escape:
 		move.w	#$400,obVelX(a0)
 		move.w	#-$40,obVelY(a0)
 		cmpi.w	#boss_slz_end,(v_limitright2).w

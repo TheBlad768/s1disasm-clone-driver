@@ -61,19 +61,20 @@ SEgg_Eggman:	; Routine 2
 SEgg_EggIndex:	dc.w SEgg_ChkSonic-SEgg_EggIndex
 		dc.w SEgg_PreLeap-SEgg_EggIndex
 		dc.w SEgg_Leap-SEgg_EggIndex
-		dc.w loc_19934-SEgg_EggIndex
+		dc.w SEgg_Move-SEgg_EggIndex
 ; ===========================================================================
 
 SEgg_ChkSonic:
 		move.w	obX(a0),d0
 		sub.w	(v_player+obX).w,d0
 		cmpi.w	#128,d0		; is Sonic within 128 pixels of Eggman?
-		bhs.s	loc_19934	; if not, branch
+		bhs.s	SEgg_Move	; if not, branch
 		addq.b	#2,ob2ndRout(a0)
 		move.w	#180,objoff_3C(a0)	; set delay to 3 seconds
 		move.b	#1,obAnim(a0)
 
-loc_19934:
+; loc_19934:
+SEgg_Move:
 		jmp	(SpeedToPos).l
 ; ===========================================================================
 
@@ -86,7 +87,7 @@ SEgg_PreLeap:
 		move.w	#15,objoff_3C(a0)
 
 loc_19954:
-		bra.s	loc_19934
+		bra.s	SEgg_Move
 ; ===========================================================================
 
 SEgg_Leap:
@@ -138,7 +139,7 @@ SEgg_FindLoop:
 		move.b	#1,obAnim(a0)
 
 loc_199D0:
-		bra.w	loc_19934
+		bra.w	SEgg_Move
 ; ===========================================================================
 
 SEgg_Switch:	; Routine 4
@@ -147,11 +148,12 @@ SEgg_Switch:	; Routine 4
 		move.w	SEgg_SwIndex(pc,d0.w),d0
 		jmp	SEgg_SwIndex(pc,d0.w)
 ; ===========================================================================
-SEgg_SwIndex:	dc.w loc_199E6-SEgg_SwIndex
+SEgg_SwIndex:	dc.w SEgg_SwChk-SEgg_SwIndex
 		dc.w SEgg_SwDisplay-SEgg_SwIndex
 ; ===========================================================================
 
-loc_199E6:
+; loc_199E6:
+SEgg_SwChk:
 		movea.l	objoff_34(a0),a1
 		cmpi.w	#"SW",obSubtype(a1)
 		bne.s	SEgg_SwDisplay

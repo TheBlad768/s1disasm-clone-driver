@@ -30,7 +30,7 @@ SpinC_Delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 SpinC_Index:	dc.w SpinC_Main-SpinC_Index
-		dc.w loc_163D8-SpinC_Index
+		dc.w SpinC_Solid-SpinC_Index
 ; ===========================================================================
 
 SpinC_Main:	; Routine 0
@@ -89,7 +89,7 @@ loc_1636C:
 
 loc_16378:
 		bsr.w	LCon_ChangeDir
-		bra.w	loc_163D8
+		bra.w	SpinC_Solid
 ; ===========================================================================
 
 loc_16380:
@@ -130,7 +130,8 @@ loc_163D0:
 		rts
 ; ===========================================================================
 
-loc_163D8:	; Routine 2
+; loc_163D8:
+SpinC_Solid:	; Routine 2
 		lea	(Ani_SpinConvey).l,a1
 		jsr	(AnimateSprite).l
 		tst.b	obFrame(a0)

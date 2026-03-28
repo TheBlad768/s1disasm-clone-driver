@@ -32,9 +32,12 @@ DeformLayers:
 ; ---------------------------------------------------------------------------
 ; Offset index for background layer deformation code
 ; ---------------------------------------------------------------------------
-Deform_Index:	dc.w Deform_GHZ-Deform_Index, Deform_LZ-Deform_Index
-		dc.w Deform_MZ-Deform_Index, Deform_SLZ-Deform_Index
-		dc.w Deform_SYZ-Deform_Index, Deform_SBZ-Deform_Index
+Deform_Index:	dc.w Deform_GHZ-Deform_Index
+		dc.w Deform_LZ-Deform_Index
+		dc.w Deform_MZ-Deform_Index
+		dc.w Deform_SLZ-Deform_Index
+		dc.w Deform_SYZ-Deform_Index
+		dc.w Deform_SBZ-Deform_Index
 		zonewarning Deform_Index,2
 		dc.w Deform_GHZ-Deform_Index
 ; ---------------------------------------------------------------------------

@@ -52,9 +52,12 @@ loc_6DC4:
 ; ---------------------------------------------------------------------------
 ; Offset index for dynamic level events
 ; ---------------------------------------------------------------------------
-DLE_Index:	dc.w DLE_GHZ-DLE_Index, DLE_LZ-DLE_Index
-		dc.w DLE_MZ-DLE_Index, DLE_SLZ-DLE_Index
-		dc.w DLE_SYZ-DLE_Index, DLE_SBZ-DLE_Index
+DLE_Index:	dc.w DLE_GHZ-DLE_Index
+		dc.w DLE_LZ-DLE_Index
+		dc.w DLE_MZ-DLE_Index
+		dc.w DLE_SLZ-DLE_Index
+		dc.w DLE_SYZ-DLE_Index
+		dc.w DLE_SBZ-DLE_Index
 		zonewarning DLE_Index,2
 		dc.w DLE_Ending-DLE_Index
 ; ===========================================================================
@@ -265,13 +268,14 @@ DLE_MZ1:
 		move.w	off_6FB2(pc,d0.w),d0
 		jmp	off_6FB2(pc,d0.w)
 ; ===========================================================================
-off_6FB2:	dc.w loc_6FBA-off_6FB2
-		dc.w loc_6FEA-off_6FB2
-		dc.w loc_702E-off_6FB2
-		dc.w loc_7050-off_6FB2
+off_6FB2:	dc.w DLE_MZ1_0-off_6FB2
+		dc.w DLE_MZ1_2-off_6FB2
+		dc.w DLE_MZ1_4-off_6FB2
+		dc.w DLE_MZ1_6-off_6FB2
 ; ===========================================================================
 
-loc_6FBA:
+; loc_6FBA:
+DLE_MZ1_0:
 		move.w	#$1D0,(v_limitbtm1).w
 		cmpi.w	#$700,(v_screenposx).w
 		blo.s	locret_6FE8
@@ -287,7 +291,8 @@ locret_6FE8:
 		rts
 ; ===========================================================================
 
-loc_6FEA:
+; loc_6FEA:
+DLE_MZ1_2:
 		cmpi.w	#$340,(v_screenposy).w
 		bhs.s	loc_6FF8
 		subq.b	#2,(v_dle_routine).w
@@ -311,7 +316,8 @@ locret_702C:
 		rts
 ; ===========================================================================
 
-loc_702E:
+; loc_702E:
+DLE_MZ1_4:
 		cmpi.w	#$370,(v_screenposy).w
 		bhs.s	loc_703C
 		subq.b	#2,(v_dle_routine).w
@@ -332,7 +338,8 @@ locret_704E:
 		rts
 ; ===========================================================================
 
-loc_7050:
+; loc_7050:
+DLE_MZ1_6:
 	if Revision<>0
 		cmpi.w	#$B80,(v_screenposx).w
 		bcc.s	locj_76B8
@@ -659,8 +666,10 @@ DLE_FZ:
 		move.w	off_72D8(pc,d0.w),d0
 		jmp	off_72D8(pc,d0.w)
 ; ===========================================================================
-off_72D8:	dc.w DLE_FZmain-off_72D8, DLE_FZboss-off_72D8
-		dc.w DLE_FZend-off_72D8, locret_7322-off_72D8
+off_72D8:	dc.w DLE_FZmain-off_72D8
+		dc.w DLE_FZboss-off_72D8
+		dc.w DLE_FZend-off_72D8
+		dc.w DLE_FZwait-off_72D8
 		dc.w DLE_FZend2-off_72D8
 ; ===========================================================================
 
@@ -697,7 +706,8 @@ loc_7320:
 		bra.s	loc_72C2
 ; ===========================================================================
 
-locret_7322:
+; locret_7322:
+DLE_FZwait:
 		rts
 ; ===========================================================================
 
