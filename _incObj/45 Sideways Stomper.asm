@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 45 - spiked metal block from beta version (MZ)
+; Object 45 - unused sidways spiked metal stomper from beta version (MZ)
 ; ---------------------------------------------------------------------------
 
 SideStomp:
@@ -10,7 +10,7 @@ SideStomp:
 ; ===========================================================================
 SStom_Index:	dc.w SStom_Main-SStom_Index
 		dc.w SStom_Solid-SStom_Index
-		dc.w loc_BA8E-SStom_Index
+		dc.w SStom_Spikes-SStom_Index
 		dc.w SStom_Display-SStom_Index
 		dc.w SStom_Pole-SStom_Index
 
@@ -92,7 +92,8 @@ SStom_Pole:	; Routine 8
 		addq.b	#3,d0
 		move.b	d0,obFrame(a0)
 
-loc_BA8E:	; Routine 4
+; loc_BA8E:
+SStom_Spikes:	; Routine 4
 		movea.l	objoff_3C(a0),a1
 		moveq	#0,d0
 		move.b	objoff_32(a1),d0
@@ -114,18 +115,22 @@ SStom_Move:
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
 		add.w	d0,d0
-		move.w	off_BAD6(pc,d0.w),d1
-		jmp	off_BAD6(pc,d1.w)
+		move.w	SStom_Move_Index(pc,d0.w),d1
+		jmp	SStom_Move_Index(pc,d1.w)
 ; End of function SStom_Move
 
 ; ===========================================================================
-		; This indicates only two subtypes... that do the same thing
-		; Compare to SStom_Len. This breaks subtype 02
-off_BAD6:	dc.w loc_BADA-off_BAD6
-		dc.w loc_BADA-off_BAD6
+SStom_Move_Index:
+		dc.w SStom_Move_0-SStom_Move_Index	; 0
+		dc.w SStom_Move_0-SStom_Move_Index	; 1 - same as 0
+	if FixBugs
+		; An entry for subtype 02 is missing, despite being defined in SStom_Len
+		dc.w SStom_Move_0-SStom_Move_Index	; 2 - missing
+	endif
 ; ===========================================================================
 
-loc_BADA:
+; loc_BADA:
+SStom_Move_0:
 		tst.w	objoff_36(a0)
 		beq.s	loc_BB08
 		tst.w	objoff_38(a0)

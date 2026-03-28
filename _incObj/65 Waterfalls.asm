@@ -12,7 +12,7 @@ WFall_Index:	dc.w WFall_Main-WFall_Index
 		dc.w WFall_Animate-WFall_Index
 		dc.w WFall_ChkDel-WFall_Index
 		dc.w WFall_OnWater-WFall_Index
-		dc.w loc_12B36-WFall_Index
+		dc.w WFall_Priority-WFall_Index
 ; ===========================================================================
 
 WFall_Main:	; Routine 0
@@ -42,7 +42,7 @@ WFall_Main:	; Routine 0
 .not49:
 		btst	#5,obSubtype(a0) ; is object type $A9 ?
 		beq.s	WFall_Animate	; if not, branch
-		move.b	#8,obRoutine(a0) ; goto loc_12B36 next
+		move.b	#8,obRoutine(a0) ; goto WFall_Priority next
 
 WFall_Animate:	; Routine 2
 		lea	(Ani_WFall).l,a1
@@ -59,7 +59,8 @@ WFall_OnWater:	; Routine 6
 		bra.s	WFall_Animate
 ; ===========================================================================
 
-loc_12B36:	; Routine 8
+; loc_12B36:
+WFall_Priority:	; Routine 8
 		bclr	#7,obGfx(a0)
 		cmpi.b	#7,(v_lvllayout+$80*2+6).w
 		bne.s	.animate

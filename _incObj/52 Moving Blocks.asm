@@ -95,11 +95,17 @@ MBlock_Move:
 		move.w	MBlock_TypeIndex(pc,d0.w),d1
 		jmp	MBlock_TypeIndex(pc,d1.w)
 ; ===========================================================================
-MBlock_TypeIndex:dc.w MBlock_Type00-MBlock_TypeIndex, MBlock_Type01-MBlock_TypeIndex
-		dc.w MBlock_Type02-MBlock_TypeIndex, MBlock_Type03-MBlock_TypeIndex
-		dc.w MBlock_Type02-MBlock_TypeIndex, MBlock_Type05-MBlock_TypeIndex
-		dc.w MBlock_Type06-MBlock_TypeIndex, MBlock_Type07-MBlock_TypeIndex
-		dc.w MBlock_Type08-MBlock_TypeIndex, MBlock_Type02-MBlock_TypeIndex
+MBlock_TypeIndex:
+		dc.w MBlock_Type00-MBlock_TypeIndex
+		dc.w MBlock_Type01-MBlock_TypeIndex
+		dc.w MBlock_Type02-MBlock_TypeIndex
+		dc.w MBlock_Type03-MBlock_TypeIndex
+		dc.w MBlock_Type02-MBlock_TypeIndex
+		dc.w MBlock_Type05-MBlock_TypeIndex
+		dc.w MBlock_Type06-MBlock_TypeIndex
+		dc.w MBlock_Type07-MBlock_TypeIndex
+		dc.w MBlock_Type08-MBlock_TypeIndex
+		dc.w MBlock_Type02-MBlock_TypeIndex
 		dc.w MBlock_Type0A-MBlock_TypeIndex
 ; ===========================================================================
 

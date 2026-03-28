@@ -69,13 +69,18 @@ BossLabyrinth_ShipMain:	; Routine 2
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 BossLabyrinth_ShipIndex:
-		dc.w loc_17F1E-BossLabyrinth_ShipIndex,	loc_17FA0-BossLabyrinth_ShipIndex
-		dc.w loc_17FE0-BossLabyrinth_ShipIndex,	loc_1801E-BossLabyrinth_ShipIndex
-		dc.w loc_180BC-BossLabyrinth_ShipIndex,	loc_180F6-BossLabyrinth_ShipIndex
-		dc.w loc_1812A-BossLabyrinth_ShipIndex,	loc_18152-BossLabyrinth_ShipIndex
+		dc.w BLZ_ShipStart-BossLabyrinth_ShipIndex
+		dc.w BLZ_ShipMove1-BossLabyrinth_ShipIndex
+		dc.w BLZ_ShipMove2-BossLabyrinth_ShipIndex
+		dc.w BLZ_ShipMove3-BossLabyrinth_ShipIndex
+		dc.w BLZ_ShipAtTop-BossLabyrinth_ShipIndex
+		dc.w BLZ_ShipWait-BossLabyrinth_ShipIndex
+		dc.w BLZ_Escape1-BossLabyrinth_ShipIndex
+		dc.w BLZ_Escape2-BossLabyrinth_ShipIndex
 ; ===========================================================================
 
-loc_17F1E:
+; loc_17F1E:
+BLZ_ShipStart:
 		move.w	obX(a1),d0
 		cmpi.w	#boss_lz_x-$40,d0
 		blo.s	loc_17F38
@@ -129,7 +134,8 @@ loc_17F92:
 		rts
 ; ===========================================================================
 
-loc_17FA0:
+; loc_17FA0:
+BLZ_ShipMove1:
 		moveq	#-2,d0
 		cmpi.w	#boss_lz_x+$68,objoff_30(a0)
 		blo.s	loc_17FB6
@@ -154,7 +160,8 @@ loc_17FDC:
 		bra.w	loc_17F38
 ; ===========================================================================
 
-loc_17FE0:
+; loc_17FE0:
+BLZ_ShipMove2:
 		moveq	#-2,d0
 		cmpi.w	#boss_lz_x+$90,objoff_30(a0)
 		blo.s	loc_17FF6
@@ -179,7 +186,8 @@ loc_1801A:
 		bra.w	loc_17F38
 ; ===========================================================================
 
-loc_1801E:
+; loc_1801E:
+BLZ_ShipMove3:
 		cmpi.w	#boss_lz_y+$40,objoff_38(a0)
 		bgt.s	loc_1804E
 		move.w	#boss_lz_y+$40,objoff_38(a0)
@@ -238,7 +246,8 @@ loc_180AE:
 		bra.w	loc_17F48
 ; ===========================================================================
 
-loc_180BC:
+; loc_180BC:
+BLZ_ShipAtTop:
 		moveq	#-2,d0
 		cmpi.w	#boss_lz_x+$16C,objoff_30(a0)
 		blo.s	loc_180D2
@@ -262,7 +271,8 @@ loc_180F2:
 		bra.w	loc_17F38
 ; ===========================================================================
 
-loc_180F6:
+; loc_180F6:
+BLZ_ShipWait:
 		tst.b	objoff_3D(a0)
 		bne.s	loc_18112
 		cmpi.w	#boss_lz_x+$E8,obX(a1)
@@ -284,7 +294,8 @@ loc_18126:
 		bra.w	loc_17F38
 ; ===========================================================================
 
-loc_1812A:
+; loc_1812A:
+BLZ_Escape1:
 		tst.b	objoff_3D(a0)
 		bne.s	loc_18136
 		subq.b	#1,objoff_3C(a0)
@@ -301,7 +312,8 @@ loc_1814E:
 		bra.w	loc_17F38
 ; ===========================================================================
 
-loc_18152:
+; loc_18152:
+BLZ_Escape2:
 		cmpi.w	#boss_lz_end,(v_limitright2).w
 		bhs.s	loc_18160
 		addq.w	#2,(v_limitright2).w

@@ -67,14 +67,15 @@ BossMarble_ShipMain:	; Routine 2
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 BossMarble_ShipIndex:
-		dc.w loc_18302-BossMarble_ShipIndex
-		dc.w loc_183AA-BossMarble_ShipIndex
-		dc.w loc_184F6-BossMarble_ShipIndex
-		dc.w loc_1852C-BossMarble_ShipIndex
-		dc.w loc_18582-BossMarble_ShipIndex
+		dc.w BMZ_ShipStart-BossMarble_ShipIndex
+		dc.w BMZ_ShipMove-BossMarble_ShipIndex
+		dc.w BMZ_Explode-BossMarble_ShipIndex
+		dc.w BMZ_Recover-BossMarble_ShipIndex
+		dc.w BMZ_Escape-BossMarble_ShipIndex
 ; ===========================================================================
 
-loc_18302:
+; loc_18302:
+BMZ_ShipStart:
 		move.b	objoff_3F(a0),d0
 		addq.b	#2,objoff_3F(a0)
 		jsr	(CalcSine).l
@@ -133,7 +134,8 @@ loc_18392:
 		rts
 ; ===========================================================================
 
-loc_183AA:
+; loc_183AA:
+BMZ_ShipMove:
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
 		move.w	off_183C2(pc,d0.w),d0
@@ -141,13 +143,14 @@ loc_183AA:
 		andi.b	#6,obSubtype(a0)
 		bra.w	loc_1833E
 ; ===========================================================================
-off_183C2:	dc.w loc_183CA-off_183C2
-		dc.w BossMarble_MakeLava2-off_183C2
-		dc.w loc_183CA-off_183C2
-		dc.w BossMarble_MakeLava2-off_183C2
+off_183C2:	dc.w BMZ_ChgDir-off_183C2
+		dc.w BMZ_DropFire-off_183C2
+		dc.w BMZ_ChgDir-off_183C2
+		dc.w BMZ_DropFire-off_183C2
 ; ===========================================================================
 
-loc_183CA:
+; loc_183CA:
+BMZ_ChgDir:
 		tst.w	obVelX(a0)
 		bne.s	loc_183FE
 		moveq	#$40,d0
@@ -224,7 +227,8 @@ locret_1849C:
 		rts
 ; ===========================================================================
 
-BossMarble_MakeLava2:
+; BossMarble_MakeLava2:
+BMZ_DropFire:
 		bsr.w	BossMove
 		move.w	objoff_38(a0),d0
 		subi.w	#boss_mz_y+$1C,d0
@@ -252,7 +256,8 @@ locret_184F4:
 		rts
 ; ===========================================================================
 
-loc_184F6:
+; loc_184F6:
+BMZ_Explode:
 		subq.w	#1,objoff_3C(a0)
 		bmi.s	loc_18500
 		bra.w	BossDefeated
@@ -273,7 +278,8 @@ locret_1852A:
 		rts
 ; ===========================================================================
 
-loc_1852C:
+; loc_1852C:
+BMZ_Recover:
 		addq.w	#1,objoff_3C(a0)
 		beq.s	loc_18544
 		bpl.s	loc_1854E
@@ -314,7 +320,8 @@ loc_1857A:
 		bra.w	loc_1833E
 ; ===========================================================================
 
-loc_18582:
+; loc_18582:
+BMZ_Escape:
 		move.w	#$500,obVelX(a0)
 		move.w	#-$40,obVelY(a0)
 		cmpi.w	#boss_mz_end,(v_limitright2).w

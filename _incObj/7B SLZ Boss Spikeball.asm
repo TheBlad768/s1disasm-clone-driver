@@ -21,8 +21,8 @@ BossSpikeball:
 BossSpikeball_Index:
 		dc.w BossSpikeball_Main-BossSpikeball_Index
 		dc.w BossSpikeball_Fall-BossSpikeball_Index
-		dc.w loc_18DC6-BossSpikeball_Index
-		dc.w loc_18EAA-BossSpikeball_Index
+		dc.w BossSpikeball_Bounce-BossSpikeball_Index
+		dc.w BossSpikeball_HitBoss-BossSpikeball_Index
 		dc.w BossSpikeball_Explode-BossSpikeball_Index
 		dc.w BossSpikeball_MoveFrag-BossSpikeball_Index
 ; ===========================================================================
@@ -82,7 +82,8 @@ locret_18DC4:
 		rts
 ; ===========================================================================
 
-loc_18DC6:	; Routine 4
+; loc_18DC6:
+BossSpikeball_Bounce: ; Routine 4
 		movea.l	objoff_3C(a0),a1
 		moveq	#0,d0
 		move.b	objoff_3A(a0),d0
@@ -115,7 +116,7 @@ loc_18E16:
 		move.b	#1,obFrame(a0)
 		move.w	#$20,obSubtype(a0)
 		addq.b	#2,obRoutine(a0)
-		bra.w	loc_18EAA
+		bra.w	BossSpikeball_HitBoss
 ; ===========================================================================
 
 loc_18E2A:
@@ -165,7 +166,8 @@ locret_18EA8:
 		rts
 ; ===========================================================================
 
-loc_18EAA:	; Routine 6
+; loc_18EAA:
+BossSpikeball_HitBoss:	; Routine 6
 	if FixBugs
 		lea	(v_lvlobjspace).w,a1
 	else

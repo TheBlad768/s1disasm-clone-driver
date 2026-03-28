@@ -16,8 +16,8 @@ BossFire:
 ; ===========================================================================
 BossFire_Index:	dc.w BossFire_Main-BossFire_Index
 		dc.w BossFire_Action-BossFire_Index
-		dc.w loc_18886-BossFire_Index
-		dc.w BossFire_Delete3-BossFire_Index
+		dc.w BossFire_TempFire-BossFire_Index
+		dc.w BossFire_TempFireDel-BossFire_Index
 ; ===========================================================================
 
 BossFire_Main:	; Routine 0
@@ -34,7 +34,7 @@ BossFire_Main:	; Routine 0
 		bne.s	loc_1870A
 		move.b	#$8B,obColType(a0)
 		addq.b	#2,obRoutine(a0)
-		bra.w	loc_18886
+		bra.w	BossFire_TempFire
 ; ===========================================================================
 
 loc_1870A:
@@ -63,7 +63,7 @@ BossFire_Action:	; Routine 2
 BossFire_Delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
-BossFire_Index2:	dc.w BossFire_Drop-BossFire_Index2
+BossFire_Index2:dc.w BossFire_Drop-BossFire_Index2
 		dc.w BossFire_MakeFlame-BossFire_Index2
 		dc.w BossFire_Duplicate-BossFire_Index2
 		dc.w BossFire_FallEdge-BossFire_Index2
@@ -201,7 +201,8 @@ BossFire_Delete2:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
-loc_18886:	; Routine 4
+; loc_18886:
+BossFire_TempFire: ; Routine 4
 		bset	#7,obGfx(a0)
 		subq.b	#1,objoff_29(a0)
 		bne.s	BossFire_Animate
@@ -220,5 +221,6 @@ BossFire_Animate:
 	endif
 ; ===========================================================================
 
-BossFire_Delete3:	; Routine 6
+; BossFire_Delete3:
+BossFire_TempFireDel:	; Routine 6
 		jmp	(DeleteObject).l

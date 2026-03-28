@@ -539,12 +539,18 @@ ShowErrorMessage:
 ; End of function ShowErrorMessage
 
 ; ===========================================================================
-ErrorText:	dc.w .exception-ErrorText, .bus-ErrorText
-		dc.w .address-ErrorText, .illinstruct-ErrorText
-		dc.w .zerodivide-ErrorText, .chkinstruct-ErrorText
-		dc.w .trapv-ErrorText, .privilege-ErrorText
-		dc.w .trace-ErrorText, .line1010-ErrorText
+ErrorText:	dc.w .exception-ErrorText
+		dc.w .bus-ErrorText
+		dc.w .address-ErrorText
+		dc.w .illinstruct-ErrorText
+		dc.w .zerodivide-ErrorText
+		dc.w .chkinstruct-ErrorText
+		dc.w .trapv-ErrorText
+		dc.w .privilege-ErrorText
+		dc.w .trace-ErrorText
+		dc.w .line1010-ErrorText
 		dc.w .line1111-ErrorText
+
 .exception:	dc.b "ERROR EXCEPTION    "
 .bus:		dc.b "BUS ERROR          "
 .address:	dc.b "ADDRESS ERROR      "

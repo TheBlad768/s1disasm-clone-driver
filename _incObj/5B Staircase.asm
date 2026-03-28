@@ -18,7 +18,6 @@ Staircase:
 Stair_Index:	dc.w Stair_Main-Stair_Index
 		dc.w Stair_Move-Stair_Index
 		dc.w Stair_Solid-Stair_Index
-
 ; ===========================================================================
 
 Stair_Main:	; Routine 0
@@ -175,4 +174,4 @@ Stair_Type01:
 
 locret_11038:
 		rts
-		rts
+		rts	; redundant second rts
