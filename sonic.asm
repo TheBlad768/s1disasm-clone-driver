@@ -6146,6 +6146,8 @@ Map_Splash:	include	"_maps/Water Splash.asm"
 		include	"_incObj/sub FindWall.asm"
 
 ; ---------------------------------------------------------------------------
+; Unused/dead subroutine that was likely used during development.
+
 ; This subroutine takes 'raw' bitmap-like collision block data as input and
 ; converts it into the proper collision arrays (ColArray and ColArray2).
 ; Pointers to said raw data are dummied out.
@@ -6255,11 +6257,12 @@ ConvertCollisionArray:
 
 ; End of function ConvertCollisionArray
 
+; ---------------------------------------------------------------------------
+; Subroutine to	calculate distance from Sonic to the wall in front of him
+; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
-Sonic_WalkSpeed:
+; Sonic_WalkSpeed: <-- old misnomer
+Sonic_CalcRoomAhead:
 		move.l	obX(a0),d3
 		move.l	obY(a0),d2
 		move.w	obVelX(a0),d1
@@ -6296,46 +6299,51 @@ loc_14D20:
 
 loc_14D24:
 		andi.b	#$C0,d0
-		beq.w	loc_14DF0
+		beq.w	Sonic_FindFloor_Quick
 		cmpi.b	#$80,d0
-		beq.w	loc_14F7C
+		beq.w	Sonic_FindCeiling_Quick
 		andi.b	#$38,d1
 		bne.s	loc_14D3C
 		addq.w	#8,d2
+	if FixBugs
+		; Fix push sensor position while rolling
+		btst	#2,obStatus(a0)	; Is Sonic rolling?
+		beq.s	loc_14D3C	; If not, branch
+		subq.w	#5,d2		; If so, move push sensor up a bit
+	endif
 
 loc_14D3C:
 		cmpi.b	#$40,d0
-		beq.w	loc_1504A
-		bra.w	loc_14EBC
-
+		beq.w	Sonic_FindWallLeft_Quick
+		bra.w	Sonic_FindWallRight_Quick
 ; End of function Sonic_WalkSpeed
 
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ---------------------------------------------------------------------------
+; Subroutine to	calculate distance from Sonic's head to the ceiling
+; ---------------------------------------------------------------------------
 
-
-sub_14D48:
+; sub_14D48:
+Sonic_CalcHeadroom:
 		move.b	d0,(v_anglebuffer).w
 		move.b	d0,(v_anglebuffer2).w
 		addi.b	#$20,d0
 		andi.b	#$C0,d0
 		cmpi.b	#$40,d0
-		beq.w	loc_14FD6
+		beq.w	Sonic_FindWallLeft
 		cmpi.b	#$80,d0
-		beq.w	Sonic_DontRunOnWalls
+		beq.w	Sonic_FindCeiling
 		cmpi.b	#$C0,d0
-		beq.w	sub_14E50
+		beq.w	Sonic_FindWallRight
+; End of function Sonic_CalcHeadroom
 
-; End of function sub_14D48
 
 ; ---------------------------------------------------------------------------
-; Subroutine to make Sonic land on the floor after jumping
+; Subroutine to	find distance to floor
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
-Sonic_HitFloor:
+; Sonic_HitFloor: <-- old misnomer
+Sonic_FindFloor:
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 		moveq	#0,d0
@@ -6368,7 +6376,8 @@ Sonic_HitFloor:
 		move.w	(sp)+,d0
 		move.b	#0,d2
 
-loc_14DD0:
+; loc_14DD0:
+Sonic_FindSmaller:
 		move.b	(v_anglebuffer2).w,d3
 		cmp.w	d0,d1
 		ble.s	loc_14DDE
@@ -6382,14 +6391,19 @@ loc_14DDE:
 
 locret_14DE6:
 		rts
+; End of function Sonic_FindFloor
 
-; End of function Sonic_HitFloor
 
-; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to	find distance to floor, no width/height checks
+; ---------------------------------------------------------------------------
+
+Sonic_FindFloor_Quick_UsePos: ; not called from anywhere
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 
-loc_14DF0:
+; loc_14DF0:
+Sonic_FindFloor_Quick:
 		addi.w	#$A,d2
 		lea	(v_anglebuffer).w,a4
 		movea.w	#$10,a3
@@ -6398,22 +6412,27 @@ loc_14DF0:
 		bsr.w	FindFloor
 		move.b	#0,d2
 
-loc_14E0A:
+; loc_14E0A:
+Sonic_SnapAngle:
 		move.b	(v_anglebuffer).w,d3
 		btst	#0,d3
-		beq.s	locret_14E16
-		move.b	d2,d3
+		beq.s	.no_angle_snap	; branch if bit 0 of angle is clear
+		move.b	d2,d3		; snap angle to 0, $40, $80 or $C0
 
-locret_14E16:
+	.no_angle_snap:
 		rts
+; End of function Sonic_FindFloor_Quick
+; ===========================================================================
 
 		include	"_incObj/sub ObjFloorDist.asm"
 
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to	find distance to right wall when Sonic is moving vertically
+; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
-sub_14E50:
+; sub_14E50:
+Sonic_FindWallRight:
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 		moveq	#0,d0
@@ -6445,19 +6464,22 @@ sub_14E50:
 		bsr.w	FindWall
 		move.w	(sp)+,d0
 		move.b	#-$40,d2
-		bra.w	loc_14DD0
-
-; End of function sub_14E50
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+		bra.w	Sonic_FindSmaller
+; End of function Sonic_FindWallRight
 
 
-sub_14EB4:
+; ---------------------------------------------------------------------------
+; Subroutine to	find distance to right wall when moving vertically,
+; no width/height checks
+; ---------------------------------------------------------------------------
+
+; sub_14EB4:
+Sonic_FindWallRight_Quick_UsePos:
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 
-loc_14EBC:
+; loc_14EBC:
+Sonic_FindWallRight_Quick:
 		addi.w	#$A,d3
 		lea	(v_anglebuffer).w,a4
 		movea.w	#$10,a3
@@ -6465,17 +6487,16 @@ loc_14EBC:
 		moveq	#$E,d5
 		bsr.w	FindWall
 		move.b	#-$40,d2
-		bra.w	loc_14E0A
+		bra.w	Sonic_SnapAngle
+; End of function Sonic_FindWallRight_Quick
 
-; End of function sub_14EB4
 
 ; ---------------------------------------------------------------------------
-; Subroutine to detect when an object hits a wall to its right
+; Subroutine to find the distance of an object to the wall to its right.
+; Runs FindWall without the need for inputs, using object RAM instead.
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
+; FindWallRightObj:
 ObjHitWallRight:
 		add.w	obX(a0),d3
 		move.w	obY(a0),d2
@@ -6487,23 +6508,21 @@ ObjHitWallRight:
 		bsr.w	FindWall
 		move.b	(v_anglebuffer).w,d3
 		btst	#0,d3
-		beq.s	locret_14F06
+		beq.s	.return
 		move.b	#-$40,d3
 
-locret_14F06:
+	.return:
 		rts
+; End of function FindWallRightObj
 
-; End of function ObjHitWallRight
 
 ; ---------------------------------------------------------------------------
-; Subroutine preventing Sonic from running on walls and ceilings when he
-; touches them
+; Subroutine to	find distance to ceiling, used to prevent Sonic from
+; running on walls and ceilings when he touches them
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
-Sonic_DontRunOnWalls:
+; Sonic_DontRunOnWalls: <-- old misnomer
+Sonic_FindCeiling:
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 		moveq	#0,d0
@@ -6537,14 +6556,20 @@ Sonic_DontRunOnWalls:
 		bsr.w	FindFloor
 		move.w	(sp)+,d0
 		move.b	#-$80,d2
-		bra.w	loc_14DD0
-; End of function Sonic_DontRunOnWalls
+		bra.w	Sonic_FindSmaller
+; End of function Sonic_FindCeiling
 
-; ===========================================================================
+
+; ---------------------------------------------------------------------------
+; Subroutine to	find distance to ceiling, no width/height checks
+; ---------------------------------------------------------------------------
+
+Sonic_FindCeiling_Quick_UsePos: ; not called from anywhere
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 
-loc_14F7C:
+; loc_14F7C:
+Sonic_FindCeiling_Quick:
 		subi.w	#$A,d2
 		eori.w	#$F,d2
 		lea	(v_anglebuffer).w,a4
@@ -6553,11 +6578,16 @@ loc_14F7C:
 		moveq	#$E,d5
 		bsr.w	FindFloor
 		move.b	#-$80,d2
-		bra.w	loc_14E0A
+		bra.w	Sonic_SnapAngle
+; End of function Sonic_FindCeiling_Quick
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
+; ---------------------------------------------------------------------------
+; Subroutine to find the distance of an object to the ceiling.
+; Runs FindFloor without the need for inputs, using object RAM instead.
+; ---------------------------------------------------------------------------
 
+; FindCeilingObj:
 ObjHitCeiling:
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
@@ -6578,11 +6608,15 @@ ObjHitCeiling:
 
 locret_14FD4:
 		rts
-; End of function ObjHitCeiling
+; End of function FindCeilingObj
 
-; ===========================================================================
 
-loc_14FD6:
+; ---------------------------------------------------------------------------
+; Subroutine to find distance to left wall when Sonic is moving vertically
+; ---------------------------------------------------------------------------
+
+; loc_14FD6:
+Sonic_FindWallLeft:
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 		moveq	#0,d0
@@ -6616,20 +6650,22 @@ loc_14FD6:
 		bsr.w	FindWall
 		move.w	(sp)+,d0
 		move.b	#$40,d2
-		bra.w	loc_14DD0
+		bra.w	Sonic_FindSmaller
+; End of function Sonic_FindWallLeft
+
 
 ; ---------------------------------------------------------------------------
-; Subroutine to stop Sonic when he jumps at a wall
+; Subroutine to	find distance to left wall when moving vertically,
+; no width/height checks
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
-Sonic_HitWall:
+; Sonic_HitWall: <-- old misnomer
+Sonic_FindWallLeft_Quick_UsePos:
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 
-loc_1504A:
+; loc_1504A:
+Sonic_FindWallLeft_Quick:
 		subi.w	#$A,d3
 		eori.w	#$F,d3
 		lea	(v_anglebuffer).w,a4
@@ -6638,23 +6674,25 @@ loc_1504A:
 		moveq	#$E,d5
 		bsr.w	FindWall
 		move.b	#$40,d2
-		bra.w	loc_14E0A
-; End of function Sonic_HitWall
+		bra.w	Sonic_SnapAngle
+; End of function Sonic_FindWallLeft_Quick
+
 
 ; ---------------------------------------------------------------------------
-; Subroutine to detect when an object hits a wall to its left
+; Subroutine to find the distance of an object to the wall to its left
+; Runs FindWall without the need for inputs, taking inputs from local OST variables
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
+; FindWallLeftObj:
 ObjHitWallLeft:
 		add.w	obX(a0),d3
 		move.w	obY(a0),d2
+	if FixBugs
 		; Engine bug: colliding with left walls is erratic with this function.
 		; The cause is this: a missing instruction to flip collision on the found
 		; 16x16 block; this one:
-		;eori.w	#$F,d3
+		eori.w	#$F,d3
+	endif
 		lea	(v_anglebuffer).w,a4
 		move.b	#0,(a4)
 		movea.w	#-$10,a3
@@ -6663,12 +6701,13 @@ ObjHitWallLeft:
 		bsr.w	FindWall
 		move.b	(v_anglebuffer).w,d3
 		btst	#0,d3
-		beq.s	locret_15098
+		beq.s	.return
 		move.b	#$40,d3
 
-locret_15098:
+	.return:
 		rts
-; End of function ObjHitWallLeft
+; End of function FindWallLeftObj
+
 
 ; ===========================================================================
 
