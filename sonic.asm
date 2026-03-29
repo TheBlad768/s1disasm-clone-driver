@@ -2270,7 +2270,11 @@ Demo_Level:
 ; ---------------------------------------------------------------------------
 ; Levels used in demos
 ; ---------------------------------------------------------------------------
-Demo_Levels:	binclude	"misc/Demo Level Order - Intro.bin"
+Demo_Levels:	; previously in "misc/Demo Level Order - Intro.bin"
+		dc.w id_GHZ_act1
+		dc.w id_MZ_act1
+		dc.w id_SYZ_act1
+		dc.w $600 ; used as trigger to start the Special Stage demo
 		even
 
 ; ===========================================================================
@@ -3574,8 +3578,16 @@ EndDemo_Exit:
 ; ---------------------------------------------------------------------------
 ; Levels used in the end sequence demos
 ; ---------------------------------------------------------------------------
-EndDemo_Levels:	binclude	"misc/Demo Level Order - Ending.bin"
-
+EndDemo_Levels:	; previously in "misc/Demo Level Order - Ending.bin"
+		dc.w id_GHZ_act1
+		dc.w id_MZ_act2
+		dc.w id_SYZ_act3
+		dc.w id_LZ_act3
+		dc.w id_SLZ_act3
+		dc.w id_SBZ_act1
+		dc.w id_SBZ_act2
+		dc.w id_GHZ_act1
+		even
 ; ---------------------------------------------------------------------------
 ; Lamppost variables in the end sequence demo (Star Light Zone)
 ; ---------------------------------------------------------------------------
