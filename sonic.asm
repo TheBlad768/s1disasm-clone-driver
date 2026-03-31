@@ -577,7 +577,7 @@ VBla_14:
 VBla_04:
 		bsr.w	VBla_StandardTransfers
 		bsr.w	LoadTilesAsYouMove_BGOnly
-		bsr.w	ProcessDPLC_9Tiles
+		bsr.w	ProcessPLC_9Tiles
 		tst.w	(v_generictimer).w
 		beq.w	.end
 		subq.w	#1,(v_generictimer).w
@@ -670,7 +670,7 @@ VBla_UpdateScreen:
 		bsr.w	LoadTilesAsYouMove	; update level tiles while screen is moving
 		jsr	(AnimateLevelGfx).l	; updated animated tiles
 		jsr	(HUD_Update).l		; update HUD data
-		bsr.w	ProcessDPLC_3Tiles	; run a bit of PLC decompression
+		bsr.w	ProcessPLC_3Tiles	; run a bit of PLC decompression
 
 		tst.w	(v_generictimer).w	; is there time left in the generic timer left?
 		beq.w	.end			; if not, branch
@@ -751,7 +751,7 @@ VBla_18:
 		bsr.w	LoadTilesAsYouMove
 		jsr	(AnimateLevelGfx).l
 		jsr	(HUD_Update).l
-		bsr.w	ProcessDPLC_9Tiles
+		bsr.w	ProcessPLC_9Tiles
 		rts
 
 ; ===========================================================================
@@ -773,7 +773,7 @@ VBla_0E:
 VBla_12:
 		bsr.w	VBla_StandardTransfers
 		move.w	(v_hbla_hreg).w,(a5)
-		bra.w	ProcessDPLC_9Tiles
+		bra.w	ProcessPLC_9Tiles
 
 
 ; ===========================================================================
@@ -879,9 +879,10 @@ HBlank:
 		rte
 ; End of function HBlank
 
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to initialise joypads
+; Subroutine to initialise joypads (run once during boot)
 ; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
@@ -902,8 +903,9 @@ JoypadInit:
 ; End of function JoypadInit
 
 ; ---------------------------------------------------------------------------
-; Subroutine to read joypad input, and send it to the RAM
+; Subroutine to read joypad input, and send it to the RAM (read every V-Int)
 ; ---------------------------------------------------------------------------
+
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
@@ -935,6 +937,10 @@ ReadJoypads:
 		rts
 ; End of function ReadJoypads
 
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to setup the VDP with values used for the game itself
+; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -967,8 +973,8 @@ VDPSetupGame:
 		move.l	(sp)+,d1
 		rts
 ; End of function VDPSetupGame
-
 ; ===========================================================================
+
 VDPSetupArray:	dc.w $8004		; 8-colour mode
 		dc.w $8134		; enable V.interrupts, enable DMA
 		dc.w $8200+(vram_fg>>10) ; set foreground nametable address
@@ -990,6 +996,7 @@ VDPSetupArray:	dc.w $8004		; 8-colour mode
 		dc.w $9200		; window vertical position
 VDPSetupArray_End:
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to clear the screen
 ; ---------------------------------------------------------------------------
@@ -1023,6 +1030,7 @@ ClearScreen:
 		include "sound/engine/Functions.asm"
 		include	"_inc/PauseGame.asm"
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to copy a tile map from RAM to VRAM namespace
 
@@ -1051,19 +1059,27 @@ Tilemap_Cell:
 		dbf	d2,Tilemap_Line	; next line
 		rts
 ; End of function TilemapToVRAM
+; ===========================================================================
 
 		include	"_inc/Nemesis Decompression.asm"
 
-
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to load pattern load cues (aka to queue pattern load requests)
+; Subroutine to add entries from a given Pattern Load Cue list ID to the
+; PLC decompression queue (decompressed later during V-Blank)
 ; ---------------------------------------------------------------------------
-
 ; ARGUMENTS
 ; d0 = index of PLC list
 ; ---------------------------------------------------------------------------
+; NOTICE: This subroutine does not check for buffer overruns. The programmer
+;         (or hacker) is responsible for making sure that no more than
+;         16 load requests are copied into the buffer.
+;         _________DO NOT PUT MORE THAN 16 LOAD REQUESTS IN A LIST!__________
+;         (or if you change the size of Plc_Buffer, the limit becomes (Plc_Buffer_Only_End-Plc_Buffer)/6)
+; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+
 
 ; LoadPLC:
 AddPLC:
@@ -1095,18 +1111,14 @@ AddPLC:
 		rts
 ; End of function AddPLC
 
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Identical to AddPLC, but also stops the current PLC process, and loads
+; a brand new queue. (The same 16th entry warning as above applies!)
+; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-; Queue pattern load requests, but clear the PLQ first
 
-; ARGUMENTS
-; d0 = index of PLC list (see ArtLoadCues)
-
-; NOTICE: This subroutine does not check for buffer overruns. The programmer
-;         (or hacker) is responsible for making sure that no more than
-;         16 load requests are copied into the buffer.
-;         _________DO NOT PUT MORE THAN 16 LOAD REQUESTS IN A LIST!__________
-;         (or if you change the size of Plc_Buffer, the limit becomes (Plc_Buffer_Only_End-Plc_Buffer)/6)
 
 ; LoadPLC2:
 NewPLC:
@@ -1130,13 +1142,13 @@ NewPLC:
 		rts
 ; End of function NewPLC
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to clear the pattern load cues
+; Clear the pattern load queue ($FFF680 - $FFF700)
 ; ---------------------------------------------------------------------------
 
-; Clear the pattern load queue ($FFF680 - $FFF700)
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 ClearPLC:
@@ -1149,6 +1161,7 @@ ClearPLC:
 		rts
 ; End of function ClearPLC
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to use graphics listed in a pattern load cue
 ; ---------------------------------------------------------------------------
@@ -1197,29 +1210,30 @@ Rplc_Exit:
 		rts
 ; End of function RunPLC
 
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to decompress and dump a specified number of Nemesis-compressed
 ; PLC tiles from the PLC process list to VRAM. These are called from VBlank,
 ; probably done to smooth out level loading because of how slow Nemesis is.
+; (Note: Process"D"PLC is an old misnomer!)
 ; ---------------------------------------------------------------------------
 
-; sub_1642:
-ProcessDPLC_9Tiles:
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+
+
+; sub_1642: ProcessDPLC_9Tiles:
+ProcessPLC_9Tiles:
 		tst.w	(v_plc_patternsleft).w
 		beq.w	locret_16DA
 		move.w	#9,(v_plc_framepatternsleft).w	; process 9 Nemesis-compressed tiles
 		moveq	#0,d0
 		move.w	(v_plc_buffer+4).w,d0
 		addi.w	#$120,(v_plc_buffer+4).w
-		bra.s	ProcessDPLC
+		bra.s	ProcessPLC
 ; ===========================================================================
 
-; sub_165E: ProcessDPLC2:
-ProcessDPLC_3Tiles:
+; sub_165E: ProcessDPLC2: ProcessPLC_3Tiles:
+ProcessPLC_3Tiles:
 		tst.w	(v_plc_patternsleft).w
 		beq.s	locret_16DA
 		move.w	#3,(v_plc_framepatternsleft).w	; process 3 Nemesis-compressed tiles
@@ -1228,8 +1242,8 @@ ProcessDPLC_3Tiles:
 		addi.w	#$60,(v_plc_buffer+4).w
 ; ---------------------------------------------------------------------------
 
-; loc_1676:
-ProcessDPLC:
+; loc_1676: ProcessPLC:
+ProcessPLC:
 		lea	(vdp_control_port).l,a4
 		lsl.l	#2,d0
 		lsr.w	#2,d0
@@ -1289,10 +1303,13 @@ loc_16E2:
 	endif
 
 		rts
-; End of function ProcessDPLC
+; End of function ProcessPLC
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to execute the pattern load cue
+; Like AddPLC, but instead of adding entries to a queue to be processed later,
+; this will decompress and transfer all entries of the given PLC ID's list
+; immediately, blocking until it is done. Does not use or affect the queue.
 ; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
@@ -1318,7 +1335,6 @@ Qplc_Loop:
 		dbf	d1,Qplc_Loop	; repeat for length of PLC
 		rts
 ; End of function QuickPLC
-
 ; ===========================================================================
 
 		include	"_inc/Enigma Decompression.asm"
@@ -1329,7 +1345,8 @@ Qplc_Loop:
 		include	"_inc/PaletteCycle.asm"
 		include	"_inc/SBZ Palette Scripts.asm"
 
-		include	"_inc/Palette Fading.asm" ; includes "PaletteFadeIn", "PaletteFadeOut", "PaletteWhiteIn", and "PaletteWhiteOut"
+		; includes "PaletteFadeIn", "PaletteFadeOut", "PaletteWhiteIn", and "PaletteWhiteOut"
+		include	"_inc/Palette Fading.asm"
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1428,14 +1445,15 @@ loc_20BC:
 		moveq	#1,d0
 		rts
 ; End of function PalCycle_Sega
-
-; ===========================================================================
+; ---------------------------------------------------------------------------
 
 Pal_Sega1:	binclude	"palette/Sega1.bin"
 Pal_Sega2:	binclude	"palette/Sega2.bin"
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutines to load palettes
+; Subroutines to load main palettes into the fading buffer.
+; These get displayed once PaletteFadeIn/PaletteWhiteIn is called.
 
 ; input:
 ; d0 = index number for palette
@@ -1459,6 +1477,9 @@ PalLoad_Fade:
 		rts
 ; End of function PalLoad_Fade
 
+; ---------------------------------------------------------------------------
+; Subroutines to directly load main palettes to the active palette.
+; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -1477,8 +1498,10 @@ PalLoad:
 		rts
 ; End of function PalLoad
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Underwater palette loading subroutine
+; Subroutines to load underwater palettes into the fading buffer.
+; These get displayed once PaletteFadeIn/PaletteWhiteIn is called.
 ; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
@@ -1499,6 +1522,9 @@ PalLoad_Fade_Water:
 		rts
 ; End of function PalLoad_Fade_Water
 
+; ---------------------------------------------------------------------------
+; Subroutines to directly load underwater palettes to the active palette.
+; ---------------------------------------------------------------------------
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -1517,13 +1543,11 @@ PalLoad_Water:
 		dbf	d7,.loop
 		rts
 ; End of function PalLoad_Water
-
 ; ===========================================================================
 
 		include	"_inc/Palette Index.asm" ; includes palette bincludes
 
 ; ===========================================================================
-
 ; ---------------------------------------------------------------------------
 ; Subroutine to wait for VBlank routines to complete
 ; ---------------------------------------------------------------------------
@@ -1545,6 +1569,7 @@ WaitForVBla:
 		include	"_incObj/sub RandomNumber.asm"
 		include	"_incObj/sub CalcSine.asm"
 	if Revision=0
+		; Only in REV00, and even there it was never used
 		include	"_incObj/sub CalcSqrt.asm"
 	endif
 		include	"_incObj/sub CalcAngle.asm"
@@ -1554,6 +1579,7 @@ WaitForVBla:
 ; Sega screen
 ; ---------------------------------------------------------------------------
 
+; SegaScreen:
 GM_Sega:
 		move.b	#bgm_Stop,d0
 		bsr.w	QueueSound1 ; stop music
@@ -1633,6 +1659,7 @@ Sega_GotoTitle:
 ; Title screen
 ; ---------------------------------------------------------------------------
 
+; TitleScreen:
 GM_Title:
 		move.b	#bgm_Stop,d0
 		bsr.w	QueueSound1 ; stop music
@@ -1689,7 +1716,7 @@ GM_Title:
 		lea	(vdp_data_port).l,a6
 		locVRAM	ArtTile_Level_Select_Font*tile_size,4(a6)
 		lea	(Art_Text).l,a5	; load level select font
-		move.w	#(Art_Text_End-Art_Text)/2-1,d1
+		move.w	#(Art_Text_end-Art_Text)/2-1,d1
 
 Tit_LoadText:
 		move.w	(a5)+,(a6)
@@ -2377,11 +2404,15 @@ LevelMenuText:
 			warning "LevSel_Ptrs does not match expected line count."
 		endif
 	endif
-	charset
+
+	charset	; reset charset to default
 	even
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Music playlist
+; Music playlist for the start of a level. Note that restarting the music
+; after invincibility has worn off is controlled in MusicList2 (part of
+; Sonic's object). Bosses have the post-defeat music hardcoded.
 ; ---------------------------------------------------------------------------
 MusicList:
 		dc.b bgm_GHZ	; GHZ
@@ -2393,12 +2424,13 @@ MusicList:
 		zonewarning MusicList,1
 		dc.b bgm_FZ	; Ending
 		even
-; ===========================================================================
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Level
 ; ---------------------------------------------------------------------------
 
+; Level:
 GM_Level:
 		bset	#7,(v_gamemode).w ; add $80 to screen mode (for pre level sequence)
 		tst.w	(f_demo).w
@@ -2728,6 +2760,7 @@ loc_3BC8:
 		include	"_inc/LZWaterFeatures.asm"
 		include	"_inc/MoveSonicInDemo.asm"
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Collision index pointer loading subroutine
 ; ---------------------------------------------------------------------------
@@ -2743,7 +2776,6 @@ ColIndexLoad:
 		rts
 ; End of function ColIndexLoad
 
-; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Collision index pointers
 ; ---------------------------------------------------------------------------
@@ -2755,9 +2787,11 @@ ColPointers:	dc.l Col_GHZ
 		dc.l Col_SBZ
 		zonewarning ColPointers,4
 ;		dc.l Col_GHZ ; Pointer for Ending is missing by default.
+; ===========================================================================
 
 		include	"_inc/Oscillatory Routines.asm"
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to change synchronised animation variables (rings, giant rings)
 ; ---------------------------------------------------------------------------
@@ -2810,6 +2844,7 @@ SyncEnd:
 		rts
 ; End of function SynchroAnimate
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; End-of-act signpost pattern loading subroutine
 ; ---------------------------------------------------------------------------
@@ -2839,18 +2874,19 @@ SignpostArtLoad:
 .exit:
 		rts
 ; End of function SignpostArtLoad
-
 ; ===========================================================================
+
 Demo_GHZ:	binclude	"demodata/Intro - GHZ.bin"
 Demo_MZ:	binclude	"demodata/Intro - MZ.bin"
 Demo_SYZ:	binclude	"demodata/Intro - SYZ.bin"
 Demo_SS:	binclude	"demodata/Intro - Special Stage.bin"
-; ===========================================================================
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Special Stage
 ; ---------------------------------------------------------------------------
 
+; SpecialStage:
 GM_Special:
 		move.w	#sfx_EnterSS,d0
 		bsr.w	QueueSound2 ; play special stage entry sound
@@ -3031,6 +3067,7 @@ SS_ToLevel:
 ; Continue screen
 ; ---------------------------------------------------------------------------
 
+; ContinueScreen:
 GM_Continue:
 		bsr.w	PaletteFadeOut
 		disable_ints
@@ -3123,6 +3160,7 @@ Map_ContScr:	include	"_maps/Continue Screen.asm"
 ; Ending sequence in Green Hill Zone
 ; ---------------------------------------------------------------------------
 
+; EndingSequence:
 GM_Ending:
 		move.b	#bgm_Stop,d0
 		bsr.w	QueueSound1 ; stop music
@@ -3281,6 +3319,7 @@ End_SlowFade:
 		bsr.w	PaletteWhiteIn
 		bra.w	End_MainLoop
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine controlling Sonic on the ending sequence
 ; ---------------------------------------------------------------------------
@@ -3345,6 +3384,7 @@ Map_ESth:	include	"_maps/Ending Sequence STH.asm"
 ; Credits ending sequence
 ; ---------------------------------------------------------------------------
 
+; CreditsScreen:
 GM_Credits:
 		bsr.w	ClearPLC
 		bsr.w	PaletteFadeOut
@@ -3401,6 +3441,7 @@ Cred_WaitLoop:
 		beq.w	TryAgainEnd	; if yes, branch
 		rts
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Ending sequence demo loading subroutine
 ; ---------------------------------------------------------------------------
@@ -3453,6 +3494,8 @@ EndDemo_Levels:	; previously in "misc/Demo Level Order - Ending.bin"
 		dc.w id_SBZ_act2
 		dc.w id_GHZ_act1
 		even
+
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Lamppost variables in the end sequence demo (Star Light Zone)
 ; ---------------------------------------------------------------------------
@@ -3468,11 +3511,13 @@ EndDemo_LampVar:
 		dc.w $308		; water height
 		dc.b 1,	1		; water routine and state
 EndDemo_LampVar_End:
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; "TRY AGAIN" and "END" screens
 ; ---------------------------------------------------------------------------
 
+; TryAgainScreen:
 TryAgainEnd:
 		bsr.w	ClearPLC
 		bsr.w	PaletteFadeOut
@@ -3506,6 +3551,7 @@ TryAgainEnd:
 ; ---------------------------------------------------------------------------
 ; "TRY AGAIN" and "END" screen main loop
 ; ---------------------------------------------------------------------------
+
 TryAg_MainLoop:
 		bsr.w	PauseGame
 		move.b	#4,(v_vbla_routine).w
@@ -3530,9 +3576,11 @@ TryAg_Exit:
 		include	"_incObj/8C Try Again Emeralds.asm"
 Map_EEgg:	include	"_maps/Try Again & End Eggman.asm"
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Ending sequence demos
 ; ---------------------------------------------------------------------------
+
 Demo_EndGHZ1:	binclude	"demodata/Ending - GHZ1.bin"
 		even
 Demo_EndMZ:	binclude	"demodata/Ending - MZ.bin"
@@ -3935,8 +3983,9 @@ Map_Pri:	include	"_maps/Prison Capsule.asm"
 
 ; ===========================================================================
 
-		include	"_inc/Special Stage Loading & Drawing.asm"	; includes the subroutines "SS_ShowLayout", "SS_AniWallsRings",
-									; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
+		; includes the subroutines "SS_ShowLayout", "SS_AniWallsRings",
+		; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
+		include	"_inc/Special Stage Loading & Drawing.asm"
 
 SS_MapIndex:	include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
 SS_MapIndex_End:
@@ -3989,6 +4038,8 @@ Art_LivesNums:	binclude "artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 				dc.b	[$300]$FF
 			endif
 		endif
+
+; ===========================================================================
 
 	if Revision=0
 Nem_SegaLogo:	binclude	"artnem/Sega Logo.nem"	; large Sega logo
@@ -4437,6 +4488,8 @@ Nem_CreditText:	binclude	"artnem/Ending - Credits.nem"
 Nem_EndStH:	binclude	"artnem/Ending - StH Logo.nem"
 		even
 
+; ---------------------------------------------------------------------------
+
 		; AngleMap starts at $62900 in all revisions, which amounts
 		; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
@@ -4647,6 +4700,8 @@ Level_EndUnk:	dc.l 0
 Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 		even
 
+; ---------------------------------------------------------------------------
+
 		; ObjPos_Index starts at $6B000 in all revisions, which amounts
 		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
 		; From a technical standpoint, this padding serves no purpose.
@@ -4815,6 +4870,8 @@ ObjPos_End:	binclude	"objpos/ending.bin"
 
 ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
+; ---------------------------------------------------------------------------
+
 		; SoundDriver starts at $71990 in all revisions, which amounts
 		; to $62A bytes of padding for rev00 and $63C for rev01/rev02.
 		; It appears to be placed in such a way that the sound driver
@@ -4827,6 +4884,8 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 				dc.b	[$63C]$FF
 			endif
 		endif
+
+; ---------------------------------------------------------------------------
 
 ; ---------------------------------------------------------------------------
 ; Vladikcomper's Mega PCM 2.0 - DAC Sound Driver
