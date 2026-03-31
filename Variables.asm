@@ -384,7 +384,7 @@ v_lamp_wtrstat:		ds.b	1		; water state at lamppost
 v_lamp_lives:		ds.b	1		; lives counter at lamppost
 			ds.b	2		; unused
 v_emeralds:		ds.b	1		; number of chaos emeralds
-v_emldlist:		ds.b	6		; which individual emeralds you have (00 = no; 01 = yes)
+v_emldlist:		ds.b	6		; special stage where each emerald was obtained
 v_oscillate:		ds.w	1		; oscillation bitfield
 v_timingandscreenvariables:
 v_timingvariables:
