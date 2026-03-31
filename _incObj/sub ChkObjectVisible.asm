@@ -52,11 +52,25 @@ ChkPartiallyVisible:
 		cmpi.w	#320,d0
 		bge.s	.offscreen2
 
+	if FixBugs
+		; fix partial visibility check for height, too
+		moveq	#0,d1
+		move.b	obHeight(a0),d1
+		move.w	obY(a0),d0
+		sub.w	(v_screenposy).w,d0
+		add.w	d1,d0
+		bmi.s	.offscreen2
+		add.w	d1,d1
+		sub.w	d1,d0
+		cmpi.w	#224,d1
+		bge.s	.offscreen2
+	else
 		move.w	obY(a0),d1
 		sub.w	(v_screenposy).w,d1
 		bmi.s	.offscreen2
 		cmpi.w	#224,d1
 		bge.s	.offscreen2
+	endif
 
 		moveq	#0,d0
 		rts

@@ -162,11 +162,15 @@ Debug_ChgItem:
 		beq.s	.backtonormal	; if not, branch
 		jsr	(FindFreeObj).l
 		bne.s	.backtonormal
+	if FixBugs
+		; fix not being able to place more rings and such after collecting one
+		clr.b	(v_objstate+2).w
+	endif
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		_move.b	obMap(a0),obID(a1)	; create object
 		move.b	obRender(a0),obRender(a1)
-		move.b	obRender(a0),obStatus(a1)
+		move.b	obRender(a0),obStatus(a1)	
 		andi.b	#$7F,obStatus(a1)
 		moveq	#0,d0
 		move.b	(v_debugitem).w,d0

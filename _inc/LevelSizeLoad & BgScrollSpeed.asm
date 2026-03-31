@@ -12,6 +12,10 @@ LevelSizeLoad:
 		move.b	d0,(v_unused9).w
 		move.b	d0,(v_unused10).w
 		move.b	d0,(v_dle_routine).w
+	if FixBugs
+		; Fix title screen not always scrolling after a game over
+		move.b	d0,(f_nobgscroll).w
+	endif
 		move.w	(v_zone).w,d0
 		lsl.b	#6,d0
 		lsr.w	#4,d0

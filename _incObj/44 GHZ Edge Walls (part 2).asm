@@ -32,9 +32,12 @@ loc_8A92:
 ; ===========================================================================
 
 loc_8AA8:
-		btst	#5,obStatus(a0)
-		beq.s	locret_8AC2
-		move.w	#id_Run,obAnim(a1)
+		btst	#5,obStatus(a0)	; is Sonic pushing?
+		beq.s	locret_8AC2	; if not, branch
+	if FixBugs=0
+		; This causes the infamous "walk-jump bug"
+		move.w	#id_Run,obAnim(a1) ; use running animation
+	endif
 
 loc_8AB6:
 		bclr	#5,obStatus(a0)

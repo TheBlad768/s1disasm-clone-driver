@@ -58,7 +58,13 @@ Drown_ChkWater:	; Routine 4
 		move.b	#6,obRoutine(a0) ; goto Drown_Display next
 		addq.b	#7,obAnim(a0)
 		cmpi.b	#$D,obAnim(a0)
+	if FixBugs
+		; fixes a graphical glitch with bubbles hitting the surface
+		bls.s	Drown_Display
+		move.b	#$D,obAnim(a0)
+	else
 		beq.s	Drown_Display
+	endif
 		bra.s	Drown_Display
 ; ===========================================================================
 
@@ -239,7 +245,7 @@ Drown_Countdown:; Routine $A
 		; Correct Drowning Bugs
 		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
 		move.b	#$A,obRoutine(a0)	; Force the character to drown
-		move.b	#0,(f_timecount).w	; Stop the timer immediately 
+		clr.b	(f_timecount).w		; Stop the timer immediately 
 	endif
 		movea.l	(sp)+,a0
 		rts

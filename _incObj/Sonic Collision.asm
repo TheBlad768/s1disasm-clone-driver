@@ -1,4 +1,3 @@
-
 ; ---------------------------------------------------------------------------
 ; Subroutine to	calculate distance from Sonic to the wall in front of him
 ; ---------------------------------------------------------------------------
@@ -58,7 +57,7 @@ loc_14D3C:
 		cmpi.b	#$40,d0
 		beq.w	Sonic_FindWallLeft_Quick
 		bra.w	Sonic_FindWallRight_Quick
-; End of function Sonic_WalkSpeed
+; End of function Sonic_CalcRoomAhead
 
 
 ; ---------------------------------------------------------------------------
@@ -255,7 +254,7 @@ ObjHitWallRight:
 
 	.return:
 		rts
-; End of function FindWallRightObj
+; End of function ObjHitWallRight
 
 
 ; ---------------------------------------------------------------------------
@@ -350,7 +349,7 @@ ObjHitCeiling:
 
 locret_14FD4:
 		rts
-; End of function FindCeilingObj
+; End of function ObjHitCeiling
 
 
 ; ---------------------------------------------------------------------------
@@ -448,4 +447,4 @@ ObjHitWallLeft:
 
 	.return:
 		rts
-; End of function FindWallLeftObj
+; End of function ObjHitWallLeft
