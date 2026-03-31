@@ -37,7 +37,7 @@ EggmanCylinder_Main:	; Routine
 		move.l	#Map_EggCyl,obMap(a0)
 		move.w	(a1)+,obX(a0)
 		move.w	(a1),obY(a0)
-		move.w	(a1)+,objoff_38(a0)
+		move.w	(a1)+,obBossY(a0)
 		move.b	#$20,obHeight(a0)
 		move.b	#$60,obWidth(a0)
 		move.b	#$20,obActWid(a0)
@@ -59,7 +59,7 @@ loc_1A4DC:
 
 loc_1A4EA:
 		move.l	objoff_3C(a0),d0
-		move.l	objoff_38(a0),d1
+		move.l	obBossY(a0),d1
 		add.l	d0,d1
 		swap	d1
 		move.w	d1,obY(a0)
@@ -136,7 +136,7 @@ EggmanCylinder_Bottom:
 		tst.b	objoff_29(a0)
 		bne.s	loc_1A5D4
 		movea.l	objoff_34(a0),a1
-		tst.b	obColProp(a1)
+		tst.b	obBossHits(a1)
 		bne.s	loc_1A5B4
 		bsr.w	BossDefeated
 		subi.l	#$10000,objoff_3C(a0)
@@ -175,7 +175,7 @@ EggmanCylinder_Top:
 		tst.b	objoff_29(a0)
 		bne.s	loc_1A646
 		movea.l	objoff_34(a0),a1
-		tst.b	obColProp(a1)
+		tst.b	obBossHits(a1)
 		bne.s	loc_1A626
 		bsr.w	BossDefeated
 		addi.l	#$10000,objoff_3C(a0)

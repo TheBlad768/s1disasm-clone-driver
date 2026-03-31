@@ -201,6 +201,13 @@ objoff_3D:	equ $3D
 objoff_3E:	equ $3E
 objoff_3F:	equ $3F
 
+; Object variables used by bosses
+obBossHits:	equ obColProp ; number of remaining hit points for boss, defaults to 8
+obBossX:	equ objoff_30 ; base X boss position (2 bytes)
+obBossY:	equ objoff_38 ; base Y boss position without swaying effect (2 bytes)
+obBossFlash:	equ objoff_3E ; number of remaining flash frames after taking a hit
+
+; Size definition for one object in RAM ($40 bytes)
 object_size_bits:	equ 6
 object_size:	equ 1<<object_size_bits
 

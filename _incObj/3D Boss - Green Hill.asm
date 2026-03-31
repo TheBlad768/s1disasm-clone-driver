@@ -44,10 +44,10 @@ BGHZ_LoadBoss:
 		dbf	d1,BGHZ_Loop	; repeat sequence 2 more times
 
 loc_17772:
-		move.w	obX(a0),objoff_30(a0)
-		move.w	obY(a0),objoff_38(a0)
+		move.w	obX(a0),obBossX(a0)
+		move.w	obY(a0),obBossY(a0)
 		move.b	#$F,obColType(a0)
-		move.b	#8,obColProp(a0) ; set number of hits to 8
+		move.b	#8,obBossHits(a0) ; set number of hits to 8
 
 BGHZ_ShipMain:	; Routine 2
 		moveq	#0,d0
@@ -74,7 +74,7 @@ BGHZ_ShipIndex:	dc.w BGHZ_ShipStart-BGHZ_ShipIndex
 BGHZ_ShipStart:
 		move.w	#$100,obVelY(a0) ; move ship down
 		bsr.w	BossMove
-		cmpi.w	#boss_ghz_y+$38,objoff_38(a0)
+		cmpi.w	#boss_ghz_y+$38,obBossY(a0)
 		bne.s	loc_177E6
 		move.w	#0,obVelY(a0)	; stop ship
 		addq.b	#2,ob2ndRout(a0) ; goto next routine
@@ -83,9 +83,9 @@ loc_177E6:
 		move.b	objoff_3F(a0),d0
 		jsr	(CalcSine).l
 		asr.w	#6,d0
-		add.w	objoff_38(a0),d0
+		add.w	obBossY(a0),d0
 		move.w	d0,obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossX(a0),obX(a0)
 		addq.b	#2,objoff_3F(a0)
 		cmpi.b	#8,ob2ndRout(a0)
 		bhs.s	locret_1784A
@@ -93,9 +93,9 @@ loc_177E6:
 		bmi.s	loc_1784C
 		tst.b	obColType(a0)
 		bne.s	locret_1784A
-		tst.b	objoff_3E(a0)
+		tst.b	obBossFlash(a0)
 		bne.s	BGHZ_ShipFlash
-		move.b	#$20,objoff_3E(a0)	; set number of times for ship to flash
+		move.b	#$20,obBossFlash(a0)	; set number of times for ship to flash
 		move.w	#sfx_HitBoss,d0
 		jsr	(QueueSound2).l	; play boss damage sound
 
@@ -108,7 +108,7 @@ BGHZ_ShipFlash:
 
 loc_1783C:
 		move.w	d0,(a1)		; load colour stored in d0
-		subq.b	#1,objoff_3E(a0)
+		subq.b	#1,obBossFlash(a0)
 		bne.s	locret_1784A
 		move.b	#$F,obColType(a0)
 
@@ -158,8 +158,8 @@ locret_178A2:
 ; ---------------------------------------------------------------------------
 
 BossMove:
-		move.l	objoff_30(a0),d2
-		move.l	objoff_38(a0),d3
+		move.l	obBossX(a0),d2
+		move.l	obBossY(a0),d3
 		move.w	obVelX(a0),d0
 		ext.l	d0
 		asl.l	#8,d0
@@ -168,8 +168,8 @@ BossMove:
 		ext.l	d0
 		asl.l	#8,d0
 		add.l	d0,d3
-		move.l	d2,objoff_30(a0)
-		move.l	d3,objoff_38(a0)
+		move.l	d2,obBossX(a0)
+		move.l	d3,obBossY(a0)
 		rts
 ; End of function BossMove
 
@@ -182,7 +182,7 @@ BGHZ_MakeBall:
 		move.w	#-$100,obVelX(a0)
 		move.w	#-$40,obVelY(a0)
 		bsr.w	BossMove
-		cmpi.w	#boss_ghz_x+$A0,objoff_30(a0)
+		cmpi.w	#boss_ghz_x+$A0,obBossX(a0)
 		bne.s	loc_17916
 		move.w	#0,obVelX(a0)
 		move.w	#0,obVelY(a0)
@@ -190,8 +190,8 @@ BGHZ_MakeBall:
 		jsr	(FindNextFreeObj).l
 		bne.s	loc_17910
 		_move.b	#id_BossBall,obID(a1) ; load swinging ball object
-		move.w	objoff_30(a0),obX(a1)
-		move.w	objoff_38(a0),obY(a1)
+		move.w	obBossX(a0),obX(a1)
+		move.w	obBossY(a0),obY(a1)
 		move.l	a0,objoff_34(a1)
 
 loc_17910:
@@ -207,7 +207,7 @@ BGHZ_ShipMove:
 		addq.b	#2,ob2ndRout(a0)
 		move.w	#$40-1,objoff_3C(a0)
 		move.w	#$100,obVelX(a0) ; move the ship sideways
-		cmpi.w	#boss_ghz_x+$A0,objoff_30(a0)
+		cmpi.w	#boss_ghz_x+$A0,obBossX(a0)
 		bne.s	BGHZ_Reverse
 		move.w	#($40*2)-1,objoff_3C(a0)
 		move.w	#$40,obVelX(a0)
@@ -335,7 +335,7 @@ BGHZ_FaceMain:	; Routine 4
 		move.b	ob2ndRout(a1),d0
 		subq.b	#4,d0
 		bne.s	loc_17A3E
-		cmpi.w	#boss_ghz_x+$A0,objoff_30(a1)
+		cmpi.w	#boss_ghz_x+$A0,obBossX(a1)
 		bne.s	loc_17A46
 		moveq	#4,d1
 

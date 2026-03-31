@@ -99,7 +99,7 @@ loc_19E3E:
 
 loc_19E5A:
 		move.w	#0,objoff_34(a0)
-		move.b	#8,obColProp(a0) ; set number of hits to 8
+		move.b	#8,obBossHits(a0) ; set number of hits to 8
 		move.w	#-1,objoff_30(a0)
 
 BossFinal_Eggman:	; Routine 2
@@ -203,10 +203,10 @@ loc_19F6A:
 		bne.s	loc_19F88
 	if FixBugs
 		; Fix underflowing hit counter to 255 on defeat
-		tst.b	obColProp(a0)	; has the boss been defeated?
+		tst.b	obBossHits(a0)	; has the boss been defeated?
 		beq.s	loc_19F9C	; if so, don't let it be hit again
 	endif
-		subq.b	#1,obColProp(a0)
+		subq.b	#1,obBossHits(a0)
 		move.b	#$64,objoff_35(a0)
 		move.w	#sfx_HitBoss,d0
 		jsr	(QueueSound2).l	; play boss damage sound
@@ -220,7 +220,7 @@ loc_19F88:
 
 loc_19F96:
 	if FixBugs
-		tst.b	obColProp(a0)	; has the boss been defeated?
+		tst.b	obBossHits(a0)	; has the boss been defeated?
 		beq.s	loc_19F9C	; if so, don't reset to laugh animation
 	endif
 		move.b	#1,obAnim(a0)
@@ -231,7 +231,7 @@ loc_19F9C:
 ; ===========================================================================
 
 loc_19FA6:
-		tst.b	obColProp(a0)
+		tst.b	obBossHits(a0)
 		beq.s	loc_19FBC
 		addq.b	#2,objoff_34(a0)
 		move.w	#-1,objoff_30(a0)
@@ -396,7 +396,7 @@ loc_1A142:
 		bne.s	loc_1A15C
 		addq.b	#2,objoff_34(a0)
 		move.w	#-$180,obVelY(a0)
-		move.b	#1,obColProp(a0)
+		move.b	#1,obBossHits(a0) ; set number oescaping Eggman hits to 1
 
 loc_1A15C:
 		lea	Ani_SEgg(pc),a1
@@ -541,7 +541,7 @@ BossFinal_Cockpit: ; Routine 6
 
 loc_1A2E4:
 		move.b	#1,obAnim(a0)
-		tst.b	obColProp(a1)
+		tst.b	obBossHits(a1)
 		ble.s	loc_1A312
 		move.b	#6,obAnim(a0)
 		move.l	#Map_Eggman,obMap(a0)

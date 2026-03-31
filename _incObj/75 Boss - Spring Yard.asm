@@ -25,10 +25,10 @@ BossSpringYard_ObjData:
 BossSpringYard_Main:	; Routine 0
 		move.w	#boss_syz_x+$1B0,obX(a0)
 		move.w	#boss_syz_y+$E,obY(a0)
-		move.w	obX(a0),objoff_30(a0)
-		move.w	obY(a0),objoff_38(a0)
+		move.w	obX(a0),obBossX(a0)
+		move.w	obY(a0),obBossY(a0)
 		move.b	#$F,obColType(a0)
-		move.b	#8,obColProp(a0) ; set number of hits to 8
+		move.b	#8,obBossHits(a0) ; set number of hits to 8
 		lea	BossSpringYard_ObjData(pc),a2
 		movea.l	a0,a1
 		moveq	#3,d1
@@ -80,7 +80,7 @@ BossSpringYard_ShipIndex:
 ; loc_191CC:
 BSYZ_ShipStart:
 		move.w	#-$100,obVelX(a0)
-		cmpi.w	#boss_syz_x+$138,objoff_30(a0)
+		cmpi.w	#boss_syz_x+$138,obBossX(a0)
 		bhs.s	loc_191DE
 		addq.b	#2,ob2ndRout(a0)
 
@@ -93,8 +93,8 @@ loc_191DE:
 
 loc_191F2:
 		bsr.w	BossMove
-		move.w	objoff_38(a0),obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossY(a0),obY(a0)
+		move.w	obBossX(a0),obX(a0)
 
 loc_19202:
 		move.w	obX(a0),d0
@@ -107,9 +107,9 @@ loc_19202:
 		bmi.s	loc_19258
 		tst.b	obColType(a0)
 		bne.s	locret_19256
-		tst.b	objoff_3E(a0)
+		tst.b	obBossFlash(a0)
 		bne.s	loc_1923A
-		move.b	#$20,objoff_3E(a0)
+		move.b	#$20,obBossFlash(a0)
 		move.w	#sfx_HitBoss,d0
 		jsr	(QueueSound2).l	; play boss damage sound
 
@@ -122,7 +122,7 @@ loc_1923A:
 
 loc_19248:
 		move.w	d0,(a1)
-		subq.b	#1,objoff_3E(a0)
+		subq.b	#1,obBossFlash(a0)
 		bne.s	locret_19256
 		move.b	#$F,obColType(a0)
 
@@ -141,7 +141,7 @@ loc_19258:
 
 ; loc_19270:
 BSYZ_ShipMove:
-		move.w	objoff_30(a0),d0
+		move.w	obBossX(a0),d0
 		move.w	#$140,obVelX(a0)
 		btst	#0,obStatus(a0)
 		bne.s	loc_1928E
@@ -180,7 +180,7 @@ loc_192AE:
 		move.b	objoff_34(a0),d0
 		asl.w	#5,d0
 		addi.w	#boss_syz_x+$10,d0
-		move.w	d0,objoff_30(a0)
+		move.w	d0,obBossX(a0)
 		bsr.w	BossSpringYard_FindBlocks
 		addq.b	#2,ob2ndRout(a0)
 		clr.w	obSubtype(a0)
@@ -206,10 +206,10 @@ off_192FA:	dc.w BSYZ_Descend-off_192FA
 ; loc_19302:
 BSYZ_Descend:
 		move.w	#$180,obVelY(a0)
-		move.w	objoff_38(a0),d0
+		move.w	obBossY(a0),d0
 		cmpi.w	#boss_syz_y+$8A,d0
 		blo.s	loc_19344
-		move.w	#boss_syz_y+$8A,objoff_38(a0)
+		move.w	#boss_syz_y+$8A,obBossY(a0)
 		clr.w	objoff_3C(a0)
 		moveq	#-1,d0
 		move.w	objoff_36(a0),d0
@@ -253,9 +253,9 @@ loc_19366:
 		neg.w	d0
 
 loc_1937C:
-		add.w	objoff_38(a0),d0
+		add.w	obBossY(a0),d0
 		move.w	d0,obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossX(a0),obX(a0)
 		bra.w	loc_19202
 ; ===========================================================================
 
@@ -267,7 +267,7 @@ BSYZ_LiftStop:
 		subi.w	#$18,d0
 
 loc_1939C:
-		cmp.w	objoff_38(a0),d0
+		cmp.w	obBossY(a0),d0
 		blt.s	loc_193BE
 		move.w	#8,objoff_3C(a0)
 		tst.w	objoff_36(a0)
@@ -321,14 +321,14 @@ loc_19406:
 		moveq	#2,d0
 
 loc_19410:
-		cmpi.w	#boss_syz_y+$E,objoff_38(a0)
+		cmpi.w	#boss_syz_y+$E,obBossY(a0)
 		beq.s	loc_19424
 		blt.s	loc_1941C
 		neg.w	d0
 
 loc_1941C:
 		tst.w	objoff_36(a0)
-		add.w	d0,objoff_38(a0)
+		add.w	d0,obBossY(a0)
 
 loc_19424:
 		moveq	#0,d0
@@ -340,9 +340,9 @@ loc_19424:
 		neg.w	d0
 
 loc_19438:
-		add.w	objoff_38(a0),d0
+		add.w	obBossY(a0),d0
 		move.w	d0,obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossX(a0),obX(a0)
 
 loc_19446:
 		bra.w	loc_19202
