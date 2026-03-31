@@ -59,11 +59,11 @@ ZoneCount = 6
 
 ; ===========================================================================
 ; Equates section - Names for constants
-	include	"Constants.asm"
+	include	"_Constants.asm"
 
 ; ===========================================================================
 ; Equates section - Names for variables
-	include	"Variables.asm"
+	include	"_Variables.asm"
 
 ; ===========================================================================
 ; Include sound driver macros and functions
