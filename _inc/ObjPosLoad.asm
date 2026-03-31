@@ -2,9 +2,6 @@
 ; Subroutine to load a level's objects
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ObjPosLoad:
 		moveq	#0,d0
 		move.b	(v_opl_routine).w,d0

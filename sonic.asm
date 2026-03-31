@@ -511,9 +511,7 @@ loc_478:
 		movem.l	(v_regbuffer).w,d0-a7
 		enable_ints
 		rte	
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 ShowErrorMessage:
 		lea	(vdp_data_port).l,a6
@@ -568,9 +566,6 @@ ErrorText:	dc.w .exception-ErrorText
 
 ; ===========================================================================
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ShowErrorValue:
 		move.w	#ArtTile_Error_Handler_Font+10,(a6)	; display "$" symbol
 		moveq	#8-1,d2
@@ -581,10 +576,7 @@ ShowErrorValue:
 		dbf	d2,.loop
 		rts
 ; End of function ShowErrorValue
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 .shownumber:
 		move.w	d0,d1
@@ -598,10 +590,7 @@ ShowErrorValue:
 		move.w	d1,(a6)
 		rts
 ; End of function sub_5CA
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 ErrorWaitForC:
 		bsr.w	ReadJoypads
@@ -825,9 +814,6 @@ VBla_08:
 ; Also deducts the generic timer that controls the length of a Demo.
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ; Demo_Time:
 VBla_UpdateScreen:
 		bsr.w	LoadTilesAsYouMove	; update level tiles while screen is moving
@@ -962,9 +948,6 @@ VBla_16:
 ; Subroutine to perform standard VRAM transfers (palette, sprites, H-scroll)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ; sub_106E:
 VBla_StandardTransfers:
 		stopZ80
@@ -991,9 +974,7 @@ VBla_StandardTransfers:
 ; Horizontal interrupt (exclusively used for the LZ water palette effect)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
+; PalToCRAM: <-- old misnomer
 HBlank:
 		disable_ints
 		tst.w	(f_hbla_pal).w		; is palette set to change?
@@ -1033,9 +1014,6 @@ HBlank:
 ; Subroutine to initialise joypads (run once during boot)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 JoypadInit:
 		stopZ80
 		waitZ80
@@ -1050,9 +1028,6 @@ JoypadInit:
 ; ---------------------------------------------------------------------------
 ; Subroutine to read joypad input, and send it to the RAM (read every V-Int)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 ReadJoypads:
 		lea	(v_jpadhold1).w,a0	; address where joypad states are written
@@ -1086,9 +1061,6 @@ ReadJoypads:
 ; ---------------------------------------------------------------------------
 ; Subroutine to setup the VDP with values used for the game itself
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 VDPSetupGame:
 		lea	(vdp_control_port).l,a0
@@ -1146,9 +1118,6 @@ VDPSetupArray_End:
 ; Subroutine to clear the screen
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ClearScreen:
 		fillVRAM	0, vram_fg, vram_fg+plane_size_64x32 ; clear foreground namespace
 		fillVRAM	0, vram_bg, vram_bg+plane_size_64x32 ; clear background namespace
@@ -1176,8 +1145,6 @@ ClearScreen:
 ; ---------------------------------------------------------------------------
 ; Subroutine to load the DAC driver
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; SoundDriverLoad:
 DACDriverLoad:
@@ -1218,9 +1185,6 @@ DACDriverLoad:
 ;	d2 = height (cells)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 TilemapToVRAM:
 		lea	(vdp_data_port).l,a6
 		move.l	#$800000,d4
@@ -1254,9 +1218,6 @@ Tilemap_Cell:
 ;         _________DO NOT PUT MORE THAN 16 LOAD REQUESTS IN A LIST!__________
 ;         (or if you change the size of Plc_Buffer, the limit becomes (Plc_Buffer_Only_End-Plc_Buffer)/6)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 ; LoadPLC:
 AddPLC:
@@ -1294,9 +1255,6 @@ AddPLC:
 ; a brand new queue. (The same 16th entry warning as above applies!)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ; LoadPLC2:
 NewPLC:
 		movem.l	a1-a2,-(sp)
@@ -1325,9 +1283,6 @@ NewPLC:
 ; Clear the pattern load queue ($FFF680 - $FFF700)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ClearPLC:
 		lea	(v_plc_buffer).w,a2 ; PLC buffer space in RAM
 		moveq	#(v_plc_buffer_end-v_plc_buffer)/4-1,d0
@@ -1342,9 +1297,6 @@ ClearPLC:
 ; ---------------------------------------------------------------------------
 ; Subroutine to use graphics listed in a pattern load cue
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 RunPLC:
 		tst.l	(v_plc_buffer).w
@@ -1394,9 +1346,6 @@ Rplc_Exit:
 ; probably done to smooth out level loading because of how slow Nemesis is.
 ; (Note: Process"D"PLC is an old misnomer!)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 ; sub_1642: ProcessDPLC_9Tiles:
 ProcessPLC_9Tiles:
@@ -1489,9 +1438,6 @@ loc_16E2:
 ; immediately, blocking until it is done. Does not use or affect the queue.
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 QuickPLC:
 		lea	(ArtLoadCues).l,a1 ; load the PLC index
 		add.w	d0,d0
@@ -1529,9 +1475,6 @@ Qplc_Loop:
 ; ---------------------------------------------------------------------------
 ; Palette cycling routine - Sega logo
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 PalCycle_Sega:
 		tst.b	(v_pcyc_time+1).w
@@ -1636,9 +1579,6 @@ Pal_Sega2:	binclude	"palette/Sega2.bin"
 ; d0 = index number for palette
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 PalLoad_Fade:
 		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
@@ -1657,9 +1597,6 @@ PalLoad_Fade:
 ; ---------------------------------------------------------------------------
 ; Subroutines to directly load main palettes to the active palette.
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 PalLoad:
 		lea	(Pal_Index).l,a1
@@ -1681,9 +1618,6 @@ PalLoad:
 ; These get displayed once PaletteFadeIn/PaletteWhiteIn is called.
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 PalLoad_Fade_Water:
 		lea	(Pal_Index).l,a1
 		lsl.w	#3,d0
@@ -1702,9 +1636,6 @@ PalLoad_Fade_Water:
 ; ---------------------------------------------------------------------------
 ; Subroutines to directly load underwater palettes to the active palette.
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 PalLoad_Water:
 		lea	(Pal_Index).l,a1
@@ -1728,9 +1659,6 @@ PalLoad_Water:
 ; ---------------------------------------------------------------------------
 ; Subroutine to wait for VBlank routines to complete
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 ; DelayProgram:
 WaitForVBla:
@@ -2923,9 +2851,6 @@ loc_3BC8:
 ; Collision index pointer loading subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ColIndexLoad:
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
@@ -2953,9 +2878,6 @@ ColPointers:	dc.l Col_GHZ
 ; ---------------------------------------------------------------------------
 ; Subroutine to change synchronised animation variables (rings, giant rings)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 SynchroAnimate:
 
@@ -3006,9 +2928,6 @@ SyncEnd:
 ; ---------------------------------------------------------------------------
 ; End-of-act signpost pattern loading subroutine
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 SignpostArtLoad:
 		tst.w	(v_debuguse).w	; is debug mode being used?
@@ -3482,9 +3401,6 @@ End_SlowFade:
 ; Subroutine controlling Sonic on the ending sequence
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 End_MoveSonic:
 		move.b	(v_sonicend).w,d0
 		bne.s	End_MoveSon2
@@ -3603,9 +3519,6 @@ Cred_WaitLoop:
 ; ---------------------------------------------------------------------------
 ; Ending sequence demo loading subroutine
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 EndingDemoLoad:
 		move.w	(v_creditsnum).w,d0
@@ -3766,7 +3679,7 @@ Demo_EndGHZ2:	binclude	"demodata/Ending - GHZ2.bin"
 		include	"_inc/DeformLayers (JP1).asm"
 		include	"_inc/Level Drawing (JP1).asm"
 	endif
-		include	"_inc/LevelLayoutLoad.asm" ; includes LevelLayoutLoad2
+		include	"_inc/LevelLayoutLoad.asm" ; includes LevelDataLoad, LevelLayoutLoad, and LevelLayoutLoad2
 
 ; ===========================================================================
 

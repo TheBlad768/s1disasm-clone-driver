@@ -95,9 +95,7 @@ BossBlock_Frag:	; Routine 4
 
 BossBlock_Delete:
 		jmp	(DeleteObject).l
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 BossBlock_Break:
 		lea	BossBlock_FragSpeed(pc),a4

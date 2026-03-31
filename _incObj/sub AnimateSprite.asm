@@ -2,9 +2,6 @@
 ; Subroutine to animate a sprite using an animation script
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 AnimateSprite:
 		moveq	#0,d0
 		move.b	obAnim(a0),d0	; move animation number to d0

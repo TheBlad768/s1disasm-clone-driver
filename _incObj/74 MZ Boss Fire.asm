@@ -113,9 +113,7 @@ BossFire_Loop:
 loc_187CA:
 		addq.b	#2,ob2ndRout(a0)
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 BossFire_Duplicate2:
 		jsr	(FindNextFreeObj).l

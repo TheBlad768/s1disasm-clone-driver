@@ -2,9 +2,6 @@
 ; Background layer deformation subroutines
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 DeformLayers:
 		tst.b	(f_nobgscroll).w
 		beq.s	.bgscroll
@@ -40,12 +37,11 @@ Deform_Index:	dc.w Deform_GHZ-Deform_Index
 		dc.w Deform_SBZ-Deform_Index
 		zonewarning Deform_Index,2
 		dc.w Deform_GHZ-Deform_Index
+
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Green Hill Zone background layer deformation code
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Deform_GHZ:
 	; block 3 - distant mountains
@@ -152,12 +148,10 @@ Deform_GHZ:
 		rts
 ; End of function Deform_GHZ
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Labyrinth Zone background layer deformation code
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Deform_LZ:
 	; plain background scroll
@@ -234,12 +228,10 @@ Lz_Scroll_Data:
 		dc.b   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 ; End of function Deform_LZ
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Marble Zone background layer deformation code
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Deform_MZ:
 	; block 1 - dungeon interior
@@ -343,12 +335,10 @@ Deform_MZ:
 		bra.w	Bg_Scroll_X
 ; End of function Deform_MZ
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Star Light Zone background layer deformation code
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Deform_SLZ:
 	; vertical scrolling
@@ -445,12 +435,10 @@ Bg_Scroll_X:
 		dbf	d1,.blockLoop
 		rts
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Spring Yard Zone background layer deformation code
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Deform_SYZ:
 	; vertical scrolling
@@ -530,12 +518,10 @@ Deform_SYZ:
 		bra.w	Bg_Scroll_X
 ; End of function Deform_SYZ
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Scrap Brain Zone background layer deformation code
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Deform_SBZ:
 		tst.b	(v_act).w
@@ -653,12 +639,10 @@ Deform_SBZ2:;loc_68A2:
 		rts
 ; End of function Deform_SBZ
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to scroll the level horizontally as Sonic moves
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 ScrollHoriz:
 		move.w	(v_screenposx).w,d4 ; save old screen position
@@ -682,10 +666,7 @@ ScrollHoriz:
 	.return:
 		rts
 ; End of function ScrollHoriz
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 MoveScreenHoriz:
 		move.w	(v_player+obX).w,d0
@@ -744,6 +725,7 @@ SH_Behind16:
 ; End of function MoveScreenHoriz
 
 ; ===========================================================================
+		; dead code
 		tst.w	d0
 		bpl.s	loc_6610
 		move.w	#-2,d0
@@ -752,13 +734,11 @@ SH_Behind16:
 loc_6610:
 		move.w	#2,d0
 		bra.s	SH_AheadOfMid
+; ===========================================================================
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to scroll the level vertically as Sonic moves
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 ScrollVertical:
 		moveq	#0,d1
@@ -913,13 +893,11 @@ loc_6724:
 	.return:
 		rts
 ; End of function ScrollVertical
+; ===========================================================================
 
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 ; Scrolls background and sets redraw flags.
 ; d4 - background x offset * $10000
 ; d5 - background y offset * $10000
-
 BGScroll_XY:
 		move.l	(v_bgscreenposx).w,d2
 		move.l	d2,d0
@@ -980,10 +958,7 @@ Bg_Scroll_Y:
 		bset	#5,(v_bg1_scroll_flags).w
 	.return:
 		rts
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 BGScroll_YAbsolute:
 		move.w	(v_bgscreenposy).w,d3
@@ -1003,11 +978,9 @@ BGScroll_YAbsolute:
 	.return:
 		rts
 ; End of function BGScroll_YAbsolute
+; ===========================================================================
 
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 ; d6 - bit to set for redraw
-
 BGScroll_Block1:
 		move.l	(v_bgscreenposx).w,d2
 		move.l	d2,d0
@@ -1030,10 +1003,7 @@ BGScroll_Block1:
 	.return:
 		rts
 ; End of function BGScroll_Block1
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 BGScroll_Block2:
 		move.l	(v_bg2screenposx).w,d2
@@ -1056,7 +1026,9 @@ BGScroll_Block2:
 		bset	d6,(v_bg2_scroll_flags).w
 	.return:
 		rts
-;-------------------------------------------------------------------------------
+; End of function BGScroll_Block2
+; ===========================================================================
+
 BGScroll_Block3:
 		move.l	(v_bg3screenposx).w,d2
 		move.l	d2,d0
@@ -1078,3 +1050,4 @@ BGScroll_Block3:
 		bset	d6,(v_bg3_scroll_flags).w
 	.return:
 		rts
+; End of function BGScroll_Block3

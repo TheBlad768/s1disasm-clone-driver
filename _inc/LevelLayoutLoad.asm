@@ -1,10 +1,6 @@
-; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to load basic level data
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 LevelDataLoad:
 		moveq	#0,d0
@@ -51,12 +47,10 @@ LevelDataLoad:
 		rts
 ; End of function LevelDataLoad
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Level layout loading subroutine
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 LevelLayoutLoad:
 		lea	(v_lvllayout).w,a3
@@ -80,12 +74,9 @@ LevLoad_ClrRam:
 		lea	(v_lvllayout+$40).w,a3 ; RAM address for background layout
 		moveq	#2,d1
 ; End of function LevelLayoutLoad
+; ===========================================================================
 
 ; "LevelLayoutLoad2" is run twice - for the level and the background
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 LevelLayoutLoad2:
 		move.w	(v_zone).w,d0
 		lsl.b	#6,d0
@@ -113,5 +104,3 @@ LevLoad_Row:
 		dbf	d2,LevLoad_NumRows ; repeat for number of rows
 		rts
 ; End of function LevelLayoutLoad2
-
-; ===========================================================================

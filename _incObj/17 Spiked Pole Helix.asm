@@ -80,9 +80,7 @@ Hel_Action:	; Routine 2, 4
 		bsr.w	Hel_RotateSpikes
 		bsr.w	DisplaySprite
 		bra.w	Hel_ChkDel
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Hel_RotateSpikes:
 		move.b	(v_ani0_frame).w,d0

@@ -175,8 +175,6 @@ Sonic_Display:
 ; Subroutine to record Sonic's previous positions for invincibility stars
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 ; Sonic_RecordPos:
 Sonic_RecordPosition:
 		move.w	(v_trackpos).w,d0
@@ -192,9 +190,6 @@ Sonic_RecordPosition:
 ; ---------------------------------------------------------------------------
 ; Subroutine for Sonic when he's underwater
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_Water:
 		cmpi.b	#id_LZ,(v_zone).w	; is level LZ?
@@ -312,8 +307,6 @@ Sonic_MdJump2:	; While Sonic is in the air and rolling
 ; ---------------------------------------------------------------------------
 ; Subroutine to make Sonic walk/run
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 Sonic_Move:
 		move.w	(v_sonspeedmax).w,d6
@@ -507,9 +500,6 @@ locret_1307C:
 ; End of function Sonic_Move
 ; ===========================================================================
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_MoveLeft:
 		move.w	obInertia(a0),d0
 		beq.s	loc_13086
@@ -558,9 +548,6 @@ locret_130E8:
 ; End of function Sonic_MoveLeft
 ; ===========================================================================
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_MoveRight:
 		move.w	obInertia(a0),d0
 		bmi.s	loc_13118
@@ -607,9 +594,6 @@ locret_1314E:
 ; ---------------------------------------------------------------------------
 ; Subroutine to change Sonic's speed as he rolls
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_RollSpeed:
 		move.w	(v_sonspeedmax).w,d6
@@ -698,9 +682,6 @@ loc_131CC:
 ; End of function Sonic_RollSpeed
 ; ===========================================================================
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_RollLeft:
 		move.w	obInertia(a0),d0
 		beq.s	loc_1320A
@@ -722,9 +703,6 @@ loc_13220:
 		rts
 ; End of function Sonic_RollLeft
 ; ===========================================================================
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_RollRight:
 		move.w	obInertia(a0),d0
@@ -748,9 +726,6 @@ loc_13242:
 ; ---------------------------------------------------------------------------
 ; Subroutine to change Sonic's direction while jumping
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 ; Sonic_ChgJumpDir:
 Sonic_JumpDirection:
@@ -846,9 +821,6 @@ Sonic_SquashUnused:
 ; Subroutine to prevent Sonic leaving the boundaries of a level
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_LevelBound:
 		move.l	obX(a0),d1
 		move.w	obVelX(a0),d0
@@ -925,9 +897,6 @@ Sonic_LevelBound:
 ; Subroutine allowing Sonic to roll when he's moving
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_Roll:
 		tst.b	(f_slidemode).w
 		bne.s	.noroll
@@ -977,9 +946,6 @@ Sonic_ChkRoll:
 ; ---------------------------------------------------------------------------
 ; Subroutine allowing Sonic to jump
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_Jump:
 		move.b	(v_jpadpress2).w,d0
@@ -1037,9 +1003,6 @@ Sonic_Jump:
 ; Subroutine controlling Sonic's jump height/duration
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_JumpHeight:
 		tst.b	jumping(a0)	; has Sonic jumped?
 		beq.s	.capyvel		; if not, just cap Y speed normally.
@@ -1081,9 +1044,6 @@ Sonic_JumpHeight:
 ; Subroutine to slow Sonic walking up a slope
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_SlopeResist:
 		move.b	obAngle(a0),d0
 		addi.b	#$60,d0
@@ -1115,9 +1075,6 @@ locret_13508:
 ; ---------------------------------------------------------------------------
 ; Subroutine to push Sonic down a slope while he's rolling
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_RollRepel:
 		move.b	obAngle(a0),d0
@@ -1156,9 +1113,6 @@ locret_13544:
 ; Subroutine to push Sonic down a slope
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_SlopeRepel:
 		nop	
 		tst.b	sticktoconvex(a0)
@@ -1194,9 +1148,6 @@ loc_13582:
 ; Subroutine to return Sonic's angle to 0 as he jumps
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_JumpAngle:
 		move.b	obAngle(a0),d0	; get Sonic's angle
 		beq.s	.return	; if already 0, branch
@@ -1224,9 +1175,6 @@ Sonic_JumpAngle:
 ; ---------------------------------------------------------------------------
 ; Subroutine for Sonic to interact with the floor after jumping/falling
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_Floor:
 		move.w	obVelX(a0),d1
@@ -1484,9 +1432,6 @@ locret_1379E:
 ; Subroutine to reset Sonic's mode when he lands on the floor
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_ResetOnFloor:
 		btst	#4,obStatus(a0)	; is Sonic roll-jumping?
 		beq.s	.notrolljump	; if not, skip.
@@ -1544,9 +1489,6 @@ Sonic_Hurt:	; Routine 4
 ; ---------------------------------------------------------------------------
 ; Subroutine to stop Sonic falling after he's been hurt
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_HurtStop:
 		move.w	(v_limitbtm2).w,d0
@@ -1606,9 +1548,6 @@ Sonic_Death:	; Routine 6
 ; Subroutine to check if Sonic has gone below the screen after dying, and
 ; update lives, restart the level, and potentially run game over
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 ; GameOver: <-- old misnomer (this routine ALSO handles game overs, but not just)
 Sonic_HandleDeath:
@@ -1708,9 +1647,6 @@ Sonic_Drowned:
 ; Subroutine to make Sonic run around loops (GHZ/SLZ)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_Loops:
 		cmpi.b	#id_SLZ,(v_zone).w ; is level SLZ ?
 		beq.s	.isstarlight	; if yes, branch
@@ -1792,9 +1728,6 @@ Sonic_Loops:
 ; ---------------------------------------------------------------------------
 ; Subroutine to animate Sonic's sprites
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_Animate:
 		lea	(Ani_Sonic).l,a1
@@ -1994,8 +1927,6 @@ Sonic_Animate:
 ; ---------------------------------------------------------------------------
 ; Sonic graphics loading subroutine
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; LoadSonicDynPLC:
 Sonic_LoadGfx:

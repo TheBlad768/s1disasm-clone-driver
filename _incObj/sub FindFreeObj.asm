@@ -5,9 +5,6 @@
 ;	a1 = free position in object RAM
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 FindFreeObj:
 		lea	(v_lvlobjspace).w,a1 ; start address for object RAM
 		move.w	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d0
@@ -20,9 +17,8 @@ FFree_Loop:
 
 FFree_Found:
 		rts
-
 ; End of function FindFreeObj
-
+; ===========================================================================
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to find a free object space AFTER the current one
@@ -30,9 +26,6 @@ FFree_Found:
 ; output:
 ;	a1 = free position in object RAM
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 FindNextFreeObj:
 		movea.l	a0,a1
@@ -50,5 +43,4 @@ NFree_Loop:
 
 NFree_Found:
 		rts
-
 ; End of function FindNextFreeObj

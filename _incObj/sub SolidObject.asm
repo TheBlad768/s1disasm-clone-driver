@@ -8,9 +8,6 @@
 ;	d4 = x-axis position
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 SolidObject:
 		tst.b	obSolid(a0)	; is Sonic standing on the object?
 		beq.w	Solid_ChkEnter	; if not, branch
@@ -293,9 +290,7 @@ Solid_Miss:
 		moveq	#0,d4
 		rts
 ; End of function SolidObject
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 
 Solid_ResetFloor:
