@@ -137,8 +137,10 @@ obRender:	equ 1	; bitfield for x/y flip, display mode
 obGfx:		equ 2	; palette line & VRAM setting (2 bytes)
 obMap:		equ 4	; mappings address (4 bytes)
 obX:		equ 8	; x-axis position (2-4 bytes)
-obScreenY:	equ $A	; y-axis position for screen-fixed items (2 bytes)
+obSubpixelX:	equ $A	; x-axis subpixel position for playfield items (2 bytes)
+obScreenY:	equ obSubpixelX	; y-axis position for screen-fixed items (2 bytes)
 obY:		equ $C	; y-axis position (2-4 bytes)
+obSubpixelY:	equ $E	; y-axis subpixel position for playfield items (2 bytes)
 obVelX:		equ $10	; x-axis velocity (2 bytes)
 obVelY:		equ $12	; y-axis velocity (2 bytes)
 obInertia:	equ $14	; potential speed (2 bytes)
@@ -176,8 +178,6 @@ standonobject:	equ $3D	; object index Sonic stands on
 locktime:	equ $3E	; temporary D-Pad control lock timer (2 bytes)
 
 ; Miscellaneous object scratch-RAM
-objoff_25:	equ $25
-objoff_26:	equ $26
 objoff_29:	equ $29
 objoff_2A:	equ $2A
 objoff_2B:	equ $2B
@@ -249,8 +249,8 @@ Tile_Pal2:	equ	1<<13
 Tile_Pal3:	equ	2<<13
 Tile_Pal4:	equ	3<<13
 
-
-; Tile VRAM Locations
+; VRAM ArtTile definitions
+; Multiply by $20 (tile_size) to get the actual location in VRAM
 
 ; Shared
 ArtTile_GHZ_MZ_Swing:		equ $380

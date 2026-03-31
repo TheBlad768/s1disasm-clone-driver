@@ -225,7 +225,7 @@ Plat_Move:
 		bclr	#3,obStatus(a1)
 		move.b	#2,obRoutine(a1)
 		bclr	#3,obStatus(a0)
-		clr.b	objoff_25(a0)
+		clr.b	ob2ndRout(a0)
 		move.w	obVelY(a0),obVelY(a1)
 
 .loc_8042:
@@ -292,7 +292,7 @@ Plat_Move:
 		move.w	d0,objoff_2C(a0)	; change position on y-axis
 
 .chgmotion:
-		move.b	(v_oscillate+$1A).w,objoff_26(a0) ; update platform-movement variable
+		move.b	(v_oscillate+$1A).w,obAngle(a0) ; update platform-movement variable
 		rts
 ; ===========================================================================
 
