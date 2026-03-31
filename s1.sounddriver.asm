@@ -3,6 +3,7 @@
 ; The source code to a similar version of the driver can be found here:
 ; https://hiddenpalace.org/News/Sega_of_Japan_Sound_Documents_and_Source_Code
 ; ---------------------------------------------------------------------------
+
 ; Constants
 SMPS_TRACK_COUNT = (SMPS_RAM.v_track_ram_end-SMPS_RAM.v_track_ram)/SMPS_Track.len
 SMPS_MUSIC_TRACK_COUNT = (SMPS_RAM.v_music_track_ram_end-SMPS_RAM.v_music_track_ram)/SMPS_Track.len
@@ -22,6 +23,7 @@ pcmLoopCounterBase function sampleRate,baseCycles, 1+(Z80_Clock/(sampleRate)-(ba
 pcmLoopCounter function sampleRate, pcmLoopCounterBase(sampleRate,90) ; 90 is the number of cycles zPlaySEGAPCMLoop takes to deliver one sample.
 dpcmLoopCounter function sampleRate, pcmLoopCounterBase(sampleRate,301/2) ; 301 is the number of cycles zPlayPCMLoop takes to deliver two samples.
 ; ---------------------------------------------------------------------------
+
 ; Go_SoundTypes:
 Go_SoundPriorities:	dc.l SoundPriorities
 ; Go_SoundD0:
@@ -31,6 +33,8 @@ Go_SoundIndex:		dc.l SoundIndex
 ; off_719A0:
 Go_SpeedUpIndex:	dc.l SpeedUpIndex
 Go_PSGIndex:		dc.l PSG_Index
+
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; PSG instruments used in music
 ; ---------------------------------------------------------------------------
@@ -58,6 +62,8 @@ PSG8:		dc.b 0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,5,5,5
 		dc.b 5,5,6,6,6,6,6,7,7,7,$80
 
 PSG9:		dc.b 0,1,2,3,4,5,6,7,8,9,$A,$B,$C,$D,$E,$F,$80
+
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; New tempos for songs during speed shoes
 ; ---------------------------------------------------------------------------
@@ -86,6 +92,7 @@ SpeedUpIndex:
 		;dc.b ?		; Drowning
 		;dc.b ?		; Get Emerald
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Music Pointers
 ; ---------------------------------------------------------------------------
@@ -110,6 +117,8 @@ ptr_mus91:	dc.l Music91
 ptr_mus92:	dc.l Music92
 ptr_mus93:	dc.l Music93
 ptr_musend
+
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Priority of sound. New music or SFX must have a priority higher than or equal
 ; to what is stored in v_sndprio or it won't play. If bit 7 of new priority is
@@ -128,12 +137,11 @@ SoundPriorities:
 		dc.b $80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80,$80	; $D0
 		dc.b $90,$90,$90,$90,$90                                            	; $E0
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to update music more than once per frame
 ; (Called by horizontal & vert. interrupts)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_71B4C:
 UpdateMusic:
@@ -156,6 +164,7 @@ UpdateMusic:
 		nop	
 		bra.s	UpdateMusic
 ; ===========================================================================
+
 ; loc_71B82:
 .driverinput:
 		lea	(v_snddriver_ram&$FFFFFF).l,a6
@@ -262,9 +271,7 @@ DoStartZ80:
 		startZ80
 		rts
 ; End of function UpdateMusic
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_71C4E: UpdateDAC:
 DACUpdateTrack:
@@ -336,8 +343,7 @@ DAC_sample_rate:
 		dc.b timpaniLoopCounter(0.95)
 		dc.b $FF, $FF
 		even
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_71CCA:
 FMUpdateTrack:
@@ -354,9 +360,7 @@ FMUpdateTrack:
 		jsr	DoModulation(pc)
 		bra.w	FMUpdateFreq
 ; End of function FMUpdateTrack
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_71CEC:
 FMDoNext:
@@ -387,9 +391,7 @@ FMDoNext:
 		jsr	SetDuration(pc)
 		bra.w	FinishTrackUpdate
 ; End of function FMDoNext
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_71D22:
 FMSetFreq:
@@ -403,9 +405,7 @@ FMSetFreq:
 		move.w	d6,SMPS_Track.Freq(a5)		; Store new frequency
 		rts
 ; End of function FMSetFreq
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_71D40:
 SetDuration:
@@ -430,8 +430,7 @@ SetDuration:
 TrackSetRest:
 		bset	#1,SMPS_Track.PlaybackControl(a5)	; Set 'track at rest' bit
 		clr.w	SMPS_Track.Freq(a5)			; Clear frequency
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_71D60:
 FinishTrackUpdate:
@@ -455,9 +454,7 @@ FinishTrackUpdate:
 .locret:
 		rts
 ; End of function FinishTrackUpdate
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_71D9E: NoteFillUpdate
 NoteTimeoutUpdate:
@@ -480,9 +477,7 @@ NoteTimeoutUpdate:
 .locret:
 		rts
 ; End of function NoteTimeoutUpdate
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_71DC6:
 DoModulation:
@@ -523,9 +518,7 @@ DoModulation:
 .locret:
 		rts
 ; End of function DoModulation
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_71E18:
 FMPrepareNote:
@@ -635,11 +628,10 @@ PauseMusic:
 .unpausedallfm:
 		bra.w	DoStartZ80
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to play a sound or music track
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; Sound_Play:
 CycleSoundQueue:
@@ -678,9 +670,7 @@ CycleSoundQueue:
 .locret:
 		rts
 ; End of function CycleSoundQueue
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Sound_ChkValue:
 PlaySoundID:
@@ -1229,8 +1219,7 @@ Sound_PlaySpecial:
 ;SpecSFX_SpecSFXChannelRAM:
 		dc.l (v_snddriver_ram.v_spcsfx_fm4_track)&$FFFFFF
 		dc.l (v_snddriver_ram.v_spcsfx_psg3_track)&$FFFFFF
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Snd_FadeOut1: Snd_FadeOutSFX: FadeOutSFX:
 StopSFX:
@@ -1317,9 +1306,7 @@ StopSFX:
 
 		rts
 ; End of function StopSFX
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Snd_FadeOut2: FadeOutSFX2: FadeOutSpecialSFX:
 StopSpecialSFX:
@@ -1380,8 +1367,7 @@ FadeOutMusic:
 		clr.b	SMPS_RAM.v_music_dac_track.PlaybackControl(a6)	; Stop DAC track
 		clr.b	SMPS_RAM.f_speedup(a6)				; Disable speed shoes tempo
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_72504:
 DoFadeOut:
@@ -1436,9 +1422,7 @@ DoFadeOut:
 
 		rts
 ; End of function DoFadeOut
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_7256A:
 FMSilenceAll:
@@ -1498,8 +1482,7 @@ StopAllSound:
 		move.b	#$80,SMPS_RAM.v_sound_id(a6)	; set music to $80 (silence)
 		jsr	FMSilenceAll(pc)
 		bra.w	PSGSilenceAll
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_725CA:
 InitMusicPlayback:
@@ -1563,9 +1546,7 @@ InitMusicPlayback:
 	endif
 	
 ; End of function InitMusicPlayback
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_7260C:
 TempoWait:
@@ -1620,8 +1601,7 @@ SlowDownMusic:
 		move.b	SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_tempo_mod(a6),SMPS_RAM.v_1up_ram_copy+SMPS_RAM.v_main_tempo_timeout(a6)
 		clr.b	SMPS_RAM.v_1up_ram_copy+SMPS_RAM.f_speedup(a6)
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_7267C:
 DoFadeIn:
@@ -1701,8 +1681,7 @@ FMNoteOn:
 ; locret_726FC:
 .locret:
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_726FE:
 FMNoteOff:
@@ -1731,8 +1710,7 @@ WriteFMIorIIMain:
 ; locret_72720:
 .locret:
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_72722:
 WriteFMIorII:
@@ -1740,9 +1718,7 @@ WriteFMIorII:
 		bne.s	WriteFMIIPart			; Branch if for part II
 		add.b	SMPS_Track.VoiceControl(a5),d0	; Add in voice control bits
 ; End of function WriteFMIorII
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Strangely, despite this driver being SMPS 68k Type 1b,
 ; WriteFMI and WriteFMII are the Type 1a versions.
@@ -1774,8 +1750,7 @@ WriteFMIIPart:
 		move.b	SMPS_Track.VoiceControl(a5),d2	; Get voice control bits
 		bclr	#2,d2				; Clear chip toggle
 		add.b	d2,d0				; Add in to destination register
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_72764:
 WriteFMII:
@@ -1835,8 +1810,7 @@ FMFrequencies:
 		MakeFMFrequenciesOctave 5
 		MakeFMFrequenciesOctave 6
 		MakeFMFrequenciesOctave 7
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_72850:
 PSGUpdateTrack:
@@ -1855,9 +1829,7 @@ PSGUpdateTrack:
 		jsr	PSGUpdateFreq(pc)	; It would be better if this were a jmp and the rts was removed
 		rts
 ; End of function PSGUpdateTrack
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_72878:
 PSGDoNext:
@@ -1888,9 +1860,7 @@ PSGDoNext:
 		jsr	SetDuration(pc)
 		bra.w	FinishTrackUpdate
 ; End of function PSGDoNext
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_728AC:
 PSGSetFreq:
@@ -1910,18 +1880,14 @@ PSGSetFreq:
 		jsr	FinishTrackUpdate(pc)
 		bra.w	PSGNoteOff
 ; End of function PSGSetFreq
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_728DC:
 PSGDoNoteOn:
 		move.w	SMPS_Track.Freq(a5),d6	; Get note frequency
 		bmi.s	PSGSetRest		; If invalid, branch
 ; End of function PSGDoNoteOn
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_728E2:
 PSGUpdateFreq:
@@ -1955,8 +1921,7 @@ PSGUpdateFreq:
 PSGSetRest:
 		bset	#1,SMPS_Track.PlaybackControl(a5)	; Set 'track at rest' bit
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_72926:
 PSGUpdateVolFX:
@@ -1986,9 +1951,7 @@ PSGDoVolFX:	; This can actually be made a bit more efficient, see the comments f
 		blo.s	SetPSGVolume	; Branch if not
 		moveq	#$F,d6		; Limit to silence and fall through
 ; End of function PSGUpdateVolFX
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_7296A:
 SetPSGVolume:
@@ -2021,8 +1984,7 @@ PSGCheckNoteTimeout:
 VolEnvHold:
 		subq.b	#1,SMPS_Track.VolEnvIndex(a5)	; Decrement volume envelope index
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_729A0:
 PSGNoteOff:
@@ -2047,9 +2009,7 @@ SendPSGNoteOff:
 locret_729B4:
 		rts
 ; End of function PSGNoteOff
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_729B6:
 PSGSilenceAll:
@@ -2095,8 +2055,7 @@ PSGFrequencies:
 		MakePSGFrequencies 1045.42,   1107.52,   1177.47,   1242.89,   1316.00,   1398.25,   1491.47,   1575.50,   1669.55,   1747.82,   1864.34,   1962.46
 		MakePSGFrequencies 2071.49,   2193.34,   2330.42,   2485.78,   2601.40,   2796.51,   2943.69,   3107.23,   3290.01,   3495.64,   3608.40,   3857.25
 		MakePSGFrequencies 4142.98,   4302.32,   4660.85,   4863.50,   5084.56,   5326.69,   5887.39,   6214.47,   6580.02, 223721.56
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_72A5A:
 CoordFlag:
@@ -2359,8 +2318,7 @@ cfSetVoice:
 		tst.b	SMPS_RAM.f_voice_selector(a6)		; Are we updating a SFX track?
 		bmi.s	SetVoice				; If yes, branch
 		movea.l	SMPS_RAM.v_special_voice_ptr(a6),a1	; Special SFX voice pointer
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_72C4E:
 SetVoice:
@@ -2414,8 +2372,7 @@ locret_72CAA:
 ; ===========================================================================
 ; byte_72CAC:
 FMSlotMask:	dc.b 8,	8, 8, 8, $A, $E, $E, $F
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_72CB4:
 SendVoiceTL:

@@ -14,8 +14,8 @@ EggmanCylinder:
 ; ===========================================================================
 EggmanCylinder_Index:
 		dc.w EggmanCylinder_Main-EggmanCylinder_Index
-		dc.w loc_1A4CE-EggmanCylinder_Index
-		dc.w loc_1A57E-EggmanCylinder_Index
+		dc.w EggmanCylinder_Action-EggmanCylinder_Index
+		dc.w EggmanCylinder_Move-EggmanCylinder_Index
 
 EggmanCylinder_PosData:
 		dc.w boss_fz_x+$80,  boss_fz_y+$110
@@ -37,7 +37,7 @@ EggmanCylinder_Main:	; Routine
 		move.l	#Map_EggCyl,obMap(a0)
 		move.w	(a1)+,obX(a0)
 		move.w	(a1),obY(a0)
-		move.w	(a1)+,objoff_38(a0)
+		move.w	(a1)+,obBossY(a0)
 		move.b	#$20,obHeight(a0)
 		move.b	#$60,obWidth(a0)
 		move.b	#$20,obActWid(a0)
@@ -45,7 +45,8 @@ EggmanCylinder_Main:	; Routine
 		move.b	#3,obPriority(a0)
 		addq.b	#2,obRoutine(a0)
 
-loc_1A4CE:	; Routine 2
+; loc_1A4CE:
+EggmanCylinder_Action: ; Routine 2
 		cmpi.b	#2,obSubtype(a0)
 		ble.s	loc_1A4DC
 		bset	#1,obRender(a0)
@@ -58,7 +59,7 @@ loc_1A4DC:
 
 loc_1A4EA:
 		move.l	objoff_3C(a0),d0
-		move.l	objoff_38(a0),d1
+		move.l	obBossY(a0),d1
 		add.l	d0,d1
 		swap	d1
 		move.w	d1,obY(a0)
@@ -116,24 +117,26 @@ loc_1A578:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-loc_1A57E:	; Routine 4
+; loc_1A57E:
+EggmanCylinder_Move: ; Routine 4
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
 		move.w	off_1A590(pc,d0.w),d0
 		jsr	off_1A590(pc,d0.w)
 		bra.w	loc_1A4EA
 ; ===========================================================================
-off_1A590:	dc.w loc_1A598-off_1A590
-		dc.w loc_1A598-off_1A590
-		dc.w loc_1A604-off_1A590
-		dc.w loc_1A604-off_1A590
+off_1A590:	dc.w EggmanCylinder_Bottom-off_1A590	; bottom left
+		dc.w EggmanCylinder_Bottom-off_1A590	; bottom right
+		dc.w EggmanCylinder_Top-off_1A590	; top left
+		dc.w EggmanCylinder_Top-off_1A590	; top right
 ; ===========================================================================
 
-loc_1A598:
+; loc_1A598:
+EggmanCylinder_Bottom:
 		tst.b	objoff_29(a0)
 		bne.s	loc_1A5D4
 		movea.l	objoff_34(a0),a1
-		tst.b	obColProp(a1)
+		tst.b	obBossHits(a1)
 		bne.s	loc_1A5B4
 		bsr.w	BossDefeated
 		subi.l	#$10000,objoff_3C(a0)
@@ -166,12 +169,13 @@ locret_1A602:
 		rts
 ; ===========================================================================
 
-loc_1A604:
+; loc_1A604:
+EggmanCylinder_Top:
 		bset	#1,obRender(a0)
 		tst.b	objoff_29(a0)
 		bne.s	loc_1A646
 		movea.l	objoff_34(a0),a1
-		tst.b	obColProp(a1)
+		tst.b	obBossHits(a1)
 		bne.s	loc_1A626
 		bsr.w	BossDefeated
 		addi.l	#$10000,objoff_3C(a0)

@@ -10,9 +10,6 @@
 ;	     (refers to a 16x16 tile number)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 FindNearestTile:
 		move.w	d2,d0			; MJ: load Y position
 		andi.w	#$780,d0		; MJ: get within 780 (E00 pixels) in multiples of 80

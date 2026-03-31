@@ -2,9 +2,6 @@
 ; Subroutine to change Sonic's angle & position as he walks along the floor
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Sonic_AnglePos:
 		move.w	#v_collision1,(v_collindex).w	; MJ: load first collision data location
 		cmpi.b	#$C,(v_top_solid_bit).w		; MJ: is second collision set to be used?
@@ -116,6 +113,7 @@ locret_146E6:
 ; End of function Sonic_AnglePos
 
 ; ===========================================================================
+		; dead code
 		move.l	obX(a0),d2
 		move.w	obVelX(a0),d0
 		ext.l	d0
@@ -133,6 +131,7 @@ locret_146E6:
 locret_1470A:
 		rts
 ; ===========================================================================
+		; dead code
 		move.l	obY(a0),d3
 		move.w	obVelY(a0),d0
 		subi.w	#$38,d0
@@ -144,6 +143,7 @@ locret_1470A:
 		rts
 		rts
 ; ===========================================================================
+		; dead code
 		move.l	obX(a0),d2
 		move.l	obY(a0),d3
 		move.w	obVelX(a0),d0
@@ -158,12 +158,10 @@ locret_1470A:
 		move.l	d3,obY(a0)
 		rts
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to change Sonic's angle as he walks along the floor
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_Angle:
 		move.b	(v_anglebuffer2).w,d2
@@ -187,12 +185,10 @@ loc_1476A:
 		rts
 ; End of function Sonic_Angle
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine allowing Sonic to walk up a vertical slope/wall to his right
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_WalkVertR:
 		move.w	obY(a0),d2
@@ -254,12 +250,10 @@ loc_147FE:
 		rts
 ; End of function Sonic_WalkVertR
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine allowing Sonic to walk upside-down
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_WalkCeiling:
 		move.w	obY(a0),d2
@@ -322,12 +316,10 @@ loc_148A0:
 		rts
 ; End of function Sonic_WalkCeiling
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine allowing Sonic to walk up a vertical slope/wall to his left
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Sonic_WalkVertL:
 		move.w	obY(a0),d2		; MJ: Load Y position

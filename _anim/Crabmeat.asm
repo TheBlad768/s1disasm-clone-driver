@@ -1,9 +1,15 @@
 ; ---------------------------------------------------------------------------
 ; Animation script - Crabmeat enemy
 ; ---------------------------------------------------------------------------
-Ani_Crab:	dc.w .stand-Ani_Crab, .standslope-Ani_Crab, .standsloperev-Ani_Crab
-		dc.w .walk-Ani_Crab, .walkslope-Ani_Crab, .walksloperev-Ani_Crab
-		dc.w .firing-Ani_Crab, .ball-Ani_Crab
+Ani_Crab:	dc.w .stand-Ani_Crab
+		dc.w .standslope-Ani_Crab
+		dc.w .standsloperev-Ani_Crab
+		dc.w .walk-Ani_Crab
+		dc.w .walkslope-Ani_Crab
+		dc.w .walksloperev-Ani_Crab
+		dc.w .firing-Ani_Crab
+		dc.w .ball-Ani_Crab
+
 .stand:		dc.b $F, 0, afEnd
 		even
 .standslope:	dc.b $F, 2, afEnd

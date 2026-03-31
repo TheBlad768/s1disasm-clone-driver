@@ -9,8 +9,8 @@ PushBlock:
 		jmp	PushB_Index(pc,d1.w)
 ; ===========================================================================
 PushB_Index:	dc.w PushB_Main-PushB_Index
-		dc.w loc_BF6E-PushB_Index
-		dc.w loc_C02C-PushB_Index
+		dc.w PushB_Action-PushB_Index
+		dc.w PushB_ChkVisible-PushB_Index
 
 PushB_Var:	dc.b $10, 0	; object width, frame number
 		dc.b $40, 1
@@ -46,12 +46,13 @@ PushB_Main:	; Routine 0
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
 		move.b	obRespawnNo(a0),d0
-		beq.s	loc_BF6E
+		beq.s	PushB_Action
 		bclr	#7,2(a2,d0.w)
 		bset	#0,2(a2,d0.w)
 		bne.w	DeleteObject
 
-loc_BF6E:	; Routine 2
+; loc_BF6E:
+PushB_Action:	; Routine 2
 		tst.b	objoff_32(a0)
 		bne.w	loc_C046
 		moveq	#0,d1
@@ -85,7 +86,7 @@ loc_BFE6:
 		move.w	objoff_34(a0),obX(a0)
 		move.w	objoff_36(a0),obY(a0)
 		move.b	#4,obRoutine(a0)
-		bra.s	loc_C02C
+		bra.s	PushB_ChkVisible
 ; ===========================================================================
 
 loc_C016:
@@ -99,7 +100,8 @@ loc_C028:
 		bra.w	DeleteObject
 ; ===========================================================================
 
-loc_C02C:	; Routine 4
+; loc_C02C:
+PushB_ChkVisible:	; Routine 4
 		bsr.w	ChkPartiallyVisible
 		beq.s	locret_C044
 		move.b	#2,obRoutine(a0)

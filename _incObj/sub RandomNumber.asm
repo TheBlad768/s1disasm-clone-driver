@@ -2,9 +2,6 @@
 ; Subroutine to generate a pseudo-random number in d0
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 RandomNumber:
 		move.l	(v_random).w,d1
 		bne.s	.scramble	; if d1 is not 0, branch
@@ -23,3 +20,4 @@ RandomNumber:
 		swap	d1
 		move.l	d1,(v_random).w
 		rts
+; End of function RandomNumber

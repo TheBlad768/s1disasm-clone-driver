@@ -140,7 +140,7 @@ LavaGeyser:
 ; ===========================================================================
 Geyser_Index:	dc.w Geyser_Main-Geyser_Index
 		dc.w Geyser_Action-Geyser_Index
-		dc.w loc_EFFC-Geyser_Index
+		dc.w Geyser_Middle-Geyser_Index
 		dc.w Geyser_Delete-Geyser_Index
 
 Geyser_Speeds:	dc.w $FB00, 0
@@ -262,7 +262,8 @@ locret_EFFA:
 		rts
 ; ===========================================================================
 
-loc_EFFC:	; Routine 4
+; loc_EFFC:
+Geyser_Middle:	; Routine 4
 		movea.l	objoff_3C(a0),a1
 		cmpi.b	#6,obRoutine(a1)
 		beq.w	Geyser_Delete

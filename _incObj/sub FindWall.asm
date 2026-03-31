@@ -1,6 +1,3 @@
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 FindWall:
 		bsr.w	FindNearestTile		; MJ: get chunk/block location
 		move.w	(a1),d0			; MJ: load block ID from chunk
@@ -77,10 +74,7 @@ loc_14BA6:
 		subi.w	#$10,d1
 		rts
 ; End of function FindWall
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 FindWall2:
 		bsr.w	FindNearestTile

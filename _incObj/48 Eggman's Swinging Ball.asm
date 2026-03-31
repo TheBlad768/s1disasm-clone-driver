@@ -10,9 +10,9 @@ BossBall:
 ; ===========================================================================
 GBall_Index:	dc.w GBall_Main-GBall_Index
 		dc.w GBall_Base-GBall_Index
-		dc.w GBall_Display2-GBall_Index
-		dc.w loc_17C68-GBall_Index
-		dc.w GBall_ChkVanish-GBall_Index
+		dc.w GBall_Base2-GBall_Index
+		dc.w GBall_Link-GBall_Index
+		dc.w GBall_Ball-GBall_Index
 ; ===========================================================================
 
 GBall_Main:	; Routine 0
@@ -105,13 +105,12 @@ GBall_Display:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-GBall_Display2:	; Routine 4
+; GBall_Display2:
+GBall_Base2:	; Routine 4
 		bsr.w	sub_17C2A
 		jsr	(Obj48_Move).l
 		jmp	(DisplaySprite).l
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 sub_17C2A:
 		movea.l	objoff_34(a0),a1
@@ -136,7 +135,8 @@ locret_17C66:
 
 ; ===========================================================================
 
-loc_17C68:	; Routine 6
+; loc_17C68:
+GBall_Link:	; Routine 6
 		movea.l	objoff_34(a0),a1
 		tst.b	obStatus(a1)
 		bpl.s	GBall_Display3
@@ -147,7 +147,8 @@ GBall_Display3:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-GBall_ChkVanish:; Routine 8
+; GBall_ChkVanish:
+GBall_Ball:	; Routine 8
 		moveq	#0,d0
 		tst.b	obFrame(a0)
 		bne.s	GBall_Vanish

@@ -8,9 +8,6 @@
 ;	d4 = x-axis position
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 SolidObject:
 		tst.b	obSolid(a0)	; is Sonic standing on the object?
 		beq.w	Solid_ChkEnter	; if not, branch
@@ -24,8 +21,13 @@ SolidObject:
 		add.w	d1,d0
 		bmi.s	.leave		; if Sonic moves off the left, branch
 		cmp.w	d2,d0		; has Sonic moved off the right?
+	if FixBugs
+		bls.s	.stand		; if not, branch
+	else
+		; This is one pixel too soon,
+		; can cause damage on sideways spikes while walking off
 		blo.s	.stand		; if not, branch
-
+	endif
 .leave:
 		bclr	#3,obStatus(a1)	; clear Sonic's standing flag
 		bclr	#3,obStatus(a0)	; clear object's standing flag
@@ -35,7 +37,12 @@ SolidObject:
 
 .stand:
 		move.w	d4,d2
+	if FixBugs
+		jsr	(MvSonicOnPtfm).l
+	else
+		; Goes out of range just from enabling FixBugs
 		bsr.w	MvSonicOnPtfm
+	endif
 		moveq	#0,d4
 		rts
 ; ===========================================================================
@@ -64,7 +71,12 @@ SolidObject71:
 
 .stand:
 		move.w	d4,d2
+	if FixBugs
+		jsr	(MvSonicOnPtfm).l
+	else
+		; Goes out of range just from enabling FixBugs
 		bsr.w	MvSonicOnPtfm
+	endif
 		moveq	#0,d4
 		rts
 ; ===========================================================================
@@ -205,18 +217,10 @@ Solid_SideAir:
 Solid_Ignore:
 		btst	#5,obStatus(a0)	; is Sonic pushing?
 		beq.s	Solid_Debug	; if not, branch
-	if FixBugs
-		; Fix the Walk-Jump bug
-		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Walk-Jump_Bug_in_Sonic_1
-		move.b	obAnim(a1),d4		; get Sonic's current animation
-		cmpi.b	#id_Roll,d4		; is Sonic in his jumping/rolling animation?
-		beq.s	Solid_NotPushing	; if so, branch
-		cmpi.b	#id_Drown,d4		; is Sonic in his drowning animation?
-		beq.s	Solid_NotPushing	; if so, branch
-		cmpi.b	#id_Hurt,d4		; is Sonic in his hurt animation?
-		beq.s	Solid_NotPushing	; if so, branch
-	endif
+	if FixBugs=0
+		; This causes the infamous "walk-jump bug"
 		move.w	#id_Run,obAnim(a1) ; use running animation
+	endif
 
 Solid_NotPushing:
 		bclr	#5,obStatus(a0)	; clear pushing flag
@@ -286,9 +290,7 @@ Solid_Miss:
 		moveq	#0,d4
 		rts
 ; End of function SolidObject
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 
 Solid_ResetFloor:

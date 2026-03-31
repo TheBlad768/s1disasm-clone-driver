@@ -2,9 +2,6 @@
 ; Palette cycling routine loading subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 PaletteCycle:
 		moveq	#0,d2
 		moveq	#0,d0
@@ -26,10 +23,7 @@ PalCycle_Index:	dc.w PalCycle_GHZ-PalCycle_Index
 		dc.w PalCycle_SBZ-PalCycle_Index
 		zonewarning PalCycle_Index,2
 		dc.w PalCycle_GHZ-PalCycle_Index	; Ending
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 PalCycle_Title:
 		lea	(Pal_TitleCyc).l,a0
@@ -55,10 +49,7 @@ PCycGHZ_Go:
 PCycGHZ_Skip:
 		rts
 ; End of function PalCycle_GHZ
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 PalCycle_LZ:
 ; Waterfalls
@@ -131,9 +122,7 @@ PCycLZ_Seq:	dc.b 1,	0, 0, 1, 0, 0, 1, 0
 
 PalCycle_MZ:
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 PalCycle_SLZ:
 		subq.w	#1,(v_pcyc_time).w
@@ -159,10 +148,7 @@ loc_1A60:
 locret_1A80:
 		rts
 ; End of function PalCycle_SLZ
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 PalCycle_SYZ:
 		subq.w	#1,(v_pcyc_time).w
@@ -186,10 +172,7 @@ PalCycle_SYZ:
 locret_1AC6:
 		rts
 ; End of function PalCycle_SYZ
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 PalCycle_SBZ:
 		lea	(Pal_SBZCycList1).l,a2
@@ -264,3 +247,20 @@ loc_1B52:
 locret_1B64:
 		rts
 ; End of function PalCycle_SBZ
+
+
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Palette cycle data bincludes
+; ---------------------------------------------------------------------------
+
+Pal_TitleCyc:	binclude	"palette/Cycle - Title Screen Water.bin"
+Pal_GHZCyc:	binclude	"palette/Cycle - GHZ.bin"
+Pal_LZCyc1:	binclude	"palette/Cycle - LZ Waterfall.bin"
+Pal_LZCyc2:	binclude	"palette/Cycle - LZ Conveyor Belt.bin"
+Pal_LZCyc3:	binclude	"palette/Cycle - LZ Conveyor Belt Underwater.bin"
+Pal_SBZ3Cyc:	binclude	"palette/Cycle - SBZ3 Waterfall.bin"
+Pal_MZCyc:	binclude	"palette/Cycle - MZ (Unused).bin"
+Pal_SLZCyc:	binclude	"palette/Cycle - SLZ.bin"
+Pal_SYZCyc1:	binclude	"palette/Cycle - SYZ1.bin"
+Pal_SYZCyc2:	binclude	"palette/Cycle - SYZ2.bin"

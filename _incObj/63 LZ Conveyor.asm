@@ -28,9 +28,9 @@ loc_12378:
 		bra.w	DeleteObject
 ; ===========================================================================
 LCon_Index:	dc.w LCon_Main-LCon_Index
-		dc.w loc_124B2-LCon_Index
-		dc.w loc_124C2-LCon_Index
-		dc.w loc_124DE-LCon_Index
+		dc.w LCon_Platform-LCon_Index
+		dc.w LCon_OnPlatform-LCon_Index
+		dc.w LCon_Wheel-LCon_Index
 ; ===========================================================================
 
 LCon_Main:	; Routine 0
@@ -47,7 +47,7 @@ LCon_Main:	; Routine 0
 		addq.b	#4,obRoutine(a0)
 		move.w	#make_art_tile(ArtTile_LZ_Conveyor_Belt,0,0),obGfx(a0)
 		move.b	#1,obPriority(a0)
-		bra.w	loc_124DE
+		bra.w	LCon_Wheel
 ; ===========================================================================
 
 loc_123E2:
@@ -89,7 +89,7 @@ loc_1244C:
 		move.w	(a2,d1.w),objoff_34(a0)
 		move.w	2(a2,d1.w),objoff_36(a0)
 		bsr.w	LCon_ChangeDir
-		bra.w	loc_124B2
+		bra.w	LCon_Platform
 ; ===========================================================================
 
 loc_12460:
@@ -138,14 +138,16 @@ loc_124AA:
 		rts
 ; ===========================================================================
 
-loc_124B2:	; Routine 2
+; loc_124B2:
+LCon_Platform:	; Routine 2
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		jsr	(PlatformObject).l
 		bra.w	sub_12502
 ; ===========================================================================
 
-loc_124C2:	; Routine 4
+; loc_124C2:
+LCon_OnPlatform: ; Routine 4
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		jsr	(ExitPlatform).l
@@ -155,7 +157,8 @@ loc_124C2:	; Routine 4
 		jmp	(MvSonicOnPtfm2).l
 ; ===========================================================================
 
-loc_124DE:	; Routine 6
+; loc_124DE:
+LCon_Wheel:	; Routine 6
 		move.w	(v_framecount).w,d0
 		andi.w	#3,d0
 		bne.s	loc_124FC
@@ -171,8 +174,7 @@ loc_124F2:
 loc_124FC:
 		addq.l	#4,sp
 		bra.w	RememberState
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 
 sub_12502:
@@ -218,10 +220,7 @@ loc_1256A:
 		bsr.w	SpeedToPos
 		rts
 ; End of function sub_12502
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 LCon_ChangeDir:
 		moveq	#0,d0
