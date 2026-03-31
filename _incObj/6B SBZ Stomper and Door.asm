@@ -127,9 +127,12 @@ Sto_Action:	; Routine 2
 .delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
-.index:		dc.w .type00-.index, .type01-.index
-		dc.w .type02-.index, .type03-.index
-		dc.w .type04-.index, .type05-.index
+.index:		dc.w .type00-.index
+		dc.w .type01-.index
+		dc.w .type02-.index
+		dc.w .type03-.index
+		dc.w .type04-.index
+		dc.w .type05-.index
 ; ===========================================================================
 
 .type00:

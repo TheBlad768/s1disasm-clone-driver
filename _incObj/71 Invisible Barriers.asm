@@ -29,7 +29,13 @@ Invis_Main:	; Routine 0
 		move.b	d1,obHeight(a0) ; set object height
 
 Invis_Solid:	; Routine 2
+	if FixBugs
+		; Fixes phasing through barriers while ducking
+		; (note that ChkPartiallyVisible had to be fixed as well)
+		bsr.w	ChkPartiallyVisible
+	else
 		bsr.w	ChkObjectVisible
+	endif
 		bne.s	.chkdel
 		moveq	#0,d1
 		move.b	obActWid(a0),d1

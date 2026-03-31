@@ -12,8 +12,8 @@ BossPlasma_Index:
 		dc.w BossPlasma_Main-BossPlasma_Index
 		dc.w BossPlasma_Generator-BossPlasma_Index
 		dc.w BossPlasma_MakeBalls-BossPlasma_Index
-		dc.w loc_1A962-BossPlasma_Index
-		dc.w loc_1A982-BossPlasma_Index
+		dc.w BossPlasma_Finish-BossPlasma_Index
+		dc.w BossPlasma_Balls-BossPlasma_Index
 ; ===========================================================================
 
 BossPlasma_Main:	; Routine 0
@@ -96,7 +96,12 @@ BossPlasma_Loop:
 		move.l	a0,objoff_34(a1)
 		jsr	(RandomNumber).l
 		move.w	objoff_32(a0),d1
+	if FixBugs
+		; compensation for the fix in BossPlasma_Drop
+		muls.w	#-$59,d1
+	else
 		muls.w	#-$4F,d1
+	endif
 		addi.w	#boss_fz_x+$128,d1
 		andi.w	#$1F,d0
 		subi.w	#$10,d0
@@ -115,7 +120,8 @@ loc_1A95E:
 		bra.w	loc_1A86C
 ; ===========================================================================
 
-loc_1A962:	; Routine 6
+; loc_1A962:
+BossPlasma_Finish: ; Routine 6
 		move.b	#2,obAnim(a0)
 		tst.w	objoff_38(a0)
 		bne.s	loc_1A97E
@@ -127,7 +133,8 @@ loc_1A97E:
 		bra.w	loc_1A86C
 ; ===========================================================================
 
-loc_1A982:	; Routine 8
+; loc_1A982:
+BossPlasma_Balls: ; Routine 8
 		moveq	#0,d0
 		move.b	ob2ndRout(a0),d0
 		move.w	BossPlasma_Index2(pc,d0.w),d0
@@ -137,12 +144,13 @@ loc_1A982:	; Routine 8
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 BossPlasma_Index2:
-		dc.w loc_1A9A6-BossPlasma_Index2
-		dc.w loc_1A9C0-BossPlasma_Index2
-		dc.w loc_1AA1E-BossPlasma_Index2
+		dc.w BossPlasma_Spread-BossPlasma_Index2
+		dc.w BossPlasma_Drop-BossPlasma_Index2
+		dc.w BossPlasma_Move-BossPlasma_Index2
 ; ===========================================================================
 
-loc_1A9A6:
+; loc_1A9A6:
+BossPlasma_Spread:
 		move.w	objoff_30(a0),d0
 		sub.w	obX(a0),d0
 		asl.w	#4,d0
@@ -152,7 +160,8 @@ loc_1A9A6:
 		rts
 ; ===========================================================================
 
-loc_1A9C0:
+; loc_1A9C0:
+BossPlasma_Drop:
 		tst.w	obVelX(a0)
 		beq.s	loc_1A9E6
 		jsr	(SpeedToPos).l
@@ -160,7 +169,13 @@ loc_1A9C0:
 		sub.w	objoff_30(a0),d0
 		bcc.s	loc_1A9E6
 		clr.w	obVelX(a0)
+	if FixBugs
+		sub.w	d0,obX(a0)
+	else
+		; this is intended to keep the leftmost energy ball in bounds,
+		; but it actually pushes it FURTHER to the left
 		add.w	d0,obX(a0)
+	endif
 		movea.l	objoff_34(a0),a1
 		subq.w	#1,objoff_32(a1)
 
@@ -182,7 +197,8 @@ locret_1AA1C:
 		rts
 ; ===========================================================================
 
-loc_1AA1E:
+; loc_1AA1E:
+BossPlasma_Move:
 		jsr	(SpeedToPos).l
 		cmpi.w	#boss_fz_y+$D0,obY(a0)
 		bhs.s	loc_1AA34
@@ -195,7 +211,7 @@ loc_1AA34:
 		movea.l	objoff_34(a0),a1
 		subq.w	#1,objoff_38(a1)
 	if FixBugs
-		; Avoid returning to loc_1A982 to prevent a display-and-delete bug.
+		; Avoid returning to BossPlasma_Balls to prevent a display-and-delete bug.
 		addq.l	#4,sp
 	endif
 		bra.w	EggmanCylinder_Delete

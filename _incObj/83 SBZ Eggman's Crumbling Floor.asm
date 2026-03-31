@@ -10,10 +10,10 @@ FalseFloor:
 ; ===========================================================================
 FFloor_Index:	dc.w FFloor_Main-FFloor_Index
 		dc.w FFloor_ChkBreak-FFloor_Index
-		dc.w loc_19C36-FFloor_Index
-		dc.w loc_19C62-FFloor_Index
-		dc.w loc_19C72-FFloor_Index
-		dc.w loc_19C80-FFloor_Index
+		dc.w FFloor_Break-FFloor_Index
+		dc.w FFloor_AllGone-FFloor_Index
+		dc.w FFloor_Block-FFloor_Index
+		dc.w FFloor_Frag-FFloor_Index
 ; ===========================================================================
 
 FFloor_Main:	; Routine 0
@@ -74,7 +74,8 @@ FFloor_Solid:
 		jmp	(SolidObject).l
 ; ===========================================================================
 
-loc_19C36:	; Routine 4
+; loc_19C36:
+FFloor_Break:	; Routine 4
 		subi.b	#$E,obTimeFrame(a0)
 		bcc.s	FFloor_Solid2
 		moveq	#-1,d0
@@ -86,32 +87,35 @@ loc_19C36:	; Routine 4
 		move.w	#"GO",obSubtype(a1)
 		addq.b	#1,obFrame(a0)
 		cmpi.b	#8,obFrame(a0)
-		beq.s	loc_19C62
+		beq.s	FFloor_AllGone
 
 FFloor_Solid2:
 		bra.s	FFloor_Solid
 ; ===========================================================================
 
-loc_19C62:	; Routine 6
+; loc_19C62:
+FFloor_AllGone:	; Routine 6
 		bclr	#3,obStatus(a0)
 		bclr	#3,(v_player+obStatus).w
-		bra.w	loc_1982C
+		bra.w	FalseFloor_Delete
 ; ===========================================================================
 
-loc_19C72:	; Routine 8
-		cmpi.w	#"GO",obSubtype(a0) ; is object set to disintegrate?
-		beq.s	FFloor_Break	; if yes, branch
+; loc_19C72:
+FFloor_Block:	; Routine 8
+		cmpi.w	#"GO",obSubtype(a0)	; is object set to disintegrate?
+		beq.s	FFloor_BlockBreak	; if yes, branch
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-loc_19C80:	; Routine $A
+; loc_19C80:
+FFloor_Frag:	; Routine $A
 		tst.b	obRender(a0)
-		bpl.w	loc_1982C
+		bpl.w	FalseFloor_Delete
 		jsr	(ObjectFall).l
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-FFloor_Break:
+FFloor_BlockBreak:
 		lea	FFloor_FragSpeed(pc),a4
 		lea	FFloor_FragPos(pc),a5
 		moveq	#1,d4

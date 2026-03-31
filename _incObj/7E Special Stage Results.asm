@@ -18,7 +18,7 @@ SSR_Index:	dc.w SSR_ChkPLC-SSR_Index
 		dc.w SSR_Continue-SSR_Index
 		dc.w SSR_Wait-SSR_Index
 		dc.w SSR_Exit-SSR_Index
-		dc.w loc_C91A-SSR_Index
+		dc.w SSR_ContAni-SSR_Index
 
 ssr_mainX = objoff_30		; position for card to display on
 ; ===========================================================================
@@ -146,7 +146,8 @@ SSR_Continue:	; Routine $E
 		bra.w	DisplaySprite
 ; ===========================================================================
 
-loc_C91A:	; Routine $14
+; loc_C91A:
+SSR_ContAni:	; Routine $14
 		move.b	(v_vbla_byte).w,d0
 		andi.b	#$F,d0
 		bne.s	SSR_Display2

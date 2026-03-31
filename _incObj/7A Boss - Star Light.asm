@@ -2,6 +2,10 @@
 ; Object 7A - Eggman (SLZ)
 ; ---------------------------------------------------------------------------
 
+BossStarLight_Delete:
+		jmp	(DeleteObject).l
+; ===========================================================================
+
 BossStarLight:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
@@ -24,10 +28,10 @@ BossStarLight_ObjData:	dc.b 2,	0, 4		; routine number, animation, priority
 BossStarLight_Main:
 		move.w	#boss_slz_x+$188,obX(a0)
 		move.w	#boss_slz_y+$18,obY(a0)
-		move.w	obX(a0),objoff_30(a0)
-		move.w	obY(a0),objoff_38(a0)
+		move.w	obX(a0),obBossX(a0)
+		move.w	obY(a0),obBossY(a0)
 		move.b	#$F,obColType(a0)
-		move.b	#8,obColProp(a0) ; set number of hits to 8
+		move.b	#8,obBossHits(a0) ; set number of hits to 8
 		lea	BossStarLight_ObjData(pc),a2
 		movea.l	a0,a1
 		moveq	#3,d1
@@ -93,17 +97,18 @@ BossStarLight_ShipMain:	; Routine 2
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 BossStarLight_ShipIndex:
-		dc.w loc_189B8-BossStarLight_ShipIndex
-		dc.w loc_18A5E-BossStarLight_ShipIndex
-		dc.w BossStarLight_MakeBall-BossStarLight_ShipIndex
-		dc.w loc_18B48-BossStarLight_ShipIndex
-		dc.w loc_18B80-BossStarLight_ShipIndex
-		dc.w loc_18BC6-BossStarLight_ShipIndex
+		dc.w BSLZ_ShipStart-BossStarLight_ShipIndex
+		dc.w BSLZ_ShipMove-BossStarLight_ShipIndex
+		dc.w BSLZ_MakeBall-BossStarLight_ShipIndex
+		dc.w BSLZ_Explode-BossStarLight_ShipIndex
+		dc.w BSLZ_Recover-BossStarLight_ShipIndex
+		dc.w BSLZ_Escape-BossStarLight_ShipIndex
 ; ===========================================================================
 
-loc_189B8:
+; loc_189B8:
+BSLZ_ShipStart:
 		move.w	#-$100,obVelX(a0)
-		cmpi.w	#boss_slz_x+$120,objoff_30(a0)
+		cmpi.w	#boss_slz_x+$120,obBossX(a0)
 		bhs.s	loc_189CA
 		addq.b	#2,ob2ndRout(a0)
 
@@ -113,16 +118,16 @@ loc_189CA:
 		addq.b	#2,objoff_3F(a0)
 		jsr	(CalcSine).l
 		asr.w	#6,d0
-		add.w	objoff_38(a0),d0
+		add.w	obBossY(a0),d0
 		move.w	d0,obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossX(a0),obX(a0)
 		bra.s	loc_189FE
 ; ===========================================================================
 
 loc_189EE:
 		bsr.w	BossMove
-		move.w	objoff_38(a0),obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossY(a0),obY(a0)
+		move.w	obBossX(a0),obX(a0)
 
 loc_189FE:
 		cmpi.b	#6,ob2ndRout(a0)
@@ -131,9 +136,9 @@ loc_189FE:
 		bmi.s	loc_18A46
 		tst.b	obColType(a0)
 		bne.s	locret_18A44
-		tst.b	objoff_3E(a0)
+		tst.b	obBossFlash(a0)
 		bne.s	loc_18A28
-		move.b	#$20,objoff_3E(a0)
+		move.b	#$20,obBossFlash(a0)
 		move.w	#sfx_HitBoss,d0
 		jsr	(QueueSound2).l	; play boss damage sound
 
@@ -146,7 +151,7 @@ loc_18A28:
 
 loc_18A36:
 		move.w	d0,(a1)
-		subq.b	#1,objoff_3E(a0)
+		subq.b	#1,obBossFlash(a0)
 		bne.s	locret_18A44
 		move.b	#$F,obColType(a0)
 
@@ -163,8 +168,9 @@ loc_18A46:
 		rts
 ; ===========================================================================
 
-loc_18A5E:
-		move.w	objoff_30(a0),d0
+; loc_18A5E:
+BSLZ_ShipMove:
+		move.w	obBossX(a0),d0
 		move.w	#$200,obVelX(a0)
 		btst	#0,obStatus(a0)
 		bne.s	loc_18A7C
@@ -215,7 +221,8 @@ loc_18AC0:
 		bra.w	loc_189CA
 ; ===========================================================================
 
-BossStarLight_MakeBall:
+; BossStarLight_MakeBall:
+BSLZ_MakeBall:
 		cmpi.b	#$28,objoff_3C(a0)
 		bne.s	loc_18B36
 		moveq	#-1,d0
@@ -265,7 +272,8 @@ loc_18B40:
 		bra.w	loc_189CA
 ; ===========================================================================
 
-loc_18B48:
+; loc_18B48:
+BSLZ_Explode:
 		subq.b	#1,objoff_3C(a0)
 		bmi.s	loc_18B52
 		bra.w	BossDefeated
@@ -286,7 +294,8 @@ loc_18B7C:
 		bra.w	loc_189FE
 ; ===========================================================================
 
-loc_18B80:
+; loc_18B80:
+BSLZ_Recover:
 		addq.b	#1,objoff_3C(a0)
 		beq.s	loc_18B90
 		bpl.s	loc_18B96
@@ -323,7 +332,8 @@ loc_18BC2:
 		bra.w	loc_189EE
 ; ===========================================================================
 
-loc_18BC6:
+; loc_18BC6:
+BSLZ_Escape:
 		move.w	#$400,obVelX(a0)
 		move.w	#-$40,obVelY(a0)
 		cmpi.w	#boss_slz_end,(v_limitright2).w

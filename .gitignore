@@ -2,6 +2,14 @@ SonED2 Projects/temp.dat
 SonED2 v1.0x Projects/temp.dat
 SonLVL INI Files/dllcache
 SonLVL INI Files/SonLVL.log
+SonPLN.log
+Utility Project Files/SonED2 Projects/temp.dat
+Utility Project Files/SonED2 v1.0x Projects/temp.dat
+Utility Project Files/SonLVL INI Files/dllcache
+Utility Project Files/SonLVL INI Files/SonLVL.log
+/Utility Project Files/SonPLN.log
+
+# Misc. compiler output.
 sonic.lst
 sonic.log
 errors.txt

@@ -37,3 +37,20 @@ Pal_SBZCycList2: mSBZh
 		mSBZp	 3, 3,Pal_SBZCyc8+4,$3E
 Pal_SBZCycList2_end:
 		even
+
+
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; SBZ palette cycle data bincludes
+; ---------------------------------------------------------------------------
+
+Pal_SBZCyc1:	binclude	"palette/Cycle - SBZ 1.bin"
+Pal_SBZCyc2:	binclude	"palette/Cycle - SBZ 2.bin"
+Pal_SBZCyc3:	binclude	"palette/Cycle - SBZ 3.bin"
+Pal_SBZCyc4:	binclude	"palette/Cycle - SBZ 4.bin"
+Pal_SBZCyc5:	binclude	"palette/Cycle - SBZ 5.bin"
+Pal_SBZCyc6:	binclude	"palette/Cycle - SBZ 6.bin"
+Pal_SBZCyc7:	binclude	"palette/Cycle - SBZ 7.bin"
+Pal_SBZCyc8:	binclude	"palette/Cycle - SBZ 8.bin"
+Pal_SBZCyc9:	binclude	"palette/Cycle - SBZ 9.bin"
+Pal_SBZCyc10:	binclude	"palette/Cycle - SBZ 10.bin"

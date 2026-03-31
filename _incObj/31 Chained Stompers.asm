@@ -9,10 +9,10 @@ ChainStomp:
 		jmp	CStom_Index(pc,d1.w)
 ; ===========================================================================
 CStom_Index:	dc.w CStom_Main-CStom_Index
-		dc.w loc_B798-CStom_Index
-		dc.w loc_B7FE-CStom_Index
-		dc.w CStom_Display2-CStom_Index
-		dc.w loc_B7E2-CStom_Index
+		dc.w CStom_Block-CStom_Index
+		dc.w CStom_Spikes-CStom_Index
+		dc.w CStom_Ceiling-CStom_Index
+		dc.w CStom_Chain-CStom_Index
 
 CStom_switch = objoff_3A		; switch number for the current stomper
 
@@ -106,14 +106,15 @@ CStom_SetSize:
 		lea	CStom_Var2(pc,d0.w),a2
 		move.b	(a2)+,obActWid(a0)
 		move.b	(a2)+,obFrame(a0)
-		bra.s	loc_B798
+		bra.s	CStom_Block
 ; ===========================================================================
 CStom_Var2:	dc.b $38, 0		; width, frame number
 		dc.b $30, 9
 		dc.b $10, $A
 ; ===========================================================================
 
-loc_B798:	; Routine 2
+; loc_B798:
+CStom_Block:	; Routine 2
 		bsr.w	CStom_Types
 		move.w	obY(a0),(v_obj31ypos).w
 		moveq	#0,d1
@@ -139,7 +140,8 @@ CStom_Display:
 		bra.w	CStom_ChkDel
 ; ===========================================================================
 
-loc_B7E2:	; Routine 8
+; loc_B7E2:
+CStom_Chain:	; Routine 8
 		move.b	#$80,obHeight(a0)
 		bset	#4,obRender(a0)
 		movea.l	objoff_3C(a0),a1
@@ -148,14 +150,16 @@ loc_B7E2:	; Routine 8
 		addq.b	#3,d0
 		move.b	d0,obFrame(a0)
 
-loc_B7FE:	; Routine 4
+; loc_B7FE:
+CStom_Spikes:	; Routine 4
 		movea.l	objoff_3C(a0),a1
 		moveq	#0,d0
 		move.b	objoff_32(a1),d0
 		add.w	objoff_30(a0),d0
 		move.w	d0,obY(a0)
 
-CStom_Display2:	; Routine 6
+; CStom_Display2:
+CStom_Ceiling:	; Routine 6
 	if FixBugs=0
 		bsr.w	DisplaySprite
 	endif

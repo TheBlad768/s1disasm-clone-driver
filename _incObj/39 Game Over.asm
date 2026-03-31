@@ -48,7 +48,10 @@ Over_UpdatePos:
 Over_SetWait:
 		move.w	#720,obTimeFrame(a0) ; set time delay to 12 seconds
 		addq.b	#2,obRoutine(a0)
+	if FixBugs=0
+		; this causes the text to briefly flicker when conjoining
 		rts
+	endif
 ; ===========================================================================
 
 Over_Wait:	; Routine 4

@@ -25,10 +25,10 @@ BossSpringYard_ObjData:
 BossSpringYard_Main:	; Routine 0
 		move.w	#boss_syz_x+$1B0,obX(a0)
 		move.w	#boss_syz_y+$E,obY(a0)
-		move.w	obX(a0),objoff_30(a0)
-		move.w	obY(a0),objoff_38(a0)
+		move.w	obX(a0),obBossX(a0)
+		move.w	obY(a0),obBossY(a0)
 		move.b	#$F,obColType(a0)
-		move.b	#8,obColProp(a0) ; set number of hits to 8
+		move.b	#8,obBossHits(a0) ; set number of hits to 8
 		lea	BossSpringYard_ObjData(pc),a2
 		movea.l	a0,a1
 		moveq	#3,d1
@@ -69,17 +69,18 @@ BossSpringYard_ShipMain:	; Routine 2
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 BossSpringYard_ShipIndex:
-		dc.w loc_191CC-BossSpringYard_ShipIndex
-		dc.w loc_19270-BossSpringYard_ShipIndex
-		dc.w loc_192EC-BossSpringYard_ShipIndex
-		dc.w loc_19474-BossSpringYard_ShipIndex
-		dc.w loc_194AC-BossSpringYard_ShipIndex
-		dc.w loc_194F2-BossSpringYard_ShipIndex
+		dc.w BSYZ_ShipStart-BossSpringYard_ShipIndex
+		dc.w BSYZ_ShipMove-BossSpringYard_ShipIndex
+		dc.w BSYZ_Attack-BossSpringYard_ShipIndex
+		dc.w BSYZ_Explode-BossSpringYard_ShipIndex
+		dc.w BSYZ_Recover-BossSpringYard_ShipIndex
+		dc.w BSYZ_Escape-BossSpringYard_ShipIndex
 ; ===========================================================================
 
-loc_191CC:
+; loc_191CC:
+BSYZ_ShipStart:
 		move.w	#-$100,obVelX(a0)
-		cmpi.w	#boss_syz_x+$138,objoff_30(a0)
+		cmpi.w	#boss_syz_x+$138,obBossX(a0)
 		bhs.s	loc_191DE
 		addq.b	#2,ob2ndRout(a0)
 
@@ -92,8 +93,8 @@ loc_191DE:
 
 loc_191F2:
 		bsr.w	BossMove
-		move.w	objoff_38(a0),obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossY(a0),obY(a0)
+		move.w	obBossX(a0),obX(a0)
 
 loc_19202:
 		move.w	obX(a0),d0
@@ -106,9 +107,9 @@ loc_19202:
 		bmi.s	loc_19258
 		tst.b	obColType(a0)
 		bne.s	locret_19256
-		tst.b	objoff_3E(a0)
+		tst.b	obBossFlash(a0)
 		bne.s	loc_1923A
-		move.b	#$20,objoff_3E(a0)
+		move.b	#$20,obBossFlash(a0)
 		move.w	#sfx_HitBoss,d0
 		jsr	(QueueSound2).l	; play boss damage sound
 
@@ -121,7 +122,7 @@ loc_1923A:
 
 loc_19248:
 		move.w	d0,(a1)
-		subq.b	#1,objoff_3E(a0)
+		subq.b	#1,obBossFlash(a0)
 		bne.s	locret_19256
 		move.b	#$F,obColType(a0)
 
@@ -138,8 +139,9 @@ loc_19258:
 		rts
 ; ===========================================================================
 
-loc_19270:
-		move.w	objoff_30(a0),d0
+; loc_19270:
+BSYZ_ShipMove:
+		move.w	obBossX(a0),d0
 		move.w	#$140,obVelX(a0)
 		btst	#0,obStatus(a0)
 		bne.s	loc_1928E
@@ -178,7 +180,7 @@ loc_192AE:
 		move.b	objoff_34(a0),d0
 		asl.w	#5,d0
 		addi.w	#boss_syz_x+$10,d0
-		move.w	d0,objoff_30(a0)
+		move.w	d0,obBossX(a0)
 		bsr.w	BossSpringYard_FindBlocks
 		addq.b	#2,ob2ndRout(a0)
 		clr.w	obSubtype(a0)
@@ -188,24 +190,26 @@ loc_192E8:
 		bra.w	loc_191DE
 ; ===========================================================================
 
-loc_192EC:
+; loc_192EC:
+BSYZ_Attack:
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
 		move.w	off_192FA(pc,d0.w),d0
 		jmp	off_192FA(pc,d0.w)
 ; ===========================================================================
-off_192FA:	dc.w loc_19302-off_192FA
-		dc.w loc_19348-off_192FA
-		dc.w loc_1938E-off_192FA
-		dc.w loc_193D0-off_192FA
+off_192FA:	dc.w BSYZ_Descend-off_192FA
+		dc.w BSYZ_Lift-off_192FA
+		dc.w BSYZ_LiftStop-off_192FA
+		dc.w BSYZ_BreakBlock-off_192FA
 ; ===========================================================================
 
-loc_19302:
+; loc_19302:
+BSYZ_Descend:
 		move.w	#$180,obVelY(a0)
-		move.w	objoff_38(a0),d0
+		move.w	obBossY(a0),d0
 		cmpi.w	#boss_syz_y+$8A,d0
 		blo.s	loc_19344
-		move.w	#boss_syz_y+$8A,objoff_38(a0)
+		move.w	#boss_syz_y+$8A,obBossY(a0)
 		clr.w	objoff_3C(a0)
 		moveq	#-1,d0
 		move.w	objoff_36(a0),d0
@@ -224,7 +228,8 @@ loc_19344:
 		bra.w	loc_191F2
 ; ===========================================================================
 
-loc_19348:
+; loc_19348:
+BSYZ_Lift:
 		subq.w	#1,objoff_3C(a0)
 		bpl.s	loc_19366
 		addq.b	#2,obSubtype(a0)
@@ -248,20 +253,21 @@ loc_19366:
 		neg.w	d0
 
 loc_1937C:
-		add.w	objoff_38(a0),d0
+		add.w	obBossY(a0),d0
 		move.w	d0,obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossX(a0),obX(a0)
 		bra.w	loc_19202
 ; ===========================================================================
 
-loc_1938E:
+; loc_1938E:
+BSYZ_LiftStop:
 		move.w	#boss_syz_y+$E,d0
 		tst.w	objoff_36(a0)
 		beq.s	loc_1939C
 		subi.w	#$18,d0
 
 loc_1939C:
-		cmp.w	objoff_38(a0),d0
+		cmp.w	obBossY(a0),d0
 		blt.s	loc_193BE
 		move.w	#8,objoff_3C(a0)
 		tst.w	objoff_36(a0)
@@ -283,7 +289,8 @@ loc_193CC:
 		bra.w	loc_191F2
 ; ===========================================================================
 
-loc_193D0:
+; loc_193D0:
+BSYZ_BreakBlock:
 		subq.w	#1,objoff_3C(a0)
 		bgt.s	loc_19406
 		bmi.s	loc_193EE
@@ -314,14 +321,14 @@ loc_19406:
 		moveq	#2,d0
 
 loc_19410:
-		cmpi.w	#boss_syz_y+$E,objoff_38(a0)
+		cmpi.w	#boss_syz_y+$E,obBossY(a0)
 		beq.s	loc_19424
 		blt.s	loc_1941C
 		neg.w	d0
 
 loc_1941C:
 		tst.w	objoff_36(a0)
-		add.w	d0,objoff_38(a0)
+		add.w	d0,obBossY(a0)
 
 loc_19424:
 		moveq	#0,d0
@@ -333,15 +340,13 @@ loc_19424:
 		neg.w	d0
 
 loc_19438:
-		add.w	objoff_38(a0),d0
+		add.w	obBossY(a0),d0
 		move.w	d0,obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossX(a0),obX(a0)
 
 loc_19446:
 		bra.w	loc_19202
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 BossSpringYard_FindBlocks:
 		clr.w	objoff_36(a0)
@@ -374,7 +379,8 @@ locret_19472:
 
 ; ===========================================================================
 
-loc_19474:
+; loc_19474:
+BSYZ_Explode:
 		subq.w	#1,objoff_3C(a0)
 		bmi.s	loc_1947E
 		bra.w	BossDefeated
@@ -395,7 +401,8 @@ loc_194A8:
 		bra.w	loc_19202
 ; ===========================================================================
 
-loc_194AC:
+; loc_194AC:
+BSYZ_Recover:
 		addq.w	#1,objoff_3C(a0)
 		beq.s	loc_194BC
 		bpl.s	loc_194C2
@@ -432,7 +439,8 @@ loc_194EE:
 		bra.w	loc_191F2
 ; ===========================================================================
 
-loc_194F2:
+; loc_194F2:
+BSYZ_Escape:
 		move.w	#$400,obVelX(a0)
 		move.w	#-$40,obVelY(a0)
 		cmpi.w	#boss_syz_end,(v_limitright2).w
@@ -476,39 +484,50 @@ BossSpringYard_FaceMain:	; Routine 4
 BossSpringYard_FaceDelete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
-off_19546:	dc.w loc_19574-off_19546, loc_19574-off_19546
-		dc.w loc_1955A-off_19546, loc_19552-off_19546
-		dc.w loc_19552-off_19546, loc_19556-off_19546
+off_19546:	dc.w BSYZ_Face_ChkHit-off_19546
+		dc.w BSYZ_Face_ChkHit-off_19546
+		dc.w BSYZ_Face_Attack-off_19546
+		dc.w BSYZ_Face_Defeat-off_19546
+		dc.w BSYZ_Face_Defeat-off_19546
+		dc.w BSYZ_Face_Escape-off_19546
 ; ===========================================================================
 
-loc_19552:
+; loc_19552:
+BSYZ_Face_Defeat:
 		moveq	#$A,d1
 		rts
 ; ===========================================================================
 
-loc_19556:
+; loc_19556:
+BSYZ_Face_Escape:
 		moveq	#6,d1
 		rts
 ; ===========================================================================
 
-loc_1955A:
+; loc_1955A:
+BSYZ_Face_Attack:
 		moveq	#0,d0
 		move.b	obSubtype(a1),d0
 		move.w	off_19568(pc,d0.w),d0
 		jmp	off_19568(pc,d0.w)
 ; ===========================================================================
-off_19568:	dc.w loc_19570-off_19568, loc_19572-off_19568
-		dc.w loc_19570-off_19568, loc_19570-off_19568
+off_19568:	dc.w BSYZ_Face_Attack_Other-off_19568
+		dc.w BSYZ_Face_Attack_Lift-off_19568
+		dc.w BSYZ_Face_Attack_Other-off_19568
+		dc.w BSYZ_Face_Attack_Other-off_19568
 ; ===========================================================================
 
-loc_19570:
-		bra.s	loc_19574
+; loc_19570:
+BSYZ_Face_Attack_Other:
+		bra.s	BSYZ_Face_ChkHit
 ; ===========================================================================
 
-loc_19572:
+; loc_19572:
+BSYZ_Face_Attack_Lift:
 		moveq	#6,d1
 
-loc_19574:
+; loc_19574:
+BSYZ_Face_ChkHit:
 		tst.b	obColType(a1)
 		bne.s	loc_1957E
 		moveq	#5,d1

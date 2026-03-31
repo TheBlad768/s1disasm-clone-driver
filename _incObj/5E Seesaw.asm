@@ -30,7 +30,6 @@ See_Index:	dc.w See_Main-See_Index
 		dc.w See_Spikeball-See_Index
 		dc.w See_MoveSpike-See_Index
 		dc.w See_SpikeFall-See_Index
-
 ; ===========================================================================
 
 See_Main:	; Routine 0
@@ -160,7 +159,7 @@ loc_117FC:
 		beq.s	loc_11822
 		move.w	#-$AF0,d1
 		move.w	#-$CC,d2
-		cmpi.w	#$A00,objoff_38(a1)
+		cmpi.w	#$A00,obBossY(a1)
 		blt.s	loc_11822
 		move.w	#-$E00,d1
 		move.w	#-$A0,d2

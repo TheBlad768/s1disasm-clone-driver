@@ -222,14 +222,17 @@ PLC_SYZ:	plcheader
 PLC_SYZ_end:
 
 PLC_SYZ2:	plcheader
-		plcm	Nem_Bumper,    ArtTile_SYZ_Bumper          ; bumper
-		plcm	Nem_SyzSpike1, ArtTile_SYZ_Big_Spikeball   ; large spikeball
-		plcm	Nem_SyzSpike2, ArtTile_SYZ_Spikeball_Chain ; small spikeball
-		plcm	Nem_Cater,     ArtTile_MZ_SYZ_Caterkiller  ; caterkiller enemy
-		plcm	Nem_LzSwitch,  ArtTile_Button              ; switch
-		plcm	Nem_Spikes,    ArtTile_Spikes              ; spikes
-		plcm	Nem_HSpring,   ArtTile_Spring_Horizontal   ; horizontal spring
-		plcm	Nem_VSpring,   ArtTile_Spring_Vertical     ; vertical spring
+		plcm	Nem_Bumper,	ArtTile_SYZ_Bumper		; bumper
+		plcm	Nem_SyzSpike1,	ArtTile_SYZ_Big_Spikeball	; large spikeball
+		plcm	Nem_SyzSpike2,	ArtTile_SYZ_Spikeball_Chain	; small spikeball
+	if FixBugs=0
+		; Despite being unused, this corrupts the Roller's graphics
+		plcm	Nem_Cater,	ArtTile_MZ_SYZ_Caterkiller	; caterkiller enemy
+	endif
+		plcm	Nem_LzSwitch,	ArtTile_Button			; switch
+		plcm	Nem_Spikes,	ArtTile_Spikes			; spikes
+		plcm	Nem_HSpring,	ArtTile_Spring_Horizontal	; horizontal spring
+		plcm	Nem_VSpring,	ArtTile_Spring_Vertical		; vertical spring
 PLC_SYZ2_end:
 
 ; ---------------------------------------------------------------------------

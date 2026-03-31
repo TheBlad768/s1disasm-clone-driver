@@ -14,7 +14,7 @@ Cat_Index:	dc.w Cat_Main-Cat_Index
 		dc.w Cat_BodySeg2-Cat_Index
 		dc.w Cat_BodySeg1-Cat_Index
 		dc.w Cat_Delete-Cat_Index
-		dc.w loc_16CC0-Cat_Index
+		dc.w Cat_Fragment-Cat_Index
 
 cat_parent = objoff_3C		; address of parent object
 ; ===========================================================================
@@ -133,11 +133,12 @@ Cat_ChkGone:
 Cat_Delete:	; Routine $A
 		jmp	(DeleteObject).l
 ; ===========================================================================
-Cat_Index2:	dc.w .wait-Cat_Index2
-		dc.w loc_16B02-Cat_Index2
+Cat_Index2:	dc.w Cat_Undulate-Cat_Index2
+		dc.w Cat_Floor-Cat_Index2
 ; ===========================================================================
 
-.wait:
+; .wait:
+Cat_Undulate:
 		subq.b	#1,objoff_2A(a0)
 		bmi.s	.move
 		rts
@@ -156,7 +157,8 @@ Cat_Index2:	dc.w .wait-Cat_Index2
 loc_16AFC:
 		bset	#7,objoff_2B(a0)
 
-loc_16B02:
+; loc_16B02:
+Cat_Floor:
 		subq.b	#1,objoff_2A(a0)
 		bmi.s	.loc_16B5E
 	if Revision=0
@@ -393,7 +395,8 @@ loc_16CAA:
 		move.b	#$C,obRoutine(a0)
 		andi.b	#$F8,obFrame(a0)
 
-loc_16CC0:	; Routine $C
+; loc_16CC0:
+Cat_Fragment:	; Routine $C
 		jsr	(ObjectFall).l
 		tst.w	obVelY(a0)
 		bmi.s	loc_16CE0

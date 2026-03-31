@@ -7,7 +7,7 @@ BossSpikeball:
 		move.b	obRoutine(a0),d0
 		move.w	BossSpikeball_Index(pc,d0.w),d0
 		jsr	BossSpikeball_Index(pc,d0.w)
-		move.w	objoff_30(a0),d0
+		move.w	obBossX(a0),d0
 		andi.w	#$FF80,d0
 		move.w	(v_screenposx).w,d1
 		subi.w	#$80,d1
@@ -21,8 +21,8 @@ BossSpikeball:
 BossSpikeball_Index:
 		dc.w BossSpikeball_Main-BossSpikeball_Index
 		dc.w BossSpikeball_Fall-BossSpikeball_Index
-		dc.w loc_18DC6-BossSpikeball_Index
-		dc.w loc_18EAA-BossSpikeball_Index
+		dc.w BossSpikeball_Bounce-BossSpikeball_Index
+		dc.w BossSpikeball_HitBoss-BossSpikeball_Index
 		dc.w BossSpikeball_Explode-BossSpikeball_Index
 		dc.w BossSpikeball_MoveFrag-BossSpikeball_Index
 ; ===========================================================================
@@ -36,7 +36,7 @@ BossSpikeball_Main:	; Routine 0
 		move.b	#$8B,obColType(a0)
 		move.b	#$C,obActWid(a0)
 		movea.l	objoff_3C(a0),a1
-		move.w	obX(a1),objoff_30(a0)
+		move.w	obX(a1),obBossX(a0)
 		move.w	obY(a1),objoff_34(a0)
 		bset	#0,obStatus(a0)
 		move.w	obX(a0),d0
@@ -55,7 +55,7 @@ BossSpikeball_Fall:	; Routine 2
 		moveq	#0,d0
 		move.b	obFrame(a1),d0
 		move.w	obX(a0),d1
-		sub.w	objoff_30(a0),d1
+		sub.w	obBossX(a0),d1
 		bcc.s	loc_18D8E
 		addq.w	#2,d0
 
@@ -82,7 +82,8 @@ locret_18DC4:
 		rts
 ; ===========================================================================
 
-loc_18DC6:	; Routine 4
+; loc_18DC6:
+BossSpikeball_Bounce: ; Routine 4
 		movea.l	objoff_3C(a0),a1
 		moveq	#0,d0
 		move.b	objoff_3A(a0),d0
@@ -98,7 +99,7 @@ loc_18DDA:
 		beq.s	loc_18E00
 		move.w	#-$960,d1
 		move.w	#-$F4,d2
-		cmpi.w	#$9C0,objoff_38(a1)
+		cmpi.w	#$9C0,obBossY(a1)
 		blt.s	loc_18E00
 		move.w	#-$A20,d1
 		move.w	#-$80,d2
@@ -107,7 +108,7 @@ loc_18E00:
 		move.w	d1,obVelY(a0)
 		move.w	d2,obVelX(a0)
 		move.w	obX(a0),d0
-		sub.w	objoff_30(a0),d0
+		sub.w	obBossX(a0),d0
 		bcc.s	loc_18E16
 		neg.w	obVelX(a0)
 
@@ -115,7 +116,7 @@ loc_18E16:
 		move.b	#1,obFrame(a0)
 		move.w	#$20,obSubtype(a0)
 		addq.b	#2,obRoutine(a0)
-		bra.w	loc_18EAA
+		bra.w	BossSpikeball_HitBoss
 ; ===========================================================================
 
 loc_18E2A:
@@ -124,7 +125,7 @@ loc_18E2A:
 		move.b	obFrame(a1),d0
 		move.w	#$28,d2
 		move.w	obX(a0),d1
-		sub.w	objoff_30(a0),d1
+		sub.w	obBossX(a0),d1
 		bcc.s	loc_18E48
 		neg.w	d2
 		addq.w	#2,d0
@@ -134,7 +135,7 @@ loc_18E48:
 		move.w	objoff_34(a0),d1
 		add.w	(a2,d0.w),d1
 		move.w	d1,obY(a0)
-		add.w	objoff_30(a0),d2
+		add.w	obBossX(a0),d2
 		move.w	d2,obX(a0)
 		clr.w	obY+2(a0)
 		clr.w	obX+2(a0)
@@ -165,7 +166,8 @@ locret_18EA8:
 		rts
 ; ===========================================================================
 
-loc_18EAA:	; Routine 6
+; loc_18EAA:
+BossSpikeball_HitBoss:	; Routine 6
 	if FixBugs
 		lea	(v_lvlobjspace).w,a1
 	else
@@ -230,7 +232,7 @@ loc_18EC0:
 		addq.b	#2,obRoutine(a0)
 		clr.w	obSubtype(a0)
 		clr.b	obColType(a1)
-		subq.b	#1,obColProp(a1)
+		subq.b	#1,obBossHits(a1)
 		bne.s	loc_18F38
 		bset	#7,obStatus(a1)
 		clr.w	obVelX(a0)
@@ -257,7 +259,7 @@ loc_18F5C:
 		moveq	#0,d0
 		move.b	obFrame(a1),d0
 		move.w	obX(a0),d1
-		sub.w	objoff_30(a0),d1
+		sub.w	obBossX(a0),d1
 		bcc.s	loc_18F7E
 		addq.w	#2,d0
 
@@ -377,7 +379,7 @@ BossSpikeball_FragSpeed:
 
 BossSpikeball_MoveFrag:	; Routine $A
 		jsr	(SpeedToPos).l
-		move.w	obX(a0),objoff_30(a0)
+		move.w	obX(a0),obBossX(a0)
 		move.w	obY(a0),objoff_34(a0)
 		addi.w	#$18,obVelY(a0)
 		moveq	#4,d0

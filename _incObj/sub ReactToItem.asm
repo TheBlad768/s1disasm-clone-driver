@@ -2,9 +2,6 @@
 ; Subroutine to react to obColType(a0)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ReactToItem:
 		nop	
 		move.w	obX(a0),d2	; load Sonic's x-axis position
@@ -141,16 +138,22 @@ ReactToItem:
 React_Monitor:
 		tst.w	obVelY(a0)	; is Sonic moving upwards?
 		bpl.s	.movingdown	; if not, branch
-
+	if FixBugs
+		; Fix bumping monitors from below that are already on the ground
+		btst	#1,obStatus(a0)
+		beq.s	.movingdown
+	endif
 		move.w	obY(a0),d0
 		subi.w	#$10,d0
 		cmp.w	obY(a1),d0
 		blo.s	.donothing
+
+.monitorbumped:
 		neg.w	obVelY(a0)	; reverse Sonic's vertical speed
 		move.w	#-$180,obVelY(a1)
 		tst.b	ob2ndRout(a1)
 		bne.s	.donothing
-		addq.b	#4,ob2ndRout(a1) ; advance the monitor's routine counter
+		addq.b	#4,ob2ndRout(a1) ; advance the monitor's routine counter (to make it fall)
 		rts
 ; ===========================================================================
 
@@ -246,16 +249,11 @@ React_ChkHurt:
 		tst.w	flashtime(a0)		; is Sonic flashing?
 		bne.s	.isflashing	; if yes, branch
 		movea.l	a1,a2
-
-; End of function ReactToItem
-; continue straight to HurtSonic
+		; continue straight to HurtSonic
 
 ; ---------------------------------------------------------------------------
 ; Hurting Sonic subroutine
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 HurtSonic:
 		tst.b	(v_shield).w	; does Sonic have a shield?
@@ -318,13 +316,11 @@ HurtSonic:
 .norings:
 		tst.w	(f_debugmode).w	; is debug mode cheat on?
 		bne.w	.hasshield	; if yes, branch
+		; continue straight to KillSonic
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to kill Sonic
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 KillSonic:
 		tst.w	(v_debuguse).w	; is debug mode active?
@@ -336,16 +332,23 @@ KillSonic:
 		move.w	#-$700,obVelY(a0)
 		move.w	#0,obVelX(a0)
 		move.w	#0,obInertia(a0)
+
 	if FixBugs=0
 		; Leftover line from the prototype, where objoff_38 was used to respawn Sonic at his last y position.
-		; sticktoconvex gets overwritten with the high byte of Sonic's y position.
-		; It is made redundant as Sonic doesn't react to solids when he dies.
-		; It was removed in the CENSOR prototype of Sonic 2 onwards.
+		; This causes sticktoconvex to get overwritten with the high byte of Sonic's y position.
+		; It is made redundant as Sonic doesn't react to solids when he dies,
+		; and it was removed in the CENSOR prototype of Sonic 2 onwards.
 		move.w	obY(a0),objoff_38(a0)
 	endif
+
 		move.b	#id_Death,obAnim(a0)
 		bset	#7,obGfx(a0)
+
 	if FixBugs
+		; Stop timer as soon as death is triggered to prevent double deaths from time overs
+		clr.b	(f_timecount).w	; stop time counter
+		
+		; Fix harpoon object's death sound
 		move.w	#sfx_HitSpikes,d0 ; play spikes death sound
 		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
 		beq.s	.sound
@@ -353,7 +356,6 @@ KillSonic:
 		beq.s	.sound
 		move.w	#sfx_Death,d0	; play normal death sound
 	else
-		; This fails to check for the harpoon object.
 		move.w	#sfx_Death,d0	; play normal death sound
 		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
 		bne.s	.sound
@@ -367,10 +369,7 @@ KillSonic:
 		moveq	#-1,d0
 		rts
 ; End of function KillSonic
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 React_Special:
 		move.b	obColType(a1),d1

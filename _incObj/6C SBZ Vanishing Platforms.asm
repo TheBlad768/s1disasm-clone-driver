@@ -9,16 +9,16 @@ VanishPlatform:
 		jmp	VanP_Index(pc,d1.w)
 ; ===========================================================================
 VanP_Index:	dc.w VanP_Main-VanP_Index
-		dc.w VanP_Vanish-VanP_Index
-		dc.w VanP_Appear-VanP_Index
-		dc.w loc_16068-VanP_Index
+		dc.w VanP_Detect-VanP_Index
+		dc.w VanP_StoodOn-VanP_Index
+		dc.w VanP_Sync-VanP_Index
 
 vanp_timer = objoff_30		; counter for time until event
 vanp_timelen = objoff_32	; time between events (general)
 ; ===========================================================================
 
 VanP_Main:	; Routine 0
-		addq.b	#6,obRoutine(a0)
+		addq.b	#6,obRoutine(a0)	; goto VanP_Sync next
 		move.l	#Map_VanP,obMap(a0)
 		move.w	#ArtTile_SBZ_Vanishing_Block|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
@@ -43,13 +43,14 @@ VanP_Main:	; Routine 0
 		subq.w	#1,d1
 		move.w	d1,objoff_38(a0)
 
-loc_16068:	; Routine 6
+; loc_16068:
+VanP_Sync:	; Routine 6
 		move.w	(v_framecount).w,d0
 		sub.w	objoff_36(a0),d0
 		and.w	objoff_38(a0),d0
 		bne.s	.animate
-		subq.b	#4,obRoutine(a0) ; goto VanP_Vanish next
-		bra.s	VanP_Vanish
+		subq.b	#4,obRoutine(a0) ; goto VanP_Detect next
+		bra.s	VanP_Detect
 ; ===========================================================================
 
 .animate:
@@ -58,8 +59,9 @@ loc_16068:	; Routine 6
 		bra.w	RememberState
 ; ===========================================================================
 
-VanP_Vanish:	; Routine 2
-VanP_Appear:	; Routine 4
+; VanP_Vanish: VanP_Appear:
+VanP_Detect:	; Routine 2
+VanP_StoodOn:	; Routine 4
 		subq.w	#1,vanp_timer(a0)
 		bpl.s	.wait
 		move.w	#127,vanp_timer(a0)

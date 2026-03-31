@@ -109,11 +109,16 @@ Elev_Types:
 		move.w	.index(pc,d0.w),d1
 		jmp	.index(pc,d1.w)
 ; ===========================================================================
-.index:		dc.w .type00-.index, .type01-.index
-		dc.w .type02-.index, .type01-.index
-		dc.w .type04-.index, .type01-.index
-		dc.w .type06-.index, .type01-.index
-		dc.w .type08-.index, .type09-.index
+.index:		dc.w .type00-.index
+		dc.w .type01-.index
+		dc.w .type02-.index
+		dc.w .type01-.index
+		dc.w .type04-.index
+		dc.w .type01-.index
+		dc.w .type06-.index
+		dc.w .type01-.index
+		dc.w .type08-.index
+		dc.w .type09-.index
 ; ===========================================================================
 
 .type00:
@@ -192,9 +197,7 @@ Elev_Types:
 
 .delete:
 		bra.w	DeleteObject
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Elev_Move:
 		move.w	objoff_38(a0),d0

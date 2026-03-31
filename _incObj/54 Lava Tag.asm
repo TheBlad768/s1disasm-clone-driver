@@ -30,7 +30,7 @@ LTag_ChkDel:	; Routine 2
 		subi.w	#$80,d1
 		andi.w	#$FF80,d1
 		sub.w	d1,d0
-		bmi.w	DeleteObject
+		bmi.w	DeleteObject ; this branch isn't in the common out_of_range macro
 		cmpi.w	#$280,d0
 		bhi.w	DeleteObject
 		rts

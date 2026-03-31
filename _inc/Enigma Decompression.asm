@@ -15,9 +15,6 @@
 ; See http://www.segaretro.org/Enigma_compression for format description
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 EniDec:
 		movem.l	d0-d7/a1-a5,-(sp)
 		movea.w	d0,a3		; store starting art tile
@@ -138,12 +135,11 @@ EniDec_Done:
 		movem.l	(sp)+,d0-d7/a1-a5
 		rts
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Part of the Enigma decompressor
 ; Fetches an inline copy value and stores it in d1
 ; ---------------------------------------------------------------------------
-
-; =============== S U B R O U T I N E =======================================
 
 ; loc_17DC:
 EniDec_FetchInlineValue:
@@ -235,8 +231,7 @@ EniDec_Masks:
 		dc.w   $1F,  $3F,  $7F,  $FF
 		dc.w  $1FF, $3FF, $7FF, $FFF
 		dc.w $1FFF,$3FFF,$7FFF,$FFFF
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_188C:
 EniDec_FetchByte:

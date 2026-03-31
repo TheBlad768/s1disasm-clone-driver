@@ -141,13 +141,20 @@ FBlock_Action:	; Routine 2
 		jmp	(DeleteObject).l
 	endif
 ; ===========================================================================
-.index:		dc.w .type00-.index, .type01-.index
-		dc.w .type02-.index, .type03-.index
-		dc.w .type04-.index, .type05-.index
-		dc.w .type06-.index, .type07-.index
-		dc.w .type08-.index, .type09-.index
-		dc.w .type0A-.index, .type0B-.index
-		dc.w .type0C-.index, .type0D-.index
+.index:		dc.w .type00-.index
+		dc.w .type01-.index
+		dc.w .type02-.index
+		dc.w .type03-.index
+		dc.w .type04-.index
+		dc.w .type05-.index
+		dc.w .type06-.index
+		dc.w .type07-.index
+		dc.w .type08-.index
+		dc.w .type09-.index
+		dc.w .type0A-.index
+		dc.w .type0B-.index
+		dc.w .type0C-.index
+		dc.w .type0D-.index
 ; ===========================================================================
 
 .type00:

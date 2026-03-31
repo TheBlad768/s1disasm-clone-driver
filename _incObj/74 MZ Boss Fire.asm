@@ -16,8 +16,8 @@ BossFire:
 ; ===========================================================================
 BossFire_Index:	dc.w BossFire_Main-BossFire_Index
 		dc.w BossFire_Action-BossFire_Index
-		dc.w loc_18886-BossFire_Index
-		dc.w BossFire_Delete3-BossFire_Index
+		dc.w BossFire_TempFire-BossFire_Index
+		dc.w BossFire_TempFireDel-BossFire_Index
 ; ===========================================================================
 
 BossFire_Main:	; Routine 0
@@ -27,14 +27,14 @@ BossFire_Main:	; Routine 0
 		move.w	#ArtTile_MZ_Fireball,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#5,obPriority(a0)
-		move.w	obY(a0),objoff_38(a0)
+		move.w	obY(a0),obBossY(a0)
 		move.b	#8,obActWid(a0)
 		addq.b	#2,obRoutine(a0)
 		tst.b	obSubtype(a0)
 		bne.s	loc_1870A
 		move.b	#$8B,obColType(a0)
 		addq.b	#2,obRoutine(a0)
-		bra.w	loc_18886
+		bra.w	BossFire_TempFire
 ; ===========================================================================
 
 loc_1870A:
@@ -63,7 +63,7 @@ BossFire_Action:	; Routine 2
 BossFire_Delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
-BossFire_Index2:	dc.w BossFire_Drop-BossFire_Index2
+BossFire_Index2:dc.w BossFire_Drop-BossFire_Index2
 		dc.w BossFire_MakeFlame-BossFire_Index2
 		dc.w BossFire_Duplicate-BossFire_Index2
 		dc.w BossFire_FallEdge-BossFire_Index2
@@ -91,8 +91,8 @@ BossFire_MakeFlame:
 		bset	#7,obGfx(a0)
 		move.w	#$A0,obVelX(a0)
 		clr.w	obVelY(a0)
-		move.w	obX(a0),objoff_30(a0)
-		move.w	obY(a0),objoff_38(a0)
+		move.w	obX(a0),obBossX(a0)
+		move.w	obY(a0),obBossY(a0)
 		move.b	#3,objoff_29(a0)
 		jsr	(FindNextFreeObj).l
 		bne.s	loc_187CA
@@ -113,9 +113,7 @@ BossFire_Loop:
 loc_187CA:
 		addq.b	#2,ob2ndRout(a0)
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 BossFire_Duplicate2:
 		jsr	(FindNextFreeObj).l
@@ -138,7 +136,7 @@ BossFire_Duplicate:
 		move.w	obX(a0),d0
 		cmpi.w	#boss_mz_x+$140,d0
 		bgt.s	loc_1882C
-		move.w	objoff_30(a0),d1
+		move.w	obBossX(a0),d1
 		cmp.w	d0,d1
 		beq.s	loc_1881E
 		andi.w	#$10,d0
@@ -149,7 +147,7 @@ BossFire_Duplicate:
 		move.w	obX(a0),objoff_32(a0)
 
 loc_1881E:
-		move.w	obX(a0),objoff_30(a0)
+		move.w	obX(a0),obBossX(a0)
 		rts
 ; ===========================================================================
 
@@ -184,7 +182,7 @@ loc_18856:
 		beq.s	BossFire_Delete2
 		clr.w	obVelY(a0)
 		move.w	objoff_32(a0),obX(a0)
-		move.w	objoff_38(a0),obY(a0)
+		move.w	obBossY(a0),obY(a0)
 		bset	#7,obGfx(a0)
 		subq.b	#2,ob2ndRout(a0)
 
@@ -201,7 +199,8 @@ BossFire_Delete2:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
-loc_18886:	; Routine 4
+; loc_18886:
+BossFire_TempFire: ; Routine 4
 		bset	#7,obGfx(a0)
 		subq.b	#1,objoff_29(a0)
 		bne.s	BossFire_Animate
@@ -220,5 +219,6 @@ BossFire_Animate:
 	endif
 ; ===========================================================================
 
-BossFire_Delete3:	; Routine 6
+; BossFire_Delete3:
+BossFire_TempFireDel:	; Routine 6
 		jmp	(DeleteObject).l

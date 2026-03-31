@@ -55,12 +55,26 @@ Spik_SideWays:
 		move.w	d2,d3
 		addq.w	#1,d3
 		move.w	obX(a0),d4
-		bsr.w	SolidObject
+		bsr.w	SolidObject		; check if Sonic touched the spikes
+	if FixBugs
+		; Fix Spikes Backside Damage in Sonic 1
+		; https://info.sonicretro.org/SCHG_How-to:Fix_Spikes_Backside_Damage_in_Sonic_1
+		ble.w	Spik_Display		; branch if not touched at all (0) or top/bottom touched (-1)
+		move.w	(v_player+obX).w,d0	; load Sonic's X position into d0
+		sub.w	obX(a0),d0		; subtract spikes' X position
+		btst	#0,obStatus(a0)		; are spikes facing left? (X-flip flag clear)
+		beq.s	.chkHurt		; if yes, branch
+		neg.w	d0			; invert difference to check opposite end for right spikes
+.chkHurt:	tst.w	d0			; is Sonic touching the "pointy" end of the spikes?
+		bgt.s	Spik_Display		; if not, make spike harmless (backside touched)
+		bra.s	Spik_Hurt		; otherwise, trigger damage
+	else
 		btst	#3,obStatus(a0)
 		bne.s	Spik_Display
 		cmpi.w	#1,d4
 		beq.s	Spik_Hurt
 		bra.s	Spik_Display
+	endif
 ; ===========================================================================
 
 ; Spikes types $0x, $2x, $3x and $4x face up or down
@@ -72,11 +86,27 @@ Spik_Upright:
 		move.w	#$10,d2
 		move.w	#$11,d3
 		move.w	obX(a0),d4
-		bsr.w	SolidObject
+		bsr.w	SolidObject		; check if Sonic touched the spikes
+	if FixBugs
+		; Fix Spikes Backside Damage in Sonic 1
+		; https://info.sonicretro.org/SCHG_How-to:Fix_Spikes_Backside_Damage_in_Sonic_1
+		btst	#3,obStatus(a0)		; does Sonic stand on the spikes? (landing on it after taking damage)
+		bne.s	.chkAnyway		; if yes, check for collision anyway
+		tst.w	d4			; check response value from SolidObject
+		bge.s	Spik_Display		; branch if not touched at all (0) or touched from the sides (+1)
+.chkAnyway:	move.w	(v_player+obY).w,d0	; load Sonic's Y position into d0
+		sub.w	obY(a0),d0		; subtract spikes' Y position
+		btst	#1,obStatus(a0)		; are spikes facing up? (Y-flip flag clear)
+		beq.s	.chkHurt		; if yes, branch
+		neg.w	d0			; invert difference to check opposite end for upside-down spikes
+.chkHurt:	tst.w	d0			; is Sonic touching the "pointy" end of the spikes?
+		bgt.s	Spik_Display		; if not, make spike harmless (backside touched)
+	else
 		btst	#3,obStatus(a0)
 		bne.s	Spik_Hurt
 		tst.w	d4
 		bpl.s	Spik_Display
+	endif
 
 Spik_Hurt:
 		tst.b	(v_invinc).w	; is Sonic invincible?

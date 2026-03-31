@@ -122,9 +122,7 @@ Jun_Release:	; Routine 6
 		bsr.s	Jun_ChkSwitch
 		bsr.s	Jun_ChgPos
 		bra.w	RememberState
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Jun_ChkSwitch:
 		lea	(f_switch).w,a2
@@ -156,10 +154,7 @@ Jun_ChkSwitch:
 .nochange:
 		rts
 ; End of function Jun_ChkSwitch
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Jun_ChgPos:
 		lea	(v_player).w,a1

@@ -128,14 +128,11 @@ loc_EC70:
 
 loc_EC86:
 		addq.b	#2,obRoutine(a0)
-
+		; fall through to GotThroughAct...
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to set up bonuses at the end of an act
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 GotThroughAct:
 		tst.b	(v_endcard).w

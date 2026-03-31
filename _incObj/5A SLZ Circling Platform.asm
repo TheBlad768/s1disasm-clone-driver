@@ -16,7 +16,6 @@ CirclingPlatform:
 Circ_Index:	dc.w Circ_Main-Circ_Index
 		dc.w Circ_Platform-Circ_Index
 		dc.w Circ_Action-Circ_Index
-
 ; ===========================================================================
 
 Circ_Main:	; Routine 0

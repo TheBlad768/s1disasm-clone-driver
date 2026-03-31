@@ -9,11 +9,16 @@ EndSonic:
 		jsr	ESon_Index(pc,d1.w)
 		jmp	(DisplaySprite).l
 ; ===========================================================================
-ESon_Index:	dc.w ESon_Main-ESon_Index, ESon_MakeEmeralds-ESon_Index
-		dc.w Obj87_Animate-ESon_Index,	Obj87_LookUp-ESon_Index
-		dc.w Obj87_ClrObjRam-ESon_Index, Obj87_Animate-ESon_Index
-		dc.w Obj87_MakeLogo-ESon_Index, Obj87_Animate-ESon_Index
-		dc.w Obj87_Leap-ESon_Index, Obj87_Animate-ESon_Index
+ESon_Index:	dc.w ESon_Main-ESon_Index
+		dc.w ESon_MakeEmeralds-ESon_Index
+		dc.w ESon_Animate-ESon_Index
+		dc.w ESon_LookUp-ESon_Index
+		dc.w ESon_ClrObjRam-ESon_Index
+		dc.w ESon_Animate-ESon_Index
+		dc.w ESon_MakeLogo-ESon_Index
+		dc.w ESon_Animate-ESon_Index
+		dc.w ESon_Leap-ESon_Index
+		dc.w ESon_Animate-ESon_Index
 
 eson_time = objoff_30	; time to wait between events
 echa_radius = objoff_3C	; radius (2 bytes)
@@ -49,7 +54,7 @@ ESon_Wait:
 		rts
 ; ===========================================================================
 
-Obj87_LookUp:	; Routine 6
+ESon_LookUp:	; Routine 6
 		cmpi.w	#$2000,((v_endemeralds+echa_radius)&$FFFFFF).l
 		bne.s	locret_5480
 		move.w	#1,(f_restart).w ; set level to restart (causes flash)
@@ -60,16 +65,16 @@ locret_5480:
 		rts
 ; ===========================================================================
 
-Obj87_ClrObjRam:
+ESon_ClrObjRam:
 		; Routine 8
 		subq.w	#1,eson_time(a0)
 		bne.s	ESon_Wait2
 		lea	(v_endemeralds).w,a1
 		move.w	#(v_endemeralds_end-v_endemeralds)/4-1,d1
 
-Obj87_ClrLoop:
+ESon_ClrLoop:
 		clr.l	(a1)+
-		dbf	d1,Obj87_ClrLoop ; clear the object RAM
+		dbf	d1,ESon_ClrLoop ; clear the object RAM
 		move.w	#1,(f_restart).w
 		addq.b	#2,ob2ndRout(a0)
 		move.b	#1,obAnim(a0)
@@ -79,7 +84,7 @@ ESon_Wait2:
 		rts
 ; ===========================================================================
 
-Obj87_MakeLogo:	; Routine $C
+ESon_MakeLogo:	; Routine $C
 		subq.w	#1,eson_time(a0)
 		bne.s	ESon_Wait3
 		addq.b	#2,ob2ndRout(a0)
@@ -91,12 +96,12 @@ ESon_Wait3:
 		rts
 ; ===========================================================================
 
-Obj87_Animate:	; Rountine 4, $A, $E, $12
+ESon_Animate:	; Rountine 4, $A, $E, $12
 		lea	(AniScript_ESon).l,a1
 		jmp	(AnimateSprite).l
 ; ===========================================================================
 
-Obj87_Leap:	; Routine $10
+ESon_Leap:	; Routine $10
 		subq.w	#1,eson_time(a0)
 		bne.s	ESon_Wait4
 		addq.b	#2,ob2ndRout(a0)
@@ -108,7 +113,7 @@ Obj87_Leap:	; Routine $10
 		move.b	#5,obFrame(a0)
 		move.b	#2,obAnim(a0)	; use "leaping" animation
 		move.b	#id_EndSTH,(v_endlogo).w ; load "SONIC THE HEDGEHOG" object
-		bra.s	Obj87_Animate
+		bra.s	ESon_Animate
 ; ===========================================================================
 
 ESon_Wait4:
