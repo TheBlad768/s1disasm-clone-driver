@@ -114,10 +114,7 @@ BuildSprites:
 		move.b	#0,-5(a2)	; set last sprite link
 		rts
 ; End of function BuildSprites
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 BuildSpr_Draw:
 		movea.w	obGfx(a0),a3
@@ -126,10 +123,7 @@ BuildSpr_Draw:
 		btst	#1,d4
 		bne.w	BuildSpr_FlipY
 ; End of function BuildSpr_Draw
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 BuildSpr_Normal:
 		cmpi.b	#$50,d5		; check sprite limit

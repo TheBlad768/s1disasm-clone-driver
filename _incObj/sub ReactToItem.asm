@@ -2,9 +2,6 @@
 ; Subroutine to react to obColType(a0)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ReactToItem:
 		nop	
 		move.w	obX(a0),d2	; load Sonic's x-axis position
@@ -252,16 +249,11 @@ React_ChkHurt:
 		tst.w	flashtime(a0)		; is Sonic flashing?
 		bne.s	.isflashing	; if yes, branch
 		movea.l	a1,a2
-
-; End of function ReactToItem
-; continue straight to HurtSonic
+		; continue straight to HurtSonic
 
 ; ---------------------------------------------------------------------------
 ; Hurting Sonic subroutine
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 HurtSonic:
 		tst.b	(v_shield).w	; does Sonic have a shield?
@@ -324,13 +316,11 @@ HurtSonic:
 .norings:
 		tst.w	(f_debugmode).w	; is debug mode cheat on?
 		bne.w	.hasshield	; if yes, branch
+		; continue straight to KillSonic
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to kill Sonic
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 KillSonic:
 		tst.w	(v_debuguse).w	; is debug mode active?
@@ -379,10 +369,7 @@ KillSonic:
 		moveq	#-1,d0
 		rts
 ; End of function KillSonic
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 React_Special:
 		move.b	obColType(a1),d1

@@ -2,9 +2,6 @@
 ; Subroutine to animate level graphics
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 AnimateLevelGfx:
 		tst.w	(f_pause).w	; is the game paused?
 		bne.s	.ispaused	; if yes, branch
@@ -28,6 +25,7 @@ AniArt_Index:	dc.w AniArt_GHZ-AniArt_Index	; GHZ
 		dc.w AniArt_SBZ-AniArt_Index	; SBZ
 		zonewarning AniArt_Index,2
 		dc.w AniArt_Ending-AniArt_Index	; ending sequence
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Animated pattern routine - Green Hill
@@ -380,6 +378,7 @@ AniArt_Ending_Flower4:
 AniArt_none:
 		rts
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to transfer graphics to VRAM
 
@@ -388,8 +387,6 @@ AniArt_none:
 ; a6 = vdp_data_port ($C00000)
 ; d1 = number of tiles to load (minus one)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 
 LoadTiles:
@@ -579,12 +576,10 @@ AniArt_MZ_Magma_Shift3_Col3:
 		dbf	d1,AniArt_MZ_Magma_Shift3_Col3
 		rts
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Animated pattern routine - giant ring
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 AniArt_GiantRing:
 

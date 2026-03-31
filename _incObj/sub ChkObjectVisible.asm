@@ -5,9 +5,6 @@
 ;	d0 = flag set if object is off screen
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 ChkObjectVisible:
 		move.w	obX(a0),d0	; get object x-position
 		sub.w	(v_screenposx).w,d0 ; subtract screen x-position
@@ -29,6 +26,7 @@ ChkObjectVisible:
 		rts
 ; End of function ChkObjectVisible
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to check if an object is off screen
 ; More precise than above subroutine, taking width into account
@@ -36,9 +34,6 @@ ChkObjectVisible:
 ; output:
 ;	d0 = flag set if object is off screen
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 ChkPartiallyVisible:
 		moveq	#0,d1

@@ -145,7 +145,7 @@ Swing_Action2:	; Routine 4
 		bsr.w	DisplaySprite
 		bra.w	Swing_ChkDel
 
-		rts
+		rts	; redundant rts
 
 
 ; ===========================================================================
@@ -153,9 +153,6 @@ Swing_Action2:	; Routine 4
 ; Subroutine to	update Sonic's position when standing on a platform
 ; (shared by other platform objects)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 MvSonicOnPtfm:	; platform height is taken from d3
 		lea	(v_player).w,a1
@@ -193,9 +190,6 @@ MvSonic2:
 ; Object 15 (part 2)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 Swing_Move:
 		move.b	(v_oscillate+$1A).w,d0
 		move.w	#$80,d1
@@ -207,10 +201,7 @@ Swing_Move:
 loc_7B78:
 		bra.s	Swing_Move2
 ; End of function Swing_Move
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Obj48_Move:
 		tst.b	objoff_3D(a0)
@@ -237,10 +228,7 @@ loc_7B9C:
 loc_7BB6:
 		move.b	obAngle(a0),d0
 ; End of function Obj48_Move
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Swing_Move2:
 		bsr.w	CalcSine

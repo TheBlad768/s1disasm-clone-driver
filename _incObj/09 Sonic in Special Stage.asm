@@ -76,9 +76,7 @@ Obj09_Display:
 		move.w	d0,(v_ssangle).w
 		jsr	(Sonic_Animate).l
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Obj09_Move:
 		btst	#bitL,(v_jpadhold2).w ; is left being pressed?
@@ -140,10 +138,7 @@ loc_1BAF2:
 		movem.l	(sp)+,d0-d1
 		rts
 ; End of function Obj09_Move
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Obj09_MoveLeft:
 		bset	#0,obStatus(a0)
@@ -171,10 +166,7 @@ loc_1BB22:
 		move.w	d0,obInertia(a0)
 		rts
 ; End of function Obj09_MoveLeft
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Obj09_MoveRight:
 		bclr	#0,obStatus(a0)
@@ -201,10 +193,7 @@ loc_1BB50:
 locret_1BB54:
 		rts
 ; End of function Obj09_MoveRight
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Obj09_Jump:
 		move.b	(v_jpadpress2).w,d0
@@ -229,18 +218,17 @@ Obj09_NoJump:
 		rts
 ; End of function Obj09_Jump
 
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Unused subroutine to limit Sonic's upward vertical speed depending on
+; how long the jump button was held after the initial jump. This likely got
+; removed as it doesn't work (it doesn't account for the stage rotation).
+; ---------------------------------------------------------------------------
 
 nullsub_2:
 		rts
-; End of function nullsub_2
 
-; ===========================================================================
-; ---------------------------------------------------------------------------
-; unused subroutine to limit Sonic's upward vertical speed
-; ---------------------------------------------------------------------------
+		; dead code
 		move.w	#-$400,d1
 		cmp.w	obVelY(a0),d1
 		ble.s	locret_1BBB4
@@ -251,12 +239,12 @@ nullsub_2:
 
 locret_1BBB4:
 		rts
+; End of function nullsub_2
+
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to fix the camera on Sonic's position (special stage)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 SS_FixCamera:
 		move.w	obY(a0),d2
@@ -314,9 +302,7 @@ loc_1BC40:
 		jsr	(Sonic_LoadGfx).l
 		bsr.w	SS_FixCamera
 		jmp	(DisplaySprite).l
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Obj09_Fall:
 		move.l	obY(a0),d2
@@ -375,10 +361,7 @@ loc_1BCD4:
 		bset	#1,obStatus(a0)
 		rts
 ; End of function Obj09_Fall
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 sub_1BCE8:
 		lea	(v_ssbuffer1).l,a1
@@ -410,10 +393,7 @@ sub_1BCE8:
 		tst.b	d5
 		rts
 ; End of function sub_1BCE8
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 sub_1BD30:
 		beq.s	locret_1BD44
@@ -434,10 +414,7 @@ loc_1BD46:
 		moveq	#-1,d5
 		rts
 ; End of function sub_1BD30
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Obj09_ChkItems:
 		lea	(v_ssbuffer1).l,a1
@@ -569,10 +546,7 @@ Obj09_GhostNotSolid:
 		moveq	#0,d4
 		rts
 ; End of function Obj09_ChkItems
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Obj09_ChkItems2:
 		move.b	objoff_30(a0),d0

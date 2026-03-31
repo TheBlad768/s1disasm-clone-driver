@@ -69,9 +69,7 @@ CFlo_Collapse:	; Routine 4
 		beq.w	loc_8458
 		move.b	#1,cflo_collapse_flag(a0)	; set object as "touched"
 		subq.b	#1,cflo_timedelay(a0)
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 CFlo_WalkOff:	; Routine $A
 		move.w	#$20,d1
@@ -182,7 +180,7 @@ loc_84B2:
 		move.b	(a4)+,ledge_timedelay(a1)
 		cmpa.l	a0,a1
 		bhs.s	loc_84EE
-		bsr.w	DisplaySprite1
+		bsr.w	DisplaySprite2
 
 loc_84EE:
 		dbf	d1,loc_84AA
@@ -200,12 +198,10 @@ CFlo_Data1:	dc.b $1C, $18, $14, $10, $1A, $16, $12,	$E, $A,	6, $18,	$14, $10, $C
 CFlo_Data2:	dc.b $1E, $16, $E, 6, $1A, $12,	$A, 2
 CFlo_Data3:	dc.b $16, $1E, $1A, $12, 6, $E,	$A, 2
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Sloped platform subroutine (GHZ collapsing ledges and MZ platforms)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 SlopeObject2:
 		lea	(v_player).w,a1

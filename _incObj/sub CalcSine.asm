@@ -9,9 +9,6 @@
 ;	d1 = cosine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 CalcSine:
 		andi.w	#$FF,d0			; clear upper input byte
 		add.w	d0,d0			; multiply input for word-sized addressing
@@ -23,7 +20,6 @@ CalcSine:
 ; End of function CalcSine
 
 ; ===========================================================================
-
 ; Precalculated Sinewave data. Do note that because two entries are $100,
 ; only reading a byte for the retrieved return value can result in those
 ; being interpreted as $00. It would be safer to change those values to $FF.
@@ -72,5 +68,4 @@ Sine_Data:
 		dc.w   $EC, $EE, $F1, $F3, $F4, $F6, $F8, $F9	;                  -=
 		dc.w   $FB, $FC, $FD, $FE, $FE, $FF, $FF, $FF	;                   =
 		even
-
 ; ===========================================================================

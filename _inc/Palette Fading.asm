@@ -1,10 +1,6 @@
-; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to fade in from black
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 PaletteFadeIn:
 		move.w	#$003F,(v_pfade_start).w ; set start position = 0; size = $40
@@ -31,10 +27,7 @@ PalFadeIn_Alt:				; start position and size are already set
 		dbf	d4,.mainloop
 		rts
 ; End of function PaletteFadeIn
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 FadeIn_FromBlack:
 		moveq	#0,d0
@@ -67,10 +60,7 @@ FadeIn_FromBlack:
 .exit:
 		rts
 ; End of function FadeIn_FromBlack
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 FadeIn_AddColour:
 .addblue:
@@ -105,14 +95,10 @@ FadeIn_AddColour:
 		rts
 ; End of function FadeIn_AddColour
 
-
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to fade out to black
 ; ---------------------------------------------------------------------------
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 PaletteFadeOut:
 		move.w	#$003F,(v_pfade_start).w ; start position = 0; size = $40
@@ -126,10 +112,7 @@ PaletteFadeOut:
 		dbf	d4,.mainloop
 		rts
 ; End of function PaletteFadeOut
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 FadeOut_ToBlack:
 		moveq	#0,d0
@@ -153,10 +136,7 @@ FadeOut_ToBlack:
 		dbf	d0,.decolour2
 		rts
 ; End of function FadeOut_ToBlack
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 FadeOut_DecColour:
 .dered:
@@ -190,12 +170,10 @@ FadeOut_DecColour:
 		rts
 ; End of function FadeOut_DecColour
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to fade in from white (Special Stage)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 PaletteWhiteIn:
 		move.w	#$003F,(v_pfade_start).w ; start position = 0; size = $40
@@ -220,10 +198,7 @@ PaletteWhiteIn:
 		dbf	d4,.mainloop
 		rts
 ; End of function PaletteWhiteIn
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 WhiteIn_FromWhite:
 		moveq	#0,d0
@@ -255,10 +230,7 @@ WhiteIn_FromWhite:
 .exit:
 		rts
 ; End of function WhiteIn_FromWhite
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 WhiteIn_DecColour:
 .deblue:
@@ -295,12 +267,10 @@ WhiteIn_DecColour:
 		rts
 ; End of function WhiteIn_DecColour
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to fade to white (Special Stage)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 PaletteWhiteOut:
 		move.w	#$003F,(v_pfade_start).w ; start position = 0; size = $40
@@ -314,10 +284,7 @@ PaletteWhiteOut:
 		dbf	d4,.mainloop
 		rts
 ; End of function PaletteWhiteOut
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 WhiteOut_ToWhite:
 		moveq	#0,d0
@@ -341,10 +308,7 @@ WhiteOut_ToWhite:
 		dbf	d0,.addcolour2
 		rts
 ; End of function WhiteOut_ToWhite
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 WhiteOut_AddColour:
 .addred:

@@ -9,9 +9,6 @@
 ;	d0 = angle
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 CalcAngle:
 		movem.l	d3-d4,-(sp)		; store register data
 		moveq	#0,d3			; clear registers
@@ -70,7 +67,6 @@ CA_NullAngle:
 		rts				; return
 
 ; ===========================================================================
-
 ; This data consists of 256 bytes to account for one 45 degree section of a circle.
 ; The other quadrants are retrieved by adding multiples of $40.
 ; Curiously, it has an extra 257th byte at the end, possibly to catch overflows.
@@ -94,5 +90,4 @@ Angle_Data:
 		dc.b  $1F,$1F,$1F,$1F,$1F,$1F,$1F,$1F,$1F,$1F,$20,$20,$20,$20,$20,$20
 		dc.b  $20 ; stray extra byte
 		even
-
 ; ===========================================================================

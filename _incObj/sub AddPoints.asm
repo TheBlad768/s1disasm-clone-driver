@@ -2,9 +2,6 @@
 ; Add points subroutine
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 AddPoints:
 		move.b	#1,(f_scorecount).w ; set score counter to update
 
@@ -21,7 +18,7 @@ AddPoints:
 .belowmax:
 		move.l	(a3),d0
 		cmp.l	(a2),d0
-		blo.w	.locret_1C6B6
+		blo.w	.return
 		move.l	d0,(a2)
 
 	else
@@ -35,19 +32,18 @@ AddPoints:
 .belowmax:
 		move.l	(a3),d0
 		cmp.l	(v_scorelife).w,d0 ; has Sonic got 50000+ points?
-		blo.s	.noextralife ; if not, branch
+		blo.s	.return ; if not, branch
 
 		addi.l	#5000,(v_scorelife).w ; increase requirement by 50000
 		tst.b	(v_megadrive).w
-		bmi.s	.noextralife ; branch if Mega Drive is Japanese
+		bmi.s	.return ; branch if Mega Drive is Japanese
 		addq.b	#1,(v_lives).w ; give extra life
 		addq.b	#1,(f_lifecount).w
 		move.w	#bgm_ExtraLife,d0
 		jmp	(QueueSound1).l
 	endif
 
-.locret_1C6B6:
-.noextralife:
+.return:
 		rts
 ; End of function AddPoints
 ; ===========================================================================

@@ -110,9 +110,7 @@ GBall_Base2:	; Routine 4
 		bsr.w	sub_17C2A
 		jsr	(Obj48_Move).l
 		jmp	(DisplaySprite).l
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 sub_17C2A:
 		movea.l	objoff_34(a0),a1

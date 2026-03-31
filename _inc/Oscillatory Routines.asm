@@ -2,10 +2,7 @@
 ; Oscillating number subroutines
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 ; Initialise the values
-
 OscillateNumInit:
 		lea	(v_oscillate).w,a1
 		lea	(.baselines).l,a2
@@ -36,11 +33,9 @@ OscillateNumInit:
 		dc.w $80, 0
 		dc.w $80, 0
 		even
+; ===========================================================================
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-; Oscillate values
-
+; Oscillate the values
 OscillateNumDo:
 		cmpi.b	#6,(v_player+obRoutine).w ; has Sonic just died?
 		bhs.s	.end		; if yes, branch
@@ -101,3 +96,4 @@ OscillateNumDo:
 		dc.w 2,	$10
 		dc.w 2,	$10
 		even
+; ===========================================================================

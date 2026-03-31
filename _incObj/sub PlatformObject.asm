@@ -1,16 +1,13 @@
-
 ; ---------------------------------------------------------------------------
 ; Platform subroutine
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 PlatformObject:
 		lea	(v_player).w,a1
 		tst.w	obVelY(a1)	; is Sonic moving up/jumping?
 		bmi.w	Plat_Exit	; if yes, branch
 
-;		perform x-axis range check
+		; perform x-axis range check
 		move.w	obX(a1),d0
 		sub.w	obX(a0),d0
 		add.w	d1,d0
@@ -24,7 +21,7 @@ Plat_NoXCheck:
 		subq.w	#8,d0
 
 Platform3:
-;		perform y-axis range check
+		; perform y-axis range check
 		move.w	obY(a1),d2
 		move.b	obHeight(a1),d1
 		ext.w	d1
@@ -82,13 +79,10 @@ Plat_Exit:
 		rts
 ; End of function PlatformObject
 
-
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Sloped platform subroutine (GHZ collapsing ledges and SLZ seesaws)
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 SlopeObject:
 		lea	(v_player).w,a1
@@ -114,10 +108,7 @@ loc_754A:
 		sub.w	d3,d0
 		bra.w	Platform3
 ; End of function SlopeObject
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 Swing_Solid:
 		lea	(v_player).w,a1

@@ -50,8 +50,7 @@ Ledge_Collapse:	; Routine 4
 		beq.w	loc_847A
 		move.b	#1,ledge_collapse_flag(a0)	; set collapse flag
 		subq.b	#1,ledge_timedelay(a0)
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+		; fall through to Ledge_WalkOff
 
 
 Ledge_WalkOff:	; Routine $A

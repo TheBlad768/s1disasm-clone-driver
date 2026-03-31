@@ -1,7 +1,3 @@
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 EdgeWall_SolidWall:
 		bsr.w	EdgeWall_SolidWall2
 		beq.s	loc_8AA8
@@ -58,10 +54,7 @@ loc_8AC4:
 locret_8AD8:
 		rts
 ; End of function EdgeWall_SolidWall
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 EdgeWall_SolidWall2:
 		lea	(v_player).w,a1
