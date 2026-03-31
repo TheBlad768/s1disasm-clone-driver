@@ -1,34 +1,39 @@
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
-Yad_ChkWall:
-		move.w	(v_framecount).w,d0
-		add.w	d7,d0
-		andi.w	#3,d0
-		bne.s	loc_F836
-		moveq	#0,d3
-		move.b	obActWid(a0),d3
-		tst.w	obVelX(a0)
-		bmi.s	loc_F82C
-		bsr.w	ObjHitWallRight
-		tst.w	d1
-		bpl.s	loc_F836
-
-loc_F828:
-		moveq	#1,d0
+; ---------------------------------------------------------------------------
+; Subroutine to check whether the object has hit the left or right wall. 
+; In the prototype, this routine was shared between Splats (Obj4F) and Yadrin,
+; but since the former was deleted, it is only used by the latter. See here:
+; https://github.com/Totally-Not-Filter/s1-proto-disasm/blob/AS/obj/4F%20Splats.asm
+; ---------------------------------------------------------------------------
+ 
+; Yad_ChkWall: 
+ChkHitLeftRightWall:
+		move.w	(v_framecount).w,d0		; get frame counter
+		add.w	d7,d0				; add object object enumerator from RAM
+		andi.w	#3,d0				; and by 3 (effectively makes it so it's only checked every 4 frames, presumably for performance reasons)
+		bne.s	.nowallhit			; if outside a 4th frame, branch
+		moveq	#0,d3				; clear d3
+		move.b	obActWid(a0),d3			; load object width to d3 (input param for wall col detection subroutines)
+		tst.w	obVelX(a0)			; is object moving to the left?
+		bmi.s	.chkleftwall			; if yes, branch
+		bsr.w	ObjHitWallRight			; get distance to nearest right wall
+		tst.w	d1				; did object hit wall?
+		bpl.s	.nowallhit			; if not, branch
+ 
+.wallhit:
+		moveq	#1,d0				; set Z-flag (wall touched)
 		rts
-; ===========================================================================
-
-loc_F82C:
-		not.w	d3
-		bsr.w	ObjHitWallLeft
-		tst.w	d1
-		bmi.s	loc_F828
-
-loc_F836:
-		moveq	#0,d0
-		rts
-; End of function Yad_ChkWall
+; ---------------------------------------------------------------------------
+ 
+.chkleftwall:
+		not.w	d3				; invert object width to make it work for left wall col
+		bsr.w	ObjHitWallLeft			; get distance to nearest left wall
+		tst.w	d1				; did object hit wall?
+		bmi.s	.wallhit			; if yes, branch
+ 
+.nowallhit:
+		moveq	#0,d0				; clear Z-flag (wall not touched)
+		rts					; return
+; End of function ChkHitLeftRightWall
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -104,7 +109,7 @@ Yad_FixToFloor:
 		cmpi.w	#$C,d1
 		bge.s	Yad_Pause
 		add.w	d1,obY(a0)	; match object's position to the floor
-		bsr.w	Yad_ChkWall
+		bsr.w	ChkHitLeftRightWall
 		bne.s	Yad_Pause
 		rts
 ; ===========================================================================

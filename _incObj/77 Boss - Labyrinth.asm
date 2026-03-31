@@ -23,10 +23,10 @@ BossLabyrinth_ObjData:
 BossLabyrinth_Main:	; Routine 0
 		move.w	#boss_lz_x+$30,obX(a0)
 		move.w	#boss_lz_y+$500,obY(a0)
-		move.w	obX(a0),objoff_30(a0)
-		move.w	obY(a0),objoff_38(a0)
+		move.w	obX(a0),obBossX(a0)
+		move.w	obY(a0),obBossY(a0)
 		move.b	#$F,obColType(a0)
-		move.b	#8,obColProp(a0) ; set number of hits to 8
+		move.b	#8,obBossHits(a0) ; set number of hits to 8
 		move.b	#4,obPriority(a0)
 		lea	BossLabyrinth_ObjData(pc),a2
 		movea.l	a0,a1
@@ -90,8 +90,8 @@ BLZ_ShipStart:
 
 loc_17F38:
 		bsr.w	BossMove
-		move.w	objoff_38(a0),obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossY(a0),obY(a0)
+		move.w	obBossX(a0),obX(a0)
 
 loc_17F48:
 		tst.b	objoff_3D(a0)
@@ -100,9 +100,9 @@ loc_17F48:
 		bmi.s	loc_17F92
 		tst.b	obColType(a0)
 		bne.s	locret_17F8C
-		tst.b	objoff_3E(a0)
+		tst.b	obBossFlash(a0)
 		bne.s	loc_17F70
-		move.b	#$20,objoff_3E(a0)
+		move.b	#$20,obBossFlash(a0)
 		move.w	#sfx_HitBoss,d0
 		jsr	(QueueSound2).l
 
@@ -115,7 +115,7 @@ loc_17F70:
 
 loc_17F7E:
 		move.w	d0,(a1)
-		subq.b	#1,objoff_3E(a0)
+		subq.b	#1,obBossFlash(a0)
 		bne.s	locret_17F8C
 		move.b	#$F,obColType(a0)
 
@@ -137,16 +137,16 @@ loc_17F92:
 ; loc_17FA0:
 BLZ_ShipMove1:
 		moveq	#-2,d0
-		cmpi.w	#boss_lz_x+$68,objoff_30(a0)
+		cmpi.w	#boss_lz_x+$68,obBossX(a0)
 		blo.s	loc_17FB6
-		move.w	#boss_lz_x+$68,objoff_30(a0)
+		move.w	#boss_lz_x+$68,obBossX(a0)
 		clr.w	obVelX(a0)
 		addq.w	#1,d0
 
 loc_17FB6:
-		cmpi.w	#boss_lz_y+$440,objoff_38(a0)
+		cmpi.w	#boss_lz_y+$440,obBossY(a0)
 		bgt.s	loc_17FCA
-		move.w	#boss_lz_y+$440,objoff_38(a0)
+		move.w	#boss_lz_y+$440,obBossY(a0)
 		clr.w	obVelY(a0)
 		addq.w	#1,d0
 
@@ -163,16 +163,16 @@ loc_17FDC:
 ; loc_17FE0:
 BLZ_ShipMove2:
 		moveq	#-2,d0
-		cmpi.w	#boss_lz_x+$90,objoff_30(a0)
+		cmpi.w	#boss_lz_x+$90,obBossX(a0)
 		blo.s	loc_17FF6
-		move.w	#boss_lz_x+$90,objoff_30(a0)
+		move.w	#boss_lz_x+$90,obBossX(a0)
 		clr.w	obVelX(a0)
 		addq.w	#1,d0
 
 loc_17FF6:
-		cmpi.w	#boss_lz_y+$400,objoff_38(a0)
+		cmpi.w	#boss_lz_y+$400,obBossY(a0)
 		bgt.s	loc_1800A
-		move.w	#boss_lz_y+$400,objoff_38(a0)
+		move.w	#boss_lz_y+$400,obBossY(a0)
 		clr.w	obVelY(a0)
 		addq.w	#1,d0
 
@@ -188,9 +188,9 @@ loc_1801A:
 
 ; loc_1801E:
 BLZ_ShipMove3:
-		cmpi.w	#boss_lz_y+$40,objoff_38(a0)
+		cmpi.w	#boss_lz_y+$40,obBossY(a0)
 		bgt.s	loc_1804E
-		move.w	#boss_lz_y+$40,objoff_38(a0)
+		move.w	#boss_lz_y+$40,obBossY(a0)
 		move.w	#$140,obVelX(a0)
 		move.w	#-$80,obVelY(a0)
 		tst.b	objoff_3D(a0)
@@ -216,7 +216,7 @@ loc_1806C:
 		asr.w	#4,d0
 		swap	d0
 		clr.w	d0
-		add.l	objoff_30(a0),d0
+		add.l	obBossX(a0),d0
 		swap	d0
 		move.w	d0,obX(a0)
 		move.w	obVelY(a0),d0
@@ -241,24 +241,24 @@ loc_180A2:
 		add.l	d0,d0
 
 loc_180AE:
-		add.l	d0,objoff_38(a0)
-		move.w	objoff_38(a0),obY(a0)
+		add.l	d0,obBossY(a0)
+		move.w	obBossY(a0),obY(a0)
 		bra.w	loc_17F48
 ; ===========================================================================
 
 ; loc_180BC:
 BLZ_ShipAtTop:
 		moveq	#-2,d0
-		cmpi.w	#boss_lz_x+$16C,objoff_30(a0)
+		cmpi.w	#boss_lz_x+$16C,obBossX(a0)
 		blo.s	loc_180D2
-		move.w	#boss_lz_x+$16C,objoff_30(a0)
+		move.w	#boss_lz_x+$16C,obBossX(a0)
 		clr.w	obVelX(a0)
 		addq.w	#1,d0
 
 loc_180D2:
-		cmpi.w	#boss_lz_y,objoff_38(a0)
+		cmpi.w	#boss_lz_y,obBossY(a0)
 		bgt.s	loc_180E6
-		move.w	#boss_lz_y,objoff_38(a0)
+		move.w	#boss_lz_y,obBossY(a0)
 		clr.w	obVelY(a0)
 		addq.w	#1,d0
 

@@ -2,9 +2,6 @@
 ; Dynamic level events
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 DynamicLevelEvents:
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
@@ -60,6 +57,7 @@ DLE_Index:	dc.w DLE_GHZ-DLE_Index
 		dc.w DLE_SBZ-DLE_Index
 		zonewarning DLE_Index,2
 		dc.w DLE_Ending-DLE_Index
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Green Hill Zone dynamic level events
@@ -78,6 +76,11 @@ DLE_GHZx:	dc.w DLE_GHZ1-DLE_GHZx
 ; ===========================================================================
 
 DLE_GHZ1:
+	if FixBugs
+		; Prevent the title screen from using GHZ1's DLE logic
+		cmpi.b	#id_Title,(v_gamemode).w
+		beq.s	locret_6E08
+	endif
 		move.w	#$300,(v_limitbtm1).w ; set lower y-boundary
 		cmpi.w	#$1780,(v_screenposx).w ; has the camera reached $1780 on x-axis?
 		blo.s	locret_6E08	; if not, branch
@@ -173,6 +176,7 @@ locret_6EE8:
 DLE_GHZ3end:
 		move.w	(v_screenposx).w,(v_limitleft2).w
 		rts
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Labyrinth Zone dynamic level events
@@ -245,6 +249,7 @@ DLE_SBZ3:
 
 locret_6F8C:
 		rts
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Marble Zone dynamic level events
@@ -417,6 +422,7 @@ locret_70E8:
 DLE_MZ3end:
 		move.w	(v_screenposx).w,(v_limitleft2).w
 		rts
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Star Light Zone dynamic level events
@@ -482,7 +488,8 @@ locret_715C:
 DLE_SLZ3end:
 		move.w	(v_screenposx).w,(v_limitleft2).w
 		rts
-		rts
+		rts	; redundant rts
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Spring Yard Zone dynamic level events
@@ -564,6 +571,7 @@ locret_7200:
 DLE_SYZ3end:
 		move.w	(v_screenposx).w,(v_limitleft2).w
 		rts
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Scrap Brain Zone dynamic level events
@@ -713,6 +721,7 @@ DLE_FZwait:
 
 DLE_FZend2:
 		bra.s	loc_72C2
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Ending sequence dynamic level events (empty)

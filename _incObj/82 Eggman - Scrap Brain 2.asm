@@ -2,6 +2,13 @@
 ; Object 82 - Eggman (SBZ2)
 ; ---------------------------------------------------------------------------
 
+; loc_1982C:
+FalseFloor_Delete:
+		; This is part of Object 82, but it is only ever called
+		; from Object 83 (the collapsing floor)
+		jmp	(DeleteObject).l
+; ===========================================================================
+
 ScrapEggman:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
@@ -21,7 +28,7 @@ SEgg_Main:	; Routine 0
 		move.w	#boss_sbz2_x+$110,obX(a0)
 		move.w	#boss_sbz2_y+$94,obY(a0)
 		move.b	#$F,obColType(a0)
-		move.b	#$10,obColProp(a0)
+		move.b	#16,obBossHits(a0) ; SBZ2 Eggman has 16 hits, despite being unhittable
 		bclr	#0,obStatus(a0)
 		clr.b	ob2ndRout(a0)
 		move.b	(a2)+,obRoutine(a0)

@@ -2,6 +2,10 @@
 ; Object 7A - Eggman (SLZ)
 ; ---------------------------------------------------------------------------
 
+BossStarLight_Delete:
+		jmp	(DeleteObject).l
+; ===========================================================================
+
 BossStarLight:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
@@ -24,10 +28,10 @@ BossStarLight_ObjData:	dc.b 2,	0, 4		; routine number, animation, priority
 BossStarLight_Main:
 		move.w	#boss_slz_x+$188,obX(a0)
 		move.w	#boss_slz_y+$18,obY(a0)
-		move.w	obX(a0),objoff_30(a0)
-		move.w	obY(a0),objoff_38(a0)
+		move.w	obX(a0),obBossX(a0)
+		move.w	obY(a0),obBossY(a0)
 		move.b	#$F,obColType(a0)
-		move.b	#8,obColProp(a0) ; set number of hits to 8
+		move.b	#8,obBossHits(a0) ; set number of hits to 8
 		lea	BossStarLight_ObjData(pc),a2
 		movea.l	a0,a1
 		moveq	#3,d1
@@ -104,7 +108,7 @@ BossStarLight_ShipIndex:
 ; loc_189B8:
 BSLZ_ShipStart:
 		move.w	#-$100,obVelX(a0)
-		cmpi.w	#boss_slz_x+$120,objoff_30(a0)
+		cmpi.w	#boss_slz_x+$120,obBossX(a0)
 		bhs.s	loc_189CA
 		addq.b	#2,ob2ndRout(a0)
 
@@ -114,16 +118,16 @@ loc_189CA:
 		addq.b	#2,objoff_3F(a0)
 		jsr	(CalcSine).l
 		asr.w	#6,d0
-		add.w	objoff_38(a0),d0
+		add.w	obBossY(a0),d0
 		move.w	d0,obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossX(a0),obX(a0)
 		bra.s	loc_189FE
 ; ===========================================================================
 
 loc_189EE:
 		bsr.w	BossMove
-		move.w	objoff_38(a0),obY(a0)
-		move.w	objoff_30(a0),obX(a0)
+		move.w	obBossY(a0),obY(a0)
+		move.w	obBossX(a0),obX(a0)
 
 loc_189FE:
 		cmpi.b	#6,ob2ndRout(a0)
@@ -132,9 +136,9 @@ loc_189FE:
 		bmi.s	loc_18A46
 		tst.b	obColType(a0)
 		bne.s	locret_18A44
-		tst.b	objoff_3E(a0)
+		tst.b	obBossFlash(a0)
 		bne.s	loc_18A28
-		move.b	#$20,objoff_3E(a0)
+		move.b	#$20,obBossFlash(a0)
 		move.w	#sfx_HitBoss,d0
 		jsr	(QueueSound2).l	; play boss damage sound
 
@@ -147,7 +151,7 @@ loc_18A28:
 
 loc_18A36:
 		move.w	d0,(a1)
-		subq.b	#1,objoff_3E(a0)
+		subq.b	#1,obBossFlash(a0)
 		bne.s	locret_18A44
 		move.b	#$F,obColType(a0)
 
@@ -166,7 +170,7 @@ loc_18A46:
 
 ; loc_18A5E:
 BSLZ_ShipMove:
-		move.w	objoff_30(a0),d0
+		move.w	obBossX(a0),d0
 		move.w	#$200,obVelX(a0)
 		btst	#0,obStatus(a0)
 		bne.s	loc_18A7C

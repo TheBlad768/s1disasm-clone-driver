@@ -85,14 +85,12 @@ loc_7F06:
 		bsr.w	DisplaySprite
 		bra.w	Plat_ChkDel
 
-		rts
+		rts	; redundant rts
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to move platform slightly when you stand on it
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Plat_Nudge:
 		move.b	objoff_38(a0),d0
@@ -105,12 +103,10 @@ Plat_Nudge:
 		rts
 ; End of function Plat_Nudge
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to move platforms
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Plat_Move:
 		moveq	#0,d0
@@ -225,7 +221,7 @@ Plat_Move:
 		bclr	#3,obStatus(a1)
 		move.b	#2,obRoutine(a1)
 		bclr	#3,obStatus(a0)
-		clr.b	objoff_25(a0)
+		clr.b	ob2ndRout(a0)
 		move.w	obVelY(a0),obVelY(a1)
 
 .loc_8042:
@@ -292,7 +288,7 @@ Plat_Move:
 		move.w	d0,objoff_2C(a0)	; change position on y-axis
 
 .chgmotion:
-		move.b	(v_oscillate+$1A).w,objoff_26(a0) ; update platform-movement variable
+		move.b	(v_oscillate+$1A).w,obAngle(a0) ; update platform-movement variable
 		rts
 ; ===========================================================================
 

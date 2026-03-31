@@ -1,5 +1,3 @@
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 ; sub_6886:
 LoadTilesAsYouMove_BGOnly:
 		lea	(vdp_control_port).l,a5
@@ -12,14 +10,12 @@ LoadTilesAsYouMove_BGOnly:
 		lea	(v_bg2_scroll_flags).w,a2
 		lea	(v_bg2screenposx).w,a3
 		bra.w	DrawBGScrollBlock2
-; End of function sub_6886
+; End of function LoadTilesAsYouMove_BGOnly
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to display correct tiles as you move
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 LoadTilesAsYouMove:
 		lea	(vdp_control_port).l,a5
@@ -92,9 +88,7 @@ loc_6938:
 locret_6952:
 		rts
 ; End of function LoadTilesAsYouMove
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; sub_6954:
 DrawBGScrollBlock1:
@@ -170,9 +164,7 @@ locj_6D88:
 locret_69F2:
 		rts
 ; End of function DrawBGScrollBlock1
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Essentially, this draws everything that isn't scroll block 1
 ; sub_69F4:
@@ -407,8 +399,7 @@ locj_701C:
 		dbf	d6,locj_6FF4
 		clr.b	(a2)
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Don't be fooled by the name: this function's for drawing from left to right
 ; when the camera's moving up or down
@@ -432,9 +423,7 @@ DrawBlocks_LR_2:
 		dbf	d6,.loop
 		rts
 ; End of function DrawBlocks_LR
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; DrawTiles_LR_3:
 DrawBlocks_LR_3:
@@ -453,9 +442,7 @@ DrawBlocks_LR_3:
 		dbf	d6,.loop
 		rts
 ; End of function DrawBlocks_LR_3
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Don't be fooled by the name: this function's for drawing from top to bottom
 ; when the camera's moving left or right
@@ -479,9 +466,7 @@ DrawBlocks_TB_2:
 		dbf	d6,.loop
 		rts
 ; End of function DrawBlocks_TB_2
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Draws a block's worth of tiles
 ; Parameters:
@@ -552,9 +537,7 @@ DrawFlipXY:
 		move.l	d5,(a6)
 		rts
 ; End of function DrawBlocks
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Gets address of block at a certain coordinate
 ; Parameters:
@@ -607,9 +590,7 @@ GetBlockData_2:
 locret_6C1E:
 		rts
 ; End of function GetBlockData
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 ; Produces a VRAM plane access command from coordinates
 ; Parameters:
@@ -635,11 +616,9 @@ Calc_VRAM_Pos_2:
 		move.w	d4,d0
 		rts
 ; End of function Calc_VRAM_Pos
+; ===========================================================================
 
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 ; not used
-
 ; This is just like Calc_VRAM_Pos, but seemingly for an earlier
 ; VRAM layout: the only difference is the high bits of the
 ; plane's VRAM address, which are 10 instead of 11.
@@ -660,12 +639,10 @@ Calc_VRAM_Pos_Unknown:
 		rts
 ; End of function Calc_VRAM_Pos_Unknown
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to load tiles as soon as the level appears
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 LoadTilesFromStart:
 		lea	(vdp_control_port).l,a5
@@ -686,9 +663,7 @@ LoadTilesFromStart:
 		cmpi.b	#id_EndZ,(v_zone).w
 		beq.w	Draw_GHz_Bg
 ; End of function LoadTilesFromStart
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 DrawChunks:
 		moveq	#-16,d4
@@ -708,9 +683,7 @@ DrawChunks:
 		dbf	d6,.loop
 		rts
 ; End of function DrawChunks
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+; ===========================================================================
 
 Draw_GHz_Bg:
 		moveq	#0,d4

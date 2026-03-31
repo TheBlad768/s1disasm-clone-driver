@@ -21,7 +21,12 @@ Spin_Main:	; Routine 0
 		move.l	#Map_Trap,obMap(a0)
 		move.w	#make_art_tile(ArtTile_SBZ_Trap_Door,2,0),obGfx(a0)
 		ori.b	#4,obRender(a0)
+	if FixBugs
+		move.b	#$40,obActWid(a0)
+	else
+		; This width is way too big, resulting in screen wrapping issues
 		move.b	#$80,obActWid(a0)
+	endif
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
 		andi.w	#$F,d0

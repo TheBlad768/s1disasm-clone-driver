@@ -107,9 +107,7 @@ SStom_Display:	; Routine 6
 SStom_ChkDel:
 		out_of_range.w	DeleteObject,objoff_3A(a0)
 		rts
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
+; ===========================================================================
 
 SStom_Move:
 		moveq	#0,d0

@@ -97,7 +97,7 @@ FFloor_Solid2:
 FFloor_AllGone:	; Routine 6
 		bclr	#3,obStatus(a0)
 		bclr	#3,(v_player+obStatus).w
-		bra.w	loc_1982C
+		bra.w	FalseFloor_Delete
 ; ===========================================================================
 
 ; loc_19C72:
@@ -110,7 +110,7 @@ FFloor_Block:	; Routine 8
 ; loc_19C80:
 FFloor_Frag:	; Routine $A
 		tst.b	obRender(a0)
-		bpl.w	loc_1982C
+		bpl.w	FalseFloor_Delete
 		jsr	(ObjectFall).l
 		jmp	(DisplaySprite).l
 ; ===========================================================================

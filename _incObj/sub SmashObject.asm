@@ -2,9 +2,6 @@
 ; Subroutine to smash a block (GHZ walls and MZ blocks)
 ; ---------------------------------------------------------------------------
 
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-
 SmashObject:
 		moveq	#0,d0
 		move.b	obFrame(a0),d0
@@ -43,7 +40,7 @@ SmashObject:
 		bsr.w	SpeedToPos
 		add.w	d2,obVelY(a0)
 		movea.l	(sp)+,a0
-		bsr.w	DisplaySprite1
+		bsr.w	DisplaySprite2
 
 .loc_D268:
 		dbf	d1,.loop
@@ -53,3 +50,24 @@ SmashObject:
 		jmp	(QueueSound2).l ; play smashing sound
 
 ; End of function SmashObject
+
+; ===========================================================================
+; Smashed block fragment speeds
+;
+Smash_FragSpd1:	dc.w $400, -$500	; x-move speed, y-move speed
+		dc.w $600, -$100
+		dc.w $600, $100
+		dc.w $400, $500
+		dc.w $600, -$600
+		dc.w $800, -$200
+		dc.w $800, $200
+		dc.w $600, $600
+
+Smash_FragSpd2:	dc.w -$600, -$600
+		dc.w -$800, -$200
+		dc.w -$800, $200
+		dc.w -$600, $600
+		dc.w -$400, -$500
+		dc.w -$600, -$100
+		dc.w -$600, $100
+		dc.w -$400, $500

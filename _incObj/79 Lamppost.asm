@@ -158,13 +158,12 @@ Lamp_StoreInfo:
 		move.b	(v_wtr_routine).w,(v_lamp_wtrrout).w	; rountine counter for water
 		move.b	(f_wtr_state).w,(v_lamp_wtrstat).w 	; water direction
 		rts
+; End of function Lamp_StoreInfo
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to load stored info when you start a level from a lamppost
 ; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
 
 Lamp_LoadInfo:
 		move.b	(v_lastlamp+1).w,(v_lastlamp).w
@@ -201,10 +200,11 @@ Lamp_LoadInfo:
 		; if the last lamp ID had bit 7 set. However, this isn't used anywhere in the game.
 		; Perhaps this once was used to prevent backtracking before bosses.
 		tst.b	(v_lastlamp).w
-		bpl.s	locret_170F6
+		bpl.s	.return
 		move.w	(v_lamp_xpos).w,d0
 		subi.w	#320/2,d0
 		move.w	d0,(v_limitleft2).w
 
-locret_170F6:
+.return:
 		rts
+; End of function Lamp_LoadInfo
