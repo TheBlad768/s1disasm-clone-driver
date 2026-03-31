@@ -3552,12 +3552,11 @@ Demo_EndGHZ2:	binclude	"demodata/Ending - GHZ2.bin"
 
 ; ===========================================================================
 
+		include	"_inc/LevelSizeLoad & BgScrollSpeed.asm" ; merged with "LevelSizeLoad & BgScrollSpeed (JP1).asm"
 	if Revision=0
-		include	"_inc/LevelSizeLoad & BgScrollSpeed.asm"
 		include	"_inc/DeformLayers.asm"
 		include	"_inc/Level Drawing.asm"
 	else
-		include	"_inc/LevelSizeLoad & BgScrollSpeed (JP1).asm"
 		include	"_inc/DeformLayers (JP1).asm"
 		include	"_inc/Level Drawing (JP1).asm"
 	endif
