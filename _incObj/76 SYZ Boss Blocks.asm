@@ -60,7 +60,7 @@ loc_19712:
 
 loc_19718:
 		movea.l	objoff_34(a0),a1
-		tst.b	obColProp(a1)
+		tst.b	obBossHits(a1)
 		beq.s	loc_19712
 		move.w	obX(a1),obX(a0)
 		move.w	obY(a1),obY(a0)
