@@ -141,16 +141,22 @@ ReactToItem:
 React_Monitor:
 		tst.w	obVelY(a0)	; is Sonic moving upwards?
 		bpl.s	.movingdown	; if not, branch
-
+	if FixBugs
+		; Fix bumping monitors from below that are already on the ground
+		btst	#1,obStatus(a0)
+		beq.s	.movingdown
+	endif
 		move.w	obY(a0),d0
 		subi.w	#$10,d0
 		cmp.w	obY(a1),d0
 		blo.s	.donothing
+
+.monitorbumped:
 		neg.w	obVelY(a0)	; reverse Sonic's vertical speed
 		move.w	#-$180,obVelY(a1)
 		tst.b	ob2ndRout(a1)
 		bne.s	.donothing
-		addq.b	#4,ob2ndRout(a1) ; advance the monitor's routine counter
+		addq.b	#4,ob2ndRout(a1) ; advance the monitor's routine counter (to make it fall)
 		rts
 ; ===========================================================================
 
@@ -336,16 +342,23 @@ KillSonic:
 		move.w	#-$700,obVelY(a0)
 		move.w	#0,obVelX(a0)
 		move.w	#0,obInertia(a0)
+
 	if FixBugs=0
 		; Leftover line from the prototype, where objoff_38 was used to respawn Sonic at his last y position.
-		; sticktoconvex gets overwritten with the high byte of Sonic's y position.
-		; It is made redundant as Sonic doesn't react to solids when he dies.
-		; It was removed in the CENSOR prototype of Sonic 2 onwards.
+		; This causes sticktoconvex to get overwritten with the high byte of Sonic's y position.
+		; It is made redundant as Sonic doesn't react to solids when he dies,
+		; and it was removed in the CENSOR prototype of Sonic 2 onwards.
 		move.w	obY(a0),objoff_38(a0)
 	endif
+
 		move.b	#id_Death,obAnim(a0)
 		bset	#7,obGfx(a0)
+
 	if FixBugs
+		; Stop timer as soon as death is triggered to prevent double deaths from time overs
+		clr.b	(f_timecount).w	; stop time counter
+		
+		; Fix harpoon object's death sound
 		move.w	#sfx_HitSpikes,d0 ; play spikes death sound
 		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
 		beq.s	.sound
@@ -353,7 +366,6 @@ KillSonic:
 		beq.s	.sound
 		move.w	#sfx_Death,d0	; play normal death sound
 	else
-		; This fails to check for the harpoon object.
 		move.w	#sfx_Death,d0	; play normal death sound
 		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
 		bne.s	.sound

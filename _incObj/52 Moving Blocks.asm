@@ -129,6 +129,13 @@ loc_FF26:
 ; ===========================================================================
 
 MBlock_Type02:
+	if FixBugs
+		; align hidden LZ1 raft with water surface
+		tst.b	objoff_3F(a0)
+		beq.s	.nosurface
+		move.w	(v_waterpos1).w,obY(a0)
+.nosurface:
+	endif
 		cmpi.b	#4,obRoutine(a0) ; is Sonic standing on the platform?
 		bne.s	MBlock_02_Wait
 		addq.b	#1,obSubtype(a0) ; if yes, add 1 to type
@@ -154,6 +161,13 @@ MBlock_03_End:
 ; ===========================================================================
 
 MBlock_Type05:
+	if FixBugs
+		; align hidden LZ1 raft with water surface
+		tst.b	objoff_3F(a0)
+		beq.s	.nosurface
+		move.w	(v_waterpos1).w,obY(a0)
+.nosurface:
+	endif
 		moveq	#0,d3
 		move.b	obActWid(a0),d3
 		bsr.w	ObjHitWallRight
@@ -187,6 +201,9 @@ MBlock_Type07:
 		tst.b	(f_switch+2).w	; has switch number 02 been pressed?
 		beq.s	MBlock_07_ChkDel
 		subq.b	#3,obSubtype(a0) ; if yes, change object type to 04
+	if FixBugs
+		move.b	#1,objoff_3F(a0) ; align hidden LZ1 raft with water surface
+	endif
 
 MBlock_07_ChkDel:
 		; This line, combined with the coordinate being pushed to

@@ -96,7 +96,12 @@ BossPlasma_Loop:
 		move.l	a0,objoff_34(a1)
 		jsr	(RandomNumber).l
 		move.w	objoff_32(a0),d1
+	if FixBugs
+		; compensation for the fix in BossPlasma_Drop
+		muls.w	#-$59,d1
+	else
 		muls.w	#-$4F,d1
+	endif
 		addi.w	#boss_fz_x+$128,d1
 		andi.w	#$1F,d0
 		subi.w	#$10,d0
@@ -164,7 +169,13 @@ BossPlasma_Drop:
 		sub.w	objoff_30(a0),d0
 		bcc.s	loc_1A9E6
 		clr.w	obVelX(a0)
+	if FixBugs
+		sub.w	d0,obX(a0)
+	else
+		; this is intended to keep the leftmost energy ball in bounds,
+		; but it actually pushes it FURTHER to the left
 		add.w	d0,obX(a0)
+	endif
 		movea.l	objoff_34(a0),a1
 		subq.w	#1,objoff_32(a1)
 

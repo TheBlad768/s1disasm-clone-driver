@@ -78,6 +78,11 @@ DLE_GHZx:	dc.w DLE_GHZ1-DLE_GHZx
 ; ===========================================================================
 
 DLE_GHZ1:
+	if FixBugs
+		; Prevent the title screen from using GHZ1's DLE logic
+		cmpi.b	#id_Title,(v_gamemode).w
+		beq.s	locret_6E08
+	endif
 		move.w	#$300,(v_limitbtm1).w ; set lower y-boundary
 		cmpi.w	#$1780,(v_screenposx).w ; has the camera reached $1780 on x-axis?
 		blo.s	locret_6E08	; if not, branch

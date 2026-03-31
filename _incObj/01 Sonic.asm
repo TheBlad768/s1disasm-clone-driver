@@ -462,6 +462,9 @@ loc_13024:
 		move.w	(sp)+,d0
 		tst.w	d1
 		bpl.s	locret_1307C
+	if FixBugs
+		clr.w	obSubpixelY(a0) ; Reset subpixel portion
+	endif
 		asl.w	#8,d1
 		addi.b	#$20,d0
 		andi.b	#$C0,d0
@@ -650,21 +653,35 @@ loc_131AA:
 loc_131CC:
 		move.b	obAngle(a0),d0
 		jsr	(CalcSine).l
+	if FixBugs
+		; Fix max roll speed not being capped for both axis
+		move.w	obInertia(a0),d2
+		cmpi.w	#$1000,d2
+		ble.s	.noPosIntCap
+		move.w	#$1000,d2
+.noPosIntCap:	cmpi.w	#-$1000,d2
+		bge.s	.noNegIntCap
+		move.w	#-$1000,d2
+.noNegIntCap:
+		muls.w	d2,d0
+		asr.l	#8,d0
+		move.w	d0,obVelY(a0)
+		muls.w	d2,d1
+		asr.l	#8,d1
+        else
 		muls.w	obInertia(a0),d0
 		asr.l	#8,d0
 		move.w	d0,obVelY(a0)
 		muls.w	obInertia(a0),d1
 		asr.l	#8,d1
 		cmpi.w	#$1000,d1
-		ble.s	loc_131F0
+		ble.s	.noPosIntCap
 		move.w	#$1000,d1
-
-loc_131F0:
-		cmpi.w	#-$1000,d1
-		bge.s	loc_131FA
+.noPosIntCap:	cmpi.w	#-$1000,d1
+		bge.s	.noNegIntCap
 		move.w	#-$1000,d1
-
-loc_131FA:
+.noNegIntCap:
+	endif
 		move.w	d1,obVelX(a0)
 		bra.w	loc_1300C
 ; End of function Sonic_RollSpeed
@@ -860,10 +877,20 @@ Sonic_LevelBound:
 
 ; Boundary_Bottom
 .bottom:
+	if FixBugs
+		cmpi.w	#id_SBZ_act2,(v_zone).w ; is level SBZ2?
+		jne	KillSonic	; if not, kill Sonic
+		cmpi.w	#$2000,(v_player+obX).w ; is Sonic far enough into the level?
+		jlo	KillSonic	; if not, kill Sonic
+	else
+		; Goes out of range just from enabling FixBugs
 		cmpi.w	#id_SBZ_act2,(v_zone).w ; is level SBZ2?
 		bne.w	KillSonic	; if not, kill Sonic
-		cmpi.w	#$2000,(v_player+obX).w
-		blo.w	KillSonic
+		cmpi.w	#$2000,(v_player+obX).w ; is Sonic far enough into the level?
+		blo.w	KillSonic	; if not, kill Sonic
+	endif
+
+.sbz2_transition:
 		clr.b	(v_lastlamp).w	; clear lamppost counter
 		move.w	#1,(f_restart).w ; restart the level
 		move.w	#id_LZ_act4,(v_zone).w ; set level to SBZ3 (LZ4)
@@ -1021,6 +1048,14 @@ Sonic_JumpHeight:
 		move.w	#-$FC0,obVelY(a0)
 
 .return2:
+	if FixBugs
+		; Positive vertical speed cap, as the
+		; above cap doesn't account for falling
+		cmpi.w	#$FC0,obVelY(a0)
+		ble.s	.return3
+		move.w	#$FC0,obVelY(a0)
+.return3:
+	endif
 		rts
 ; End of function Sonic_JumpHeight
 
@@ -1197,6 +1232,9 @@ loc_135F0:
 		tst.w	d1
 		bpl.s	loc_13602
 		add.w	d1,obX(a0)
+	if FixBugs
+		clr.w	obSubpixelX(a0) ; Reset subpixel portion
+	endif
 		move.w	#0,obVelX(a0)
 
 loc_13602:
@@ -1214,9 +1252,30 @@ loc_13602:
 
 loc_1361E:
 		add.w	d1,obY(a0)
+	if FixBugs
+		clr.w	obSubpixelY(a0) ; Reset subpixel portion
+	endif
 		move.b	d3,obAngle(a0)
 		bsr.w	Sonic_ResetOnFloor
 		move.b	#id_Walk,obAnim(a0)
+	if FixBugs
+		; Fix angle inconsistencies on sloped surfaces
+		move.b	d3,d0		; Get floor angle
+		bpl.s	.CheckUpper	; If it's in the left half, branch
+		neg.b	d0		; If if's in the right half, mirror it
+
+	.CheckUpper:
+		btst	#6,d0		; Is it in the lower half?
+		beq.s	.CheckSlope	; If so, branch
+		subi.b	#$80,d0		; If it's in the upper half, mirror it
+		neg.b	d0
+
+	.CheckSlope:
+		cmpi.b	#$20,d0		; Are we landing on a steep slope?
+		bhs.s	loc_1365C	; If so, branch
+		cmpi.b	#$11,d0		; Are we landing on a shallow slope?
+		blo.s	loc_1364E	; If not, branch
+	else
 		move.b	d3,d0
 		addi.b	#$20,d0
 		andi.b	#$40,d0
@@ -1225,6 +1284,7 @@ loc_1361E:
 		addi.b	#$10,d0
 		andi.b	#$20,d0
 		beq.s	loc_1364E
+	endif
 		asr.w	obVelY(a0)
 		bra.s	loc_13670
 ; ===========================================================================
@@ -1256,6 +1316,9 @@ loc_13680:
 		tst.w	d1
 		bpl.s	loc_1369A
 		sub.w	d1,obX(a0)
+	if FixBugs
+		clr.w	obSubpixelX(a0) ; Reset subpixel portion
+	endif
 		move.w	#0,obVelX(a0)
 		move.w	obVelY(a0),obInertia(a0)
 		rts
@@ -1266,6 +1329,9 @@ loc_1369A:
 		tst.w	d1
 		bpl.s	loc_136B4
 		sub.w	d1,obY(a0)
+	if FixBugs
+		clr.w	obSubpixelY(a0) ; Reset subpixel portion
+	endif
 		tst.w	obVelY(a0)
 		bpl.s	locret_136B2
 		move.w	#0,obVelY(a0)
@@ -1281,6 +1347,9 @@ loc_136B4:
 		tst.w	d1
 		bpl.s	locret_136E0
 		add.w	d1,obY(a0)
+	if FixBugs
+		clr.w	obSubpixelY(a0) ; Reset subpixel portion
+	endif
 		move.b	d3,obAngle(a0)
 		bsr.w	Sonic_ResetOnFloor
 		move.b	#id_Walk,obAnim(a0)
@@ -1296,6 +1365,9 @@ loc_136E2:
 		tst.w	d1
 		bpl.s	loc_136F4
 		sub.w	d1,obX(a0)
+	if FixBugs
+		clr.w	obSubpixelX(a0) ; Reset subpixel portion
+	endif
 		move.w	#0,obVelX(a0)
 
 loc_136F4:
@@ -1303,6 +1375,9 @@ loc_136F4:
 		tst.w	d1
 		bpl.s	loc_13706
 		add.w	d1,obX(a0)
+	if FixBugs
+		clr.w	obSubpixelX(a0) ; Reset subpixel portion
+	endif
 		move.w	#0,obVelX(a0)
 
 loc_13706:
@@ -1310,6 +1385,9 @@ loc_13706:
 		tst.w	d1
 		bpl.s	locret_1373C
 		sub.w	d1,obY(a0)
+	if FixBugs
+		clr.w	obSubpixelY(a0) ; Reset subpixel portion
+	endif
 		move.b	d3,d0
 		addi.b	#$20,d0
 		andi.b	#$40,d0
@@ -1335,6 +1413,9 @@ loc_1373E:
 		tst.w	d1
 		bpl.s	loc_13758
 		add.w	d1,obX(a0)
+	if FixBugs
+		clr.w	obSubpixelX(a0) ; Reset subpixel portion
+	endif
 		move.w	#0,obVelX(a0)
 		move.w	obVelY(a0),obInertia(a0)
 		rts
@@ -1345,6 +1426,9 @@ loc_13758:
 		tst.w	d1
 		bpl.s	loc_13772
 		sub.w	d1,obY(a0)
+	if FixBugs
+		clr.w	obSubpixelY(a0) ; Reset subpixel portion
+	endif
 		tst.w	obVelY(a0)
 		bpl.s	locret_13770
 		move.w	#0,obVelY(a0)
@@ -1360,6 +1444,9 @@ loc_13772:
 		tst.w	d1
 		bpl.s	locret_1379E
 		add.w	d1,obY(a0)
+	if FixBugs
+		clr.w	obSubpixelY(a0) ; Reset subpixel portion
+	endif
 		move.b	d3,obAngle(a0)
 		bsr.w	Sonic_ResetOnFloor
 		move.b	#id_Walk,obAnim(a0)
@@ -1388,12 +1475,19 @@ Sonic_ResetOnFloor:
 		bclr	#5,obStatus(a0)	; clear push flag.
 		bclr	#1,obStatus(a0)	; clear in-air flag.
 		bclr	#4,obStatus(a0)	; clear roll-jump flag.
+	if FixBugs
+		; This line was placed too late into the routine,
+		; occasionally causing Sonic "sliding" on the floor
+		move.b	#id_Walk,obAnim(a0) ; use running/walking animation
+	endif
 		btst	#2,obStatus(a0)	; check if Sonic is in a ball state.
 		beq.s	.notball	; if not, skip.
 		bclr	#2,obStatus(a0)	; clear ball flag.
 		move.b	#$13,obHeight(a0)	; set Sonic's hitbox to standing.
 		move.b	#9,obWidth(a0)
+	if FixBugs=0
 		move.b	#id_Walk,obAnim(a0) ; use running/walking animation
+	endif
 		subq.w	#5,obY(a0)	; raise Sonic up 5 pixels so he's not inside the ground.
 
 .notball:
@@ -1663,6 +1757,10 @@ Sonic_Animate:
 		move.b	d0,obPrevAni(a0)
 		move.b	#0,obAniFrame(a0) ; reset animation
 		move.b	#0,obTimeFrame(a0) ; reset frame duration
+	if FixBugs
+		; This fixes the occasional "pushing air" bug
+		bclr	#5,obStatus(a0)	; clear pushing flag
+	endif
 
 ; SAnim_Do:
 .do:
@@ -1734,6 +1832,12 @@ Sonic_Animate:
 		bne.w	.rolljump	; if not, branch
 		moveq	#0,d1
 		move.b	obAngle(a0),d0	; get Sonic's angle
+	if FixBugs
+		; Fix off-by-one angle (this was implemented in S2/S3K)
+		ble.s	.notoffbyone	; on a flat surface or ascending slope? if yes, branch
+		subq.b	#1,d0		; adjust off-by-one angle on descending slopes
+.notoffbyone:
+	endif
 		move.b	obStatus(a0),d2
 		andi.b	#1,d2		; is Sonic mirrored horizontally?
 		bne.s	.flip		; if yes, branch

@@ -3170,6 +3170,13 @@ End_LoadData:
 		bsr.w	PalLoad_Fade	; load Sonic's palette
 		move.w	#bgm_Ending,d0
 		bsr.w	QueueSound1	; play ending sequence music
+
+	if FixBugs
+		; Fix being able to enable debug mode without having
+		; entered the cheat code for it
+		tst.b	(f_debugcheat).w ; has debug cheat been entered?
+		beq.s	End_LoadSonic	; if not, branch
+	endif
 		btst	#bitA,(v_jpadhold1).w ; is button A pressed?
 		beq.s	End_LoadSonic	; if not, branch
 		move.b	#1,(f_debugmode).w ; enable debug mode

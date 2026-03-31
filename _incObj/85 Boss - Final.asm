@@ -201,6 +201,11 @@ loc_19F6A:
 		move.w	d0,(v_player+obVelX).w
 		tst.b	objoff_35(a0)
 		bne.s	loc_19F88
+	if FixBugs
+		; Fix underflowing hit counter to 255 on defeat
+		tst.b	obColProp(a0)	; has the boss been defeated?
+		beq.s	loc_19F9C	; if so, don't let it be hit again
+	endif
 		subq.b	#1,obColProp(a0)
 		move.b	#$64,objoff_35(a0)
 		move.w	#sfx_HitBoss,d0
@@ -214,6 +219,10 @@ loc_19F88:
 ; ===========================================================================
 
 loc_19F96:
+	if FixBugs
+		tst.b	obColProp(a0)	; has the boss been defeated?
+		beq.s	loc_19F9C	; if so, don't reset to laugh animation
+	endif
 		move.b	#1,obAnim(a0)
 
 loc_19F9C:
