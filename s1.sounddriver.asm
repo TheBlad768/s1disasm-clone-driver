@@ -2601,15 +2601,15 @@ DACDriver:
 		; In this branch, the DAC driver is a binary blob. We do some
 		; hackery here to manually patch some of its pointers. In the
 		; AS branch, this driver is properly disassembled.
-		incbin	"sound/z80.bin", 0, $15
+		binclude	"sound/z80.bin", 0, $15
 		dc.b ((SegaPCM&$FF8000)/$8000)&1						; Least bit of bank ID (bit 15 of address)
-		incbin	"sound/z80.bin", $16, 6
+		binclude	"sound/z80.bin", $16, 6
 		dc.b ((SegaPCM&$FF8000)/$8000)>>1						; ... the remaining bits of bank ID (bits 16-23)
-		incbin	"sound/z80.bin", $1D, $93
+		binclude	"sound/z80.bin", $1D, $93
 		dc.w ((SegaPCM&$FF)<<8)+((SegaPCM&$7F00)>>8)|$80				; Pointer to Sega PCM, relative to start of ROM bank (i.e., little_endian($8000 + SegaPCM&$7FFF)
-		incbin	"sound/z80.bin", $B2, 1
+		binclude	"sound/z80.bin", $B2, 1
 		dc.w (((SegaPCM_End-SegaPCM)&$FF)<<8)+(((SegaPCM_End-SegaPCM)&$FF00)>>8)	; ... the size of the Sega PCM (little endian)
-		incbin	"sound/z80.bin", $B5, $16AB
+		binclude	"sound/z80.bin", $B5, $16AB
 		even
 
 ; ---------------------------------------------------------------------------
@@ -2836,7 +2836,7 @@ SoundD0:	include "sound/sfx/SndD0 - Waterfall.asm"
 		if (*&$7FFF)+Size_of_SegaPCM>$8000
 			align $8000
 		endc
-SegaPCM:	incbin	"sound/dac/sega.pcm"
+SegaPCM:	binclude	"sound/dac/sega.pcm"
 SegaPCM_End
 		even
 

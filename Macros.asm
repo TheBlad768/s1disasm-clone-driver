@@ -320,8 +320,16 @@ zonewarning:	macro loc,elementsize
 ; binclude compatibility macro for asm68k
 ; ---------------------------------------------------------------------------
 
-binclude:	macro path
+binclude:	macro path,offset,length
+	if offset<>0|length<>0
+		if length<>0
+			incbin \path,\offset,\length
+		else
+			incbin \path,\offset
+		endif
+	else
 		incbin \path
+	endif
 		endm
 
 ; ---------------------------------------------------------------------------
