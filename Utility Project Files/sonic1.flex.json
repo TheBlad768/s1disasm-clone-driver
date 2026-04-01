@@ -82,7 +82,7 @@
                     "uuid": "472ab9f3-6355-46ce-a3a8-3fd70d6d9cd8"
                 },
                 {
-                    "name": "Ring",
+                    "name": "Ring (REV00)",
                     "format": "Sonic 1.js",
                     "palettes": [
                         {
@@ -96,7 +96,7 @@
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "../_maps/Rings.asm",
+                        "path": "../_maps/Rings (REV00).asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -105,6 +105,31 @@
                         "label": ""
                     },
                     "uuid": "2ab9f363-55e6-4ee3-a83f-d70d6d9cd886"
+                },
+                {
+                    "name": "Ring (REV01)",
+                    "format": "Sonic 1.js",
+                    "palettes": [
+                        {
+                            "path": "../palette/Sonic.bin",
+                            "length": 1
+                        }
+                    ],
+                    "art": {
+                        "path": "../artnem/Rings.nem",
+                        "compression": "Nemesis",
+                        "offset": 0
+                    },
+                    "mappings": {
+                        "path": "../_maps/Rings (REV01).asm",
+                        "label": ""
+                    },
+                    "dplcs": {
+                        "enabled": false,
+                        "path": "../",
+                        "label": ""
+                    },
+                    "uuid": "2ab9f363-55e6-4ee3-a83f-d70d6d9cd887"
                 },
                 {
                     "name": "Monitor",

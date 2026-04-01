@@ -20,5 +20,5 @@ Also see [ClownMapEd](https://info.sonicretro.org/ClownMapEd) as an alternative 
 ## `S1SSEdit.ini`
 Project file for the [S1SSEdit](https://info.sonicretro.org/S1SSEdit) special stage editor.
 
-## Legacy tools
-Project files for [PlaneEd](https://info.sonicretro.org/PlaneEd) and both major versions of [SonED2](https://info.sonicretro.org/SonED2) are only provided for historical purposes, as the utilities themselves are considered obsolete by modern alternatives.
+## `Legacy Utility Project Files.zip`
+Archive that contains project files for [PlaneEd](https://info.sonicretro.org/PlaneEd) and both major versions of [SonED2](https://info.sonicretro.org/SonED2). These are only provided for historical purposes, as the utilities themselves are considered superseded by modern alternatives, and they may require additional adjustments to match newer naming conventions.

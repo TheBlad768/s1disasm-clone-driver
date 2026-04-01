@@ -3693,11 +3693,11 @@ Demo_EndGHZ2:	incbin	"demodata/Ending - GHZ2.bin"
 
 		include	"_inc/LevelSizeLoad & BgScrollSpeed.asm" ; merged with "LevelSizeLoad & BgScrollSpeed (JP1).asm"
 	if Revision=0
-		include	"_inc/DeformLayers.asm"
-		include	"_inc/Level Drawing.asm"
+		include	"_inc/DeformLayers (REV00).asm"
+		include	"_inc/Level Drawing (REV00).asm"
 	else
-		include	"_inc/DeformLayers (JP1).asm"
-		include	"_inc/Level Drawing (JP1).asm"
+		include	"_inc/DeformLayers (REV01).asm"
+		include	"_inc/Level Drawing (REV01).asm"
 	endif
 		include	"_inc/LevelLayoutLoad.asm" ; includes LevelDataLoad, LevelLayoutLoad, and LevelLayoutLoad2
 
@@ -3772,9 +3772,11 @@ Map_Missile:	include	"_maps/Buzz Bomber Missile.asm"
 		include	"_incObj/7C Ring Flash.asm"
 		include	"_anim/Rings.asm"
 Map_Ring:   if Revision=0
-		include	"_maps/Rings.asm"
+		include	"_maps/Rings (REV00).asm"
 	    else
-		include	"_maps/Rings (JP1).asm"
+		; REV01 added an extra blank frame, possibly to mitigate
+		; rings occasionally popping up in the sign post sparkles
+		include	"_maps/Rings (REV01).asm"
 	    endif
 Map_GRing:	include	"_maps/Giant Ring.asm"
 Map_Flash:	include	"_maps/Ring Flash.asm"
@@ -4133,14 +4135,14 @@ Art_LivesNums:	incbin "artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers on 
 ; ===========================================================================
 
 	if Revision=0
-Nem_SegaLogo:	incbin	"artnem/Sega Logo.nem"	; large Sega logo
+Nem_SegaLogo:	binclude	"artnem/Sega Logo (REV00).nem"	; large Sega logo
 		even
-Eni_SegaLogo:	incbin	"tilemaps/Sega Logo.eni" ; large Sega logo (mappings)
+Eni_SegaLogo:	binclude	"tilemaps/Sega Logo (REV00).eni" ; large Sega logo (mappings)
 		even
 	else
-Nem_SegaLogo:	incbin	"artnem/Sega Logo (JP1).nem" ; large Sega logo
+Nem_SegaLogo:	binclude	"artnem/Sega Logo (REV01).nem" ; large Sega logo
 		even
-Eni_SegaLogo:	incbin	"tilemaps/Sega Logo (JP1).eni" ; large Sega logo (mappings)
+Eni_SegaLogo:	binclude	"tilemaps/Sega Logo (REV01).eni" ; large Sega logo (mappings)
 		even
 	endif
 
@@ -4508,10 +4510,10 @@ Nem_MZ:		incbin	"artnem/8x8 - MZ.nem"	; MZ primary patterns
 		even
 Blk256_MZ:
 	if Revision=0
-		incbin	"map256/MZ.kos"
+		binclude	"map256/MZ (REV00).kos"
 		even
 	else
-		incbin	"map256/MZ (JP1).kos"
+		binclude	"map256/MZ (REV01).kos"
 		even
 	endif
 
@@ -4535,10 +4537,10 @@ Nem_SBZ:	incbin	"artnem/8x8 - SBZ.nem"	; SBZ primary patterns
 		even
 Blk256_SBZ:
 	if Revision=0
-		incbin	"map256/SBZ.kos"
+		binclude	"map256/SBZ (REV00).kos"
 		even
 	else
-		incbin	"map256/SBZ (JP1).kos"
+		binclude	"map256/SBZ (REV01).kos"
 		even
 	endif
 
@@ -4626,16 +4628,16 @@ SS_3:		incbin	"sslayout/3.eni"
 SS_4:		incbin	"sslayout/4.eni"
 		even
 	if Revision=0
-SS_5:		incbin	"sslayout/5.eni"
+SS_5:		binclude	"sslayout/5 (REV00).eni"
 		even
-SS_6:		incbin	"sslayout/6.eni"
+SS_6:		binclude	"sslayout/6 (REV00).eni"
 		even
 	else
 		; SS 5 and 6 had broken objects outside the accessible layout;
-		; rev01 removes those - remaining layouts stay unchanged.
-SS_5:		incbin	"sslayout/5 (JP1).eni"
+		; REV01 removes those - remaining layouts stay unchanged.
+SS_5:		binclude	"sslayout/5 (REV01).eni"
 		even
-SS_6:		incbin	"sslayout/6 (JP1).eni"
+SS_6:		binclude	"sslayout/6 (REV01).eni"
 		even
 	endif
 
@@ -4757,9 +4759,9 @@ Level_SYZ1:	incbin	"levels/syz1.bin"
 		even
 Level_SYZbg:
 	if Revision=0
-		incbin	"levels/syzbg.bin"
+		binclude	"levels/syzbg (REV00).bin"
 	else
-		incbin	"levels/syzbg (JP1).bin"
+		binclude	"levels/syzbg (REV01).bin"
 	endif
 		even
 Level_SYZ1Unk:	dc.l 0
@@ -4859,52 +4861,53 @@ ObjPos_GHZ2:	incbin	"objpos/ghz2.bin"
 		even
 ObjPos_GHZ3:
 	if Revision=0
-		incbin	"objpos/ghz3.bin"
+		binclude	"objpos/ghz3 (REV00).bin"
 		even
 	else
-		incbin	"objpos/ghz3 (JP1).bin"
+		binclude	"objpos/ghz3 (REV01).bin"
 		even
 	endif
 
 ObjPos_LZ1:
 	if Revision=0
-		incbin	"objpos/lz1.bin"
+		binclude	"objpos/lz1 (REV00).bin"
 		even
 	else
-		incbin	"objpos/lz1 (JP1).bin"
+		binclude	"objpos/lz1 (REV01).bin"
 		even
 	endif
-ObjPos_LZ2:	incbin	"objpos/lz2.bin"
+ObjPos_LZ2:	binclude	"objpos/lz2.bin"
 		even
 ObjPos_LZ3:
 	if Revision=0
-		incbin	"objpos/lz3.bin"
+		binclude	"objpos/lz3 (REV00).bin"
 		even
 	else
-		incbin	"objpos/lz3 (JP1).bin"
+		binclude	"objpos/lz3 (REV01).bin"
 		even
 	endif
-ObjPos_SBZ3:	incbin	"objpos/sbz3.bin"
+ObjPos_SBZ3:	binclude	"objpos/sbz3.bin"
 		even
-ObjPos_LZ1pf1:	incbin	"objpos/lz1pf1.bin"
+
+ObjPos_LZ1pf1:	binclude	"objpos/platforms/lz1pf1.bin"
 		even
-ObjPos_LZ1pf2:	incbin	"objpos/lz1pf2.bin"
+ObjPos_LZ1pf2:	binclude	"objpos/platforms/lz1pf2.bin"
 		even
-ObjPos_LZ2pf1:	incbin	"objpos/lz2pf1.bin"
+ObjPos_LZ2pf1:	binclude	"objpos/platforms/lz2pf1.bin"
 		even
-ObjPos_LZ2pf2:	incbin	"objpos/lz2pf2.bin"
+ObjPos_LZ2pf2:	binclude	"objpos/platforms/lz2pf2.bin"
 		even
-ObjPos_LZ3pf1:	incbin	"objpos/lz3pf1.bin"
+ObjPos_LZ3pf1:	binclude	"objpos/platforms/lz3pf1.bin"
 		even
-ObjPos_LZ3pf2:	incbin	"objpos/lz3pf2.bin"
+ObjPos_LZ3pf2:	binclude	"objpos/platforms/lz3pf2.bin"
 		even
 
 ObjPos_MZ1:
 	if Revision=0
-		incbin	"objpos/mz1.bin"
+		binclude	"objpos/mz1 (REV00).bin"
 		even
 	else
-		incbin	"objpos/mz1 (JP1).bin"
+		binclude	"objpos/mz1 (REV01).bin"
 		even
 	endif
 ObjPos_MZ2:	incbin	"objpos/mz2.bin"
@@ -4924,39 +4927,40 @@ ObjPos_SYZ2:	incbin	"objpos/syz2.bin"
 		even
 ObjPos_SYZ3:
 	if Revision=0
-		incbin	"objpos/syz3.bin"
+		binclude	"objpos/syz3 (REV00).bin"
 		even
 	else
-		incbin	"objpos/syz3 (JP1).bin"
+		binclude	"objpos/syz3 (REV01).bin"
 		even
 	endif
 
 ObjPos_SBZ1:
 	if Revision=0
-		incbin	"objpos/sbz1.bin"
+		binclude	"objpos/sbz1 (REV00).bin"
 		even
 	else
-		incbin	"objpos/sbz1 (JP1).bin"
+		binclude	"objpos/sbz1 (REV01).bin"
 		even
 	endif
 ObjPos_SBZ2:	incbin	"objpos/sbz2.bin"
 		even
 ObjPos_FZ:	incbin	"objpos/fz.bin"
 		even
-ObjPos_SBZ1pf1:	incbin	"objpos/sbz1pf1.bin"
+
+ObjPos_SBZ1pf1:	binclude	"objpos/platforms/sbz1pf1.bin"
 		even
-ObjPos_SBZ1pf2:	incbin	"objpos/sbz1pf2.bin"
+ObjPos_SBZ1pf2:	binclude	"objpos/platforms/sbz1pf2.bin"
 		even
-ObjPos_SBZ1pf3:	incbin	"objpos/sbz1pf3.bin"
+ObjPos_SBZ1pf3:	binclude	"objpos/platforms/sbz1pf3.bin"
 		even
-ObjPos_SBZ1pf4:	incbin	"objpos/sbz1pf4.bin"
+ObjPos_SBZ1pf4:	binclude	"objpos/platforms/sbz1pf4.bin"
 		even
-ObjPos_SBZ1pf5:	incbin	"objpos/sbz1pf5.bin"
+ObjPos_SBZ1pf5:	binclude	"objpos/platforms/sbz1pf5.bin"
 		even
-ObjPos_SBZ1pf6:	incbin	"objpos/sbz1pf6.bin"
+ObjPos_SBZ1pf6:	binclude	"objpos/platforms/sbz1pf6.bin"
 		even
 
-ObjPos_End:	incbin	"objpos/ending.bin"
+ObjPos_End:	binclude	"objpos/ending.bin"
 		even
 
 ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
