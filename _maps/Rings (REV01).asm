@@ -10,7 +10,7 @@ Map_Ring_internal:	mappingsTable
 	mappingsTableEntry.w	.sparkle2
 	mappingsTableEntry.w	.sparkle3
 	mappingsTableEntry.w	.sparkle4
-	mappingsTableEntry.w	.blank
+	mappingsTableEntry.w	.blank	; REV01 adds this extra blank frame
 
 .front:	spriteHeader
 	spritePiece	-8, -8, 2, 2, 0, 0, 0, 0, 0	; ring front
