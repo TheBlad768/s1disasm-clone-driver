@@ -430,9 +430,9 @@ v_levselitem:		ds.w	1		; level select - item selected
 v_levselsound:		ds.w	1		; level select - sound selected
 			ds.b	$3A		; unused
 	if Revision=0
-v_scorecopy:		ds.l	1		; score, duplicate
+v_scorecopy:		ds.l	1		; score, duplicate (REV00 only)
 	else
-v_scorelife:		ds.l	1		; points required for an extra life (JP1 only)
+v_scorelife:		ds.l	1		; points required for an extra life (REV01 only)
 	endif
 			ds.b	$1C		; unused
 f_levselcheat:		ds.b	1		; level select cheat flag
