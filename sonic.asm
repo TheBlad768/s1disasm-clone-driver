@@ -1038,7 +1038,7 @@ Tilemap_Cell:
 ; End of function TilemapToVRAM
 ; ===========================================================================
 
-		include	"_inc/Nemesis Decompression.asm"
+		include	"_inc/Decompression/Nemesis Decompression.asm"
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1296,13 +1296,12 @@ Qplc_Loop:
 ; End of function QuickPLC
 ; ===========================================================================
 
-		include	"_inc/Enigma Decompression.asm"
-		include	"_inc/Kosinski Decompression.asm"
+		include	"_inc/Decompression/Enigma Decompression.asm"
+		include	"_inc/Decompression/Kosinski Decompression.asm"
 
 ; ===========================================================================
 
 		include	"_inc/PaletteCycle.asm"
-		include	"_inc/SBZ Palette Scripts.asm"
 
 		; includes "PaletteFadeIn", "PaletteFadeOut", "PaletteWhiteIn", and "PaletteWhiteOut"
 		include	"_inc/Palette Fading.asm"
