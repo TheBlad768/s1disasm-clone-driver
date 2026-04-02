@@ -602,10 +602,11 @@ ErrorWaitForC:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Text used in level select, debug mode, and error text
+; Uncompressed art text for debug mode, level select, and errors
+; (formerly "menutext.bin")
 ; ---------------------------------------------------------------------------
 
-Art_Text:	bincludeEndMarker	"artunc/menutext.bin" 
+Art_Text:	bincludeEndMarker	"artunc/Level Select & Debug Text.bin" 
 		even
 
 ; ===========================================================================
