@@ -452,8 +452,17 @@ SS_LayoutIndex:
 
 ; ---------------------------------------------------------------------------
 ; Special stage start locations
+; (Previously separated into "_inc/Start Location Array - Special Stages.asm")
 ; ---------------------------------------------------------------------------
-SS_StartLoc:	include	"_inc/Start Location Array - Special Stages.asm"
+
+SS_StartLoc:
+		binclude	"startpos/Special Stages/ss1.bin"
+		binclude	"startpos/Special Stages/ss2.bin"
+		binclude	"startpos/Special Stages/ss3.bin"
+		binclude	"startpos/Special Stages/ss4.bin"
+		binclude	"startpos/Special Stages/ss5.bin"
+		binclude	"startpos/Special Stages/ss6.bin"
+		even
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
