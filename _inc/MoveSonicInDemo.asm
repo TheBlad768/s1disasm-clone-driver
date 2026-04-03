@@ -115,5 +115,4 @@ DemoEndDataPtr:	dc.l Demo_EndGHZ1	; demos run during the credits
 ; Interestingly, this lines up with our knowledge of the fabled
 ; Tokyo Game Show prototype.
 ; See it in action: https://youtu.be/S8_IAfQbUu0
-Demo_Unused:	binclude	"demodata/Unused Demo.bin"
-		even
+Demo_Unused:	include	"demodata/Unused Demo.asm"
