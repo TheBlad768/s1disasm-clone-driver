@@ -304,6 +304,43 @@ gotoROM:	macro
 		endm
 
 ; ---------------------------------------------------------------------------
+; macro to simplify editing the demo scripts
+; (taken from the Sonic 2 disassembly, adapted for ASM68K)
+; ---------------------------------------------------------------------------
+
+demoinput:	macro buttons,duration
+	btns_mask: = 0
+
+	i:   = 1
+	len: = strlen("\buttons")
+	while (i<=len)
+		btn:	substr i,i,"\buttons"
+		i: = i+1
+
+		; If anyone reads this in the future and knows how to get
+		; switch-cases to work in ASM68K, please submit a PR...
+		if "\btn"="U"
+			btns_mask: = btns_mask|btnUp
+		elseif "\btn"="D"
+			btns_mask: = btns_mask|btnDn
+		elseif "\btn"="L"
+			btns_mask: = btns_mask|btnL
+		elseif "\btn"="R"
+			btns_mask: = btns_mask|btnR
+		elseif "\btn"="A"
+			btns_mask: = btns_mask|btnA
+		elseif "\btn"="B"
+			btns_mask: = btns_mask|btnB
+		elseif "\btn"="C"
+			btns_mask: = btns_mask|btnC
+		elseif "\btn"="S"
+			btns_mask: = btns_mask|btnStart
+		endif
+	endw
+	dc.b	btns_mask,\duration-1
+    endm
+
+; ---------------------------------------------------------------------------
 ; compare the size of an index with ZoneCount constant
 ; (should be used immediately after the index)
 ; input: index address, element size

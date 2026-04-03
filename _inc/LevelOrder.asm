@@ -1,6 +1,7 @@
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Level order array
+; Level order array (extracted from "_incObj/3A Got Through Card.asm").
+; "0" technically translates to GHZ1, but left here as is for readability.
 ; ---------------------------------------------------------------------------
 
 		; Green Hill Zone

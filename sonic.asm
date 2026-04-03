@@ -594,10 +594,11 @@ ErrorWaitForC:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Text used in level select, debug mode, and error text
+; Uncompressed art text for debug mode, level select, and errors
+; (formerly "menutext.bin")
 ; ---------------------------------------------------------------------------
 
-Art_Text:	bincludeEndMarker	"artunc/menutext.bin" 
+Art_Text:	bincludeEndMarker	"artunc/Level Select & Debug Text.bin" 
 		even
 
 ; ===========================================================================
@@ -1194,7 +1195,7 @@ Tilemap_Cell:
 ; End of function TilemapToVRAM
 ; ===========================================================================
 
-		include	"_inc/Nemesis Decompression.asm"
+		include	"_inc/Decompression/Nemesis Decompression.asm"
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1452,13 +1453,12 @@ Qplc_Loop:
 ; End of function QuickPLC
 ; ===========================================================================
 
-		include	"_inc/Enigma Decompression.asm"
-		include	"_inc/Kosinski Decompression.asm"
+		include	"_inc/Decompression/Enigma Decompression.asm"
+		include	"_inc/Decompression/Kosinski Decompression.asm"
 
 ; ===========================================================================
 
 		include	"_inc/PaletteCycle.asm"
-		include	"_inc/SBZ Palette Scripts.asm"
 
 		; includes "PaletteFadeIn", "PaletteFadeOut", "PaletteWhiteIn", and "PaletteWhiteOut"
 		include	"_inc/Palette Fading.asm"
@@ -2974,10 +2974,10 @@ SignpostArtLoad:
 ; End of function SignpostArtLoad
 ; ===========================================================================
 
-Demo_GHZ:	binclude	"demodata/Intro - GHZ.bin"
-Demo_MZ:	binclude	"demodata/Intro - MZ.bin"
-Demo_SYZ:	binclude	"demodata/Intro - SYZ.bin"
-Demo_SS:	binclude	"demodata/Intro - Special Stage.bin"
+Demo_GHZ:	include	"demodata/Intro - GHZ.asm"
+Demo_MZ:	include	"demodata/Intro - MZ.asm"
+Demo_SYZ:	include	"demodata/Intro - SYZ.asm"
+Demo_SS:	include	"demodata/Intro - Special Stage.asm"
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -3672,22 +3672,14 @@ Map_EEgg:	include	"_maps/Try Again & End Eggman.asm"
 ; ---------------------------------------------------------------------------
 ; Ending sequence demos
 ; ---------------------------------------------------------------------------
-Demo_EndGHZ1:	binclude	"demodata/Ending - GHZ1.bin"
-		even
-Demo_EndMZ:	binclude	"demodata/Ending - MZ.bin"
-		even
-Demo_EndSYZ:	binclude	"demodata/Ending - SYZ.bin"
-		even
-Demo_EndLZ:	binclude	"demodata/Ending - LZ.bin"
-		even
-Demo_EndSLZ:	binclude	"demodata/Ending - SLZ.bin"
-		even
-Demo_EndSBZ1:	binclude	"demodata/Ending - SBZ1.bin"
-		even
-Demo_EndSBZ2:	binclude	"demodata/Ending - SBZ2.bin"
-		even
-Demo_EndGHZ2:	binclude	"demodata/Ending - GHZ2.bin"
-		even
+Demo_EndGHZ1:	include	"demodata/Ending - GHZ1.asm"
+Demo_EndMZ:	include	"demodata/Ending - MZ.asm"
+Demo_EndSYZ:	include	"demodata/Ending - SYZ.asm"
+Demo_EndLZ:	include	"demodata/Ending - LZ.asm"
+Demo_EndSLZ:	include	"demodata/Ending - SLZ.asm"
+Demo_EndSBZ1:	include	"demodata/Ending - SBZ1.asm"
+Demo_EndSBZ2:	include	"demodata/Ending - SBZ2.asm"
+Demo_EndGHZ2:	include	"demodata/Ending - GHZ2.asm"
 
 ; ===========================================================================
 
