@@ -1768,7 +1768,7 @@ Tit_LoadText:
 		bsr.w	DeformLayers			; initialize background deformation before fade-in
 		jsr	(BuildSprites).l		; build sprites for the title screen objects before fade-in
 		moveq	#plcid_Main,d0			; load main patterns (rings, etc.)
-		bsr.w	NewPLC				; (note that these get loaded once during the title screen and then never again)
+		bsr.w	NewPLC				; (these get loaded once for the title screen and then never again, except when exiting Special Stages)
 
 		move.w	#0,(v_title_dcount).w		; clear D-Pad counter for title screen cheats
 		move.w	#0,(v_title_ccount).w		; clear C counter for title screen cheats
@@ -2573,7 +2573,7 @@ Level_SkipClr:
 		move.b	d0,(v_shoes).w			; clear speed shoes
 		move.b	d0,(v_unused1).w		; clear unused flag (goggles?)
 		move.w	d0,(v_debuguse).w		; clear debug usage flag
-		move.w	d0,(f_restart).w		; clear level restsrt flag
+		move.w	d0,(f_restart).w		; clear level restart flag
 		move.w	d0,(v_framecount).w		; reset frames since level start to 0
 		bsr.w	OscillateNumInit		; initialize oscillation values
 		move.b	#1,(f_scorecount).w		; update score counter
@@ -2729,7 +2729,7 @@ Level_FDLoop:
 		move.b	#8,(v_vbla_routine).w		; set routine to 8 in V-Int
 		bsr.w	WaitForVBla			; wait until V-Blank has finished
 		bsr.w	MoveSonicInDemo			; continue updating demo controls during fade-out
-		jsr	(ExecuteObjects).l		; continue executing objects during fade-oout
+		jsr	(ExecuteObjects).l		; continue executing objects during fade-out
 		jsr	(BuildSprites).l		; continue building sprites during fade-out
 		jsr	(ObjPosLoad).l			; continue running object manager during fade-out
 		subq.w	#1,(v_palchgspeed).w		; decrement palette fade-out delay
@@ -2865,175 +2865,205 @@ Demo_SS:	include	"demodata/Intro - Special Stage.asm"
 ; ---------------------------------------------------------------------------
 
 ; SpecialStage:
-GM_Special:
-		move.w	#sfx_EnterSS,d0
-		bsr.w	QueueSound2 ; play special stage entry sound
-		bsr.w	PaletteWhiteOut
-		disable_ints
-		lea	(vdp_control_port).l,a6
-		move.w	#$8B03,(a6)	; line scroll mode
-		move.w	#$8004,(a6)	; 8-colour mode
-		move.w	#$8A00+175,(v_hbla_hreg).w
-		move.w	#$9011,(a6)	; 128-cell hscroll size
-		disable_display
-		bsr.w	ClearScreen
-		enable_ints
-		fillVRAM	0, ArtTile_SS_Plane_1*tile_size+plane_size_64x32, ArtTile_SS_Plane_5*tile_size
-		bsr.w	SS_BGLoad
-		moveq	#plcid_SpecialStage,d0
-		bsr.w	QuickPLC	; load special stage patterns
+GM_Special:	; white fade-out from previous game mode
+		move.w	#sfx_EnterSS,d0			; set special stage entry sound
+		bsr.w	QueueSound2			; play it
+		bsr.w	PaletteWhiteOut			; fade-out to white
+; ---------------------------------------------------------------------------
 
-		clearRAM v_objspace
-		clearRAM v_levelvariables
-		clearRAM v_timingvariables
-		clearRAM v_ngfx_buffer
+		; load special stage patterns
+		disable_ints				; disable interrupts
+		lea	(vdp_control_port).l,a6		; load VDP control port
+		move.w	#$8B03,(a6)			; line scroll mode (per-row horizontally, full-screen vertically)
+		move.w	#$8004,(a6)			; 8-colour mode
+		move.w	#$8A00+175,(v_hbla_hreg).w	; set H-Blank counter to scanline 175 (even though H-Int isn't used here...)
+		move.w	#$9011,(a6)			; 128-cell hscroll size
+		disable_display				; disable screen output
+		bsr.w	ClearScreen			; wipe screen
+		enable_ints				; enable interrupts
 
-		clr.b	(f_wtr_state).w
-		clr.w	(f_restart).w
-		moveq	#palid_Special,d0
-		bsr.w	PalLoad_Fade	; load special stage palette
-		jsr	(SS_Load).l		; load SS layout data
-		move.l	#0,(v_screenposx).w
-		move.l	#0,(v_screenposy).w
-		move.b	#id_SonicSpecial,(v_player).w ; load special stage Sonic object
-		bsr.w	PalCycle_SS
-		clr.w	(v_ssangle).w	; set stage angle to "upright"
-		move.w	#$40,(v_ssrotate).w ; set stage rotation speed
-		move.w	#bgm_SS,d0
-		bsr.w	QueueSound1	; play special stage BG music
-		move.w	#0,(v_btnpushtime1).w
-		lea	(DemoDataPtr).l,a1
-		moveq	#6,d0
-		lsl.w	#2,d0
-		movea.l	(a1,d0.w),a1
-		move.b	1(a1),(v_btnpushtime2).w
-		subq.b	#1,(v_btnpushtime2).w
-		clr.w	(v_rings).w
-		clr.b	(v_lifecount).w
-		move.w	#0,(v_debuguse).w
-		move.w	#1800,(v_generictimer).w
-		tst.b	(f_debugcheat).w ; has debug cheat been entered?
-		beq.s	SS_NoDebug	; if not, branch
-		btst	#bitA,(v_jpadhold1).w ; is A button pressed?
-		beq.s	SS_NoDebug	; if not, branch
-		move.b	#1,(f_debugmode).w ; enable debug mode
+		fillVRAM	0, ArtTile_SS_Plane_1*tile_size+plane_size_64x32, ArtTile_SS_Plane_5*tile_size ; clear nametables
+		bsr.w	SS_BGLoad			; load background clouds/bubbles/birds/fish mappings
+		moveq	#plcid_SpecialStage,d0		; load special stage patterns
+		bsr.w	QuickPLC			; execute PLCs immediately (no queue)
+
+		clearRAM v_objspace			; clear object RAM space
+		clearRAM v_levelvariables		; clear various level variables
+		clearRAM v_timingvariables		; clear various timing variables
+		clearRAM v_ngfx_buffer			; clear Nemesis decompression buffer
+
+		clr.b	(f_wtr_state).w			; clear water state
+		clr.w	(f_restart).w			; clear level restart flag
+		moveq	#palid_Special,d0		; load special stage palette...
+		bsr.w	PalLoad_Fade			; ...into the palette fade-in buffer
+		jsr	(SS_Load).l			; load SS layout data (based on last stage entered and collected emeralds)
+		move.l	#0,(v_screenposx).w		; reset X-camera position
+		move.l	#0,(v_screenposy).w		; reset Y-camera position
+		move.b	#id_SonicSpecial,(v_player).w	; load special stage Sonic object
+		bsr.w	PalCycle_SS			; initialize palette cycle and background for fade-in
+		clr.w	(v_ssangle).w			; set stage angle to "upright"
+		move.w	#$40,(v_ssrotate).w		; set stage rotation speed
+		move.w	#bgm_SS,d0			; play special stage BG music
+		bsr.w	QueueSound1			; play it
+
+		move.w	#0,(v_btnpushtime1).w		; clear button push counters for demos
+		lea	(DemoDataPtr).l,a1		; load demo data
+		moveq	#6,d0				; hardcoded to load the entry for the Special Stage demo
+		lsl.w	#2,d0				; multiply by 4 for longword-based indexing
+		movea.l	(a1,d0.w),a1			; get demo pointer for current level
+		move.b	1(a1),(v_btnpushtime2).w	; load initial demo key press duration
+		subq.b	#1,(v_btnpushtime2).w		; subtract 1 from demo key pressduration
+
+		clr.w	(v_rings).w			; clear rings
+		clr.b	(v_lifecount).w			; clear extra lives flags when getting 100/200 rings
+
+		move.w	#0,(v_debuguse).w		; exit debug mode if necessary
+		move.w	#1800,(v_generictimer).w	; run regular demos for 30 seconds
+		tst.b	(f_debugcheat).w		; has debug cheat been entered?
+		beq.s	SS_NoDebug			; if not, branch
+		btst	#bitA,(v_jpadhold1).w		; is A button held?
+		beq.s	SS_NoDebug			; if not, branch
+		move.b	#1,(f_debugmode).w		; enable debug mode
 
 SS_NoDebug:
-		enable_display
-		bsr.w	PaletteWhiteIn
+		enable_display				; enable screen out-put
+		bsr.w	PaletteWhiteIn			; fade-in from white and enter main loop
 
 ; ---------------------------------------------------------------------------
 ; Main Special Stage loop
 ; ---------------------------------------------------------------------------
 
 SS_MainLoop:
-		bsr.w	PauseGame
-		move.b	#$A,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		bsr.w	MoveSonicInDemo
-		move.w	(v_jpadhold1).w,(v_jpadhold2).w
-		jsr	(ExecuteObjects).l
-		jsr	(BuildSprites).l
-		jsr	(SS_ShowLayout).l
-		bsr.w	SS_BGAnimate
-		tst.w	(f_demo).w	; is demo mode on?
-		beq.s	SS_ChkEnd	; if not, branch
-		tst.w	(v_generictimer).w ; is there time left on the demo?
-		beq.w	SS_ToSegaScreen	; if not, branch
+		bsr.w	PauseGame			; handle pausing the game when pressing start
+		move.b	#$A,(v_vbla_routine).w		; set V-Int to routine $A
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		bsr.w	MoveSonicInDemo			; simulate controls in demos (immediately returns outside demos)
+		move.w	(v_jpadhold1).w,(v_jpadhold2).w	; copy controller 1 inputs to Sonic player object inputs
+
+		jsr	(ExecuteObjects).l		; execute Special Stage object
+		jsr	(BuildSprites).l		; build sprites
+		jsr	(SS_ShowLayout).l		; render Special Stage layout
+		bsr.w	SS_BGAnimate			; animate Special Stage background
+
+		tst.w	(f_demo).w			; is demo mode on?
+		beq.s	SS_ChkEnd			; if not, branch
+		tst.w	(v_generictimer).w		; is there time left on the demo?
+		beq.w	SS_ToSegaScreen			; if not, return to Sega screen
 
 SS_ChkEnd:
-		cmpi.b	#id_Special,(v_gamemode).w ; is game mode $10 (special stage)?
-		beq.w	SS_MainLoop	; if yes, branch
+		cmpi.b	#id_Special,(v_gamemode).w	; is game mode still the Special Stage?
+		beq.w	SS_MainLoop			; if yes, loop game mode
+; ---------------------------------------------------------------------------
 
-		tst.w	(f_demo).w	; is demo mode on?
+		; Exiting Special Stage...
+		tst.w	(f_demo).w			; are we exiting from a demo?
 	if Revision=0
-		bne.w	SS_ToSegaScreen	; if yes, branch
+		bne.w	SS_ToSegaScreen			; if yes, return to Sega Screen
 	else
-		bne.w	SS_ToLevel
+		; REV01 added a small convenience improvement by returning straight
+		; to the title screen when pressing start during the Special Stage demo,
+		; rather than always being forced back to the Sega screen.
+		bne.w	SS_ToNextScreen			; if yes, return to next game mode
 	endif
-		move.b	#id_Level,(v_gamemode).w ; set screen mode to $0C (level)
-		cmpi.w	#id_FZ+1,(v_zone).w ; is level number higher than FZ (0502)?
-		blo.s	SS_Finish	; if not, branch
-		clr.w	(v_zone).w	; set to GHZ1 (possibly as a failsafe)
+
+		move.b	#id_Level,(v_gamemode).w	; set screen mode to $0C (level)
+		cmpi.w	#id_FZ+1,(v_zone).w		; is level number higher than FZ (0502)?
+		blo.s	SS_Finish			; if not, branch
+		clr.w	(v_zone).w			; set to GHZ1 (possibly as a failsafe)
+
 
 SS_Finish:
-		move.w	#60,(v_generictimer).w ; set delay time to 1 second
-		move.w	#$3F,(v_pfade_start).w
-		clr.w	(v_palchgspeed).w
+		move.w	#60,(v_generictimer).w		; run fade-out for one second
+		move.w	#$3F,(v_pfade_start).w		; set palette fade-out position and size
+		clr.w	(v_palchgspeed).w		; do first palette brightening immediately
 
 SS_FinLoop:
-		move.b	#$16,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		bsr.w	MoveSonicInDemo
-		move.w	(v_jpadhold1).w,(v_jpadhold2).w
-		jsr	(ExecuteObjects).l
-		jsr	(BuildSprites).l
-		jsr	(SS_ShowLayout).l
-		bsr.w	SS_BGAnimate
-		subq.w	#1,(v_palchgspeed).w
-		bpl.s	loc_47D4
-		move.w	#2,(v_palchgspeed).w
-		bsr.w	WhiteOut_ToWhite
+		move.b	#$16,(v_vbla_routine).w		; set routine to $16 in V-Int
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		bsr.w	MoveSonicInDemo			; continue updating demo controls during fade-out
+		move.w	(v_jpadhold1).w,(v_jpadhold2).w	; continue copying 1P inputs to Sonic object (even though controls are locked...)
+		jsr	(ExecuteObjects).l		; continue executing objects during fade-oout
+		jsr	(BuildSprites).l		; continue building sprites during fade-out
+		jsr	(SS_ShowLayout).l		; continue rendering Special Stage layout
+		bsr.w	SS_BGAnimate			; continue to animate background
+		subq.w	#1,(v_palchgspeed).w		; decrement palette fade-out delay
+		bpl.s	SS_FinLoop_NoBrighten		; if time remains, branch
+		move.w	#2,(v_palchgspeed).w		; reset palette fade-out delay
+		bsr.w	WhiteOut_ToWhite		; brighten palette further
 
-loc_47D4:
-		tst.w	(v_generictimer).w
-		bne.s	SS_FinLoop
+; loc_47D4:
+SS_FinLoop_NoBrighten:
+		tst.w	(v_generictimer).w		; has fade-out loop finished?
+		bne.s	SS_FinLoop			; if not, loop
+; ---------------------------------------------------------------------------
 
-		disable_ints
-		lea	(vdp_control_port).l,a6
-		move.w	#$8200+(vram_fg>>10),(a6) ; set foreground nametable address
-		move.w	#$8400+(vram_bg>>13),(a6) ; set background nametable address
-		move.w	#$9001,(a6)		; 64-cell hscroll size
-		bsr.w	ClearScreen
-		locVRAM	ArtTile_Title_Card*tile_size
-		lea	(Nem_TitleCard).l,a0 ; load title card patterns
-		bsr.w	NemDec
-		jsr	(Hud_Base).l
-		enable_ints
-		moveq	#palid_SSResult,d0
-		bsr.w	PalLoad	; load results screen palette
-		moveq	#plcid_Main,d0
-		bsr.w	NewPLC
-		moveq	#plcid_SSResult,d0
-		bsr.w	AddPLC		; load results screen patterns
-		move.b	#1,(f_scorecount).w ; update score counter
-		move.b	#1,(f_endactbonus).w ; update ring bonus counter
-		move.w	(v_rings).w,d0
-		mulu.w	#10,d0		; multiply rings by 10
-		move.w	d0,(v_ringbonus).w ; set rings bonus
-		move.w	#bgm_GotThrough,d0
-		jsr	(QueueSound1).l	 ; play end-of-level music
+		; Fade-out done, load Special Stage Results screen
+		disable_ints				; disable interrupts
+		lea	(vdp_control_port).l,a6		; load VDP control port
+		move.w	#$8200+(vram_fg>>10),(a6)	; set foreground nametable address
+		move.w	#$8400+(vram_bg>>13),(a6)	; set background nametable address
+		move.w	#$9001,(a6)			; 64-cell hscroll size
+		bsr.w	ClearScreen			; wipe screen
 
-		clearRAM v_objspace
+		locVRAM	ArtTile_Title_Card*tile_size	; set VRAM location for title card font
+		lea	(Nem_TitleCard).l,a0		; load title card patterns
+		bsr.w	NemDec				; decompress Nemesis-compressed graphics directly to VRAM
 
-		move.b	#id_SSResult,(v_ssrescard).w ; load results screen object
+		jsr	(Hud_Base).l			; load basic HUD graphics
+		enable_ints				; enable interrupts
 
-SS_NormalExit:
-		bsr.w	PauseGame
-		move.b	#$C,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		jsr	(ExecuteObjects).l
-		jsr	(BuildSprites).l
-		bsr.w	RunPLC
-		tst.w	(f_restart).w
-		beq.s	SS_NormalExit
-		tst.l	(v_plc_buffer).w
-		bne.s	SS_NormalExit
-		move.w	#sfx_EnterSS,d0
-		bsr.w	QueueSound2 ; play special stage exit sound
-		bsr.w	PaletteWhiteOut
-		rts
+		moveq	#palid_SSResult,d0		; load Special Stage results screen palette...
+		bsr.w	PalLoad				; ...directly to active palette
+		moveq	#plcid_Main,d0			; load main patterns (rings, etc.)
+		bsr.w	NewPLC				; add to new PLC queue
+		moveq	#plcid_SSResult,d0		; load Special Stage results screen patterns
+		bsr.w	AddPLC				; add to PLC queue
+
+		move.b	#1,(f_scorecount).w		; update score counter
+		move.b	#1,(f_endactbonus).w		; update ring bonus counter
+		move.w	(v_rings).w,d0			; get rings collected in Special Stage
+		mulu.w	#10,d0				; award 100 bonus points per collected ring
+		move.w	d0,(v_ringbonus).w		; set rings bonus
+
+		move.w	#bgm_GotThrough,d0		; play end-of-level music
+		jsr	(QueueSound2).l	 		; play it
+
+		clearRAM v_objspace			; clear object RAM
+
+		move.b	#id_SSResult,(v_ssrescard).w	; load Special Stage Results screen object
+; ---------------------------------------------------------------------------
+
+SS_NormalExit:	; Special Stage results screen loop
+		bsr.w	PauseGame			; allow pausing during the results screen
+		move.b	#$C,(v_vbla_routine).w		; set routine $C in V-Int
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		jsr	(ExecuteObjects).l		; execute SSR objects
+		jsr	(BuildSprites).l		; build sprites
+		bsr.w	RunPLC				; load SSR patterns
+		tst.w	(f_restart).w			; has the SSR object signaled that we can exit?
+		beq.s	SS_NormalExit			; if not, loop results screen
+		tst.l	(v_plc_buffer).w		; is PLC buffer empty?
+		bne.s	SS_NormalExit			; if not, loop (pointless here, SSR object has its own check)
+; ---------------------------------------------------------------------------
+
+		; Exit Special Stage normally
+		move.w	#sfx_EnterSS,d0			; play special stage exit sound
+		bsr.w	QueueSound2 			; play it
+		bsr.w	PaletteWhiteOut			; fade-out to white
+		rts					; return to MainGameLoop
 ; ===========================================================================
 
 SS_ToSegaScreen:
-		move.b	#id_Sega,(v_gamemode).w ; goto Sega screen
-		rts
+		move.b	#id_Sega,(v_gamemode).w		; set game mode to Sega screen
+		rts					; return to MainGameLoop
+; ===========================================================================
 
 	if Revision<>0
-SS_ToLevel:
-		cmpi.b	#id_Level,(v_gamemode).w
-		beq.s	SS_ToSegaScreen
-		rts
+; SS_ToLevel: <-- old misnomer
+SS_ToNextScreen:
+		cmpi.b	#id_Level,(v_gamemode).w	; was demo exited with the instruction to go to a level next?
+		beq.s	SS_ToSegaScreen			; if yes, return to the Sega screen instead (if demo finished)
+		rts					; otherwise, go to new game mode (which is the title screen, if demo was aborted)
 	endif
 
 ; ===========================================================================
@@ -3047,85 +3077,99 @@ SS_ToLevel:
 
 ; ContinueScreen:
 GM_Continue:
-		bsr.w	PaletteFadeOut
-		disable_ints
-		disable_display
-		lea	(vdp_control_port).l,a6
-		move.w	#$8004,(a6)	; 8 colour mode
-		move.w	#$8700,(a6)	; background colour
-		bsr.w	ClearScreen
+		bsr.w	PaletteFadeOut			; fade-out palette from previous game mode
 
-		clearRAM v_objspace
+		disable_ints				; disable interrupts
+		disable_display				; disable screen output
+		lea	(vdp_control_port).l,a6		; load VDP control port
+		move.w	#$8004,(a6)			; 8 colour mode
+		move.w	#$8700,(a6)			; background colour
+		bsr.w	ClearScreen			; wipe screen
 
-		locVRAM	ArtTile_Title_Card*tile_size
-		lea	(Nem_TitleCard).l,a0 ; load title card patterns
-		bsr.w	NemDec
-		locVRAM	ArtTile_Continue_Sonic*tile_size
-		lea	(Nem_ContSonic).l,a0 ; load Sonic patterns
-		bsr.w	NemDec
-		locVRAM	ArtTile_Mini_Sonic*tile_size
-		lea	(Nem_MiniSonic).l,a0 ; load continue screen patterns
-		bsr.w	NemDec
-		moveq	#10,d1
-		jsr	(ContScrCounter).l	; run countdown (start from 10)
-		moveq	#palid_Continue,d0
-		bsr.w	PalLoad_Fade	; load continue screen palette
-		move.b	#bgm_Continue,d0
-		bsr.w	QueueSound1	; play continue music
-		move.w	#659,(v_generictimer).w ; set time delay to 11 seconds
-		clr.l	(v_screenposx).w
-		move.l	#$1000000,(v_screenposy).w
-		move.b	#id_ContSonic,(v_player).w ; load Sonic object
-		move.b	#id_ContScrItem,(v_continuetext).w ; load continue screen objects
-		move.b	#id_ContScrItem,(v_continuelight).w
-		move.b	#3,(v_continuelight+obPriority).w
-		move.b	#4,(v_continuelight+obFrame).w
-		move.b	#id_ContScrItem,(v_continueicon).w
-		move.b	#4,(v_continueicon+obRoutine).w
-		jsr	(ExecuteObjects).l
-		jsr	(BuildSprites).l
-		enable_display
-		bsr.w	PaletteFadeIn
+		clearRAM v_objspace			; clear object RAM
+
+		locVRAM	ArtTile_Title_Card*tile_size	; set VRAM location for title card patterns
+		lea	(Nem_TitleCard).l,a0		; load title card patterns
+		bsr.w	NemDec				; decompress Nemesis-compressed patterns directly to VRAM
+
+		locVRAM	ArtTile_Continue_Sonic*tile_size ; set VRAM location for Sonic on the continue screen
+		lea	(Nem_ContSonic).l,a0		; load Sonic patterns
+		bsr.w	NemDec				; decompress Nemesis-compressed patterns directly to VRAM
+
+		locVRAM	ArtTile_Mini_Sonic*tile_size	; set VRAM location for the mini Sonic icons
+		lea	(Nem_MiniSonic).l,a0		; load mini Sonic icons
+		bsr.w	NemDec				; decompress Nemesis-compressed patterns directly to VRAM
+
+		moveq	#10,d1				; draw continue screen countdown to start with digits 10
+		jsr	(ContScrCounter).l		; initialize countdown
+
+		moveq	#palid_Continue,d0		; load continue screen palette...
+		bsr.w	PalLoad_Fade			; ...into fade-in buffer
+		move.b	#bgm_Continue,d0		; play continue screen music
+		bsr.w	QueueSound1			; play it
+
+		move.w	#659,(v_generictimer).w		; show continue screen for 11 seconds in total
+
+		clr.l	(v_screenposx).w		; clear X-camera position
+		move.l	#$1000000,(v_screenposy).w	; set Y-camera position to $100
+
+		move.b	#id_ContSonic,(v_player).w	; load continue screen Sonic object
+		move.b	#id_ContScrItem,(v_continuetext).w ; load continue screen objects (text and misc elements)
+		move.b	#id_ContScrItem,(v_continuelight).w ; load floor light object Sonic is laying on
+		move.b	#3,(v_continuelight+obPriority).w ; set priority to be behind Sonic
+		move.b	#4,(v_continuelight+obFrame).w	; set correct frame for the light
+		move.b	#id_ContScrItem,(v_continueicon).w ; load continue icons object
+		move.b	#4,(v_continueicon+obRoutine).w	; set to continue icons routine
+
+		jsr	(ExecuteObjects).l		; initialize objects
+		jsr	(BuildSprites).l		; build sprites
+		enable_display				; enable screen output
+
+		bsr.w	PaletteFadeIn			; fade-in palette and enter main loop
 
 ; ---------------------------------------------------------------------------
 ; Continue screen main loop
 ; ---------------------------------------------------------------------------
 
 Cont_MainLoop:
-		move.b	#$16,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		cmpi.b	#6,(v_player+obRoutine).w
-		bhs.s	loc_4DF2
-		disable_ints
-		move.w	(v_generictimer).w,d1
-		divu.w	#60,d1
-		andi.l	#$F,d1
-		jsr	(ContScrCounter).l
-		enable_ints
+		move.b	#$16,(v_vbla_routine).w		; set V-Int to routine $16
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		cmpi.b	#6,(v_player+obRoutine).w	; has continue screen Sonic object signaled that we want to continue?
+		bhs.s	Cont_NoCountdown		; if yes, stop updating countdown timer
 
-loc_4DF2:
-		jsr	(ExecuteObjects).l
-		jsr	(BuildSprites).l
-		cmpi.w	#$180,(v_player+obX).w ; has Sonic run off screen?
-		bhs.s	Cont_GotoLevel	; if yes, branch
-		cmpi.b	#6,(v_player+obRoutine).w
-		bhs.s	Cont_MainLoop
-		tst.w	(v_generictimer).w
-		bne.w	Cont_MainLoop
-		move.b	#id_Sega,(v_gamemode).w ; go to Sega screen
-		rts
+		disable_ints				; disable interrupts
+		move.w	(v_generictimer).w,d1		; get remaining time for countdown (in frames)
+		divu.w	#60,d1				; divide by 60 to get remaining time in seconds
+		andi.l	#$F,d1				; mask off remainder and anything except the end digit
+		jsr	(ContScrCounter).l		; update countdown digits
+		enable_ints				; enable interrupts again
+; loc_4DF2:
+Cont_NoCountdown:
+		jsr	(ExecuteObjects).l		; execute continue screen objects
+		jsr	(BuildSprites).l		; build sprites
+
+		cmpi.w	#320+64,(v_player+obX).w	; has Sonic run off screen after using a continue?
+		bhs.s	Cont_GotoLevel			; if yes, return to level and continue game
+		cmpi.b	#6,(v_player+obRoutine).w	; has continue screen Sonic object signaled that we want to continue?
+		bhs.s	Cont_MainLoop			; if yes, Sonic is still running off-screen, loop until he is gone
+		tst.w	(v_generictimer).w		; has countdown run out?
+		bne.w	Cont_MainLoop			; if not, loop game mode
+
+		; Continue wasn't used. Game Over.
+		move.b	#id_Sega,(v_gamemode).w		; go to Sega screen
+		rts					; return to MainGameLoop
 ; ===========================================================================
 
 Cont_GotoLevel:
-		move.b	#id_Level,(v_gamemode).w ; set screen mode to $0C (level)
-		move.b	#3,(v_lives).w	; set lives to 3
-		moveq	#0,d0
-		move.w	d0,(v_rings).w	; clear rings
-		move.l	d0,(v_time).w	; clear time
-		move.l	d0,(v_score).w	; clear score
-		move.b	d0,(v_lastlamp).w ; clear lamppost count
-		subq.b	#1,(v_continues).w ; subtract 1 from continues
-		rts
+		move.b	#id_Level,(v_gamemode).w	; set screen mode to $0C (level)
+		move.b	#3,(v_lives).w			; set lives to 3
+		moveq	#0,d0				; clear d0
+		move.w	d0,(v_rings).w			; clear rings
+		move.l	d0,(v_time).w			; clear time
+		move.l	d0,(v_score).w			; clear score
+		move.b	d0,(v_lastlamp).w		; clear lamppost count
+		subq.b	#1,(v_continues).w		; subtract 1 from continues
+		rts					; return to MainGameLoop
 ; ===========================================================================
 
 		include	"_incObj/80 Continue Screen Elements.asm"
