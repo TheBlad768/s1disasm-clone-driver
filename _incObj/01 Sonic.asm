@@ -74,7 +74,7 @@ Sonic_Control:	; Routine 2
 		bsr.w	Sonic_RecordPosition			; record Sonic's previous position for the invincibility stars trail
 		bsr.w	Sonic_Water				; handle Sonic while in water (LZ only)
 		move.b	(v_anglebuffer).w,angleright(a0)	; update front collision hot spot
-		move.b	(v_anglebuffer2).w,angleleft(a0)	; update read collision hot spot
+		move.b	(v_anglebuffer2).w,angleleft(a0)	; update rear collision hot spot
 
 		tst.b	(f_wtunnelmode).w			; is Sonic in a wind tunnel? (LZ only)
 		beq.s	.nowindtunnel				; if not, branch
@@ -305,7 +305,7 @@ Sonic_MdJump:	; While Sonic is in the air but not rolling
 ; loc_12E5C:
 .notunderwater:
 		bsr.w	Sonic_JumpAngle				; steadily return Sonic's angle while jumping to 0
-		bsr.w	Sonic_Floor				; handle landing on the floor again
+		bsr.w	Sonic_Floor				; handle collision with level while airborne
 		rts						; return
 ; ===========================================================================
 
@@ -334,7 +334,7 @@ Sonic_MdJump2:	; While Sonic is in the air and rolling (usually, but not limited
 ; loc_12EA6:
 .notunderwater:
 		bsr.w	Sonic_JumpAngle				; steadily return Sonic's angle while jumping to 0
-		bsr.w	Sonic_Floor				; handle landing on the floor again
+		bsr.w	Sonic_Floor				; handle collision with level while airborne
 		rts						; return
 ; End of Sonic_Modes
 
@@ -506,8 +506,8 @@ Sonic_AngleSpeed:
 Sonic_WallSpeedAdjust:
 	if FixBugs
 		; This was added to S&K to prevent an issue where Sonic could run through walls
-		; if he is upside-down, or standing still on a wall if his angle is exactly $80.
-		; This issue was most notable in S3 alone's Carnival Night Zone.
+		; if he is upside-down, or moving on a wall if his angle is exactly $80. This issue
+		; can be seen in S3 alone's Carnival Night Zone if you jump onto a curved ceiling.
 		move.b	obAngle(a0),d0				; get Sonic's current angle in relation to the floor
 		andi.b	#$3F,d0					; is he standing on a flat surface in any of the four quadrants?
 		beq.s	.noearlyexit				; if yes, skip the upside-down exit below
@@ -623,7 +623,7 @@ Sonic_MoveLeft:
 		move.b	obAngle(a0),d0				; get Sonic's current angle
 		addi.b	#$20,d0					; rotate by 45 degrees clockwise
 		andi.b	#$C0,d0					; snap to nearest multiple of 90 degrees
-		bne.s	.nostopping				; if Sonic is not on a flat surface, prevent stopping animation
+		bne.s	.nostopping				; if Sonic is on a wall or ceiling, prevent stopping animation
 		cmpi.w	#$400,d0				; has Sonic changed direction while being really fast?
 		blt.s	.nostopping				; if not, don't play skidding animation/sound
 		move.b	#id_Stop,obAnim(a0)			; use "stopping" animation
@@ -676,7 +676,7 @@ Sonic_MoveRight:
 		move.b	obAngle(a0),d0				; get Sonic's current angle
 		addi.b	#$20,d0					; rotate by 45 degrees clockwise
 		andi.b	#$C0,d0					; snap to nearest multiple of 90 degrees
-		bne.s	.nostopping				; if Sonic is not on a flat surface, prevent stopping animation
+		bne.s	.nostopping				; if Sonic is on a wall or ceiling, prevent stopping animation
 		cmpi.w	#-$400,d0				; has Sonic changed direction while being really fast?
 		bgt.s	.nostopping				; if not, don't play skidding animation/sound
 
@@ -1136,13 +1136,7 @@ Sonic_Jump:
 		moveq	#0,d0					; clear d0
 		move.b	obAngle(a0),d0				; get Sonic's current angle
 		subi.b	#$40,d0					; rotate it perpendicularly for jump trajectory
-
-		; sin($00) =  0    and cos($00) =  $100
-		; sin($C0) = -$100 and cos($C0) =  0
-		; sin($80) =  0    and cos($80) = -$100
-		; sin($40) =  $100 and cos($C0) =  0
 		jsr	(CalcSine).l				; find the direction Sonic should jump
-
 		muls.w	d2,d1					; apply jump force to the cosine angle
 		asr.l	#8,d1					; shift it to upper word
 		add.w	d1,obVelX(a0)				; apply to X speed
@@ -1238,13 +1232,13 @@ Sonic_JumpHeight:
 Sonic_SlopeResistWalk:
 		move.b	obAngle(a0),d0				; get Sonic's current angle
 		addi.b	#$60,d0					; rotate it by 135 degrees
-		cmpi.b	#$C0,d0					; is Sonic rotated by more than 90 degrees?
-		bhs.s	.return					; if yes, don't do slope resist (for loopings and such, handled elsewhere)
+		cmpi.b	#$C0,d0					; is Sonic on a steep enough slope?
+		bhs.s	.return					; if no, don't do slope resist
 
 		move.b	obAngle(a0),d0				; get Sonic's current angle
 		jsr	(CalcSine).l				; get sine and cosine values for angle
 		muls.w	#$20,d0					; multiply by resist force while walking
-		asr.l	#8,d0					; shift up a byte
+		asr.l	#8,d0					; shift down a byte
 
 		tst.w	obInertia(a0)				; check Sonic's ground speed
 		beq.s	.return					; if he's standing still, branch
@@ -1276,13 +1270,13 @@ Sonic_SlopeResistWalk:
 Sonic_SlopeResistRoll:
 		move.b	obAngle(a0),d0				; get Sonic's current angle
 		addi.b	#$60,d0					; rotate it by 135 degrees
-		cmpi.b	#$C0,d0					; is Sonic rotated by more than 90 degrees?
-		bhs.s	.return					; if yes, don't do slope resist (for loopings and such, handled elsewhere)
+		cmpi.b	#$C0,d0					; is Sonic on a steep enough slope?
+		bhs.s	.return					; if no, don't do slope resist
 
 		move.b	obAngle(a0),d0				; get Sonic's current angled
 		jsr	(CalcSine).l				; get sine and cosine values for angle
 		muls.w	#$50,d0					; multiply by resist force while rolling (2.5x larger than walking)
-		asr.l	#8,d0					; shift up a byte
+		asr.l	#8,d0					; shift down a byte
 
 		tst.w	obInertia(a0)				; check Sonic's current ground speed
 		bmi.s	.left					; he's rolling to the left, branch
@@ -1327,7 +1321,7 @@ Sonic_SlopeRepel:
 		move.b	obAngle(a0),d0				; get Sonic's current angle
 		addi.b	#$20,d0					; rotate it by 45 degrees
 		andi.b	#$C0,d0					; snap to nearest multiple of 90 degrees
-		beq.s	.return					; if Sonic is on a mostly flat surface, branch
+		beq.s	.return					; if Sonic is not on a wall or ceiling, branch
 
 		move.w	obInertia(a0),d0			; get Sonic's current ground speed
 		bpl.s	.posinertia				; is it positive? if yes, branch
