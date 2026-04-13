@@ -1762,8 +1762,9 @@ Sega_WaitEnd:
 Sega_GotoTitle:	; transition to title screen
 		move.b	#id_Title,(v_gamemode).w	; go to title screen
 		rts
-; ===========================================================================
+; End of function GM_Sega
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Title screen
 ; ---------------------------------------------------------------------------
@@ -1838,7 +1839,7 @@ Tit_LoadText:
 		dbf	d1,Tit_LoadText			; loop until it's fully loaded
 
 		move.b	#0,(v_lastlamp).w		; clear lamppost counter
-		move.w	#0,(v_debuguse).w		; disable debug item placement mode
+		move.w	#0,(v_debuguse).w		; exit debug mode if necessary
 		move.w	#0,(f_demo).w			; disable demo mode
 		move.w	#0,(v_unused2).w		; unused variable
 		move.w	#id_GHZ_act1,(v_zone).w		; set level to GHZ1 (000)
@@ -1927,9 +1928,11 @@ Tit_LoadText:
 
 		move.w	#0,(v_title_dcount).w		; clear D-Pad counter for title screen cheats
 		move.w	#0,(v_title_ccount).w		; clear C counter for title screen cheats
-		enable_display				; enable display
+; ---------------------------------------------------------------------------
 
-		bsr.w	PaletteFadeIn			; fade-in title screen and enter main loop
+		; fade-in palette and enter main loop
+		enable_display				; enable display
+		bsr.w	PaletteFadeIn			; fade-in title screen
 
 ; ---------------------------------------------------------------------------
 ; Title screen main loop and cheat checks
@@ -2139,6 +2142,8 @@ PlayLevel:
 		move.b	#bgm_Fade,d0			; set music fade-out command
 		bsr.w	QueueSound2			; fade out music
 		rts					; return to MainGameLoop to start level
+; End of function GM_Title
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Level select - level pointers
@@ -2727,7 +2732,7 @@ Level_SkipClr:
 		move.b	d0,(v_invinc).w			; clear invincibility
 		move.b	d0,(v_shoes).w			; clear speed shoes
 		move.b	d0,(v_unused1).w		; clear unused flag (goggles?)
-		move.w	d0,(v_debuguse).w		; clear debug usage flag
+		move.w	d0,(v_debuguse).w		; exit debug mode if necessary
 		move.w	d0,(f_restart).w		; clear level restart flag
 		move.w	d0,(v_framecount).w		; reset frames since level start to 0
 		bsr.w	OscillateNumInit		; initialize oscillation values
@@ -2806,7 +2811,7 @@ Level_ClrCardArt:
 
 Level_StartGame:
 		bclr	#7,(v_gamemode).w		; subtract $80 from mode to end pre-level stuff
-
+		; enter main loop...
 
 ; ---------------------------------------------------------------------------
 ; Main level loop (when all title card and loading sequences are finished)
@@ -2877,7 +2882,7 @@ Level_EndDemo:
 
 Level_FadeDemo:
 		move.w	#60,(v_generictimer).w		; run fade-out for one second
-		move.w	#$3F,(v_pfade_start).w		; set palette fade-out position and size
+		move.w	#$003F,(v_pfade_start).w	; set palette fade-out position and size
 		clr.w	(v_palchgspeed).w		; do first palette dimming immediately
 
 Level_FDLoop:
@@ -2887,6 +2892,7 @@ Level_FDLoop:
 		jsr	(ExecuteObjects).l		; continue executing objects during fade-out
 		jsr	(BuildSprites).l		; continue building sprites during fade-out
 		jsr	(ObjPosLoad).l			; continue running object manager during fade-out
+
 		subq.w	#1,(v_palchgspeed).w		; decrement palette fade-out delay
 		bpl.s	Level_FDLoop_NoDim		; if time remains, branch
 		move.w	#2,(v_palchgspeed).w		; reset palette fade-out delay
@@ -2897,6 +2903,8 @@ Level_FDLoop_NoDim:
 		tst.w	(v_generictimer).w		; has fade-out loop finished?
 		bne.s	Level_FDLoop			; if not, loop
 		rts					; return to MainGameLoop
+; End of function GM_Level
+
 ; ===========================================================================
 
 		include	"_inc/LZWaterFeatures.asm"
@@ -2908,11 +2916,11 @@ Level_FDLoop_NoDim:
 ; ---------------------------------------------------------------------------
 
 ColIndexLoad:
-		moveq	#0,d0
-		move.b	(v_zone).w,d0
-		lsl.w	#2,d0
-		move.l	ColPointers(pc,d0.w),(v_collindex).w
-		rts
+		moveq	#0,d0				; clear d0
+		move.b	(v_zone).w,d0			; get current zone ID
+		lsl.w	#2,d0				; multiply by 4 for long-based indexing
+		move.l	ColPointers(pc,d0.w),(v_collindex).w ; set collision index pointer for current zone
+		rts					; return
 ; End of function ColIndexLoad
 
 ; ---------------------------------------------------------------------------
@@ -2925,7 +2933,7 @@ ColPointers:	dc.l Col_GHZ
 		dc.l Col_SYZ
 		dc.l Col_SBZ
 		zonewarning ColPointers,4
-;		dc.l Col_GHZ ; Pointer for Ending is missing by default.
+;		dc.l Col_GHZ ; Pointer for Ending is missing, as it's hardcoded.
 ; ===========================================================================
 
 		include	"_inc/Oscillatory Routines.asm"
@@ -2939,74 +2947,76 @@ SynchroAnimate:
 
 ; Used for GHZ spiked log
 Sync1:
-		subq.b	#1,(v_ani0_time).w ; has timer reached 0?
-		bpl.s	Sync2		; if not, branch
-		move.b	#$C-1,(v_ani0_time).w ; reset timer
-		subq.b	#1,(v_ani0_frame).w ; next frame
-		andi.b	#7,(v_ani0_frame).w ; max frame is 7
+		subq.b	#1,(v_ani0_time).w		; has first timer reached 0?
+		bpl.s	Sync2				; if not, branch
+		move.b	#12-1,(v_ani0_time).w		; reset first timer to 12 frames
+		subq.b	#1,(v_ani0_frame).w		; go to next frame (backwards)
+		andi.b	#7,(v_ani0_frame).w 		; limit to frames 0-7
 
 ; Used for rings and giant rings
 Sync2:
-		subq.b	#1,(v_ani1_time).w
-		bpl.s	Sync3
-		move.b	#8-1,(v_ani1_time).w
-		addq.b	#1,(v_ani1_frame).w
-		andi.b	#3,(v_ani1_frame).w
+		subq.b	#1,(v_ani1_time).w		; has second timer reached 0?
+		bpl.s	Sync3				; if not, branch
+		move.b	#8-1,(v_ani1_time).w		; reset second timer to 8 frames
+		addq.b	#1,(v_ani1_frame).w		; go to next frame
+		andi.b	#3,(v_ani1_frame).w		; limit to frames 0-3
 
 ; Used for nothing
 Sync3:
-		subq.b	#1,(v_ani2_time).w
-		bpl.s	Sync4
-		move.b	#8-1,(v_ani2_time).w
-		addq.b	#1,(v_ani2_frame).w
-		cmpi.b	#6,(v_ani2_frame).w
-		blo.s	Sync4
-		move.b	#0,(v_ani2_frame).w
+		subq.b	#1,(v_ani2_time).w		; has third timer reached 0?
+		bpl.s	Sync4				; if not, branch
+		move.b	#8-1,(v_ani2_time).w		; reset third timer to 8 frames
+		addq.b	#1,(v_ani2_frame).w		; go to next frame
+		cmpi.b	#6,(v_ani2_frame).w		; limit to frames 0-5
+		blo.s	Sync4				; if still frame 0-5, branch
+		move.b	#0,(v_ani2_frame).w		; set to frame 0 when it reached frame 6
 
 ; Used for bouncing rings
 Sync4:
-		tst.b	(v_ani3_time).w
-		beq.s	SyncEnd
-		moveq	#0,d0
-		move.b	(v_ani3_time).w,d0
-		add.w	(v_ani3_buf).w,d0
-		move.w	d0,(v_ani3_buf).w
-		rol.w	#7,d0
-		andi.w	#3,d0
-		move.b	d0,(v_ani3_frame).w
-		subq.b	#1,(v_ani3_time).w
+		tst.b	(v_ani3_time).w			; is ring loss timer active at all?
+		beq.s	SyncEnd				; if not, don't advance animation
+		moveq	#0,d0				; clear d0
+		move.b	(v_ani3_time).w,d0		; get remaining ring loss timer
+		add.w	(v_ani3_buf).w,d0		; add buffered timer value
+		move.w	d0,(v_ani3_buf).w		; set that as new buffered timer
+		rol.w	#7,d0				; align for speed
+		andi.w	#3,d0				; limit to frames 0-3
+		move.b	d0,(v_ani3_frame).w		; set as current frame for lost rings
+		subq.b	#1,(v_ani3_time).w		; decrease ring loss timer
 
 SyncEnd:
-		rts
+		rts					; return
 ; End of function SynchroAnimate
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; End-of-act signpost pattern loading subroutine
+; End-of-act signpost pattern loading subroutine. Also locks left boundary.
 ; ---------------------------------------------------------------------------
 
 SignpostArtLoad:
-		tst.w	(v_debuguse).w	; is debug mode being used?
-		bne.w	.exit		; if yes, branch
-		cmpi.b	#act3,(v_act).w	; is this a third act?
-		beq.s	.exit		; if yes, don't load art (due to the boss fight)
+		tst.w	(v_debuguse).w			; is debug mode being used?
+		bne.w	.return				; if yes, do not lock screen or load art
+		cmpi.b	#act3,(v_act).w			; is this a third act?
+		beq.s	.return				; if yes, don't load art (due to the boss fight)
 
-		move.w	(v_screenposx).w,d0
-		move.w	(v_limitright2).w,d1
-		subi.w	#$100,d1
-		cmp.w	d1,d0		; has Sonic reached the edge of the level?
-		blt.s	.exit		; if not, branch
-		tst.b	(f_timecount).w
-		beq.s	.exit
-		cmp.w	(v_limitleft2).w,d1
-		beq.s	.exit
-		move.w	d1,(v_limitleft2).w ; move left boundary to current screen position
-		moveq	#plcid_Signpost,d0
-		bra.w	NewPLC		; load signpost patterns
+		move.w	(v_screenposx).w,d0		; get current X-camera position
+		move.w	(v_limitright2).w,d1		; get right level boundary
+		subi.w	#$100,d1			; check for $100 pixels before the right boundary
+		cmp.w	d1,d0				; has Sonic reached the right edge of the level?
+		blt.s	.return				; if not, branch
 
-.exit:
-		rts
+		tst.b	(f_timecount).w			; has time already stopped from touching the signpost?
+		beq.s	.return				; if yes, branch
+		cmp.w	(v_limitleft2).w,d1		; has left boundary already been locked?
+		beq.s	.return				; if yes, branch
+		move.w	d1,(v_limitleft2).w		; lock left level boundary to current screen position
+		moveq	#plcid_Signpost,d0		; load signpost, hidden points, giant ring flash patterns
+		bra.w	NewPLC				; add to new PLC queue
+
+.return:
+		rts					; return
 ; End of function SignpostArtLoad
+
 ; ===========================================================================
 
 Demo_GHZ:	include	"demodata/Intro - GHZ.asm"
@@ -3082,10 +3092,10 @@ GM_Special:	; white fade-out from previous game mode
 
 SS_NoDebug:
 		enable_display				; enable screen out-put
-		bsr.w	PaletteWhiteIn			; fade-in from white and enter main loop
+		bsr.w	PaletteWhiteIn			; fade-in from white
 
 ; ---------------------------------------------------------------------------
-; Main Special Stage loop
+; Special Stage main loop
 ; ---------------------------------------------------------------------------
 
 SS_MainLoop:
@@ -3129,7 +3139,7 @@ SS_ChkEnd:
 
 SS_Finish:
 		move.w	#60,(v_generictimer).w		; run fade-out for one second
-		move.w	#$3F,(v_pfade_start).w		; set palette fade-out position and size
+		move.w	#$003F,(v_pfade_start).w	; set palette fade-out position and size
 		clr.w	(v_palchgspeed).w		; do first palette brightening immediately
 
 SS_FinLoop:
@@ -3141,6 +3151,7 @@ SS_FinLoop:
 		jsr	(BuildSprites).l		; continue building sprites during fade-out
 		jsr	(SS_ShowLayout).l		; continue rendering Special Stage layout
 		bsr.w	SS_BGAnimate			; continue to animate background
+
 		subq.w	#1,(v_palchgspeed).w		; decrement palette fade-out delay
 		bpl.s	SS_FinLoop_NoBrighten		; if time remains, branch
 		move.w	#2,(v_palchgspeed).w		; reset palette fade-out delay
@@ -3220,6 +3231,7 @@ SS_ToNextScreen:
 		beq.s	SS_ToSegaScreen			; if yes, return to the Sega screen instead (if demo finished)
 		rts					; otherwise, go to new game mode (which is the title screen, if demo was aborted)
 	endif
+; ENd of function GM_Special
 
 ; ===========================================================================
 
@@ -3278,9 +3290,11 @@ GM_Continue:
 
 		jsr	(ExecuteObjects).l		; initialize objects
 		jsr	(BuildSprites).l		; build sprites
-		enable_display				; enable screen output
+; ---------------------------------------------------------------------------
 
-		bsr.w	PaletteFadeIn			; fade-in palette and enter main loop
+		; fade-in palette and enter main loop
+		enable_display				; enable screen output
+		bsr.w	PaletteFadeIn			; fade-in palette
 
 ; ---------------------------------------------------------------------------
 ; Continue screen main loop
@@ -3325,6 +3339,8 @@ Cont_GotoLevel:
 		move.b	d0,(v_lastlamp).w		; clear lamppost count
 		subq.b	#1,(v_continues).w		; subtract 1 from continues
 		rts					; return to MainGameLoop
+; End of function GM_Continue
+
 ; ===========================================================================
 
 		include	"_incObj/80 Continue Screen Elements.asm"
@@ -3334,167 +3350,196 @@ Map_ContScr:	include	"_maps/Continue Screen.asm"
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Ending sequence in Green Hill Zone
+; Ending sequence in Green Hill Zone. This is essentially a stripped-down
+; copy-paste of regular levels with lots of hardcoding.
 ; ---------------------------------------------------------------------------
 
 ; EndingSequence:
 GM_Ending:
-		move.b	#bgm_Stop,d0
-		bsr.w	QueueSound2 ; stop music
-		bsr.w	PaletteFadeOut
+		; fading out from previous game mode
+		move.b	#bgm_Stop,d0			; set stop music command
+		bsr.w	QueueSound2			; stop music
+		bsr.w	PaletteFadeOut			; fade-out previous game mode
+; ---------------------------------------------------------------------------
 
-		clearRAM v_objspace
-		clearRAM v_misc_variables
-		clearRAM v_levelvariables
-		clearRAM v_timingandscreenvariables
+		; screen setup and loading patterns
+		clearRAM v_objspace			; clear object RAM
+		clearRAM v_misc_variables		; clear various miscellaneous RAM
+		clearRAM v_levelvariables		; clear level variables RAM (camera position, etc.)
+		clearRAM v_timingandscreenvariables	; clear various timing and screen RAM (for animated tiles, etc.)
 
-		disable_ints
-		disable_display
-		bsr.w	ClearScreen
-		lea	(vdp_control_port).l,a6
-		move.w	#$8B03,(a6)	; line scroll mode
-		move.w	#$8200+(vram_fg>>10),(a6) ; set foreground nametable address
-		move.w	#$8400+(vram_bg>>13),(a6) ; set background nametable address
-		move.w	#$8500+(vram_sprites>>9),(a6) ; set sprite table address
-		move.w	#$9001,(a6)		; 64-cell hscroll size
-		move.w	#$8004,(a6)		; 8-colour mode
-		move.w	#$8720,(a6)		; set background colour (line 3; colour 0)
-		move.w	#$8A00+223,(v_hbla_hreg).w ; set palette change position (for water)
-		move.w	(v_hbla_hreg).w,(a6)
-		move.w	#30,(v_air).w
-		move.w	#id_EndZ_good,(v_zone).w ; set level number to 0600 (extra flowers)
-		cmpi.b	#6,(v_emeralds).w ; do you have all 6 emeralds?
-		beq.s	End_LoadData	; if yes, branch
-		move.w	#id_EndZ_bad,(v_zone).w ; set level number to 0601 (no flowers)
+		disable_ints				; disable interrupts
+		disable_display				; disable screeen output
+		bsr.w	ClearScreen			; wipe the screen
+		lea	(vdp_control_port).l,a6		; load VDP control port
+		move.w	#$8B03,(a6)			; line scroll mode (per-row horizontally, full-screen vertically)
+		move.w	#$8200+(vram_fg>>10),(a6)	; set foreground nametable address
+		move.w	#$8400+(vram_bg>>13),(a6)	; set background nametable address
+		move.w	#$8500+(vram_sprites>>9),(a6)	; set sprite table address
+		move.w	#$9001,(a6)			; 64-cell hscroll size
+		move.w	#$8004,(a6)			; 8-colour mode
+		move.w	#$8720,(a6)			; set background colour (line 3; colour 0)
+		move.w	#$8A00+223,(v_hbla_hreg).w	; set palette change position (for water)
+		move.w	(v_hbla_hreg).w,(a6)		; write to VDP
+		move.w	#30,(v_air).w			; replenish air
+
+		move.w	#id_EndZ_good,(v_zone).w	; set to good ending by default (level number 600, extra flowers)
+		cmpi.b	#6,(v_emeralds).w		; do you have all 6 emeralds?
+		beq.s	End_LoadData			; if yes, use good ending
+		move.w	#id_EndZ_bad,(v_zone).w		; otherwise, set to bad ending (level number 601, no extra flowers)
 
 End_LoadData:
-		moveq	#plcid_Ending,d0
-		bsr.w	QuickPLC	; load ending sequence patterns
-		jsr	(Hud_Base).l
-		bsr.w	LevelSizeLoad
-		bsr.w	DeformLayers
-		bset	#2,(v_fg_scroll_flags).w
-		bsr.w	LevelDataLoad
-		bsr.w	LoadTilesFromStart
-		move.l	#Col_GHZ,(v_collindex).w ; load collision index
-		enable_ints
-		lea	(Kos_EndFlowers).l,a0 ; load extra flower patterns
-		lea	(v_256x256+$4A*chunk_size).w,a1 ; RAM address to buffer the patterns (overwriting unused chunk RAM)
-		bsr.w	KosDec
-		moveq	#palid_Sonic,d0
-		bsr.w	PalLoad_Fade	; load Sonic's palette
-		move.w	#bgm_Ending,d0
-		bsr.w	QueueSound1	; play ending sequence music
+		moveq	#plcid_Ending,d0		; load ending sequence patterns (GHZ art, animals, etc.)
+		bsr.w	QuickPLC			; execute PLCs immediately (no queue)
+		jsr	(Hud_Base).l			; load basic HUD graphics (only in levels, not in the ending demos)
+		bsr.w	LevelSizeLoad			; load level size and set default level boundaries
+		bsr.w	DeformLayers			; initialize background deformation
+		bset	#2,(v_fg_scroll_flags).w	; draw an extra column at the left side of the screen during level start
+		bsr.w	LevelDataLoad			; load block mappings and palettes
+		bsr.w	LoadTilesFromStart		; fully draw the foreground and background once before fade-in
+		move.l	#Col_GHZ,(v_collindex).w	; load collision index (hardcoded to GHZ instead of using ColIndexLoad)
+		enable_ints				; enable interrupts
+
+		lea	(Kos_EndFlowers).l,a0		; load extra flower patterns
+		lea	(v_256x256+$4A*chunk_size).w,a1	; set RAM address to be used as decompression buffer (this overwrites unused chunk RAM)
+		bsr.w	KosDec				; decompress Kosinski-compressed chunks mappings to buffer
+
+		moveq	#palid_Sonic,d0			; load Sonic's palette...
+		bsr.w	PalLoad_Fade			; ...to fade-in buffer
+		move.w	#bgm_Ending,d0			; play ending sequence music
+		bsr.w	QueueSound1			; play it
 
 	if FixBugs
-		; Fix being able to enable debug mode without having
-		; entered the cheat code for it
-		tst.b	(f_debugcheat).w ; has debug cheat been entered?
-		beq.s	End_LoadSonic	; if not, branch
+		; Fix being able to enable debug mode without having entered the cheat code for it
+		tst.b	(f_debugcheat).w		; has debug cheat been entered?
+		beq.s	End_LoadSonic			; if not, branch
 	endif
-		btst	#bitA,(v_jpadhold1).w ; is button A pressed?
-		beq.s	End_LoadSonic	; if not, branch
-		move.b	#1,(f_debugmode).w ; enable debug mode
+		btst	#bitA,(v_jpadhold1).w		; was button A held while entering ending sequence?
+		beq.s	End_LoadSonic			; if not, branch
+		move.b	#1,(f_debugmode).w		; enable debug mode
 
 End_LoadSonic:
-		move.b	#id_SonicPlayer,(v_player).w ; load Sonic object
-		bset	#0,(v_player+obStatus).w ; make Sonic face left
-		move.b	#1,(f_lockctrl).w ; lock controls
-		move.w	#(btnL<<8),(v_jpadhold2).w ; move Sonic to the left
-		move.w	#-$800,(v_player+obInertia).w ; set Sonic's speed
-		move.b	#id_HUD,(v_hud).w ; load HUD object
-		jsr	(ObjPosLoad).l
-		jsr	(ExecuteObjects).l
-		jsr	(BuildSprites).l
-		moveq	#0,d0
-		move.w	d0,(v_rings).w
-		move.l	d0,(v_time).w
-		move.b	d0,(v_lifecount).w
-		move.b	d0,(v_shield).w
-		move.b	d0,(v_invinc).w
-		move.b	d0,(v_shoes).w
-		move.b	d0,(v_unused1).w
-		move.w	d0,(v_debuguse).w
-		move.w	d0,(f_restart).w
-		move.w	d0,(v_framecount).w
-		bsr.w	OscillateNumInit
-		move.b	#1,(f_scorecount).w
-		move.b	#1,(f_ringcount).w
-		move.b	#0,(f_timecount).w
-		move.w	#1800,(v_generictimer).w
-		move.b	#$18,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		enable_display
-		move.w	#$3F,(v_pfade_start).w
-		bsr.w	PaletteFadeIn
+		move.b	#id_SonicPlayer,(v_player).w	; load Sonic object
+		bset	#0,(v_player+obStatus).w	; make Sonic face left
+		move.b	#1,(f_lockctrl).w		; lock controls to keep simulating D-Pad
+		move.w	#(btnL<<8),(v_jpadhold2).w	; simulate holding down the left D-Pad button to move Sonic
+		move.w	#-$800,(v_player+obInertia).w	; set Sonic's initial speed (speed cap immediately limits this to -$600)
+
+		move.b	#id_HUD,(v_hud).w		; load HUD object
+		jsr	(ObjPosLoad).l			; run the object manager to load level objects
+		jsr	(ExecuteObjects).l		; execute all objects in object RAM
+		jsr	(BuildSprites).l		; build sprite table
+
+		moveq	#0,d0				; set d0 to 0
+		move.w	d0,(v_rings).w			; clear rings
+		move.l	d0,(v_time).w			; clear time
+		move.b	d0,(v_lifecount).w		; clear extra lives flags when getting 100/200 rings
+		move.b	d0,(v_shield).w			; clear shield
+		move.b	d0,(v_invinc).w			; clear invincibility
+		move.b	d0,(v_shoes).w			; clear speed shoes
+		move.b	d0,(v_unused1).w		; clear unused flag (goggles?)
+		move.w	d0,(v_debuguse).w		; exit debug mode if necessary
+		move.w	d0,(f_restart).w		; clear level restart flag
+		move.w	d0,(v_framecount).w		; reset frames since level start to 0
+		bsr.w	OscillateNumInit		; initialize oscillation values
+		move.b	#1,(f_scorecount).w		; update score counter
+		move.b	#1,(f_ringcount).w		; update rings counter
+		move.b	#0,(f_timecount).w		; stop time counter for the ending sequence
+
+		move.w	#1800,(v_generictimer).w	; set generic timer to 30 seconds (unused in ending sequence)
+		move.b	#$18,(v_vbla_routine).w		; set V-Int to routine $18
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
+; ---------------------------------------------------------------------------
+
+		; fade-in palette and enter main loop
+		enable_display				; enable screen output
+		move.w	#$003F,(v_pfade_start).w	; set palette fade-in position and size	(redundant)
+		bsr.w	PaletteFadeIn			; fade-in palette
 
 ; ---------------------------------------------------------------------------
-; Main ending sequence loop
+; Ending sequence main loop
 ; ---------------------------------------------------------------------------
 
 End_MainLoop:
-		bsr.w	PauseGame
-		move.b	#$18,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		addq.w	#1,(v_framecount).w
-		bsr.w	End_MoveSonic
-		jsr	(ExecuteObjects).l
-		bsr.w	DeformLayers
-		jsr	(BuildSprites).l
-		jsr	(ObjPosLoad).l
-		bsr.w	PaletteCycle
-		bsr.w	OscillateNumDo
-		bsr.w	SynchroAnimate
-		cmpi.b	#id_Ending,(v_gamemode).w ; is game mode $18 (ending)?
-		beq.s	End_ChkEmerald	; if yes, branch
+		bsr.w	PauseGame			; allow pausing during the ending sequence
+		move.b	#$18,(v_vbla_routine).w		; set V-Int to routine 8
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		addq.w	#1,(v_framecount).w		; add 1 to level timer
 
-		move.b	#id_Credits,(v_gamemode).w ; goto credits
-		move.b	#bgm_Credits,d0
-		bsr.w	QueueSound2 ; play credits music
-		move.w	#0,(v_creditsnum).w ; set credits index number to 0
-		rts
+		bsr.w	End_MoveSonic			; control simulated button inputs for Sonic during the cutscene
+
+		jsr	(ExecuteObjects).l		; execute all objects in object RAM
+		bsr.w	DeformLayers			; scroll planes and do background deformation
+		jsr	(BuildSprites).l		; build sprite table
+		jsr	(ObjPosLoad).l			; run the object manager to load level objects
+		bsr.w	PaletteCycle			; run palette cycles
+		bsr.w	OscillateNumDo			; advance oscillation values
+		bsr.w	SynchroAnimate			; advance animation timers
+
+		cmpi.b	#id_Ending,(v_gamemode).w	; is game mode still set to ending sequence?
+		beq.s	End_ChkEmerald			; if yes, branch
+
+		move.b	#id_Credits,(v_gamemode).w	; change game mode to credits
+		move.b	#bgm_Credits,d0			; play credits music
+		bsr.w	QueueSound2			; play it
+		move.w	#0,(v_creditsnum).w		; set credits page number to 0 ("Sonic Team Staff")
+		rts					; return to MainGameLoop
 ; ===========================================================================
 
 End_ChkEmerald:
-		tst.w	(f_restart).w	; has Sonic released the emeralds?
-		beq.w	End_MainLoop	; if not, branch
+		tst.w	(f_restart).w			; is level restart flag set? (set while emeralds are spinning in th egood ending)
+		beq.w	End_MainLoop			; if not, loop ending sequence game mode normally
+; ---------------------------------------------------------------------------
 
-		clr.w	(f_restart).w
-		move.w	#$3F,(v_pfade_start).w
-		clr.w	(v_palchgspeed).w
+		; prepare slow white-in as the emeralds keep spinning in good ending
+		clr.w	(f_restart).w			; clear level restart flag
+		move.w	#$003F,(v_pfade_start).w	; prepare fade position and size
+		clr.w	(v_palchgspeed).w		; trigger the first brightening immediately
+; ---------------------------------------------------------------------------
 
-End_AllEmlds:
-		bsr.w	PauseGame
-		move.b	#$18,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		addq.w	#1,(v_framecount).w
-		bsr.w	End_MoveSonic
-		jsr	(ExecuteObjects).l
-		bsr.w	DeformLayers
-		jsr	(BuildSprites).l
-		jsr	(ObjPosLoad).l
-		bsr.w	OscillateNumDo
-		bsr.w	SynchroAnimate
-		subq.w	#1,(v_palchgspeed).w
-		bpl.s	End_SlowFade
-		move.w	#2,(v_palchgspeed).w
-		bsr.w	WhiteOut_ToWhite
+		
+End_AllEmlds:	; during the slow white-in
+		bsr.w	PauseGame			; still allow pausing the game
+		move.b	#$18,(v_vbla_routine).w		; set V-Int routine to $18
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		addq.w	#1,(v_framecount).w		; add 1 to level timer
+
+		bsr.w	End_MoveSonic			; control simulated button inputs for Sonic (redundant at this point)
+
+		jsr	(ExecuteObjects).l		; continue executing objects during white-in
+		bsr.w	DeformLayers			; continue upgrading background deformation during white-in
+		jsr	(BuildSprites).l		; continue building sprites during white-in
+		jsr	(ObjPosLoad).l			; continue running object manager during white-in
+		bsr.w	OscillateNumDo			; continue advancing oscillation values during white-in
+		bsr.w	SynchroAnimate			; continue advancing animation timers during white-in
+
+		subq.w	#1,(v_palchgspeed).w		; decrement palette white-in delay
+		bpl.s	End_SlowFade			; if time remains, branch
+		move.w	#2,(v_palchgspeed).w		; reset palette white-in delay
+		bsr.w	WhiteOut_ToWhite		; brighten palette further
 
 End_SlowFade:
-		tst.w	(f_restart).w
-		beq.w	End_AllEmlds
-		clr.w	(f_restart).w
-		move.w	#$2E2F,(v_lvllayout+$80).w ; modify level layout
-		lea	(vdp_control_port).l,a5
-		lea	(vdp_data_port).l,a6
-		lea	(v_screenposx).w,a3
-		lea	(v_lvllayout).w,a4
-		move.w	#$4000,d2
-		bsr.w	DrawChunks
-		moveq	#palid_Ending,d0
-		bsr.w	PalLoad_Fade	; load ending palette
-		bsr.w	PaletteWhiteIn
-		bra.w	End_MainLoop
+		tst.w	(f_restart).w			; has flag been set signaling that the emeralds have disappeared?
+		beq.w	End_AllEmlds			; if not, loop
+; ---------------------------------------------------------------------------
+
+		; screen is fully white and emeralds are gone, update level layout with extra flowers and fade back in
+		clr.w	(f_restart).w			; clear level restart flag
+		move.w	#$2E2F,(v_lvllayout+$80).w	; swap chunks in level layout to the variants with flowers (chunk $2E and $2F)
+
+		lea	(vdp_control_port).l,a5		; set VDP control port
+		lea	(vdp_data_port).l,a6		; set VDP data port
+		lea	(v_screenposx).w,a3		; get current foreground X position
+		lea	(v_lvllayout).w,a4		; get location in level layout RAM where foreground is stored
+		move.w	#$4000,d2			; set VRAM write command to vram_fg nametable start address
+		bsr.w	DrawChunks			; update drawn chunks to show the new flowers
+
+		moveq	#palid_Ending,d0		; reload ending palette...
+		bsr.w	PalLoad_Fade			; ...to fade-in buffer
+		bsr.w	PaletteWhiteIn			; fade-in from white
+
+		bra.w	End_MainLoop			; return to main ending sequence loop for the rest of the scene
+; End of function GM_Ending
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -3502,45 +3547,49 @@ End_SlowFade:
 ; ---------------------------------------------------------------------------
 
 End_MoveSonic:
-		move.b	(v_sonicend).w,d0
-		bne.s	End_MoveSon2
-		cmpi.w	#$90,(v_player+obX).w ; has Sonic passed $90 on x-axis?
-		bhs.s	End_MoveSonExit	; if not, branch
+		move.b	(v_sonicend).w,d0		; get ending cutscene routine number
+		bne.s	End_MoveSon2			; if it's non-zero, branch to second script
 
-		addq.b	#2,(v_sonicend).w
-		move.b	#1,(f_lockctrl).w ; lock player's controls
-		move.w	#(btnR<<8),(v_jpadhold2).w ; move Sonic to the right
-		rts
+		cmpi.w	#$90,(v_player+obX).w		; has Sonic passed $90 on the X-axis (from the right)?
+		bhs.s	End_MoveSonExit			; if not, branch
+
+		addq.b	#2,(v_sonicend).w		; advance ending cutscene routine number
+		move.b	#1,(f_lockctrl).w		; lock player's controls (redundant, already locked)
+		move.w	#(btnR<<8),(v_jpadhold2).w	; simulate holding down the right D-Pad button to trigger skidding animation
+		rts					; return
 ; ===========================================================================
 
 End_MoveSon2:
-		subq.b	#2,d0
-		bne.s	End_MoveSon3
-		cmpi.w	#$A0,(v_player+obX).w ; has Sonic passed $A0 on x-axis?
-		blo.s	End_MoveSonExit	; if not, branch
+		subq.b	#2,d0				; subtract 2 from cutscene routine number
+		bne.s	End_MoveSon3			; if it's still non-zero, branch to third script
 
-		addq.b	#2,(v_sonicend).w
-		moveq	#0,d0
-		move.b	d0,(f_lockctrl).w
-		move.w	d0,(v_jpadhold2).w ; stop Sonic moving
-		move.w	d0,(v_player+obInertia).w
-		move.b	#$81,(f_playerctrl).w ; lock controls and disable object interaction
-		move.b	#fr_Wait2,(v_player+obFrame).w
-		move.w	#(id_Wait<<8)+id_Wait,(v_player+obAnim).w ; use "standing" animation
-		move.b	#3,(v_player+obTimeFrame).w
-		rts
+		cmpi.w	#$A0,(v_player+obX).w		; has Sonic passed $A0 on the X-axis (from the left)?
+		blo.s	End_MoveSonExit			; if not, branch
+
+		addq.b	#2,(v_sonicend).w		; advance ending cutscene routine number
+		moveq	#0,d0				; clear d0
+		move.b	d0,(f_lockctrl).w		; unlock controls (no effect, see below)
+		move.w	d0,(v_jpadhold2).w		; clear simulated button inputs to stop Sonic moving
+		move.w	d0,(v_player+obInertia).w	; clear ground speed to make Sonic stop immediately
+		move.b	#$81,(f_playerctrl).w		; set control ignore and disabled object interaction flags
+
+		move.b	#fr_Wait2,(v_player+obFrame).w	; force Sonic to a specific waiting frame
+		move.w	#(id_Wait<<8)+id_Wait,(v_player+obAnim).w ; use "standing" animation and prevent it from getting immediately restarted
+		move.b	#3,(v_player+obTimeFrame).w	; set a bit of an animation interval so Sonic keeps looking when he gets replaced on the next frame
+		rts					; return
 ; ===========================================================================
 
 End_MoveSon3:
-		subq.b	#2,d0
-		bne.s	End_MoveSonExit
-		addq.b	#2,(v_sonicend).w
-		move.w	#$A0,(v_player+obX).w
-		move.b	#id_EndSonic,(v_player).w ; load Sonic ending sequence object
-		clr.w	(v_player+obRoutine).w
+		subq.b	#2,d0				; subtract 2 from cutscene routine number
+		bne.s	End_MoveSonExit			; if it's still non-zero, the below code has already run, branch to do nothing anymore
+
+		addq.b	#2,(v_sonicend).w		; advance ending cutscene routine number
+		move.w	#$A0,(v_player+obX).w		; force Sonic to the middle of the screen
+		move.b	#id_EndSonic,(v_player).w	; replace real Sonic object with a fake ending sequence Sonic object
+		clr.w	(v_player+obRoutine).w		; reset routine counter to initialize fake ending Sonic
 
 End_MoveSonExit:
-		rts
+		rts					; return
 ; End of function End_MoveSonic
 
 ; ===========================================================================
@@ -3555,65 +3604,87 @@ Map_ESth:	include	"_maps/Ending Sequence STH.asm"
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Credits ending sequence
+; Credits ending sequence. This game mode works in tandem with the regular
+; demo game mode, with both redirecting to here after their respective timer
+; has expired. The variable v_creditsnum for the current page is deliberately
+; located near the end of RAM so it doesn't get cleared during mode change.
 ; ---------------------------------------------------------------------------
 
 ; CreditsScreen:
 GM_Credits:
-		bsr.w	ClearPLC
-		bsr.w	PaletteFadeOut
-		lea	(vdp_control_port).l,a6
-		move.w	#$8004,(a6)		; 8-colour mode
-		move.w	#$8200+(vram_fg>>10),(a6) ; set foreground nametable address
-		move.w	#$8400+(vram_bg>>13),(a6) ; set background nametable address
-		move.w	#$9001,(a6)		; 64-cell hscroll size
-		move.w	#$9200,(a6)		; window vertical position
-		move.w	#$8B03,(a6)		; line scroll mode
-		move.w	#$8720,(a6)		; set background colour (line 3; colour 0)
-		clr.b	(f_wtr_state).w
-		bsr.w	ClearScreen
+		; fading out from previous game mode (music gets already started before this)
+		bsr.w	ClearPLC			; stop any potential in-progress PLC
+		bsr.w	PaletteFadeOut			; fade-out previous game mode
+; ---------------------------------------------------------------------------
 
-		clearRAM v_objspace
+		; screen setup and loading patterns
+		lea	(vdp_control_port).l,a6		; load VDP control port
+		move.w	#$8004,(a6)			; use 8-colour mode
+		move.w	#$8200+(vram_fg>>10),(a6)	; set foreground nametable address
+		move.w	#$8400+(vram_bg>>13),(a6)	; set background nametable address
+		move.w	#$9001,(a6)			; 64-cell hscroll size
+		move.w	#$9200,(a6)			; window vertical position
+		move.w	#$8B03,(a6)			; line scroll mode (per-row horizontally, full-screen vertically)
+		move.w	#$8720,(a6)			; set background colour (line 3; colour 0)
+		clr.b	(f_wtr_state).w			; clear water state
+		bsr.w	ClearScreen			; wipe the screen
 
-		locVRAM	ArtTile_Credits_Font*tile_size
-		lea	(Nem_CreditText).l,a0 ; load credits alphabet patterns
-		bsr.w	NemDec
+		clearRAM v_objspace			; clear object RAM
 
-		clearRAM v_palette_fading
+		locVRAM	ArtTile_Credits_Font*tile_size	; set target VRAM location for credits font
+		lea	(Nem_CreditText).l,a0		; load credits font
+		bsr.w	NemDec				; decompress Nemesis-compressed patterns directly to VRAM
 
-		moveq	#palid_Sonic,d0
-		bsr.w	PalLoad_Fade	; load Sonic's palette
-		move.b	#id_CreditsText,(v_credits).w ; load credits object
-		jsr	(ExecuteObjects).l
-		jsr	(BuildSprites).l
-		bsr.w	EndingDemoLoad
-		moveq	#0,d0
-		move.b	(v_zone).w,d0
-		lsl.w	#4,d0
-		lea	(LevelHeaders).l,a2
-		lea	(a2,d0.w),a2
-		moveq	#0,d0
-		move.b	(a2),d0
-		beq.s	Cred_SkipObjGfx
-		bsr.w	AddPLC		; load object graphics
+		clearRAM v_palette_fading		; set palette fade-in buffer to all-black
+		moveq	#palid_Sonic,d0			; load Sonic's palette...
+		bsr.w	PalLoad_Fade			; ...into fade-in buffer
+
+		move.b	#id_CreditsText,(v_credits).w	; load credits text object
+		jsr	(ExecuteObjects).l		; execute objects to load credits text object
+		jsr	(BuildSprites).l		; build sprites for the credits text object
+
+		bsr.w	EndingDemoLoad			; prepare loading the next ending demo
+
+		moveq	#0,d0				; clear d0
+		move.b	(v_zone).w,d0			; get zone ID for next credits demo
+		lsl.w	#4,d0				; multiply by $10 (number of bytes per level header entry)
+		lea	(LevelHeaders).l,a2		; load level headers
+		lea	(a2,d0.w),a2			; get relevant header for next credits demo
+		moveq	#0,d0				; clear d0
+		move.b	(a2),d0				; get first PLC entry
+		beq.s	Cred_SkipObjGfx			; if it's null, branch (never the case)
+		bsr.w	AddPLC				; load level patterns for next credits demo
 
 Cred_SkipObjGfx:
-		moveq	#plcid_Main2,d0
-		bsr.w	AddPLC		; load standard level graphics
-		move.w	#120,(v_generictimer).w ; display a credit for 2 seconds
-		bsr.w	PaletteFadeIn
+		moveq	#plcid_Main2,d0			; load secondary standard patterns
+		bsr.w	AddPLC				; (monitors, etc.)
+; ---------------------------------------------------------------------------
 
-Cred_WaitLoop:
-		move.b	#4,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		bsr.w	RunPLC
-		tst.w	(v_generictimer).w ; have 2 seconds elapsed?
-		bne.s	Cred_WaitLoop	; if not, branch
-		tst.l	(v_plc_buffer).w ; have level gfx finished decompressing?
-		bne.s	Cred_WaitLoop	; if not, branch
-		cmpi.w	#9,(v_creditsnum).w ; have the credits finished?
-		beq.w	TryAgainEnd	; if yes, branch
-		rts
+		; fade-in palette and enter wait loop
+		move.w	#120,(v_generictimer).w		; display a single credits page for 2 seconds
+		bsr.w	PaletteFadeIn			; fade-in palette
+
+; ---------------------------------------------------------------------------
+; Credits page main loop (only shown for 2 seconds)
+; ---------------------------------------------------------------------------
+
+Cred_WaitLoop:	; while a credits page is displayed and graphics are getting decompressed
+		move.b	#4,(v_vbla_routine).w		; set V-Int to routine 4
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
+
+		bsr.w	RunPLC				; decompress level graphics
+
+		tst.w	(v_generictimer).w		; have at least 2 seconds elapsed?
+		bne.s	Cred_WaitLoop			; if not, loop
+		tst.l	(v_plc_buffer).w		; have 2 seconds elapsed but level gfx have not finished decompressing?
+		bne.s	Cred_WaitLoop			; if yes, still loop until graphics are finished
+; ---------------------------------------------------------------------------
+
+		; credits page has finished displaying, go to next game mode
+		cmpi.w	#9,(v_creditsnum).w		; are we past the final credits page?
+		beq.w	TryAgainEnd			; if yes, go to Try Again/End screen instead
+		rts					; otherwise, return to MainGameLoop to enter Demo mode
+; End of function GM_Credits
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -3621,40 +3692,43 @@ Cred_WaitLoop:
 ; ---------------------------------------------------------------------------
 
 EndingDemoLoad:
-		move.w	(v_creditsnum).w,d0
-		andi.w	#$F,d0
-		add.w	d0,d0
-		move.w	EndDemo_Levels(pc,d0.w),d0 ; load level array
-		move.w	d0,(v_zone).w	; set level from level array
-		addq.w	#1,(v_creditsnum).w
-		cmpi.w	#9,(v_creditsnum).w ; have credits finished?
-		bhs.s	EndDemo_Exit	; if yes, branch
-		move.w	#$8001,(f_demo).w ; set demo+ending mode
-		move.b	#id_Demo,(v_gamemode).w ; set game mode to 8 (demo)
-		move.b	#3,(v_lives).w	; set lives to 3
-		moveq	#0,d0
-		move.w	d0,(v_rings).w	; clear rings
-		move.l	d0,(v_time).w	; clear time
-		move.l	d0,(v_score).w	; clear score
-		move.b	d0,(v_lastlamp).w ; clear lamppost counter
-		cmpi.w	#4,(v_creditsnum).w ; is SLZ demo running?
-		bne.s	EndDemo_Exit	; if not, branch
-		lea	(EndDemo_LampVar).l,a1 ; load lamppost variables
-		lea	(v_lastlamp).w,a2
-		move.w	#(EndDemo_LampVar_End-EndDemo_LampVar)/4-1,d0
+		move.w	(v_creditsnum).w,d0		; get current credits page
+		andi.w	#$F,d0				; limit to 16 possible entries (redundant)
+		add.w	d0,d0				; double for word-based indexing
+		move.w	EndDemo_Levels(pc,d0.w),d0	; get relevant zone and act for the next credits demo
+		move.w	d0,(v_zone).w			; set level from level array
 
+		addq.w	#1,(v_creditsnum).w		; increase credits page number for next time
+		cmpi.w	#9,(v_creditsnum).w		; are we past the final credits page now?
+		bhs.s	EndDemo_Exit			; if yes, don't load another demo
+
+		move.w	#$8001,(f_demo).w 		; set demo mode to its credits/ending variant
+		move.b	#id_Demo,(v_gamemode).w		; set game mode to demo (activates once credits page has finished)
+
+		move.b	#3,(v_lives).w			; set lives to 3
+		moveq	#0,d0				; set d0 to 0
+		move.w	d0,(v_rings).w			; clear rings
+		move.l	d0,(v_time).w			; clear time
+		move.l	d0,(v_score).w			; clear score
+		move.b	d0,(v_lastlamp).w		; clear lamppost counter
+
+		cmpi.w	#4,(v_creditsnum).w		; is specifically the 4th demo about to run? (SLZ demo)
+		bne.s	EndDemo_Exit			; if not, branch
+		lea	(EndDemo_LampVar).l,a1		; load special lamppost variables for SLZ demo
+		lea	(v_lastlamp).w,a2		; write to lamppost buffer
+		move.w	#(EndDemo_LampVar_End-EndDemo_LampVar)/4-1,d0 ; write for all entries
 EndDemo_LampLoad:
-		move.l	(a1)+,(a2)+
-		dbf	d0,EndDemo_LampLoad
+		move.l	(a1)+,(a2)+			; copy lamppost variables for SLZ demo
+		dbf	d0,EndDemo_LampLoad		; loop until everything is loaded
 
 EndDemo_Exit:
-		rts
+		rts					; return
 ; End of function EndingDemoLoad
 
-; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Levels used in the end sequence demos
 ; ---------------------------------------------------------------------------
+
 EndDemo_Levels:	; previously in "misc/Demo Level Order - Ending.bin"
 		dc.w id_GHZ_act1
 		dc.w id_MZ_act2
@@ -3666,80 +3740,90 @@ EndDemo_Levels:	; previously in "misc/Demo Level Order - Ending.bin"
 		dc.w id_GHZ_act1
 		even
 
-; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Lamppost variables in the end sequence demo (Star Light Zone)
+; Lamppost variables in the Star Light Zone credits demo
 ; ---------------------------------------------------------------------------
 EndDemo_LampVar:
-		dc.b 1,	1		; number of the last lamppost
-		dc.w $A00, $62C		; x/y-axis position
-		dc.w 13			; rings
-		dc.l 0			; time
-		dc.b 0,	0		; dynamic level event routine counter
-		dc.w $800		; level bottom boundary
-		dc.w $957, $5CC		; x/y axis screen position
-		dc.w $4AB, $3A6, 0, $28C, 0, 0 ; scroll info
-		dc.w $308		; water height
-		dc.b 1,	1		; water routine and state
+		dc.b 1,	1				; number of the last lamppost
+		dc.w $A00, $62C				; x/y-axis position
+		dc.w 13					; rings
+		dc.l 0					; time
+		dc.b 0,	0				; dynamic level event routine counter
+		dc.w $800				; level bottom boundary
+		dc.w $957, $5CC				; x/y axis screen position
+		dc.w $4AB, $3A6, 0, $28C, 0, 0		; scroll info
+		dc.w $308				; water height
+		dc.b 1,	1				; water routine and state
 EndDemo_LampVar_End:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; "TRY AGAIN" and "END" screens
+; "TRY AGAIN" screen (bad ending) and "END" screen (good ending). This is
+; essentially a full game mode, although it's not called from the main
+; game mode array, but rather directly from the credits.
 ; ---------------------------------------------------------------------------
 
 ; TryAgainScreen:
-TryAgainEnd:
-		bsr.w	ClearPLC
-		bsr.w	PaletteFadeOut
-		lea	(vdp_control_port).l,a6
-		move.w	#$8004,(a6)	; use 8-colour mode
-		move.w	#$8200+(vram_fg>>10),(a6) ; set foreground nametable address
-		move.w	#$8400+(vram_bg>>13),(a6) ; set background nametable address
-		move.w	#$9001,(a6)	; 64-cell hscroll size
-		move.w	#$9200,(a6)	; window vertical position
-		move.w	#$8B03,(a6)	; line scroll mode
-		move.w	#$8720,(a6)	; set background colour (line 3; colour 0)
-		clr.b	(f_wtr_state).w
-		bsr.w	ClearScreen
+TryAgainEnd:	; fading out from previous game mode
+		bsr.w	ClearPLC			; stop any potential in-progress PLC
+		bsr.w	PaletteFadeOut			; fade-out previous game mode
+; ---------------------------------------------------------------------------
 
-		clearRAM v_objspace
+		; screen setup and loading patterns
+		lea	(vdp_control_port).l,a6		; load VDP control port
+		move.w	#$8004,(a6)			; use 8-colour mode
+		move.w	#$8200+(vram_fg>>10),(a6)	; set foreground nametable address
+		move.w	#$8400+(vram_bg>>13),(a6)	; set background nametable address
+		move.w	#$9001,(a6)			; 64-cell hscroll size
+		move.w	#$9200,(a6)			; window vertical position
+		move.w	#$8B03,(a6)			; line scroll mode (per-row horizontally, full-screen vertically)
+		move.w	#$8720,(a6)			; set background colour (line 3; colour 0)
+		clr.b	(f_wtr_state).w			; clear water state
+		bsr.w	ClearScreen			; wipe the screen
 
-		moveq	#plcid_TryAgain,d0
-		bsr.w	QuickPLC	; load "TRY AGAIN" or "END" patterns
+		clearRAM v_objspace			; clear object RAM
 
-		clearRAM v_palette_fading
+		moveq	#plcid_TryAgain,d0		; load "TRY AGAIN" and "END" patterns
+		bsr.w	QuickPLC			; execute PLCs immediately (no queue)
 
-		moveq	#palid_Ending,d0
-		bsr.w	PalLoad_Fade	; load ending palette
-		clr.w	(v_palette_fading+$40).w
-		move.b	#id_EndEggman,(v_endeggman).w ; load Eggman object
-		jsr	(ExecuteObjects).l
-		jsr	(BuildSprites).l
-		move.w	#1800,(v_generictimer).w ; show screen for 30 seconds
-		bsr.w	PaletteFadeIn
+		clearRAM v_palette_fading		; set palette fade-in buffer to all-black
+		moveq	#palid_Ending,d0		; load ending palette...
+		bsr.w	PalLoad_Fade			; ...to fade-in buffer
+		clr.w	(v_palette_fading_line_3).w	; ensure the backdrop color is black
+
+		move.b	#id_EndEggman,(v_endeggman).w	; load end Eggman object
+		jsr	(ExecuteObjects).l		; execute objects to load end objects
+		jsr	(BuildSprites).l		; build sprites for end objects
+; ---------------------------------------------------------------------------
+
+		; fade-in palette and enter main loop
+		move.w	#1800,(v_generictimer).w	; automatically return to Sega screen after 30 seconds
+		bsr.w	PaletteFadeIn			; fade-in palette
 
 ; ---------------------------------------------------------------------------
 ; "TRY AGAIN" and "END" screen main loop
 ; ---------------------------------------------------------------------------
 
 TryAg_MainLoop:
-		bsr.w	PauseGame
-		move.b	#4,(v_vbla_routine).w
-		bsr.w	WaitForVBla
-		jsr	(ExecuteObjects).l
-		jsr	(BuildSprites).l
-		andi.b	#btnStart,(v_jpadpress1).w ; is Start button pressed?
-		bne.s	TryAg_Exit	; if yes, branch
-		tst.w	(v_generictimer).w ; has 30 seconds elapsed?
-		beq.s	TryAg_Exit	; if yes, branch
-		cmpi.b	#id_Credits,(v_gamemode).w
-		beq.s	TryAg_MainLoop
+		bsr.w	PauseGame			; allow to pause game (redundant, start exits the screen)
+		move.b	#4,(v_vbla_routine).w		; set V-Int routine to 4
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
 
-TryAg_Exit:
-		move.b	#id_Sega,(v_gamemode).w ; goto Sega screen
-		rts
+		jsr	(ExecuteObjects).l		; update end objects
+		jsr	(BuildSprites).l		; build sprites for end objects
 
+		andi.b	#btnStart,(v_jpadpress1).w	; has Start button been pressed?
+		bne.s	TryAg_Exit			; if yes, exit end screen
+		tst.w	(v_generictimer).w		; have 30 seconds elapsed?
+		beq.s	TryAg_Exit			; if yes, exit end screen
+		cmpi.b	#id_Credits,(v_gamemode).w	; is game mode still set to show the end screen?
+		beq.s	TryAg_MainLoop			; if yes, loop
+; ---------------------------------------------------------------------------
+
+TryAg_Exit:	; exit end screen and restart the gam
+		move.b	#id_Sega,(v_gamemode).w		; set game mode to Sega screen
+		rts					; return to MainGameLoop
+; End of function TryAgainEnd
 ; ===========================================================================
 
 		include	"_incObj/8B Try Again & End Eggman.asm"
@@ -3747,7 +3831,6 @@ TryAg_Exit:
 		include	"_incObj/8C Try Again Emeralds.asm"
 Map_EEgg:	include	"_maps/Try Again & End Eggman.asm"
 
-; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Ending sequence demos
 ; ---------------------------------------------------------------------------
