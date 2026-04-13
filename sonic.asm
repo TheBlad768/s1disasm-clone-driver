@@ -3689,8 +3689,16 @@ Demo_EndSBZ1:	include	"demodata/Ending - SBZ1.asm"
 Demo_EndSBZ2:	include	"demodata/Ending - SBZ2.asm"
 Demo_EndGHZ2:	include	"demodata/Ending - GHZ2.asm"
 
+
+
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; >> END OF MAIN GAME LOGIC - Everything below this point is file includes <<
+; ---------------------------------------------------------------------------
 ; ===========================================================================
 
+; ===========================================================================
+; >>> Level rendering, loading, and updating
 		include	"_inc/LevelSizeLoad & BgScrollSpeed.asm" ; merged with "LevelSizeLoad & BgScrollSpeed (JP1).asm"
 	if Revision=0
 		include	"_inc/DeformLayers (REV00).asm"
@@ -3701,12 +3709,10 @@ Demo_EndGHZ2:	include	"demodata/Ending - GHZ2.asm"
 	endif
 		include	"_inc/LevelLayoutLoad.asm" ; includes LevelDataLoad, LevelLayoutLoad, and LevelLayoutLoad2
 
-; ===========================================================================
-
 		include	"_inc/DynamicLevelEvents.asm"
 
 ; ===========================================================================
-
+; >>> Various level objects
 		include	"_incObj/11 Bridge.asm"
 Map_Bri:	include	"_maps/Bridge.asm"
 		include	"_incObj/15 Swinging Platforms.asm"
@@ -3735,7 +3741,7 @@ Map_ADoor:	include	"_maps/SBZ Small Door.asm"
 		include	"_incObj/44 GHZ Edge Walls (part 2).asm"
 
 ; ===========================================================================
-
+; >>> Badniks and Badnik-related objects
 		include	"_incObj/1E Ball Hog.asm"
 		include	"_incObj/20 Cannonball.asm"
 		include	"_incObj/24, 27 & 3F Explosions.asm"
@@ -3743,18 +3749,12 @@ Map_ADoor:	include	"_maps/SBZ Small Door.asm"
 Map_Hog:	include	"_maps/Ball Hog.asm"
 Map_MisDissolve:include	"_maps/Buzz Bomber Missile Dissolve.asm"
 		include	"_maps/Explosions.asm"
-
-; ===========================================================================
-
 		include	"_incObj/28 Animals.asm"
 		include	"_incObj/29 Points.asm"
 Map_Animal1:	include	"_maps/Animals 1.asm"
 Map_Animal2:	include	"_maps/Animals 2.asm"
 Map_Animal3:	include	"_maps/Animals 3.asm"
 Map_Poi:	include	"_maps/Points.asm"
-
-; ===========================================================================
-
 		include	"_incObj/1F Crabmeat.asm"
 		include	"_anim/Crabmeat.asm"
 Map_Crab:	include	"_maps/Crabmeat.asm"
@@ -3766,7 +3766,7 @@ Map_Buzz:	include	"_maps/Buzz Bomber.asm"
 Map_Missile:	include	"_maps/Buzz Bomber Missile.asm"
 
 ; ===========================================================================
-
+; >>> Rings and monitors
 		include	"_incObj/25 & 37 Rings.asm"
 		include	"_incObj/4B Giant Ring.asm"
 		include	"_incObj/7C Ring Flash.asm"
@@ -3787,19 +3787,17 @@ Map_Flash:	include	"_maps/Ring Flash.asm"
 Map_Monitor:	include	"_maps/Monitor.asm"
 
 ; ===========================================================================
-
+; >>> Title screen objects
 		include	"_incObj/0E Title Screen Sonic.asm"
 		include	"_incObj/0F Press Start and TM.asm"
 		include	"_anim/Title Screen Sonic.asm"
 		include	"_anim/Press Start and TM.asm"
-
 		include	"_incObj/sub AnimateSprite.asm"
-
 Map_PSB:	include	"_maps/Press Start and TM.asm"
 Map_TSon:	include	"_maps/Title Screen Sonic.asm"
 
 ; ===========================================================================
-
+; >>> More Badniks and level objects
 		include	"_incObj/2B Chopper.asm"
 		include	"_anim/Chopper.asm"
 Map_Chop:	include	"_maps/Chopper.asm"
@@ -3826,7 +3824,7 @@ Map_But:	include	"_maps/Button.asm"
 Map_Push:	include	"_maps/Pushable Blocks.asm"
 
 ; ===========================================================================
-
+; >>> Title card objects
 		include	"_incObj/34 Title Cards.asm"
 		include	"_incObj/39 Game Over.asm"
 		include	"_incObj/3A Got Through Card.asm"
@@ -3835,7 +3833,7 @@ Map_Push:	include	"_maps/Pushable Blocks.asm"
 		include	"_maps/Title Cards.asm"	; includes "Map_Card", "Map_Over", "Map_Got", and "Map_SSR"
 
 ; ===========================================================================
-
+; >>> More level objects
 Map_SSRC:	include	"_maps/SS Result Chaos Emeralds.asm"
 		include	"_incObj/36 Spikes.asm"
 Map_Spike:	include	"_maps/Spikes.asm"
@@ -3847,7 +3845,7 @@ Map_PRock:	include	"_maps/Purple Rock.asm"
 Map_Smash:	include	"_maps/Smashable Walls.asm"
 
 ; ===========================================================================
-
+; Subroutines to run, render, and update objects
 		include	"_inc/ExecuteObjects.asm"
 		include	"_inc/Object Pointers.asm" ; includes Obj_Index
 		include	"_incObj/sub ObjectFall.asm"
@@ -3860,7 +3858,7 @@ Map_Smash:	include	"_maps/Smashable Walls.asm"
 		include	"_incObj/sub FindFreeObj.asm"
 
 ; ===========================================================================
-
+; >>> More level obejcts
 		include	"_incObj/41 Springs.asm"
 		include	"_anim/Springs.asm"
 Map_Spring:	include	"_maps/Springs.asm"
@@ -3903,13 +3901,7 @@ Map_Moto:	include	"_maps/Moto Bug.asm"
 		include	"_incObj/50 Yadrin.asm"
 		include	"_anim/Yadrin.asm"
 Map_Yad:	include	"_maps/Yadrin.asm"
-
-; ===========================================================================
-
 		include	"_incObj/sub SolidObject.asm"
-
-; ===========================================================================
-
 		include	"_incObj/51 Smashable Green Block.asm"
 Map_Smab:	include	"_maps/Smashable Green Block.asm"
 		include	"_incObj/52 Moving Blocks.asm"
@@ -3970,11 +3962,11 @@ Map_Bub:	include	"_maps/Bubbles.asm"
 Map_WFall:	include	"_maps/Waterfalls.asm"
 
 ; ===========================================================================
-
+; >>> Main Sonic player object
 		include	"_incObj/01 Sonic.asm"
 
 ; ===========================================================================
-
+; >>> Various unique objects
 		include	"_incObj/0A Drowning Countdown.asm"
 		include	"_incObj/sub ResumeMusic.asm"
 		include	"_anim/Drowning Countdown.asm"
@@ -3990,7 +3982,7 @@ Map_Vanish:	include	"_maps/Special Stage Entry (Unused).asm"
 Map_Splash:	include	"_maps/Water Splash.asm"
 
 ; ===========================================================================
-
+; >>> Collision subroutines for Sonic and other objects
 		include	"_incObj/Sonic AnglePos.asm"
 		include	"_incObj/sub FindNearestTile.asm"
 		include	"_incObj/sub FindFloor.asm"
@@ -3999,7 +3991,7 @@ Map_Splash:	include	"_maps/Water Splash.asm"
 		include	"_incObj/Sonic Collision.asm"
 
 ; ===========================================================================
-
+; >>> More level objects
 		include	"_incObj/66 Rotating Junction.asm"
 Map_Jun:	include	"_maps/Rotating Junction.asm"
 		include	"_incObj/67 Running Disc.asm"
@@ -4034,7 +4026,7 @@ Map_Bonus:	include	"_maps/Hidden Bonuses.asm"
 Map_Cred:	include	"_maps/Credits.asm"
 
 ; ===========================================================================
-
+; >>> Boss objects
 		include	"_incObj/3D Boss - Green Hill.asm"	; includes "BossDeafeated" and "BossMove" subroutines
 		include	"_incObj/48 Eggman's Swinging Ball.asm"
 		include	"_anim/Eggman.asm"
@@ -4071,15 +4063,13 @@ Map_Plasma:	include	"_maps/Plasma Balls.asm"
 Map_Pri:	include	"_maps/Prison Capsule.asm"
 
 ; ===========================================================================
-
+; >>> Object-to-object touch response handler for Sonic
 		include	"_incObj/sub ReactToItem.asm"
 
 ; ===========================================================================
-
-		; includes the subroutines "SS_ShowLayout", "SS_AniWallsRings",
-		; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
-		include	"_inc/Special Stage Loading & Drawing.asm"
-
+; >>> Special Stage rendering and objects
+		include	"_inc/Special Stage Loading & Drawing.asm" ; includes the subroutines "SS_ShowLayout", "SS_AniWallsRings",
+								   ; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
 SS_MapIndex:	include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
 SS_MapIndex_End:
 Map_SS_R:	include	"_maps/SS R Block.asm"
@@ -4091,11 +4081,11 @@ Map_SS_Down:	include	"_maps/SS DOWN Block.asm"
 		include	"_incObj/10.asm"
 
 ; ===========================================================================
-
+; >>> Subroutine for in-place level animations in VRAM
 		include	"_inc/AnimateLevelGfx.asm"
 
 ; ===========================================================================
-
+; >>> HUD objects
 		include	"_incObj/21 HUD.asm"
 Map_HUD:	include	"_maps/HUD.asm"
 		include	"_incObj/sub AddPoints.asm"
@@ -4107,19 +4097,20 @@ Art_LivesNums:	binclude "artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 		even
 
 ; ===========================================================================
-
+; >>> Debug Mode
 		include	"_incObj/DebugMode.asm"
 		include	"_inc/DebugList.asm"
 
 ; ===========================================================================
-
+; >>> Level definitions
 		include	"_inc/LevelHeaders.asm"
-
-; ===========================================================================
-
 		include	"_inc/Pattern Load Cues.asm"
 
 ; ===========================================================================
+
+; ---------------------------------------------------------------------------
+; >> END OF PRIMARY INCLUDES - Everything below this point is art includes <<
+; ---------------------------------------------------------------------------
 
 		; Nem_SegaLogo has a bunch of padding before it that differs between revisions:
 		; - in rev00, it starts at $1DC00, which amounts to $EE bytes
@@ -4133,7 +4124,9 @@ Art_LivesNums:	binclude "artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 		endif
 
 ; ===========================================================================
-
+; ---------------------------------------------------------------------------
+; Compressed graphics and mappings - Sega screen
+; ---------------------------------------------------------------------------
 	if Revision=0
 Nem_SegaLogo:	binclude	"artnem/Sega Logo (REV00).nem"	; large Sega logo
 		even
@@ -4146,6 +4139,9 @@ Eni_SegaLogo:	binclude	"tilemaps/Sega Logo (REV01).eni" ; large Sega logo (mappi
 		even
 	endif
 
+; ---------------------------------------------------------------------------
+; Compressed graphics and mappings - Title screen
+; ---------------------------------------------------------------------------
 Eni_Title:	binclude	"tilemaps/Title Screen.eni" ; title screen foreground (mappings)
 		even
 Nem_TitleFg:	binclude	"artnem/Title Screen Foreground.nem"
