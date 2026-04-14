@@ -466,12 +466,12 @@ loc_1A210:
 loc_1A216:
 		cmpi.w	#boss_fz_end+$90,(v_player+obX).w
 		blt.s	loc_1A23A
-		move.b	#1,(f_lockctrl).w
-		move.w	#0,(v_jpadhold2).w
-		clr.w	(v_player+obInertia).w
-		tst.w	obVelY(a0)
-		bpl.s	loc_1A248
-		move.w	#btnUp<<8,(v_jpadhold2).w
+		move.b	#1,(f_lockctrl).w	; lock controls
+		move.w	#0,(v_jpadhold2).w	; clear button inputs
+		clr.w	(v_player+obInertia).w	; stop Sonic moving
+		tst.w	obVelY(a0)		; is Eggman going down?
+		bpl.s	loc_1A248		; if yes, branch
+		move.w	#btnUp<<8,(v_jpadhold2).w ; make Sonic look up if Eggman got away
 
 loc_1A23A:
 		cmpi.w	#boss_fz_end+$E0,(v_player+obX).w
