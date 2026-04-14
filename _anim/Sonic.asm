@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sonic frame IDs
 ; ---------------------------------------------------------------------------
+
 fr_Null:	equ 0
 fr_Stand:	equ 1
 fr_Wait1:	equ 2
@@ -88,17 +89,22 @@ fr_Float5:	equ $53
 fr_Float6:	equ $54
 fr_Injury:	equ $55
 fr_GetAir:	equ $56
-fr_WaterSlide:	equ $57
+fr_Slide:	equ $57 ; formerly mamed fr_WaterSlide (was too long...)
+
 
 ; ---------------------------------------------------------------------------
 ; Animation script - Sonic
 ; ---------------------------------------------------------------------------
+
+; Macro to map an ID to a label while defining the offset table entries
 sonani:		macro anim,{INTLABEL},{GLOBALSYMBOLS}
 __LABEL__: =	(*-Ani_Sonic)/2
 		dc.w	anim-Ani_Sonic
 		endm
+; ---------------------------------------------------------------------------
 
 Ani_Sonic:
+
 id_Walk:	sonani	SonAni_Walk	; $00
 id_Run:		sonani	SonAni_Run	; $01
 id_Roll:	sonani	SonAni_Roll	; $02
@@ -126,72 +132,184 @@ id_Drown:	sonani	SonAni_Drown	; $17
 id_Death:	sonani	SonAni_Death	; $18
 id_Shrink:	sonani	SonAni_Shrink	; $19
 id_Hurt:	sonani	SonAni_Hurt	; $1A
-id_WaterSlide:	sonani	SonAni_WaterSlide ; $1B
+id_Slide:	sonani	SonAni_Slide	; $1B
 id_Null:	sonani	SonAni_Null	; $1C
 id_Float3:	sonani	SonAni_Float3	; $1D
 id_Float4:	sonani	SonAni_Float4	; $1E
 
+; ---------------------------------------------------------------------------
+; --- Special animations (walk/run/roll/push) ---
+; Sonic handles animations with a start value of $80 or greater separately.
+; All special animations need to have EXACTLY 6 frames (plus one afEnd),
+; animations that are too short have extra afEnd to pad to the same length.
+; This is because the special animation handler switches between these
+; animations without resetting the animation positon.
 
-SonAni_Walk:	dc.b $FF, fr_Walk13, fr_Walk14,	fr_Walk15, fr_Walk16, fr_Walk11, fr_Walk12, afEnd
+SonAni_Walk:	dc.b $FF
+		dc.b fr_Walk13, fr_Walk14, fr_Walk15, fr_Walk16, fr_Walk11, fr_Walk12
+		dc.b afEnd
 		even
-SonAni_Run:	dc.b $FF,  fr_Run11,  fr_Run12,  fr_Run13,  fr_Run14,     afEnd,     afEnd, afEnd
+
+SonAni_Run:	dc.b $FF
+		dc.b fr_Run11,  fr_Run12,  fr_Run13,  fr_Run14,  afEnd,     afEnd
+		dc.b afEnd 
 		even
-SonAni_Roll:	dc.b $FE,  fr_Roll1,  fr_Roll2,  fr_Roll3,  fr_Roll4,  fr_Roll5,     afEnd, afEnd
+
+SonAni_Roll:	dc.b $FE
+		dc.b fr_Roll1,  fr_Roll2,  fr_Roll3,  fr_Roll4,  fr_Roll5,  afEnd
+		dc.b afEnd
 		even
-SonAni_Roll2:	dc.b $FE,  fr_Roll1,  fr_Roll2,  fr_Roll5,  fr_Roll3,  fr_Roll4,  fr_Roll5, afEnd
+
+SonAni_Roll2:	dc.b $FE
+		dc.b fr_Roll1,  fr_Roll2,  fr_Roll5,  fr_Roll3,  fr_Roll4,  fr_Roll5
+		dc.b afEnd
 		even
-SonAni_Push:	dc.b $FD,  fr_Push1,  fr_Push2,  fr_Push3,  fr_Push4,     afEnd,     afEnd, afEnd
+
+SonAni_Push:	dc.b $FD
+		dc.b fr_Push1,  fr_Push2,  fr_Push3,  fr_Push4,  afEnd,     afEnd
+		dc.b afEnd
 		even
-SonAni_Wait:	dc.b $17, fr_Stand, fr_Stand, fr_Stand, fr_Stand, fr_Stand, fr_Stand, fr_Stand, fr_Stand, fr_Stand
-		dc.b fr_Stand, fr_Stand, fr_Stand, fr_Wait2, fr_Wait1, fr_Wait1, fr_Wait1, fr_Wait2, fr_Wait3, afBack, 2
+
+; ---------------------------------------------------------------------------
+; --- Normal animations ---
+; First byte denotes number of frames between each animation.
+; Overview of animation flags (examples):
+; 	dc.b afEnd  		; return to beginning of animation
+; 	dc.b afBack, 5		; go back specified number of frames
+; 	dc.b afChange, id_Surf	; switch to a different animation
+
+SonAni_Wait:	dc.b 23
+		dc.b fr_Stand, fr_Stand, fr_Stand, fr_Stand, fr_Stand, fr_Stand
+		dc.b fr_Stand, fr_Stand, fr_Stand, fr_Stand, fr_Stand, fr_Stand
+		dc.b fr_Wait2, fr_Wait1, fr_Wait1, fr_Wait1
+		dc.b fr_Wait2, fr_Wait3	; looped
+		dc.b afBack, 2
 		even
-SonAni_Balance:	dc.b $1F, fr_Balance1, fr_Balance2, afEnd
+
+SonAni_Balance:	dc.b 31
+		dc.b fr_Balance1, fr_Balance2
+		dc.b afEnd
 		even
-SonAni_LookUp:	dc.b $3F, fr_LookUp, afEnd
+
+SonAni_LookUp:	dc.b 63
+		dc.b fr_LookUp
+		dc.b afEnd
 		even
-SonAni_Duck:	dc.b $3F, fr_Duck, afEnd
+
+SonAni_Duck:	dc.b 63
+		dc.b fr_Duck
+		dc.b afEnd
 		even
-SonAni_Warp1:	dc.b $3F, fr_Warp1, afEnd
+
+SonAni_Warp1:	dc.b 63
+		dc.b fr_Warp1
+		dc.b afEnd
 		even
-SonAni_Warp2:	dc.b $3F, fr_Warp2, afEnd
+
+SonAni_Warp2:	dc.b 63
+		dc.b fr_Warp2
+		dc.b afEnd
 		even
-SonAni_Warp3:	dc.b $3F, fr_Warp3, afEnd
+
+SonAni_Warp3:	dc.b 63
+		dc.b fr_Warp3
+		dc.b afEnd
 		even
-SonAni_Warp4:	dc.b $3F, fr_Warp4, afEnd
+
+SonAni_Warp4:	dc.b 63
+		dc.b fr_Warp4
+		dc.b afEnd
 		even
-SonAni_Stop:	dc.b 7,	fr_Stop1, fr_Stop2, afEnd
+
+SonAni_Stop:	dc.b 7
+		dc.b fr_Stop1, fr_Stop2
+		dc.b afEnd
 		even
-SonAni_Float1:	dc.b 7,	fr_Float1, fr_Float4, afEnd
+
+SonAni_Float1:	dc.b 7
+		dc.b fr_Float1, fr_Float4
+		dc.b afEnd
 		even
-SonAni_Float2:	dc.b 7,	fr_Float1, fr_Float2, fr_Float5, fr_Float3, fr_Float6, afEnd
+
+SonAni_Float2:	dc.b 7
+		dc.b fr_Float1, fr_Float2, fr_Float5, fr_Float3, fr_Float6
+		dc.b afEnd
 		even
-SonAni_Spring:	dc.b $2F, fr_Spring, afChange, id_Walk
+
+SonAni_Spring:	dc.b 47
+		dc.b fr_Spring
+		dc.b afChange, id_Walk
 		even
-SonAni_Hang:	dc.b 4,	fr_Hang1, fr_Hang2, afEnd
+
+SonAni_Hang:	dc.b 4
+		dc.b fr_Hang1, fr_Hang2
+		dc.b afEnd
 		even
-SonAni_Leap1:	dc.b $F, fr_Leap1, fr_Leap1, fr_Leap1,	afBack, 1
+
+SonAni_Leap1:	dc.b 15
+		dc.b fr_Leap1, fr_Leap1
+		dc.b fr_Leap1 ; looped
+		dc.b afBack, 1
 		even
-SonAni_Leap2:	dc.b $F, fr_Leap1, fr_Leap2, afBack, 1
+
+SonAni_Leap2:	dc.b 15
+		dc.b fr_Leap1
+		dc.b fr_Leap2 ; looped
+		dc.b afBack, 1
 		even
-SonAni_Surf:	dc.b $3F, fr_Surf, afEnd
+
+SonAni_Surf:	dc.b 63
+		dc.b fr_Surf
+		dc.b afEnd
 		even
-SonAni_GetAir:	dc.b $B, fr_GetAir, fr_GetAir, fr_Walk15, fr_Walk16, afChange, id_Walk
+
+SonAni_GetAir:	dc.b 11
+		dc.b fr_GetAir, fr_GetAir, fr_Walk15, fr_Walk16
+		dc.b afChange, id_Walk
 		even
-SonAni_Burnt:	dc.b $20, fr_Burnt, afEnd
+
+SonAni_Burnt:	dc.b 32
+		dc.b fr_Burnt
+		dc.b afEnd
 		even
-SonAni_Drown:	dc.b $2F, fr_Drown, afEnd
+
+SonAni_Drown:	dc.b 47
+		dc.b fr_Drown
+		dc.b afEnd
 		even
-SonAni_Death:	dc.b 3,	fr_Death, afEnd
+
+SonAni_Death:	dc.b 3
+		dc.b fr_Death
+		dc.b afEnd
 		even
-SonAni_Shrink:	dc.b 3,	fr_Shrink1, fr_Shrink2, fr_Shrink3, fr_Shrink4, fr_Shrink5, fr_Null, afBack, 1
+
+SonAni_Shrink:	dc.b 3
+		dc.b fr_Shrink1, fr_Shrink2, fr_Shrink3, fr_Shrink4, fr_Shrink5
+		dc.b fr_Null ; looped
+		dc.b afBack, 1
 		even
-SonAni_Hurt:	dc.b 3,	fr_Injury, afEnd
+
+SonAni_Hurt:	dc.b 3
+		dc.b fr_Injury
+		dc.b afEnd
 		even
-SonAni_WaterSlide: dc.b 7, fr_Injury, fr_WaterSlide, afEnd
+
+SonAni_Slide:	dc.b 7
+		dc.b fr_Injury, fr_Slide
+		dc.b afEnd
 		even
-SonAni_Null:	dc.b $77, fr_Null, afChange, id_Walk
+
+SonAni_Null:	dc.b 119
+		dc.b fr_Null
+		dc.b afChange, id_Walk
 		even
-SonAni_Float3:	dc.b 3,	fr_Float1, fr_Float2, fr_Float5, fr_Float3, fr_Float6, afEnd
+
+SonAni_Float3:	dc.b 3
+		dc.b fr_Float1, fr_Float2, fr_Float5, fr_Float3, fr_Float6
+		dc.b afEnd
 		even
-SonAni_Float4:	dc.b 3,	fr_Float1, afChange, id_Walk
+
+SonAni_Float4:	dc.b 3
+		dc.b fr_Float1
+		dc.b afChange, id_Walk
 		even
