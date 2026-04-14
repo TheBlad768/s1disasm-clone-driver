@@ -359,7 +359,7 @@ ArtTile_Level:			equ $000
 ArtTile_Ball_Hog:		equ $302
 ArtTile_Bomb:			equ $400
 ArtTile_Crabmeat:		equ $400
-ArtTile_Missile_Disolve:	equ $41C ; Unused
+ArtTile_UnusedExplosion:	equ $41C ; Unused
 ArtTile_Buzz_Bomber:		equ $444
 ArtTile_Chopper:		equ $47B
 ArtTile_Yadrin:			equ $47B

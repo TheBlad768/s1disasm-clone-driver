@@ -3786,13 +3786,13 @@ Map_ADoor:	include	"_maps/SBZ Small Door.asm"
 
 
 ; ===========================================================================
-; >>> Badniks and Badnik-related objects
+; >>> Badniks, explosions, and Badnik-related objects
 		include	"_incObj/1E Ball Hog.asm"
 		include	"_incObj/20 Cannonball.asm"
 		include	"_incObj/24, 27 & 3F Explosions.asm"
 		include	"_anim/Ball Hog.asm"
 Map_Hog:	include	"_maps/Ball Hog.asm"
-Map_MisDissolve:include	"_maps/Buzz Bomber Missile Dissolve.asm"
+Map_UnkExplode:	include	"_maps/Unused Explosion.asm"
 		include	"_maps/Explosions.asm"
 		include	"_incObj/28 Animals.asm"
 		include	"_incObj/29 Points.asm"

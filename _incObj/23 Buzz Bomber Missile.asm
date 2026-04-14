@@ -78,8 +78,13 @@ Msl_ChkCancel:
 ; ===========================================================================
 
 Msl_FromBuzz:	; Routine 4
-		btst	#7,obStatus(a0)
-		bne.s	.explode
+		; This check most likely used to work at some point, but was abandoned
+		; in favor of simply deleting the missile after destroying the Buzz Bomber.
+		; There is nothing that sets the required flag, so the branch to the below
+		; missile desolve object spawner is never run (and would be broken anyway).
+		btst	#7,obStatus(a0)		; has bit 7 of status flags been set? (impossible condition)
+		bne.s	.explode		; if yes, dissolve missile
+
 		move.b	#$87,obColType(a0)
 		move.b	#1,obAnim(a0)
 		bsr.w	SpeedToPos
@@ -107,9 +112,12 @@ Msl_FromBuzz:	; Routine 4
 ; ===========================================================================
 
 .explode:
-		_move.b	#id_MissileDissolve,obID(a0) ; change object to an explosion (Obj24)
-		move.b	#0,obRoutine(a0)
-		bra.w	MissileDissolve
+		; This section is unreachable because bit 7 in obStatus is never set.
+		; The relevant small explosion object doesn't even have graphics
+		; loaded into VRAM (the same space is occupied by the Crabmeat).
+		_move.b	#id_UnusedExplosion,obID(a0)	; change object to a small explosion ($24)
+		move.b	#0,obRoutine(a0)		; reset routine counter
+		bra.w	UnusedExplosion			; jump to unused explosion code
 ; ===========================================================================
 
 Msl_Delete:	; Routine 6
