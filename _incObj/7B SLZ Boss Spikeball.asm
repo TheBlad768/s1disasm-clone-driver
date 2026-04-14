@@ -336,7 +336,7 @@ BossSpikeball_BallHitbox:
 ; ===========================================================================
 
 BossSpikeball_Explode:	; Routine 8
-		move.b	#id_ExplosionBomb,obID(a0)
+		move.b	#id_Explosion,obID(a0)
 		clr.b	obRoutine(a0)
 		cmpi.w	#$20,obSubtype(a0)
 		beq.s	BossSpikeball_MakeFrag
