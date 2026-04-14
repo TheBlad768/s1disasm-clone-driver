@@ -607,7 +607,7 @@ ErrorWaitForC:
 ; ---------------------------------------------------------------------------
 
 Art_Text:	bincludeEndMarker	"artunc/Level Select & Debug Text.bin" 
-		even
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1167,13 +1167,15 @@ DACDriverLoad:
 
 ; ===========================================================================
 ; >>> Subroutines to queue sound commands to be executed by the sound driver during V-Blank
-		; includes QueueSound1, QueueSound2, QueueSound3
-		; (formerly called PlaySound, PlaySound_Special, PlaySound_Unknown)
-		include	"_inc/Queue Sound Routines.asm"
+	; includes QueueSound1, QueueSound2, QueueSound3
+	; (formerly called PlaySound, PlaySound_Special, PlaySound_Unknown)
+	include	"_inc/Queue Sound Routines.asm"
+
 
 ; ===========================================================================
 ; >>> Subroutine to allow pausing the game
-		include	"_inc/PauseGame.asm"
+	include	"_inc/PauseGame.asm"
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1204,7 +1206,7 @@ Tilemap_Cell:
 
 ; ===========================================================================
 ; >>> Nemesis decompression algorithm, primarily (but not exclusively) used for PLCs
-		include	"_inc/Decompression/Nemesis Decompression.asm"
+	include	"_inc/Decompression/Nemesis Decompression.asm"
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to add entries from a given Pattern Load Cue list ID to the
@@ -1462,13 +1464,15 @@ Qplc_Loop:
 
 ; ===========================================================================
 ; >>> Other decompression algorithms
-		include	"_inc/Decompression/Enigma Decompression.asm"
-		include	"_inc/Decompression/Kosinski Decompression.asm"
+	include	"_inc/Decompression/Enigma Decompression.asm"
+	include	"_inc/Decompression/Kosinski Decompression.asm"
+
 
 ; ===========================================================================
 ; >>> Palette logic routines
-		include	"_inc/PaletteCycle.asm"
-		include	"_inc/Palette Fading.asm" ; includes "PaletteFadeIn", "PaletteFadeOut", "PaletteWhiteIn", and "PaletteWhiteOut"
+	include	"_inc/PaletteCycle.asm"
+	include	"_inc/Palette Fading.asm" ; includes "PaletteFadeIn", "PaletteFadeOut", "PaletteWhiteIn", and "PaletteWhiteOut"
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1590,8 +1594,7 @@ PCycSega_FadeIn:
 		rts					; return
 ; End of function PalCycle_Sega
 
-; ---------------------------------------------------------------------------
-
+; ===========================================================================
 ; >>> Palette cycle data used for Sega screen
 Pal_Sega1:	bincludeEndMarker	"palette/Sega1.bin" ; used during the light scanning effect
 Pal_Sega2:	bincludeEndMarker	"palette/Sega2.bin" ; used during the fade-in (three color sets, 5+1 colors each)
@@ -1683,7 +1686,8 @@ PalLoad_Water:
 
 ; ===========================================================================
 ; >>> Palette pointers and palette binary includes
-		include	"_inc/Palette Index.asm"
+	include	"_inc/Palette Index.asm"
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1702,13 +1706,13 @@ WaitForVBla:
 
 ; ===========================================================================
 ; >>> Subroutines for generic calculations
-		include	"_incObj/sub RandomNumber.asm"
-		include	"_incObj/sub CalcSine.asm"
-	if Revision=0
-		; Only in REV00, and even there it was never used
-		include	"_incObj/sub CalcSqrt.asm"
-	endif
-		include	"_incObj/sub CalcAngle.asm"
+	include	"_incObj/sub RandomNumber.asm"
+	include	"_incObj/sub CalcSine.asm"
+    if Revision=0
+	; Only in REV00, and even there it was never used
+	include	"_incObj/sub CalcSqrt.asm"
+    endif
+	include	"_incObj/sub CalcAngle.asm"
 
 
 ; ===========================================================================
@@ -2944,8 +2948,9 @@ Level_FDLoop_NoDim:
 
 ; ===========================================================================
 ; >>> Misc level logic for specific circumstances
-		include	"_inc/LZWaterFeatures.asm"
-		include	"_inc/MoveSonicInDemo.asm"
+	include	"_inc/LZWaterFeatures.asm"
+	include	"_inc/MoveSonicInDemo.asm"
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -2975,8 +2980,9 @@ ColPointers:	dc.l Col_GHZ
 		even
 
 ; ===========================================================================
+; >>> Routines to set and update values that change on a fixed timer
+	include	"_inc/Oscillatory Routines.asm"
 
-		include	"_inc/Oscillatory Routines.asm"
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -3058,7 +3064,6 @@ SignpostArtLoad:
 ; End of function SignpostArtLoad
 
 ; ===========================================================================
-
 ; >>> Demo inputs for title screen demos
 Demo_GHZ:	include	"demodata/Intro - GHZ.asm"
 Demo_MZ:	include	"demodata/Intro - MZ.asm"
@@ -3277,7 +3282,8 @@ SS_ToNextScreen:
 
 ; ===========================================================================
 
-		include	"_inc/Special Stage Background & Palette Cycle.asm"
+; >>> Special Stage background drawing and palette cycle logic
+	include	"_inc/Special Stage Background & Palette Cycle.asm"
 
 
 ; ===========================================================================
@@ -3386,10 +3392,8 @@ Cont_GotoLevel:
 
 ; ===========================================================================
 
-		include	"_incObj/80 Continue Screen Elements.asm"
-		include	"_incObj/81 Continue Screen Sonic.asm"
-		include	"_anim/Continue Screen Sonic.asm"
-Map_ContScr:	include	"_maps/Continue Screen.asm"
+; >>> Objects for the continue screen
+	include	"_incObj/80 & 81 Continue Screen Elements and Sonic.asm"
 
 
 ; ===========================================================================
@@ -3638,13 +3642,8 @@ End_MoveSonExit:
 
 ; ===========================================================================
 
-		include	"_incObj/87 Ending Sequence Sonic.asm"
-		include "_anim/Ending Sequence Sonic.asm"
-		include	"_incObj/88 Ending Sequence Emeralds.asm"
-		include	"_incObj/89 Ending Sequence STH.asm"
-Map_ESon:	include	"_maps/Ending Sequence Sonic.asm"
-Map_ECha:	include	"_maps/Ending Sequence Emeralds.asm"
-Map_ESth:	include	"_maps/Ending Sequence STH.asm"
+; >>> Objects on the ending sequence
+	include	"_incObj/87, 88 & 89 Ending Sequence Sonic, Emeralds, Logo.asm"
 
 
 ; ===========================================================================
@@ -3873,11 +3872,11 @@ TryAg_Exit:	; exit end screen and restart the gam
 ; End of function TryAgainEnd
 ; ===========================================================================
 
-		include	"_incObj/8B Try Again & End Eggman.asm"
-		include "_anim/Try Again & End Eggman.asm"
-		include	"_incObj/8C Try Again Emeralds.asm"
-Map_EEgg:	include	"_maps/Try Again & End Eggman.asm"
+; >>> Objects on final screen
+	include	"_incObj/8B & 8C Try Again, End Eggman, End Emeralds.asm"
 
+
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Ending sequence demos
 ; ---------------------------------------------------------------------------
@@ -3890,7 +3889,6 @@ Demo_EndSLZ:	include	"demodata/Ending - SLZ.asm"
 Demo_EndSBZ1:	include	"demodata/Ending - SBZ1.asm"
 Demo_EndSBZ2:	include	"demodata/Ending - SBZ2.asm"
 Demo_EndGHZ2:	include	"demodata/Ending - GHZ2.asm"
-
 
 
 ; ===========================================================================
@@ -3912,6 +3910,7 @@ Demo_EndGHZ2:	include	"demodata/Ending - GHZ2.asm"
 		include	"_inc/LevelLayoutLoad.asm" ; includes LevelDataLoad, LevelLayoutLoad, and LevelLayoutLoad2
 
 		include	"_inc/DynamicLevelEvents.asm"
+
 
 ; ===========================================================================
 ; >>> Various level objects
@@ -3942,6 +3941,7 @@ Map_Swi:	include	"_maps/Unused Switch.asm"
 Map_ADoor:	include	"_maps/SBZ Small Door.asm"
 		include	"_incObj/44 GHZ Edge Walls (part 2).asm"
 
+
 ; ===========================================================================
 ; >>> Badniks and Badnik-related objects
 		include	"_incObj/1E Ball Hog.asm"
@@ -3967,6 +3967,7 @@ Map_Crab:	include	"_maps/Crabmeat.asm"
 Map_Buzz:	include	"_maps/Buzz Bomber.asm"
 Map_Missile:	include	"_maps/Buzz Bomber Missile.asm"
 
+
 ; ===========================================================================
 ; >>> Rings and monitors
 		include	"_incObj/25 & 37 Rings.asm"
@@ -3988,6 +3989,7 @@ Map_Flash:	include	"_maps/Ring Flash.asm"
 		include	"_anim/Monitor.asm"
 Map_Monitor:	include	"_maps/Monitor.asm"
 
+
 ; ===========================================================================
 ; >>> Title screen objects
 		include	"_incObj/0E Title Screen Sonic.asm"
@@ -3997,6 +3999,7 @@ Map_Monitor:	include	"_maps/Monitor.asm"
 		include	"_incObj/sub AnimateSprite.asm"
 Map_PSB:	include	"_maps/Press Start and TM.asm"
 Map_TSon:	include	"_maps/Title Screen Sonic.asm"
+
 
 ; ===========================================================================
 ; >>> More Badniks and level objects
@@ -4025,6 +4028,7 @@ Map_But:	include	"_maps/Button.asm"
 		include	"_incObj/33 Pushable Blocks.asm"
 Map_Push:	include	"_maps/Pushable Blocks.asm"
 
+
 ; ===========================================================================
 ; >>> Title card objects
 		include	"_incObj/34 Title Cards.asm"
@@ -4033,6 +4037,7 @@ Map_Push:	include	"_maps/Pushable Blocks.asm"
 		include	"_incObj/7E Special Stage Results.asm"
 		include	"_incObj/7F SS Result Chaos Emeralds.asm"
 		include	"_maps/Title Cards.asm"	; includes "Map_Card", "Map_Over", "Map_Got", and "Map_SSR"
+
 
 ; ===========================================================================
 ; >>> More level objects
@@ -4046,6 +4051,7 @@ Map_PRock:	include	"_maps/Purple Rock.asm"
 		include	"_incObj/sub SmashObject.asm"
 Map_Smash:	include	"_maps/Smashable Walls.asm"
 
+
 ; ===========================================================================
 ; Subroutines to run, render, and update objects
 		include	"_inc/ExecuteObjects.asm"
@@ -4058,6 +4064,7 @@ Map_Smash:	include	"_maps/Smashable Walls.asm"
 		include	"_incObj/sub ChkObjectVisible.asm"
 		include	"_inc/ObjPosLoad.asm"
 		include	"_incObj/sub FindFreeObj.asm"
+
 
 ; ===========================================================================
 ; >>> More level obejcts
@@ -4163,9 +4170,11 @@ Map_Bub:	include	"_maps/Bubbles.asm"
 		include	"_anim/Waterfalls.asm"
 Map_WFall:	include	"_maps/Waterfalls.asm"
 
+
 ; ===========================================================================
 ; >>> Main Sonic player object
 		include	"_incObj/01 Sonic.asm"
+
 
 ; ===========================================================================
 ; >>> Various unique objects
@@ -4183,6 +4192,7 @@ Map_Vanish:	include	"_maps/Special Stage Entry (Unused).asm"
 		include	"_anim/Water Splash.asm"
 Map_Splash:	include	"_maps/Water Splash.asm"
 
+
 ; ===========================================================================
 ; >>> Collision subroutines for Sonic and other objects
 		include	"_incObj/Sonic AnglePos.asm"
@@ -4191,6 +4201,7 @@ Map_Splash:	include	"_maps/Water Splash.asm"
 		include	"_incObj/sub FindWall.asm"
 		include "_incObj/sub ConvertCollisionArray (Unused).asm"
 		include	"_incObj/Sonic Collision.asm"
+
 
 ; ===========================================================================
 ; >>> More level objects
@@ -4227,8 +4238,9 @@ Map_Bonus:	include	"_maps/Hidden Bonuses.asm"
 		include	"_incObj/8A Credits.asm"
 Map_Cred:	include	"_maps/Credits.asm"
 
+
 ; ===========================================================================
-; >>> Boss objects
+; >>> Bosses and related objects
 		include	"_incObj/3D Boss - Green Hill.asm"	; includes "BossDeafeated" and "BossMove" subroutines
 		include	"_incObj/48 Eggman's Swinging Ball.asm"
 		include	"_anim/Eggman.asm"
@@ -4259,14 +4271,15 @@ Map_EggCyl:	include	"_maps/FZ Eggman's Cylinders.asm"
 Map_PLaunch:	include	"_maps/Plasma Ball Launcher.asm"
 		include	"_anim/Plasma Balls.asm"
 Map_Plasma:	include	"_maps/Plasma Balls.asm"
-
 		include	"_incObj/3E Prison Capsule.asm"
 		include	"_anim/Prison Capsule.asm"
 Map_Pri:	include	"_maps/Prison Capsule.asm"
 
+
 ; ===========================================================================
 ; >>> Object-to-object touch response handler for Sonic
 		include	"_incObj/sub ReactToItem.asm"
+
 
 ; ===========================================================================
 ; >>> Special Stage rendering and objects
@@ -4282,9 +4295,11 @@ Map_SS_Down:	include	"_maps/SS DOWN Block.asm"
 		include	"_incObj/09 Sonic in Special Stage.asm"
 		include	"_incObj/10.asm"
 
+
 ; ===========================================================================
 ; >>> Subroutine for in-place level animations in VRAM
 		include	"_inc/AnimateLevelGfx.asm"
+
 
 ; ===========================================================================
 ; >>> HUD objects
@@ -4298,15 +4313,18 @@ Art_Hud:	binclude "artunc/HUD Numbers.bin" ; 8x16 pixel numbers on HUD
 Art_LivesNums:	binclude "artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers on lives counter
 		even
 
+
 ; ===========================================================================
 ; >>> Debug Mode
 		include	"_incObj/DebugMode.asm"
 		include	"_inc/DebugList.asm"
 
+
 ; ===========================================================================
 ; >>> Level definitions
 		include	"_inc/LevelHeaders.asm"
 		include	"_inc/Pattern Load Cues.asm"
+
 
 ; ===========================================================================
 
@@ -4314,16 +4332,16 @@ Art_LivesNums:	binclude "artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 ; >> END OF PRIMARY INCLUDES - Everything below this point is art includes <<
 ; ---------------------------------------------------------------------------
 
-		; Nem_SegaLogo has a bunch of padding before it that differs between revisions:
-		; - in rev00, it starts at $1DC00, which amounts to $EE bytes
-		; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
-		; From a technical standpoint, this padding serves no purpose.
-		if PaddingOptimization=0
-			align	$200
-			if Revision<>0
-				dc.b	[$300]$FF
-			endif
+	; Nem_SegaLogo has a bunch of padding before it that differs between revisions:
+	; - in rev00, it starts at $1DC00, which amounts to $EE bytes
+	; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
+	; From a technical standpoint, this padding serves no purpose.
+	if PaddingOptimization=0
+		align	$200
+		if Revision<>0
+			dc.b	[$300]$FF
 		endif
+	endif
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -4781,16 +4799,16 @@ Nem_EndStH:	binclude	"artnem/Ending - StH Logo.nem"
 
 ; ---------------------------------------------------------------------------
 
-		; AngleMap starts at $62900 in all revisions, which amounts
-		; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
-		; From a technical standpoint, this padding serves no purpose.
-		if PaddingOptimization=0
-			if Revision=0
-				dc.b	[$104]$FF
-			else
-				dc.b	[$40]$FF
-			endif
+	; AngleMap starts at $62900 in all revisions, which amounts
+	; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
+	; From a technical standpoint, this padding serves no purpose.
+	if PaddingOptimization=0
+		if Revision=0
+			dc.b	[$104]$FF
+		else
+			dc.b	[$40]$FF
 		endif
+	endif
 
 ; ---------------------------------------------------------------------------
 ; Collision data
@@ -4993,12 +5011,12 @@ Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 
 ; ---------------------------------------------------------------------------
 
-		; ObjPos_Index starts at $6B000 in all revisions, which amounts
-		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
-		; From a technical standpoint, this padding serves no purpose.
-		if PaddingOptimization=0
-			align	$100
-		endif
+	; ObjPos_Index starts at $6B000 in all revisions, which amounts
+	; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
+	; From a technical standpoint, this padding serves no purpose.
+	if PaddingOptimization=0
+		align	$100
+	endif
 	
 ; ---------------------------------------------------------------------------
 ; Sprite locations index
@@ -5165,18 +5183,18 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
 ; ---------------------------------------------------------------------------
 
-		; SoundDriver starts at $71990 in all revisions, which amounts
-		; to $62A bytes of padding for rev00 and $63C for rev01/rev02.
-		; It appears to be placed in such a way that the sound driver
-		; ends right on the $80000 mark in the ROM in all revisions.
-		; From a technical standpoint, this padding serves no purpose.
-		if PaddingOptimization=0
-			if Revision=0
-				dc.b	[$62A]$FF
-			else
-				dc.b	[$63C]$FF
-			endif
+	; SoundDriver starts at $71990 in all revisions, which amounts
+	; to $62A bytes of padding for rev00 and $63C for rev01/rev02.
+	; It appears to be placed in such a way that the sound driver
+	; ends right on the $80000 mark in the ROM in all revisions.
+	; From a technical standpoint, this padding serves no purpose.
+	if PaddingOptimization=0
+		if Revision=0
+			dc.b	[$62A]$FF
+		else
+			dc.b	[$63C]$FF
 		endif
+	endif
 		
 ; ---------------------------------------------------------------------------
 
