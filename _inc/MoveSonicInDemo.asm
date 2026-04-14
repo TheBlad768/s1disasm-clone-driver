@@ -31,7 +31,7 @@ DemoRecorder:
 ; ===========================================================================
 
 MDemo_On:
-		tst.b	(v_jpadhold1).w	; is start button pressed?
+		tst.b	(v_jpadhold1).w	; is start button held?
 		bpl.s	.dontquit	; if not, branch
 		tst.w	(f_demo).w	; is this an ending sequence demo?
 		bmi.s	.dontquit	; if yes, branch
