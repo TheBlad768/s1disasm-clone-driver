@@ -219,6 +219,9 @@ afRoutine:	equ $FC	; increment routine counter
 afReset:	equ $FB	; reset animation and 2nd object routine counter
 af2ndRoutine:	equ $FA	; increment 2nd routine counter
 
+aniXFlip:	equ $20 ; horizontally mirrors the current frame
+aniYFlip:	equ $40 ; vertically mirrors the current frame
+
 ; Background music
 bgm__First:	equ $81
 bgm_GHZ:	equ ((ptr_mus81-MusicIndex)/4)+bgm__First

@@ -1,9 +1,16 @@
 ; ---------------------------------------------------------------------------
-; Animation script - flamethrower (SBZ)
+; Animation script - Bumper (SYZ)
 ; ---------------------------------------------------------------------------
-Ani_Bump:	dc.w byte_EAF4-Ani_Bump
-		dc.w byte_EAF8-Ani_Bump
-byte_EAF4:	dc.b $F, 0, afEnd
+
+Ani_Bump:	dc.w .idle-Ani_Bump
+		dc.w .touched-Ani_Bump
+
+.idle:		dc.b 15
+		dc.b 0
+		dc.b afEnd
 		even
-byte_EAF8:	dc.b 3,	1, 2, 1, 2, afChange, 0
+
+.touched:	dc.b 3
+		dc.b 1, 2, 1, 2
+		dc.b afChange, 0
 		even

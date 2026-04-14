@@ -1,6 +1,10 @@
 ; ---------------------------------------------------------------------------
-; Animation script - Eggman (FZ)
+; Animation script - Eggman while escaping after landing final hit (FZ)
 ; ---------------------------------------------------------------------------
-Ani_FZEgg:	dc.w byte_1A3D6-Ani_FZEgg
-byte_1A3D6:	dc.b 3,	0, 1, afEnd
+
+Ani_FZEgg:	dc.w .exploding-Ani_FZEgg
+
+.exploding:	dc.b 3
+		dc.b 0, 1
+		dc.b afEnd
 		even

@@ -1,6 +1,10 @@
 ; ---------------------------------------------------------------------------
 ; Animation script - Sonic on the continue screen
 ; ---------------------------------------------------------------------------
-AniScript_CSon:	dc.w A_CSon_1-AniScript_CSon
-A_CSon_1:	dc.b 4,	1, 1, 1, 1, 2, 2, 2, 3,	3, afEnd
+
+Ani_CSon:	dc.w .onfloor-Ani_CSon
+
+.onfloor:	dc.b 4
+		dc.b 1, 1, 1, 1, 2, 2, 2, 3, 3
+		dc.b afEnd
 		even

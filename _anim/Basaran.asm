@@ -1,12 +1,22 @@
 ; ---------------------------------------------------------------------------
-; Animation script - Basaran enemy
+; Animation script - Basaran enemy (MZ)
 ; ---------------------------------------------------------------------------
+
 Ani_Bas:	dc.w .still-Ani_Bas
 		dc.w .fall-Ani_Bas
 		dc.w .fly-Ani_Bas
-.still:		dc.b $F, 0, afEnd
+
+.still:		dc.b 15
+		dc.b 0
+		dc.b afEnd
 		even
-.fall:		dc.b $F, 1, afEnd
+
+.fall:		dc.b 15
+		dc.b 1
+		dc.b afEnd
 		even
-.fly:		dc.b 3,	1, 2, 3, 2, afEnd
+
+.fly:		dc.b 3
+		dc.b 1, 2, 3, 2
+		dc.b afEnd
 		even

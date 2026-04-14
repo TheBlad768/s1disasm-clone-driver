@@ -1,10 +1,23 @@
 ; ---------------------------------------------------------------------------
 ; Animation script - Sonic on the ending sequence
 ; ---------------------------------------------------------------------------
-AniScript_ESon:	dc.w byte_551C-AniScript_ESon
-		dc.w byte_552A-AniScript_ESon
-		dc.w byte_5534-AniScript_ESon
-byte_551C:	dc.b 3,	1, 0, 1, 0, 1, 0, 1, 0,	1, 0, 1, 2, $FA
-byte_552A:	dc.b 5,	3, 4, 3, 4, 3, 4, 3, $FA, 0
-byte_5534:	dc.b 3,	5, 5, 5, 6, 7, $FE, 1
+
+Ani_ESon:	dc.w .hold-Ani_ESon
+		dc.w .confused-Ani_ESon
+		dc.w .leap-Ani_ESon
+
+.hold:		dc.b 3
+		dc.b 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 2
+		dc.b af2ndRoutine
+		even
+
+.confused:	dc.b 5
+		dc.b 3, 4, 3, 4, 3, 4, 3
+		dc.b af2ndRoutine
+		even
+
+.leap:		dc.b 3
+		dc.b 5, 5, 5, 6
+		dc.b 7
+		dc.b afBack, 1
 		even
