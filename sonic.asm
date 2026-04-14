@@ -3769,7 +3769,7 @@ Map_Plat_Unused:include	"_maps/Platforms (unused).asm"
 Map_Plat_GHZ:	include	"_maps/Platforms (GHZ).asm"
 Map_Plat_SYZ:	include	"_maps/Platforms (SYZ).asm"
 Map_Plat_SLZ:	include	"_maps/Platforms (SLZ).asm"
-		include	"_incObj/19.asm"
+		include	"_incObj/19.asm" ; this was the rolling GHZ ball in the prototype
 Map_GBall:	include	"_maps/GHZ Ball.asm"
 		include	"_incObj/1A Collapsing Ledge.asm"
 		include	"_incObj/53 Collapsing Floors.asm"	; includes "Ledge_Fragment" and "SlopeObject2" subroutines
@@ -3880,11 +3880,11 @@ Map_Push:	include	"_maps/Pushable Blocks.asm"
 		include	"_incObj/7E Special Stage Results.asm"
 		include	"_incObj/7F SS Result Chaos Emeralds.asm"
 		include	"_maps/Title Cards.asm"	; includes "Map_Card", "Map_Over", "Map_Got", and "Map_SSR"
+Map_SSRC:	include	"_maps/SS Result Chaos Emeralds.asm"
 
 
 ; ===========================================================================
 ; >>> More level objects
-Map_SSRC:	include	"_maps/SS Result Chaos Emeralds.asm"
 		include	"_incObj/36 Spikes.asm"
 Map_Spike:	include	"_maps/Spikes.asm"
 		include	"_incObj/3B Purple Rock.asm"
@@ -3949,7 +3949,7 @@ Map_LWall:	include	"_maps/Wall of Lava.asm"
 		include	"_incObj/40 Moto Bug.asm" ; includes "_incObj/sub RememberState.asm" subroutine
 		include	"_anim/Moto Bug.asm"
 Map_Moto:	include	"_maps/Moto Bug.asm"
-		include	"_incObj/4F.asm"
+		include	"_incObj/4F.asm" ; this was Splats in the prototype
 		include	"_incObj/50 Yadrin.asm"
 		include	"_anim/Yadrin.asm"
 Map_Yad:	include	"_maps/Yadrin.asm"
@@ -4136,7 +4136,10 @@ Map_SS_Up:	include	"_maps/SS UP Block.asm"
 Map_SS_Down:	include	"_maps/SS DOWN Block.asm"
 		include	"_maps/SS Chaos Emeralds.asm"
 		include	"_incObj/09 Sonic in Special Stage.asm"
-		include	"_incObj/10.asm"
+
+; ===========================================================================
+; >>> Deleted, blank object that is randomly mixed in here
+		include	"_incObj/10.asm" ; this was an animation test object for Sonic in the prototype
 
 
 ; ===========================================================================
