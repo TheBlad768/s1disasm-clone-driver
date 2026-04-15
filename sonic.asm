@@ -208,7 +208,7 @@ PortA_Ok:	bne.s	SkipSetup		; skip the VDP and Z80 setup code if this is a soft-r
 		move.l	#'SEGA',$2F00(a1) ; move "SEGA" to TMSS register ($A14000)
 
 SkipSecurity:
-		move.w	(a4),d0	; clear write-pending flag in VDP to prevent issues if the 68k has been reset in the middle of writing a command long word to the VDP.
+		move.w	(a4),d0	; clear write-pending flag in VDP (prevents issues if 68k was reset while writing a command to VDP)
 		moveq	#0,d0	; clear d0
 		movea.l	d0,a6	; clear a6
 		move.l	a6,usp	; set usp to $0
@@ -613,112 +613,135 @@ Art_Text:	bincludeEndMarker	"artunc/Level Select & Debug Text.bin"
 ; ---------------------------------------------------------------------------
 ; Vertical interrupt
 ; ---------------------------------------------------------------------------
+id_VBlank_Lag:		equ $00	; (lag frame)
+id_VBlank_Sega:		equ $02	; Sega Screen
+id_VBlank_Title:	equ $04	; Title Screen, Credits
+id_VBlank_Unused06:	equ $06	; (unused)
+id_VBlank_Levels:	equ $08	; Levels, Demos
+id_VBlank_SpecialStage:	equ $0A	; Special Stages
+id_VBlank_TitleCards:	equ $0C	; Title Cards
+id_VBlank_Unused0E:	equ $0E	; (unused)
+id_VBlank_Paused:	equ $10	; Paused
+id_VBlank_PaletteFade:	equ $12	; Palette Fade
+id_VBlank_SegaPCM:	equ $14	; Sega Screen PCM
+id_VBlank_Continue:	equ $16	; Continue Screen
+id_VBlank_Ending:	equ $18	; Ending Sequence
+; ---------------------------------------------------------------------------
 
-; loc_B10:
+; loc_B10: VBla:
 VBlank:
-		movem.l	d0-a6,-(sp)
-		tst.b	(v_vbla_routine).w
-		beq.s	VBla_00
-		move.w	(vdp_control_port).l,d0
-		move.l	#$40000010,(vdp_control_port).l
+		movem.l	d0-a6,-(sp)			; backup all registers except stack pointer (a7)
+
+		tst.b	(v_vblank_routine).w		; was a VBlank routine set?
+		beq.s	VBlank_Lag			; if not, this is a lag frame, branch
+
+		move.w	(vdp_control_port).l,d0		; clear write-pending flag in VDP (prevents issues if 68k was reset while writing a command to VDP)
+		move.l	#$40000010,(vdp_control_port).l	; set VDP to VSRAM write mode
 		move.l	(v_scrposy_vdp).w,(vdp_data_port).l ; send screen y-axis pos. to VSRAM
 
 		; Wait here in a loop doing nothing for a while. This seems to be a pretty harsh attempt
 		; to push CRAM dots outside of the visable view area, due to Sonic 1 not using all
 		; the available screen space PAL offers, as they would otherwise be seen at the bottom.
-		btst	#6,(v_megadrive).w ; is Megadrive PAL?
-		beq.s	.notPAL		; if not, branch
-		move.w	#$700,d0
-.waitPAL:	dbf	d0,.waitPAL 
+		btst	#6,(v_megadrive).w		; is Megadrive PAL?
+		beq.s	.notPAL				; if not, branch
+		move.w	#$700,d0			; set to waste a bunch of cycles
+	.waitPAL:
+		dbf	d0,.waitPAL			; loop until cycles have been wasted
 
 .notPAL:
-		move.b	(v_vbla_routine).w,d0
-		move.b	#0,(v_vbla_routine).w
-		move.w	#1,(f_hbla_pal).w
-		andi.w	#$3E,d0
-		move.w	VBla_Index(pc,d0.w),d0
-		jsr	VBla_Index(pc,d0.w)
+		move.b	(v_vblank_routine).w,d0		; copy specified VBlank routine to d0
+		move.b	#id_VBlank_Lag,(v_vblank_routine).w ; reset actual routine to lag frame (which ideally should get set again in the next frame)
+		move.w	#1,(f_hblank_pal).w		; set HBlank palette swap flag (only relevant for LZ)
+		andi.w	#$3E,d0				; mask out irrelevant bits in VBlank routine
+		move.w	VBlank_Index(pc,d0.w),d0	; load address to relevant VBlank routine
+		jsr	VBlank_Index(pc,d0.w)		; jump to VBlank routine and then return here
 
-VBla_Music:
-		jsr	(UpdateMusic).l
+VBlank_Music:
+		jsr	(UpdateMusic).l			; run sound driver to advance music
 
-VBla_Exit:
-		addq.l	#1,(v_vbla_count).w
-		movem.l	(sp)+,d0-a6
-		rte	
+VBlank_Exit:
+		addq.l	#1,(v_vblank_count).w		; increment VBlank counter
+		movem.l	(sp)+,d0-a6			; restore all backed-up registers
+		rte					; return from interrupt and resume normal operation
+
 ; ===========================================================================
-VBla_Index:	dc.w VBla_00-VBla_Index	; (lag frame)
-		dc.w VBla_02-VBla_Index	; Sega Screen
-		dc.w VBla_04-VBla_Index	; Title Screen, Credits
-		dc.w VBla_06-VBla_Index	; (unused)
-		dc.w VBla_08-VBla_Index	; Levels
-		dc.w VBla_0A-VBla_Index	; Special Stage
-		dc.w VBla_0C-VBla_Index	; Title Cards
-		dc.w VBla_0E-VBla_Index	; (unused)
-		dc.w VBla_10-VBla_Index	; Paused
-		dc.w VBla_12-VBla_Index	; Palette Fade
-		dc.w VBla_14-VBla_Index	; Sega Screen PCM
-		dc.w VBla_16-VBla_Index	; Continue Screen
-		dc.w VBla_18-VBla_Index	; Ending Sequence
+; VBla_Index:
+VBlank_Index:	dc.w VBlank_Lag-VBlank_Index		; $00 - (lag frame)
+		dc.w VBlank_Sega-VBlank_Index		; $02 - Sega Screen
+		dc.w VBlank_Title-VBlank_Index		; $04 - Title Screen, Credits, Try Again
+		dc.w VBlank_Unused06-VBlank_Index	; $06 - (unused)
+		dc.w VBlank_Levels-VBlank_Index		; $08 - Levels, Demos
+		dc.w VBlank_SpecialStage-VBlank_Index	; $0A - Special Stages
+		dc.w VBlank_TitleCards-VBlank_Index	; $0C - Title Cards
+		dc.w VBlank_Unused0E-VBlank_Index	; $0E - (unused)
+		dc.w VBlank_Paused-VBlank_Index		; $10 - Paused
+		dc.w VBlank_PaletteFade-VBlank_Index	; $12 - Palette Fade
+		dc.w VBlank_SegaPCM-VBlank_Index	; $14 - Sega Screen PCM
+		dc.w VBlank_Continue-VBlank_Index	; $16 - Continue Screen, SS Finish
+		dc.w VBlank_Ending-VBlank_Index		; $18 - Ending Sequence
 ; ===========================================================================
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; VBlank 00 - Lag frame (VBlank occured before call to WaitForVBla)
+; VBlank 00 - Lag frame (VBlank occured before call to WaitForVBlank)
 ; ---------------------------------------------------------------------------
 
-; loc_B88:
-VBla_00:
-		cmpi.b	#$80+id_Level,(v_gamemode).w ; is pre level sequence active?
-		beq.s	.islevel	; if not, branch
-		cmpi.b	#id_Level,(v_gamemode).w ; is game on a level?
-		bne.w	VBla_Music	; if not, branch
+; loc_B88: VBla_00:
+VBlank_Lag:
+		cmpi.b	#$80+id_Level,(v_gamemode).w	; is pre level sequence active?
+		beq.s	.islevel			; if not, just update sound driver and resume operation
+		cmpi.b	#id_Level,(v_gamemode).w	; is game on a level?
+		bne.w	VBlank_Music			; if not, just update sound driver and resume operation
 
 .islevel:
-		cmpi.b	#id_LZ,(v_zone).w ; is level LZ ?
-		bne.w	VBla_Music	; if not, branch
+		cmpi.b	#id_LZ,(v_zone).w		; is level LZ?
+		bne.w	VBlank_Music			; if not, just update sound driver and resume operation
+
+	; A lag frame has occured while in Labyrinth Zone...
+
+		move.w	(vdp_control_port).l,d0		; clear write-pending flag in VDP (prevents issues if 68k was reset while writing a command to VDP)
 
 		; Same as in the opening block of the VBlank routine, this time during a lag frame.
 		; This only happens if the level is LZ (note, Sonic 2/3/&K would change this so it runs in any level).
-		move.w	(vdp_control_port).l,d0
-		btst	#6,(v_megadrive).w ; is Megadrive PAL?
-		beq.s	.notPAL		; if not, branch
-		move.w	#$700,d0
-.waitPAL:	dbf	d0,.waitPAL
+		btst	#6,(v_megadrive).w		; is Megadrive PAL?
+		beq.s	.notPAL				; if not, branch
+		move.w	#$700,d0			; set to waste a bunch of cycles
+	.waitPAL:
+		dbf	d0,.waitPAL			; loop until cycles have been wasted
 
 .notPAL:
-		move.w	#1,(f_hbla_pal).w ; set HBlank flag
+		move.w	#1,(f_hblank_pal).w		; set HBlank flag
 		stopZ80
 		waitZ80
-		tst.b	(f_wtr_state).w	; is water above top of screen?
-		bne.s	.waterabove 	; if yes, branch
 
-		writeCRAM	v_palette,0
-		bra.s	.waterbelow
-
+		tst.b	(f_wtr_state).w			; is the screen completely underewater?
+		bne.s	.waterabove 			; if not, branch
+		writeCRAM	v_palette,0		; write regular palette buffer to CRAM
+		bra.s	.waterbelow			; skip over
 .waterabove:
-		writeCRAM	v_palette_water,0
+		writeCRAM	v_palette_water,0	; write water palette buffer to CRAM
 
 .waterbelow:
-		move.w	(v_hbla_hreg).w,(a5)
+		move.w	(v_hblank_hreg).w,(a5)		; write HBlank trigger scan line for water palette swap to VDP
 		startZ80
-		bra.w	VBla_Music
+		bra.w	VBlank_Music			; branch back to update sound driver and resume operation
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; VBlank 02 - Sega Screen
 ; ---------------------------------------------------------------------------
 
-; loc_C32:
-VBla_02:
-		bsr.w	VBla_StandardTransfers
+; loc_C32: VBla_02:
+VBlank_Sega:
+		bsr.w	VBlank_StandardTransfers
 		; fall-through
 
 ; ---------------------------------------------------------------------------
 ; VBlank 14 - Sega Screen while the PCM sample is playing
 ; ---------------------------------------------------------------------------
 
-VBla_14:
+; loc_C36: VBla_14:
+VBlank_SegaPCM:
 		tst.w	(v_generictimer).w
 		beq.w	.end
 		subq.w	#1,(v_generictimer).w
@@ -730,9 +753,9 @@ VBla_14:
 ; VBlank 04 - Title Screen, Level Select, Credits, "Try Again" screen
 ; ---------------------------------------------------------------------------
 
-; loc_C44:
-VBla_04:
-		bsr.w	VBla_StandardTransfers
+; loc_C44: VBla_04:
+VBlank_Title:
+		bsr.w	VBlank_StandardTransfers
 		bsr.w	LoadTilesAsYouMove_BGOnly
 		bsr.w	ProcessPLC_9Tiles
 		tst.w	(v_generictimer).w
@@ -746,9 +769,9 @@ VBla_04:
 ; VBlank 06 - Unused
 ; ---------------------------------------------------------------------------
 
-; loc_C5E:
-VBla_06:
-		bsr.w	VBla_StandardTransfers
+; loc_C5E: VBla_06:
+VBlank_Unused06:
+		bsr.w	VBlank_StandardTransfers
 		rts
 
 ; ===========================================================================
@@ -756,24 +779,24 @@ VBla_06:
 ; VBlank 10 - While game is paused
 ; ---------------------------------------------------------------------------
 
-; loc_C64:
-VBla_10:
-		cmpi.b	#id_Special,(v_gamemode).w ; is game on special stage?
-		beq.w	VBla_0A		; if yes, branch
+; loc_C64: VBla_10:
+VBlank_Paused:
+		cmpi.b	#id_Special,(v_gamemode).w	; is game on special stage?
+		beq.w	VBlank_SpecialStage		; if yes, branch
 		; fall-through...
 
 ; ---------------------------------------------------------------------------
-; VBlank 08 - Levels
+; VBlank 08 - Levels and Demos
 ; ---------------------------------------------------------------------------
 
-; loc_C6E:
-VBla_08:
+; loc_C6E: VBla_08:
+VBlank_Levels:
 		stopZ80
 		waitZ80
 		bsr.w	ReadJoypads
+
 		tst.b	(f_wtr_state).w
 		bne.s	.waterabove
-
 		writeCRAM	v_palette,0
 		bra.s	.waterbelow
 
@@ -781,13 +804,13 @@ VBla_08:
 		writeCRAM	v_palette_water,0
 
 .waterbelow:
-		move.w	(v_hbla_hreg).w,(a5)
+		move.w	(v_hblank_hreg).w,(a5)
 
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
 		writeVRAM	v_spritetablebuffer,vram_sprites
-		tst.b	(f_sonframechg).w ; has Sonic's sprite changed?
-		beq.s	.nochg		; if not, branch
 
+		tst.b	(f_sonframechg).w		; has Sonic's sprite changed?
+		beq.s	.nochg				; if not, branch
 		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size ; load new Sonic gfx
 		move.b	#0,(f_sonframechg).w
 
@@ -800,14 +823,14 @@ VBla_08:
 
 		; The following code handles an awkward visual glitch for the LZ water surface.
 		; If the surface is near the top of the screen (within 96 pixels), the VDP would not have
-		; enough time to do all the transfers in VBla_UpdateScreen before the palette needs to get
+		; enough time to do all the transfers in VBlank_UpdateScreen before the palette needs to get
 		; changed for the water. Without this special check, the water surface would violently flicker
 		; whenever it's near the top of the screen. It's a rather dirty workaround, but it works.
-		cmpi.b	#96,(v_hbla_line).w		; is LZ water surface within 96 pixels of the top of the screen?
-		bhs.s	VBla_UpdateScreen		; if not, do screen updates now
+		cmpi.b	#96,(v_hblank_line).w		; is LZ water surface within 96 pixels of the top of the screen?
+		bhs.s	VBlank_UpdateScreen		; if not, do screen updates now
 		move.b	#1,(f_doupdatesinhblank).w	; otherwise, we don't have enough time to do them now before HBlank hits, defer updates to then
 		addq.l	#4,sp				; skip return address (i.e. postpone updating the sound driver as well)
-		bra.w	VBla_Exit			; go straight back to to the VBlank exit
+		bra.w	VBlank_Exit			; go straight back to to the VBlank exit
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -815,26 +838,27 @@ VBla_08:
 ; Also deducts the generic timer that controls the length of a Demo.
 ; ---------------------------------------------------------------------------
 
-; Demo_Time:
-VBla_UpdateScreen:
-		bsr.w	LoadTilesAsYouMove	; update level tiles while screen is moving
-		jsr	(AnimateLevelGfx).l	; updated animated tiles
-		jsr	(HUD_Update).l		; update HUD data
-		bsr.w	ProcessPLC_3Tiles	; run a bit of PLC decompression
+; Demo_Time: VBla_UpdateScreen:
+VBlank_UpdateScreen:
+		bsr.w	LoadTilesAsYouMove		; update level tiles while screen is moving
+		jsr	(AnimateLevelGfx).l		; updated animated tiles
+		jsr	(HUD_Update).l			; update HUD data
+		bsr.w	ProcessPLC_3Tiles		; run a bit of PLC decompression
 
-		tst.w	(v_generictimer).w	; is there time left in the generic timer left?
-		beq.w	.end			; if not, branch
-		subq.w	#1,(v_generictimer).w	; subtract 1 from time left
+		tst.w	(v_generictimer).w		; is there time left in the generic timer left?
+		beq.w	.end				; if not, branch
+		subq.w	#1,(v_generictimer).w		; subtract 1 from time left
 .end:
 		rts
-; End of function VBla_UpdateScreen
+; End of function VBlank_UpdateScreen
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; VBlank 0A - Special Stages
 ; ---------------------------------------------------------------------------
 
-VBla_0A:
+; loc_DA6: VBla_0A:
+VBlank_SpecialStage:
 		stopZ80
 		waitZ80
 		bsr.w	ReadJoypads
@@ -843,26 +867,28 @@ VBla_0A:
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
 		startZ80
 		bsr.w	PalCycle_SS
-		tst.b	(f_sonframechg).w ; has Sonic's sprite changed?
-		beq.s	.nochg		; if not, branch
 
+		tst.b	(f_sonframechg).w		; has Sonic's sprite changed?
+		beq.s	.nochg				; if not, branch
 		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size ; load new Sonic gfx
 		move.b	#0,(f_sonframechg).w
 
 .nochg:
-		tst.w	(v_generictimer).w	; is there time left on the demo?
-		beq.w	.end	; if not, return
-		subq.w	#1,(v_generictimer).w	; subtract 1 from time left in demo
+		tst.w	(v_generictimer).w		; is there time left on the demo?
+		beq.w	.end				; if not, return
+		subq.w	#1,(v_generictimer).w		; subtract 1 from time left in demo
 .end:
 		rts
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; VBlank 0C & 18 - While title cards are displayed (Levels and SS Results)
+; VBlank 0C - While title cards are displayed (Levels and SS Results)
+; VBlank 18 - During the Ending Sequence
 ; ---------------------------------------------------------------------------
 
-VBla_0C:
-VBla_18:
+; loc_E72: VBla_0C: VBla_18:
+VBlank_TitleCards:
+VBlank_Ending:
 		stopZ80
 		waitZ80
 		bsr.w	ReadJoypads
@@ -876,9 +902,10 @@ VBla_18:
 		writeCRAM	v_palette_water,0
 
 .waterbelow:
-		move.w	(v_hbla_hreg).w,(a5)
+		move.w	(v_hblank_hreg).w,(a5)
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
 		writeVRAM	v_spritetablebuffer,vram_sprites
+
 		tst.b	(f_sonframechg).w
 		beq.s	.nochg
 		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size
@@ -898,13 +925,14 @@ VBla_18:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; VBlank 0E - Unused
+; VBlank 0E - Unused (possibly once uses as a lag frame counter?)
 ; ---------------------------------------------------------------------------
 
-VBla_0E:
-		bsr.w	VBla_StandardTransfers
-		addq.b	#1,(v_vbla_0e_counter).w ; Unused besides this one write...
-		move.b	#$E,(v_vbla_routine).w
+; loc_F8A: VBla_0E:
+VBlank_Unused0E:
+		bsr.w	VBlank_StandardTransfers
+		addq.b	#1,(v_vblank_0e_counter).w	; unused besides this one write...
+		move.b	#id_VBlank_Unused0E,(v_vblank_routine).w ; set itself to land back here again if not further altered
 		rts
 
 ; ===========================================================================
@@ -912,9 +940,10 @@ VBla_0E:
 ; VBlank 12 - During palette fades
 ; ---------------------------------------------------------------------------
 
-VBla_12:
-		bsr.w	VBla_StandardTransfers
-		move.w	(v_hbla_hreg).w,(a5)
+; loc_F9A: VBla_12:
+VBlank_PaletteFade:
+		bsr.w	VBlank_StandardTransfers
+		move.w	(v_hblank_hreg).w,(a5)
 		bra.w	ProcessPLC_9Tiles
 		
 
@@ -923,7 +952,8 @@ VBla_12:
 ; VBlank 16 - Continue Screen and Special Stage finish loop
 ; ---------------------------------------------------------------------------
 
-VBla_16:
+; loc_FA6: VBla_16:
+VBlank_Continue:
 		stopZ80
 		waitZ80
 		bsr.w	ReadJoypads
@@ -931,6 +961,7 @@ VBla_16:
 		writeVRAM	v_spritetablebuffer,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
 		startZ80
+
 		tst.b	(f_sonframechg).w
 		beq.s	.nochg
 		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size
@@ -950,7 +981,7 @@ VBla_16:
 ; ---------------------------------------------------------------------------
 
 ; sub_106E:
-VBla_StandardTransfers:
+VBlank_StandardTransfers:
 		stopZ80
 		waitZ80
 		bsr.w	ReadJoypads
@@ -968,7 +999,7 @@ VBla_StandardTransfers:
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
 		startZ80
 		rts
-; End of function VBla_StandardTransfers
+; End of function VBlank_StandardTransfers
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -978,22 +1009,22 @@ VBla_StandardTransfers:
 ; PalToCRAM: <-- old misnomer
 HBlank:
 		disable_ints
-		tst.w	(f_hbla_pal).w		; is palette set to change?
-		beq.s	.nochg			; if not, branch
-		move.w	#0,(f_hbla_pal).w	; clear palette change flag
+		tst.w	(f_hblank_pal).w		; is palette set to change?
+		beq.s	.nochg				; if not, branch
+		move.w	#0,(f_hblank_pal).w		; clear palette change flag
 
 		movem.l	a0-a1,-(sp)
 		lea	(vdp_data_port).l,a1
-		lea	(v_palette_water).w,a0	; get water palette from RAM
-		move.l	#$C0000000,4(a1)	; set VDP to CRAM write
-		rept (4*$10)/2			; overwrite full palette (4 rows, 2 colors per move)
-			move.l	(a0)+,(a1)	; move water palette to CRAM
+		lea	(v_palette_water).w,a0		; get water palette from RAM
+		move.l	#$C0000000,4(a1)		; set VDP to CRAM write
+		rept (4*$10)/2				; overwrite full palette (4 rows, 2 colors per move)
+			move.l	(a0)+,(a1)		; move water palette to CRAM
 		endr
-		move.w	#$8A00+223,4(a1)	; reset horizontal interrupt counter
+		move.w	#$8A00+223,4(a1)		; reset horizontal interrupt counter
 		movem.l	(sp)+,a0-a1
 
-		tst.b	(f_doupdatesinhblank).w	; was frame update delayed by water surface being near the top of the screen?
-		bne.s	.delayed_transfer	; if yes, resume transfer now
+		tst.b	(f_doupdatesinhblank).w		; was frame update delayed by water surface being near the top of the screen?
+		bne.s	.delayed_transfer		; if yes, resume transfer now
 
 .nochg:
 		rte	
@@ -1001,10 +1032,10 @@ HBlank:
 
 ; loc_119E:
 .delayed_transfer:
-		clr.b	(f_doupdatesinhblank).w	; clear delayed updates flag
+		clr.b	(f_doupdatesinhblank).w		; clear delayed updates flag
 		movem.l	d0-a6,-(sp)
-		bsr.w	VBla_UpdateScreen	; do all the screen updates that were skipped during VBlank now
-		jsr	(UpdateMusic).l		; update the sound driver
+		bsr.w	VBlank_UpdateScreen		; do all the screen updates that were skipped during VBlank now
+		jsr	(UpdateMusic).l			; update the sound driver
 		movem.l	(sp)+,d0-a6
 		rte	
 ; End of function HBlank
@@ -1027,7 +1058,7 @@ JoypadInit:
 ; End of function JoypadInit
 
 ; ---------------------------------------------------------------------------
-; Subroutine to read joypad input, and send it to the RAM (read every V-Int)
+; Subroutine to read joypad input, and send it to the RAM (read every VBlank)
 ; ---------------------------------------------------------------------------
 
 ReadJoypads:
@@ -1075,7 +1106,7 @@ VDPSetupGame:
 
 		move.w	(VDPSetupArray+2).l,d0
 		move.w	d0,(v_vdp_buffer1).w		; buffer register $81 (used for enabling/disabling display)
-		move.w	#$8A00+223,(v_hbla_hreg).w	; H-INT every 224th scanline
+		move.w	#$8A00+223,(v_hblank_hreg).w	; HBlank every 224th scanline
 		moveq	#0,d0
 		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
 		move.w	#($80)/2-1,d7
@@ -1166,7 +1197,7 @@ DACDriverLoad:
 ; End of function DACDriverLoad
 
 ; ===========================================================================
-; >>> Subroutines to queue sound commands to be executed by the sound driver during V-Blank
+; >>> Subroutines to queue sound commands to be executed by the sound driver during VBlank
 	; includes QueueSound1, QueueSound2, QueueSound3
 	; (formerly called PlaySound, PlaySound_Special, PlaySound_Unknown)
 	include	"_inc/Queue Sound Routines.asm"
@@ -1210,7 +1241,7 @@ Tilemap_Cell:
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to add entries from a given Pattern Load Cue list ID to the
-; PLC decompression queue (decompressed later during V-Blank)
+; PLC decompression queue (decompressed later during VBlank)
 ; ---------------------------------------------------------------------------
 ; ARGUMENTS
 ; d0 = index of PLC list
@@ -1695,14 +1726,15 @@ PalLoad_Water:
 ; ---------------------------------------------------------------------------
 
 ; DelayProgram: <--- old misnomer
-WaitForVBla:
+; WaitForVBla: <--- old name
+WaitForVBlank:
 		enable_ints				; enable interrupts so vertical interrupts can occur
 
 .wait:
-		tst.b	(v_vbla_routine).w		; has VBlank routine finished?
+		tst.b	(v_vblank_routine).w		; has VBlank routine finished?
 		bne.s	.wait				; if not, loop until it has
 		rts					; resume normal operation
-; End of function WaitForVBla
+; End of function WaitForVBlank
 
 ; ===========================================================================
 ; >>> Subroutines for generic calculations
@@ -1770,8 +1802,8 @@ GM_Sega:
 ; ---------------------------------------------------------------------------
 
 Sega_WaitPal:	; while light scanning effect is active
-		move.b	#2,(v_vbla_routine).w		; set routine 2 in V-Int
-		bsr.w	WaitForVBla			; wait for V-Blank to finish
+		move.b	#id_VBlank_Sega,(v_vblank_routine).w ; set VBlank routine to $02
+		bsr.w	WaitForVBlank			; wait for VBlank to finish
 		bsr.w	PalCycle_Sega			; advance light scanning palette cycle effect
 		bne.s	Sega_WaitPal			; loop until it's finished
 ; ---------------------------------------------------------------------------
@@ -1779,16 +1811,16 @@ Sega_WaitPal:	; while light scanning effect is active
 		; while "SEGA" sound is playing
 		move.b	#sfx_Sega,d0			; set "SEGA" sound
 		bsr.w	QueueSound2			; queue it
-		move.b	#$14,(v_vbla_routine).w		; set routine $14 in V-Int
-		bsr.w	WaitForVBla			; wait for V-Blank to play the sound (CPU is frozen here until sound finished playing)
+		move.b	#id_VBlank_SegaPCM,(v_vblank_routine).w ; set VBlank routine to $14
+		bsr.w	WaitForVBlank			; wait for VBlank to play the sound (CPU is frozen here until sound finished playing)
 ; ---------------------------------------------------------------------------
 
 		; after sound has finished playing
 		move.w	#30,(v_generictimer).w		; wait 30 frames before automatic fade-out
 
 Sega_WaitEnd:
-		move.b	#2,(v_vbla_routine).w		; set routine 2 in V-Int
-		bsr.w	WaitForVBla			; wait for V-Blank to finish
+		move.b	#id_VBlank_Sega,(v_vblank_routine).w ; set VBlank routine to $02
+		bsr.w	WaitForVBlank			; wait for VBlank to finish
 		tst.w	(v_generictimer).w		; has post-chant timer expired?
 		beq.s	Sega_GotoTitle			; if yes, go to title screen
 		andi.b	#btnStart,(v_jpadpress1).w	; is Start button pressed?
@@ -1976,8 +2008,8 @@ Tit_LoadText:
 ; ---------------------------------------------------------------------------
 
 Tit_MainLoop:
-		move.b	#4,(v_vbla_routine).w		; set routine 4 in V-Int
-		bsr.w	WaitForVBla			; wait for V-Blank to finish
+		move.b	#id_VBlank_Title,(v_vblank_routine).w ; set VBlank routine to $04
+		bsr.w	WaitForVBlank			; wait for VBlank to finish
 		jsr	(ExecuteObjects).l		; execute title screen objects
 		bsr.w	DeformLayers			; run background deformation
 		jsr	(BuildSprites).l		; display sprites
@@ -2067,8 +2099,8 @@ Tit_EnterLevelSelect:
 	if FixBugs
 		; Fix the level selects graphics bug
 		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Level_Select_graphics_bug
-		move.b	#4,(v_vbla_routine).w		; set routine 4 in V-Int
-		bsr.w	WaitForVBla			; run V-Blank one extra frame to prevent graphical glitches
+		move.b	#id_VBlank_Title,(v_vblank_routine).w ; set VBlank routine to $04
+		bsr.w	WaitForVBlank			; run VBlank one extra frame to prevent graphical glitches
 	endif
 		moveq	#palid_LevelSel,d0		; load level select palette...
 		bsr.w	PalLoad				; ...directly to active palette
@@ -2090,8 +2122,8 @@ Tit_EnterLevelSelect:
 ; ---------------------------------------------------------------------------
 
 LevelSelect:
-		move.b	#4,(v_vbla_routine).w		; set routine 4 in V-Int
-		bsr.w	WaitForVBla			; wait for V-Blank to finish
+		move.b	#id_VBlank_Title,(v_vblank_routine).w ; set VBlank routine to $04
+		bsr.w	WaitForVBlank			; wait for VBlank to finish
 		bsr.w	LevSelControls			; update selected line if necessary
 		bsr.w	RunPLC				; run any potential PLC
 		tst.l	(v_plc_buffer).w		; are any patterns in the PLC still left to be loaded?
@@ -2255,8 +2287,8 @@ GotoDemo:	; wait half a second on the final frame of Sonic's finger wagging befo
 
 ; loc_33B6:
 GotoDemo_PreDelayLoop:
-		move.b	#4,(v_vbla_routine).w		; set routine 4 in V-Int
-		bsr.w	WaitForVBla			; wait for V-Blank to finish
+		move.b	#id_VBlank_Title,(v_vblank_routine).w ; set VBlank routine to $04
+		bsr.w	WaitForVBlank			; wait for VBlank to finish
 		bsr.w	DeformLayers			; run background deformation
 		bsr.w	PaletteCycle			; run normal palette cycle routine (this briefly uses GHZ's cycle)
 		bsr.w	RunPLC				; run any potential PLC
@@ -2644,12 +2676,12 @@ Level_ClrRam:
 		move.w	#$9001,(a6)			; 64-cell hscroll size
 		move.w	#$8004,(a6)			; 8-colour mode
 		move.w	#$8720,(a6)			; set background colour (line 3; colour 0)
-		move.w	#$8A00+223,(v_hbla_hreg).w	; set palette change position (for water)
-		move.w	(v_hbla_hreg).w,(a6)		; write to VDP
+		move.w	#$8A00+223,(v_hblank_hreg).w	; set palette change position (for water)
+		move.w	(v_hblank_hreg).w,(a6)		; write to VDP
 
 		cmpi.b	#id_LZ,(v_zone).w		; is level LZ?
 		bne.s	Level_LoadPal			; if not, branch
-		move.w	#$8014,(a6)			; enable H-interrupts
+		move.w	#$8014,(a6)			; enable horizontal interrupts (HBlank)
 		moveq	#0,d0				; clear d0
 		move.b	(v_act).w,d0			; get current LZ act
 		add.w	d0,d0				; double for word-based indexing
@@ -2704,8 +2736,8 @@ Level_PlayBgm:
 ; ---------------------------------------------------------------------------
 
 Level_TtlCardLoop: ; move in title cards, stay on them until PLCs have finished
-		move.b	#$C,(v_vbla_routine).w		; set $C in V-Int routine
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_TitleCards,(v_vblank_routine).w ;set VBlank routine to $0C
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		jsr	(ExecuteObjects).l		; execute title cards object
 		jsr	(BuildSprites).l		; build sprites to show title cards
 		bsr.w	RunPLC				; decompress level graphics
@@ -2737,13 +2769,13 @@ Level_CheckTtlCard:
 		; PLCs have finished, load/initialize remaining data
 
 	if FixBugs
-		; Do V-Blank for one extra frame to provide enough processing time
+		; Do VBlank for one extra frame to provide enough processing time
 		; for the remaining data initialization below. Without it, it's 
-		; possible for V-Blank to interrupt in the middle of a transfer,
+		; possible for VBlank to interrupt in the middle of a transfer,
 		; resulting in visual corruption. This will also make title cards
 		; smoother should decompression get upgraded with something faster.
-		move.b	#$C,(v_vbla_routine).w		; set $C in V-Int routine
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_TitleCards,(v_vblank_routine).w ; set VBlank routine to $0C
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 	endif
 
 		jsr	(Hud_Base).l			; load basic HUD graphics (only in levels, not in the ending demos)
@@ -2847,11 +2879,11 @@ Level_WtrNotSbz:
 		bsr.w	PalLoad_Water			; load underwater palette to active palette
 
 Level_Delay:
-		move.w	#4-1,d1				; run 4 extra frames of V-Blank to do palette transfers
+		move.w	#4-1,d1				; run 4 extra frames of VBlank to do palette transfers
 
 Level_DelayLoop:
-		move.b	#8,(v_vbla_routine).w		; set V-Int to routine 8
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Levels,(v_vblank_routine).w ; set VBlank routine to $08
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		dbf	d1,Level_DelayLoop		; repeat for 4 frames in total
 
 		move.w	#$202F,(v_pfade_start).w	; set to fade in 2nd, 3rd & 4th palette lines
@@ -2889,8 +2921,8 @@ Level_StartGame:
 
 Level_MainLoop:
 		bsr.w	PauseGame			; handle pausing the game when pressing start
-		move.b	#8,(v_vbla_routine).w		; set V-Int to routine 8
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Levels,(v_vblank_routine).w ; set VBlank routine to $08
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		addq.w	#1,(v_framecount).w		; add 1 to level timer
 
 		bsr.w	MoveSonicInDemo			; simulate controls in demos (immediately returns outside demos)
@@ -2956,8 +2988,8 @@ Level_FadeDemo:
 		clr.w	(v_palchgspeed).w		; do first palette dimming immediately
 
 Level_FDLoop:
-		move.b	#8,(v_vbla_routine).w		; set routine to 8 in V-Int
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Levels,(v_vblank_routine).w ; set VBlank routine to $08
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		bsr.w	MoveSonicInDemo			; continue updating demo controls during fade-out
 		jsr	(ExecuteObjects).l		; continue executing objects during fade-out
 		jsr	(BuildSprites).l		; continue building sprites during fade-out
@@ -3117,7 +3149,7 @@ GM_Special:	; white fade-out from previous game mode
 		lea	(vdp_control_port).l,a6		; load VDP control port
 		move.w	#$8B03,(a6)			; line scroll mode (per-row horizontally, full-screen vertically)
 		move.w	#$8004,(a6)			; 8-colour mode
-		move.w	#$8A00+175,(v_hbla_hreg).w	; set H-Blank counter to scanline 175 (even though H-Int isn't used here...)
+		move.w	#$8A00+175,(v_hblank_hreg).w	; set HBlank counter to scanline 175 (even though horizontal interrupts aren'tused here...)
 		move.w	#$9011,(a6)			; 128-cell hscroll size
 		disable_display				; disable screen output
 		bsr.w	ClearScreen			; wipe screen
@@ -3176,8 +3208,8 @@ SS_NoDebug:
 
 SS_MainLoop:
 		bsr.w	PauseGame			; handle pausing the game when pressing start
-		move.b	#$A,(v_vbla_routine).w		; set V-Int to routine $A
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_SpecialStage,(v_vblank_routine).w ; set VBlank routine to $0A
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		bsr.w	MoveSonicInDemo			; simulate controls in demos (immediately returns outside demos)
 		move.w	(v_jpadhold1).w,(v_jpadhold2).w	; copy controller 1 inputs to Sonic player object inputs
 
@@ -3219,8 +3251,8 @@ SS_Finish:
 		clr.w	(v_palchgspeed).w		; do first palette brightening immediately
 
 SS_FinLoop:
-		move.b	#$16,(v_vbla_routine).w		; set routine to $16 in V-Int
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Continue,(v_vblank_routine).w ; set VBlank routine to $16 (uses the same one as the continue screen)
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		bsr.w	MoveSonicInDemo			; continue updating demo controls during fade-out
 		move.w	(v_jpadhold1).w,(v_jpadhold2).w	; continue copying 1P inputs to Sonic object (even though controls are locked...)
 		jsr	(ExecuteObjects).l		; continue executing objects during fade-oout
@@ -3277,8 +3309,8 @@ SS_FinLoop_NoBrighten:
 
 SS_NormalExit:	; Special Stage results screen loop
 		bsr.w	PauseGame			; allow pausing during the results screen
-		move.b	#$C,(v_vbla_routine).w		; set routine $C in V-Int
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_TitleCards,(v_vblank_routine).w ; set VBlank routine to $0C
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		jsr	(ExecuteObjects).l		; execute SSR objects
 		jsr	(BuildSprites).l		; build sprites
 		bsr.w	RunPLC				; load SSR patterns
@@ -3379,8 +3411,8 @@ GM_Continue:
 ; ---------------------------------------------------------------------------
 
 Cont_MainLoop:
-		move.b	#$16,(v_vbla_routine).w		; set V-Int to routine $16
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Continue,(v_vblank_routine).w ; set VBlank routine to $16
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		cmpi.b	#6,(v_player+obRoutine).w	; has continue screen Sonic object signaled that we want to continue?
 		bhs.s	Cont_NoCountdown		; if yes, stop updating countdown timer
 
@@ -3456,8 +3488,8 @@ GM_Ending:
 		move.w	#$9001,(a6)			; 64-cell hscroll size
 		move.w	#$8004,(a6)			; 8-colour mode
 		move.w	#$8720,(a6)			; set background colour (line 3; colour 0)
-		move.w	#$8A00+223,(v_hbla_hreg).w	; set palette change position (for water)
-		move.w	(v_hbla_hreg).w,(a6)		; write to VDP
+		move.w	#$8A00+223,(v_hblank_hreg).w	; set palette change position (for water)
+		move.w	(v_hblank_hreg).w,(a6)		; write to VDP
 		move.w	#30,(v_air).w			; replenish air
 
 		move.w	#id_EndZ_good,(v_zone).w	; set to good ending by default (level number 600, extra flowers)
@@ -3524,8 +3556,8 @@ End_LoadSonic:
 		move.b	#0,(f_timecount).w		; stop time counter for the ending sequence
 
 		move.w	#1800,(v_generictimer).w	; set generic timer to 30 seconds (unused in ending sequence)
-		move.b	#$18,(v_vbla_routine).w		; set V-Int to routine $18
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Ending,(v_vblank_routine).w ; set VBlank routine to $18
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 ; ---------------------------------------------------------------------------
 
 		; fade-in palette and enter main loop
@@ -3539,8 +3571,8 @@ End_LoadSonic:
 
 End_MainLoop:
 		bsr.w	PauseGame			; allow pausing during the ending sequence
-		move.b	#$18,(v_vbla_routine).w		; set V-Int to routine 8
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Ending,(v_vblank_routine).w ; set VBlank routine to $18
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		addq.w	#1,(v_framecount).w		; add 1 to level timer
 
 		bsr.w	End_MoveSonic			; control simulated button inputs for Sonic during the cutscene
@@ -3577,8 +3609,8 @@ End_ChkEmerald:
 		
 End_AllEmlds:	; during the slow white-in
 		bsr.w	PauseGame			; still allow pausing the game
-		move.b	#$18,(v_vbla_routine).w		; set V-Int routine to $18
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Ending,(v_vblank_routine).w ; set VBlank routine to $18
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 		addq.w	#1,(v_framecount).w		; add 1 to level timer
 
 		bsr.w	End_MoveSonic			; control simulated button inputs for Sonic (redundant at this point)
@@ -3742,8 +3774,8 @@ Cred_SkipObjGfx:
 ; ---------------------------------------------------------------------------
 
 Cred_WaitLoop:	; while a credits page is displayed and graphics are getting decompressed
-		move.b	#4,(v_vbla_routine).w		; set V-Int to routine 4
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Title,(v_vblank_routine).w ; set VBlank routine to $04 (uses the same one as the title screen)
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 
 		bsr.w	RunPLC				; decompress level graphics
 
@@ -3881,8 +3913,8 @@ TryAgainEnd:	; fading out from previous game mode
 
 TryAg_MainLoop:
 		bsr.w	PauseGame			; allow to pause game (redundant, start exits the screen)
-		move.b	#4,(v_vbla_routine).w		; set V-Int routine to 4
-		bsr.w	WaitForVBla			; wait until V-Blank has finished
+		move.b	#id_VBlank_Title,(v_vblank_routine).w ; set VBlank routine to $04 (uses the same one as the title screen)
+		bsr.w	WaitForVBlank			; wait until VBlank has finished
 
 		jsr	(ExecuteObjects).l		; update end objects
 		jsr	(BuildSprites).l		; build sprites for end objects

@@ -197,7 +197,7 @@ Anml_ChkFloor:
 		move.b	d0,obRoutine(a0)
 		tst.b	(v_bossstatus).w
 		beq.s	loc_9180
-		btst	#4,(v_vbla_byte).w
+		btst	#4,(v_vblank_byte).w
 		beq.s	loc_9180
 		neg.w	obVelX(a0)
 		bchg	#0,obRender(a0)

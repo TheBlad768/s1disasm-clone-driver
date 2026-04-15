@@ -20,8 +20,8 @@ PalFadeIn_Alt:				; start position and size are already set
 		move.w	#$16-1,d4
 
 .mainloop:
-		move.b	#$12,(v_vbla_routine).w
-		bsr.w	WaitForVBla
+		move.b	#id_VBlank_PaletteFade,(v_vblank_routine).w
+		bsr.w	WaitForVBlank
 		bsr.s	FadeIn_FromBlack
 		bsr.w	RunPLC
 		dbf	d4,.mainloop
@@ -105,8 +105,8 @@ PaletteFadeOut:
 		move.w	#$16-1,d4
 
 .mainloop:
-		move.b	#$12,(v_vbla_routine).w
-		bsr.w	WaitForVBla
+		move.b	#id_VBlank_PaletteFade,(v_vblank_routine).w
+		bsr.w	WaitForVBlank
 		bsr.s	FadeOut_ToBlack
 		bsr.w	RunPLC
 		dbf	d4,.mainloop
@@ -191,8 +191,8 @@ PaletteWhiteIn:
 		move.w	#$16-1,d4
 
 .mainloop:
-		move.b	#$12,(v_vbla_routine).w
-		bsr.w	WaitForVBla
+		move.b	#id_VBlank_PaletteFade,(v_vblank_routine).w
+		bsr.w	WaitForVBlank
 		bsr.s	WhiteIn_FromWhite
 		bsr.w	RunPLC
 		dbf	d4,.mainloop
@@ -277,8 +277,8 @@ PaletteWhiteOut:
 		move.w	#$16-1,d4
 
 .mainloop:
-		move.b	#$12,(v_vbla_routine).w
-		bsr.w	WaitForVBla
+		move.b	#id_VBlank_PaletteFade,(v_vblank_routine).w
+		bsr.w	WaitForVBlank
 		bsr.s	WhiteOut_ToWhite
 		bsr.w	RunPLC
 		dbf	d4,.mainloop

@@ -83,7 +83,7 @@ loc_AD78:
 ; ===========================================================================
 
 loc_AD84:
-		btst	#2,(v_vbla_byte).w
+		btst	#2,(v_vblank_byte).w
 		beq.s	loc_ADA4
 		subq.b	#2,ob2ndRout(a0)
 		move.w	#59,burro_timedelay(a0)
