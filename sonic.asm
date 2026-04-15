@@ -2717,15 +2717,18 @@ Level_TtlCardLoop: ; move in title cards, stay on them until PLCs have finished
 ; ---------------------------------------------------------------------------
 
 		; PLCs have finished, load/initialize remaining data
+
 	if FixBugs
-		disable_ints				; prevent VBlank interrupt during VDP writes
-		jsr	(Hud_Base).l			; load basic HUD graphics (only in levels, not in the ending demos)
-		enable_ints				; enable interrupts again so music doesn't hang
-	else
-		; Hud_Base directly writes to VDP, but interrupts are still enabled at this point!
-		; If a VBlank interrupt occurs mid-transfer, it can corrupt the write and cause visual glitches.
-		jsr	(Hud_Base).l			; load basic HUD graphics (only in levels, not in the ending demos)
+		; Do V-Blank for one extra frame to provide enough processing time
+		; for the remaining data initialization below. Without it, it's 
+		; possible for V-Blank to interrupt in the middle of a transfer,
+		; resulting in visual corruption. This will also make title cards
+		; smoother should decompression get upgraded with something faster.
+		move.b	#$C,(v_vbla_routine).w		; set $C in V-Int routine
+		bsr.w	WaitForVBla			; wait until V-Blank has finished
 	endif
+
+		jsr	(Hud_Base).l			; load basic HUD graphics (only in levels, not in the ending demos)
 
 Level_SkipTtlCard:
 		moveq	#palid_Sonic,d0			; load Sonic's palette...
