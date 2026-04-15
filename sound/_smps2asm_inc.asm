@@ -496,31 +496,33 @@ z80_ptr macros
 ;s3TempotoS1 function n,s2TempotoS1(s2TempotoS3(n))
 ;s3TempotoS2 function n,s2TempotoS3(n)
 
-s2TempotoS1 macro n
-	s21convval:	= (((768-n)>>1)/(256-n))&$FF
+s2TempotoS1 macro
+	s21convval:	= (((768-\1)>>1)/(256-\1))&$FF
 	endm
 
-s2TempotoS3 macro n
-	s23convval:	= ($100-((n=0)|n))&$FF
+s2TempotoS3 macro
+	s23convval:	= ($100-(((\1=0)&1)|\1))&$FF
 	s32convval:	= s23convval
 	endm
 
-s1TempotoS2 macro n
-	if n=0
+s1TempotoS2 macro
+	if \1=0
 		s12convval:	= ((((256-1)<<8)+(256>>1))/256)&$FF
 	else
-		s12convval:	= ((((n-1)<<8)+(n>>1))/n)&$FF
+		s12convval:	= ((((\1-1)<<8)+(\1>>1))/\1)&$FF
 	endif
 	endm
 
-s1TempotoS3 macro n
-	s1TempotoS2	n
+s1TempotoS3 macro
+	s1TempotoS2	\1
 	s2TempotoS3	s12convval
+	s13convval:	= s32convval
 	endm
 
-s3TempotoS1 macro n
-	s2TempotoS3	n
+s3TempotoS1 macro
+	s2TempotoS3	\1
 	s2TempotoS1	s23convval
+	s31convval:	= s21convval
 	endm
 
 s3TempotoS2 macros
@@ -1244,10 +1246,10 @@ vcTL4 set op4
 ;   0     1     2     3     4     5     6     7
 ;%1000,%1000,%1000,%1000,%1010,%1110,%1110,%1111
 	if SourceSMPS2ASM=0
-vcTLMask4 set ((vcAlgorithm=7)<<7)
-vcTLMask3 set ((vcAlgorithm>=4)<<7)
-vcTLMask2 set ((vcAlgorithm>=5)<<7)
-vcTLMask1 set $80
+vcTLMask4 set (((vcAlgorithm=7)&1)<<7)
+vcTLMask3 set (((vcAlgorithm>=4)&1)<<7)
+vcTLMask2 set (((vcAlgorithm>=5)&1)<<7)
+vcTLMask1 set 1<<7
 	else
 vcTLMask4 set 0
 vcTLMask3 set 0
@@ -1256,15 +1258,15 @@ vcTLMask1 set 0
 	endif
 
 	if (SonicDriverVer>=3)&(SourceDriver<3)
-vcTLMask4 set ((vcAlgorithm=7)<<7)
-vcTLMask3 set ((vcAlgorithm>=4)<<7)
-vcTLMask2 set ((vcAlgorithm>=5)<<7)
+vcTLMask4 set (((vcAlgorithm=7)&1)<<7)
+vcTLMask3 set (((vcAlgorithm>=4)&1)<<7)
+vcTLMask2 set (((vcAlgorithm>=5)&1)<<7)
 vcTLMask1 set 128
 vcTL1 set vcTL1&127
 vcTL2 set vcTL2&127
 vcTL3 set vcTL3&127
 vcTL4 set vcTL4&127
-    elseif (SonicDriverVer<3)&(SourceDriver>=3)&((((vcTL1|vcTLMask1)&$80)<>$80)|(((vcTL2|vcTLMask2)&$80)<>((vcAlgorithm>=5)<<7))|(((vcTL3|vcTLMask3)&$80)<>((vcAlgorithm>=4)<<7))|(((vcTL4|vcTLMask4)&$80)<>((vcAlgorithm=7)<<7)))
+    elseif (SonicDriverVer<3)&(SourceDriver>=3)&((((vcTL1|vcTLMask1)&$80)<>$80)|(((vcTL2|vcTLMask2)&$80)<>(((vcAlgorithm>=5)&1)<<7))|(((vcTL3|vcTLMask3)&$80)<>(((vcAlgorithm>=4)&1)<<7))|(((vcTL4|vcTLMask4)&$80)<>(((vcAlgorithm=7)&1)<<7)))
         inform 1,"Voice at 0x%h has TL bits that do not match its algorithm setting. This voice will not work in S1/S2 drivers.",*
     endif
 
