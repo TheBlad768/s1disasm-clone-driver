@@ -28,7 +28,7 @@ Pause_Loop:
 ; ===========================================================================
 
 Pause_ChkBC:
-		btst	#bitB,(v_jpadhold1).w ; is button B pressed?
+		btst	#bitB,(v_jpadhold1).w ; is button B held?
 		bne.s	Pause_SlowMo	; if yes, branch
 		btst	#bitC,(v_jpadpress1).w ; is button C pressed?
 		bne.s	Pause_SlowMo	; if yes, branch

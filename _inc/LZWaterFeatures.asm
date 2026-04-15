@@ -169,7 +169,7 @@ DynWater_LZ3:
 		bhs.s	.setwaterlz3	; if not, branch
 
 		move.w	#$4C8,d1	; set new water height
-		move.b	#$4B,(v_lvllayout+$80*2+6).w ; update level layout
+		move.b	#$4B,(v_lvllayout_fg+((layout_row*2)+6)).w ; update chunk at row 2, column 6 (zero-based)
 		move.b	#1,(v_wtr_routine).w ; use second routine next
 		move.w	#sfx_Rumbling,d0
 		bsr.w	QueueSound2 ; play sound $B7 (rumbling)
@@ -343,12 +343,12 @@ LZWindTunnels:
 		move.w	#0,obVelY(a1)
 		move.b	#id_Float2,obAnim(a1)	; use floating animation
 		bset	#1,obStatus(a1)
-		btst	#bitUp,(v_jpadhold2).w ; is up pressed?
+		btst	#bitUp,(v_jpadhold2).w ; is up being held?
 		beq.s	.down		; if not, branch
 		subq.w	#1,obY(a1)	; move Sonic up on pole
 
 .down:
-		btst	#bitDn,(v_jpadhold2).w ; is down being pressed?
+		btst	#bitDn,(v_jpadhold2).w ; is down being held?
 		beq.s	.end		; if not, branch
 		addq.w	#1,obY(a1)	; move Sonic down on pole
 
@@ -395,7 +395,7 @@ LZWaterSlides:
 		move.b	obX(a1),d1
 		andi.w	#$7F,d1
 		add.w	d1,d0
-		lea	(v_lvllayout).w,a2
+		lea	(v_lvllayout_fg).w,a2
 		move.b	(a2,d0.w),d0
 		lea	Slide_Chunks_End(pc),a2
 		moveq	#Slide_Chunks_End-Slide_Chunks-1,d1
@@ -429,7 +429,7 @@ loc_3F84:
 
 loc_3F9A:
 		clr.b	obInertia+1(a1)
-		move.b	#id_WaterSlide,obAnim(a1) ; use Sonic's "sliding" animation
+		move.b	#id_Slide,obAnim(a1) ; use Sonic's "water slide" animation
 		move.b	#1,(f_slidemode).w	; set water slide flag
 		move.b	(v_vbla_byte).w,d0
 		andi.b	#$1F,d0

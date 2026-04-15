@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
-; Animation script - Eggman (SBZ2)
+; Animation script - Eggman (SBZ2 cutscene)
 ; ---------------------------------------------------------------------------
+
 Ani_SEgg:	dc.w .stand-Ani_SEgg
 		dc.w .laugh-Ani_SEgg
 		dc.w .jump1-Ani_SEgg
@@ -8,13 +9,38 @@ Ani_SEgg:	dc.w .stand-Ani_SEgg
 		dc.w .running-Ani_SEgg
 		dc.w .jump2-Ani_SEgg
 		dc.w .starjump-Ani_SEgg
-.stand:		dc.b $7E, 0, afEnd
+
+.stand:		dc.b 126
+		dc.b 0
+		dc.b afEnd
 		even
-.laugh:		dc.b 6,	1, 2, afEnd
-.jump1:		dc.b $E, 3, 4, 4, 0, 0,	0, afEnd
-.intube:	dc.b 0,	5, 9, afEnd
-.running:	dc.b 6,	7, 4, 8, 4, afEnd
-.jump2:		dc.b $F, 4, 3, 3, afEnd
+
+.laugh:		dc.b 6
+		dc.b 1, 2
+		dc.b afEnd
 		even
-.starjump:	dc.b $7E, 6, afEnd
+
+.jump1:		dc.b 14
+		dc.b 3, 4, 4, 0, 0, 0
+		dc.b afEnd
+		even
+
+.intube:	dc.b 0
+		dc.b 5, 9
+		dc.b afEnd
+		even
+
+.running:	dc.b 6
+		dc.b 7, 4, 8, 4
+		dc.b afEnd
+		even
+
+.jump2:		dc.b 15
+		dc.b 4, 3, 3
+		dc.b afEnd
+		even
+
+.starjump:	dc.b 126
+		dc.b 6
+		dc.b afEnd
 		even

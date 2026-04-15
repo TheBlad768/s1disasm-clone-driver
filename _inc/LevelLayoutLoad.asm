@@ -68,13 +68,14 @@ LevLoad_ClrRam:
 		move.l	d0,(a3)+
 		dbf	d1,LevLoad_ClrRam ; clear the RAM ($A400-A7FF)
 
-		lea	(v_lvllayout).w,a3 ; RAM address for level layout
+		lea	(v_lvllayout_fg).w,a3 ; RAM address for level foreground layout
 		moveq	#0,d1
 		bsr.w	LevelLayoutLoad2 ; load level layout into RAM
-		lea	(v_lvllayout+$40).w,a3 ; RAM address for background layout
+
+		lea	(v_lvllayout_bg).w,a3 ; RAM address for background layout
 		moveq	#2,d1
-; End of function LevelLayoutLoad
-; ===========================================================================
+		; fall-through for second run...
+; ---------------------------------------------------------------------------
 
 ; "LevelLayoutLoad2" is run twice - for the level and the background
 LevelLayoutLoad2:
@@ -100,7 +101,7 @@ LevLoad_NumRows:
 LevLoad_Row:
 		move.b	(a1)+,(a0)+
 		dbf	d0,LevLoad_Row	; load 1 row
-		lea	$80(a3),a3	; do next row
+		lea	layout_row(a3),a3 ; do next row (skip over other plane)
 		dbf	d2,LevLoad_NumRows ; repeat for number of rows
 		rts
-; End of function LevelLayoutLoad2
+; End of function LevelLayoutLoad

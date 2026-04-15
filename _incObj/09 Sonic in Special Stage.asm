@@ -79,19 +79,19 @@ Obj09_Display:
 ; ===========================================================================
 
 Obj09_Move:
-		btst	#bitL,(v_jpadhold2).w ; is left being pressed?
+		btst	#bitL,(v_jpadhold2).w ; is left being held?
 		beq.s	Obj09_ChkRight	; if not, branch
 		bsr.w	Obj09_MoveLeft
 
 Obj09_ChkRight:
-		btst	#bitR,(v_jpadhold2).w ; is right being pressed?
+		btst	#bitR,(v_jpadhold2).w ; is right being held?
 		beq.s	loc_1BA78	; if not, branch
 		bsr.w	Obj09_MoveRight
 
 loc_1BA78:
-		move.b	(v_jpadhold2).w,d0
-		andi.b	#btnL+btnR,d0
-		bne.s	loc_1BAA8
+		move.b	(v_jpadhold2).w,d0 ; get held buttons
+		andi.b	#btnL+btnR,d0	; is left or right being held?
+		bne.s	loc_1BAA8	; if yes, branch
 		move.w	obInertia(a0),d0
 		beq.s	loc_1BAA8
 		bmi.s	loc_1BA9A
@@ -229,15 +229,16 @@ nullsub_2:
 		rts
 
 		; dead code
-		move.w	#-$400,d1
-		cmp.w	obVelY(a0),d1
-		ble.s	locret_1BBB4
-		move.b	(v_jpadhold2).w,d0
-		andi.b	#btnABC,d0
-		bne.s	locret_1BBB4
-		move.w	d1,obVelY(a0)
+		move.w	#-$400,d1		; set maximum jump speed
+		cmp.w	obVelY(a0),d1		; is Sonic already below the cap?
+		ble.s	.return			; if yes, branch
+		move.b	(v_jpadhold2).w,d0	; get held buttons
+		andi.b	#btnABC,d0		; is A, B, or C being held?
+		bne.s	.return			; if yes, branch
+		move.w	d1,obVelY(a0)		; cap vertical speed if not holding ABC
 
-locret_1BBB4:
+; locret_1BBB4:
+.return:
 		rts
 ; End of function nullsub_2
 

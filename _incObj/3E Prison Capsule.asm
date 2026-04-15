@@ -108,7 +108,7 @@ Pri_Explosion:	; Routine 6, 8, $A
 		bne.s	.noexplosion
 		jsr	(FindFreeObj).l
 		bne.s	.noexplosion
-		_move.b	#id_ExplosionBomb,obID(a1) ; load explosion object
+		_move.b	#id_Explosion,obID(a1) ; load explosion object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		jsr	(RandomNumber).l

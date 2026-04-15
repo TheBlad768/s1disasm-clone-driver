@@ -4,7 +4,7 @@ LoadTilesAsYouMove_BGOnly:
 		lea	(vdp_data_port).l,a6
 		lea	(v_bg1_scroll_flags).w,a2
 		lea	(v_bgscreenposx).w,a3
-		lea	(v_lvllayout+$40).w,a4
+		lea	(v_lvllayout_bg).w,a4
 		move.w	#$6000,d2
 		bsr.w	DrawBGScrollBlock1
 		lea	(v_bg2_scroll_flags).w,a2
@@ -23,7 +23,7 @@ LoadTilesAsYouMove:
 		; First, update the background
 		lea	(v_bg1_scroll_flags_dup).w,a2	; Scroll block 1 scroll flags
 		lea	(v_bgscreenposx_dup).w,a3	; Scroll block 1 X coordinate
-		lea	(v_lvllayout+$40).w,a4
+		lea	(v_lvllayout_bg).w,a4
 		move.w	#$6000,d2			; VRAM thing for selecting Plane B
 		bsr.w	DrawBGScrollBlock1
 		lea	(v_bg2_scroll_flags_dup).w,a2	; Scroll block 2 scroll flags
@@ -32,7 +32,7 @@ LoadTilesAsYouMove:
 		; Then, update the foreground
 		lea	(v_fg_scroll_flags_dup).w,a2	; Foreground scroll flags
 		lea	(v_screenposx_dup).w,a3		; Foreground X coordinate
-		lea	(v_lvllayout).w,a4
+		lea	(v_lvllayout_fg).w,a4
 		move.w	#$4000,d2			; VRAM thing for selecting Plane A
 		; The FG's update function is inlined here
 		tst.b	(a2)
@@ -223,6 +223,8 @@ locret_6A80:
 
 ; Abandoned unused scroll block code.
 ; This would have drawn a scroll block that started at 208 pixels down, and was 48 pixels long.
+; See Calc_VRAM_Pos_Unknown for more information.
+DrawBGScrollBlock_PlaneZ:
 		tst.b	(a2)
 		beq.s	locret_6AD6
 		bclr	#2,(a2)
@@ -234,7 +236,7 @@ locret_6A80:
 		sub.w	d1,d4
 		move.w	d4,-(sp)
 		moveq	#-16,d5
-		bsr.w	Calc_VRAM_Pos_Unknown
+		bsr.w	Calc_VRAM_Pos_PlaneZ
 		move.w	(sp)+,d4
 		moveq	#-16,d5
 		moveq	#3-1,d6	; Draw only three rows
@@ -250,7 +252,7 @@ loc_6AAC:
 		sub.w	d1,d4
 		move.w	d4,-(sp)
 		move.w	#320,d5
-		bsr.w	Calc_VRAM_Pos_Unknown
+		bsr.w	Calc_VRAM_Pos_PlaneZ
 		move.w	(sp)+,d4
 		move.w	#320,d5
 		moveq	#3-1,d6
@@ -480,13 +482,16 @@ Calc_VRAM_Pos:
 ; ===========================================================================
 
 ; not used
-; This is just like Calc_VRAM_Pos, but seemingly for an earlier
-; VRAM layout: the only difference is the high bits of the
-; plane's VRAM address, which are 10 instead of 11.
-; Both the foreground and background are at $C000 and $E000
-; respectively, so this one starting at $8000 makes no sense.
-; sub_6C3C:
-Calc_VRAM_Pos_Unknown:
+; What this does is swap the background nametable with the window layer in order
+; to create a third scrolling layer that appears above the foreground. However,
+; this comes at the cost of the background becoming garbled at the bottom of the
+; screen, which was likely what contributed in its removal. Internally, it was
+; known as "Plane Z", and was also the intended use of the third layout entry.
+; Presumably, this (alongside bit 3 of obRender) was what was used to achieve the
+; foreground effect seen in the Tokyo Toy Show '90. Ultimately, Sonic 2 repurposed
+; this code to draw player 2's foreground in multiplayer.
+; sub_6C3C: Calc_VRAM_Pos_Unknown:
+Calc_VRAM_Pos_PlaneZ:
 		add.w	4(a3),d4
 		add.w	(a3),d5
 		andi.w	#$F0,d4
@@ -498,7 +503,7 @@ Calc_VRAM_Pos_Unknown:
 		swap	d0
 		move.w	d4,d0
 		rts
-; End of function Calc_VRAM_Pos_Unknown
+; End of function Calc_VRAM_Pos_PlaneZ
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -509,11 +514,11 @@ LoadTilesFromStart:
 		lea	(vdp_control_port).l,a5
 		lea	(vdp_data_port).l,a6
 		lea	(v_screenposx).w,a3
-		lea	(v_lvllayout).w,a4
+		lea	(v_lvllayout_fg).w,a4
 		move.w	#$4000,d2
 		bsr.s	DrawChunks
 		lea	(v_bgscreenposx).w,a3
-		lea	(v_lvllayout+$40).w,a4
+		lea	(v_lvllayout_bg).w,a4
 		move.w	#$6000,d2
 ; End of function LoadTilesFromStart
 ; ===========================================================================

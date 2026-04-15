@@ -1,31 +1,38 @@
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 24 - buzz bomber missile vanishing (unused?)
+; Object 24 - Unused small explosion, originally used for the front-facing
+; Ball Hog badnik from the prototype. Would also technically be used by the
+; Buzz Bomber badnik to dissolve its missile after destroying it, but does
+; not work because the relevant flag is never set, and the required graphics
+; aren't even loaded into VRAM (it would be "Nem_UnkExplode", but loading
+; it overwrites part of the Crabmeat graphics at "ArtTile_Missile_Disolve").
 ; ---------------------------------------------------------------------------
 
-MissileDissolve:
+; MissileDissolve: <--- old misnomer
+UnusedExplosion:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
-		move.w	MDis_Index(pc,d0.w),d1
-		jmp	MDis_Index(pc,d1.w)
+		move.w	UnkExpl_Index(pc,d0.w),d1
+		jmp	UnkExpl_Index(pc,d1.w)
 ; ===========================================================================
-MDis_Index:	dc.w MDis_Main-MDis_Index
-		dc.w MDis_Animate-MDis_Index
+UnkExpl_Index:	dc.w UnkExpl_Main-UnkExpl_Index
+		dc.w UnkExpl_Animate-UnkExpl_Index
 ; ===========================================================================
 
-MDis_Main:	; Routine 0
+UnkExpl_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.l	#Map_MisDissolve,obMap(a0)
-		move.w	#ArtTile_Missile_Disolve,obGfx(a0)
+		move.l	#Map_UnkExplode,obMap(a0)
+		move.w	#ArtTile_UnusedExplosion,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#0,obColType(a0)
 		move.b	#$C,obActWid(a0)
 		move.b	#9,obTimeFrame(a0)
 		move.b	#0,obFrame(a0)
-		move.w	#sfx_A5,d0
-		jsr	(QueueSound2).l		 ; play sound
+		move.w	#sfx_A5,d0		; (this sfx is also unused)
+		jsr	(QueueSound2).l		; play sound
 
-MDis_Animate:	; Routine 2
+UnkExpl_Animate:	; Routine 2
 		subq.b	#1,obTimeFrame(a0) ; subtract 1 from frame duration
 		bpl.s	.display
 		move.b	#9,obTimeFrame(a0) ; set frame duration to 9 frames
@@ -35,10 +42,10 @@ MDis_Animate:	; Routine 2
 
 .display:
 		bra.w	DisplaySprite
-; ===========================================================================
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 27 - explosion from a destroyed enemy or monitor
+; Object 27 - Gray explosion from a destroyed enemy or monitor
 ; ---------------------------------------------------------------------------
 
 ExplosionItem:
@@ -74,7 +81,7 @@ ExItem_Main:	; Routine 2
 		move.w	#sfx_BreakItem,d0
 		jsr	(QueueSound2).l	; play breaking enemy sound
 
-ExItem_Animate:	; Routine 4 (2 for ExplosionBomb)
+ExItem_Animate:	; Routine 4 (2 for Explosion)
 		subq.b	#1,obTimeFrame(a0) ; subtract 1 from frame duration
 		bpl.s	.display
 		move.b	#7,obTimeFrame(a0) ; set frame duration to 7 frames
@@ -84,22 +91,24 @@ ExItem_Animate:	; Routine 4 (2 for ExplosionBomb)
 
 .display:
 		bra.w	DisplaySprite
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 3F - explosion from a destroyed boss, bomb or cannonball
+; Object 3F - Fiery explosion from a destroyed boss, bomb badnik, or cannonball
 ; ---------------------------------------------------------------------------
 
-ExplosionBomb:
+; ExplosionBomb: <--- old misnomer, this is used for more than just bombs
+Explosion:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
-		move.w	ExBom_Index(pc,d0.w),d1
-		jmp	ExBom_Index(pc,d1.w)
+		move.w	Expl_Index(pc,d0.w),d1
+		jmp	Expl_Index(pc,d1.w)
 ; ===========================================================================
-ExBom_Index:	dc.w ExBom_Main-ExBom_Index
-		dc.w ExItem_Animate-ExBom_Index
+Expl_Index:	dc.w Expl_Main-Expl_Index
+		dc.w ExItem_Animate-Expl_Index	; <-- this branches to a different object!
 ; ===========================================================================
 
-ExBom_Main:	; Routine 0
+Expl_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_ExplodeBomb,obMap(a0)
 		move.w	#ArtTile_Explosion,obGfx(a0)

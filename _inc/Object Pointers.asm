@@ -48,7 +48,7 @@ id_Cannonball:		objptr	Cannonball		; 20
 id_HUD:			objptr	HUD			; 21
 id_BuzzBomber:		objptr	BuzzBomber		; 22
 id_Missile:		objptr	Missile			; 23
-id_MissileDissolve:	objptr	MissileDissolve		; 24
+id_UnusedExplosion:	objptr	UnusedExplosion		; 24
 id_Rings:		objptr	Rings			; 25
 id_Monitor:		objptr	Monitor			; 26
 id_ExplosionItem:	objptr	ExplosionItem		; 27
@@ -75,7 +75,7 @@ id_PurpleRock:		objptr	PurpleRock		; 3B
 id_SmashWall:		objptr	SmashWall		; 3C
 id_BossGreenHill:	objptr	BossGreenHill		; 3D
 id_Prison:		objptr	Prison			; 3E
-id_ExplosionBomb:	objptr	ExplosionBomb		; 3F
+id_Explosion:		objptr	Explosion		; 3F
 id_MotoBug:		objptr	MotoBug			; 40
 id_Springs:		objptr	Springs			; 41
 id_Newtron:		objptr	Newtron			; 42

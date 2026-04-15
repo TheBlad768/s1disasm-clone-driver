@@ -92,7 +92,7 @@ Debug_Control:
 		move.b	#-1,(v_debugspeed).w
 
 .dirpressed:
-		move.b	(v_jpadhold1).w,d4
+		move.b	(v_jpadhold1).w,d4	; get held button presses
 
 loc_1D01C:
 		moveq	#0,d1
@@ -102,14 +102,14 @@ loc_1D01C:
 		asr.l	#4,d1
 		move.l	obY(a0),d2
 		move.l	obX(a0),d3
-		btst	#bitUp,d4	; is up being pressed?
+		btst	#bitUp,d4	; is up being held?
 		beq.s	loc_1D03C	; if not, branch
 		sub.l	d1,d2
 		bcc.s	loc_1D03C
 		moveq	#0,d2
 
 loc_1D03C:
-		btst	#bitDn,d4	; is down being pressed?
+		btst	#bitDn,d4	; is down being held?
 		beq.s	loc_1D052	; if not, branch
 		add.l	d1,d2
 		cmpi.l	#$7FF0000,d2
@@ -117,15 +117,15 @@ loc_1D03C:
 		move.l	#$7FF0000,d2
 
 loc_1D052:
-		btst	#bitL,d4
-		beq.s	loc_1D05E
+		btst	#bitL,d4	; is left being held?
+		beq.s	loc_1D05E	; if not, branch
 		sub.l	d1,d3
 		bcc.s	loc_1D05E
 		moveq	#0,d3
 
 loc_1D05E:
-		btst	#bitR,d4
-		beq.s	loc_1D066
+		btst	#bitR,d4	; is right being held?
+		beq.s	loc_1D066	; if not, branch
 		add.l	d1,d3
 
 loc_1D066:
@@ -133,7 +133,7 @@ loc_1D066:
 		move.l	d3,obX(a0)
 
 Debug_ChgItem:
-		btst	#bitA,(v_jpadhold1).w ; is button A pressed?
+		btst	#bitA,(v_jpadhold1).w ; is button A held?
 		beq.s	.createitem	; if not, branch
 		btst	#bitC,(v_jpadpress1).w ; is button C pressed?
 		beq.s	.nextitem	; if not, branch
