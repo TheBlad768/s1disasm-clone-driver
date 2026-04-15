@@ -1,11 +1,23 @@
 ; ---------------------------------------------------------------------------
-; Animation script - Roller enemy
+; Animation script - Roller enemy (SYZ)
 ; ---------------------------------------------------------------------------
-Ani_Roll:	dc.w A_Roll_Unfold-Ani_Roll
-		dc.w A_Roll_Fold-Ani_Roll
-		dc.w A_Roll_Roll-Ani_Roll
-A_Roll_Unfold:	dc.b $F, 2, 1, 0, afBack, 1
-A_Roll_Fold:	dc.b $F, 1, 2, afChange, 2
+
+Ani_Roll:	dc.w .unfold-Ani_Roll
+		dc.w .fold-Ani_Roll
+		dc.w .roll-Ani_Roll
+
+.unfold:	dc.b 15
+		dc.b 2, 1
+		dc.b 0
+		dc.b afBack, 1
 		even
-A_Roll_Roll:	dc.b 3,	3, 4, 2, afEnd
+
+.fold:		dc.b 15
+		dc.b 1, 2
+		dc.b afChange, 2
+		even
+
+.roll:		dc.b 3
+		dc.b 3, 4, 2
+		dc.b afEnd
 		even

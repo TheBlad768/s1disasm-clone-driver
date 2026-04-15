@@ -1,7 +1,7 @@
 ; ---------------------------------------------------------------------------
-; Sprite mappings - buzz bomber missile vanishing
+; Sprite mappings - unused small explosion (used for prototype Ball Hog)
 ; ---------------------------------------------------------------------------
-Map_MisDissolve_internal:	mappingsTable
+Map_UnkExplode_internal:	mappingsTable
 	mappingsTableEntry.w	byte_8EAE
 	mappingsTableEntry.w	byte_8EB4
 	mappingsTableEntry.w	byte_8EBA

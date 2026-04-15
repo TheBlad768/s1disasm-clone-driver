@@ -25,12 +25,6 @@ loc_D358:
 ; ===========================================================================
 
 loc_D362:
-	if FixBugs
-		; Correct Drowning bugs
-		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
-		cmpi.b	#$A,(v_player+obRoutine).w	; Has Sonic drowned?
-		beq.s	loc_D348			; If so, run objects a little longer
-	endif
 		moveq	#(v_lvlobjspace-v_objspace)/object_size-1,d7
 		bsr.s	loc_D348
 		moveq	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d7

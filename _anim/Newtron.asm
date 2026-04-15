@@ -1,15 +1,35 @@
 ; ---------------------------------------------------------------------------
 ; Animation script - Newtron enemy
 ; ---------------------------------------------------------------------------
-Ani_Newt:	dc.w A_Newt_Blank-Ani_Newt
-		dc.w A_Newt_Drop-Ani_Newt
-		dc.w A_Newt_Fly1-Ani_Newt
-		dc.w A_Newt_Fly2-Ani_Newt
-		dc.w A_Newt_Fires-Ani_Newt
-A_Newt_Blank:	dc.b $F, $A, afEnd
+
+Ani_Newt:	dc.w .blank-Ani_Newt
+		dc.w .drop-Ani_Newt
+		dc.w .fly1-Ani_Newt
+		dc.w .fly2-Ani_Newt
+		dc.w .fires-Ani_Newt
+
+.blank:		dc.b 15
+		dc.b $A
+		dc.b afEnd
 		even
-A_Newt_Drop:	dc.b $13, 0, 1,	3, 4, 5, afBack, 1
-A_Newt_Fly1:	dc.b 2,	6, 7, afEnd
-A_Newt_Fly2:	dc.b 2,	8, 9, afEnd
-A_Newt_Fires:	dc.b $13, 0, 1,	1, 2, 1, 1, 0, afRoutine
+
+.drop:		dc.b 19
+		dc.b 0, 1, 3, 4
+		dc.b 5
+		dc.b afBack, 1
+		even
+
+.fly1:		dc.b 2
+		dc.b 6, 7
+		dc.b afEnd
+		even
+
+.fly2:		dc.b 2
+		dc.b 8, 9
+		dc.b afEnd
+		even
+
+.fires:		dc.b 19
+		dc.b 0, 1, 1, 2, 1, 1, 0
+		dc.b afRoutine
 		even

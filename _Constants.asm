@@ -52,9 +52,13 @@ vram_bg:	equ $E000	; background namespace
 vram_sprites:	equ $F800	; sprite table
 vram_hscroll:	equ $FC00	; horizontal scroll table
 
+; Various sizes
 tile_size:	equ 8*8/2	; size of a single 8x8 tile
 chunk_size_128:	equ $80		; size of a single 128x128 chunk
 plane_size_64x32: equ 64*32*2	; size of plane in 512x256 mode
+
+layout_row_interlaced:	equ $80	; size of a single level layout row (FG/BG alternating)
+layout_row:		equ layout_row_interlaced*2	; size of a single level layout row (skipping over other plane)
 
 ; Levels (zones)
 id_GHZ:		equ 0
@@ -218,6 +222,9 @@ afChange:	equ $FD	; run specified animation
 afRoutine:	equ $FC	; increment routine counter
 afReset:	equ $FB	; reset animation and 2nd object routine counter
 af2ndRoutine:	equ $FA	; increment 2nd routine counter
+
+aniXFlip:	equ $20 ; horizontally mirrors the current frame
+aniYFlip:	equ $40 ; vertically mirrors the current frame
 
 ; Background music
 bgm__First:	equ $81
@@ -444,7 +451,7 @@ ArtTile_Level:			equ $000
 ArtTile_Ball_Hog:		equ $302
 ArtTile_Bomb:			equ $400
 ArtTile_Crabmeat:		equ $400
-ArtTile_Missile_Disolve:	equ $41C ; Unused
+ArtTile_UnusedExplosion:	equ $41C ; Unused
 ArtTile_Buzz_Bomber:		equ $444
 ArtTile_Chopper:		equ $47B
 ArtTile_Yadrin:			equ $47B

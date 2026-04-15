@@ -61,10 +61,10 @@ WFall_OnWater:	; Routine 6
 
 ; loc_12B36:
 WFall_Priority:	; Routine 8
-		bclr	#7,obGfx(a0)
-		cmpi.w	#$1718,(v_lvllayout+$100*5+12).w
-		bne.s	.animate
-		bset	#7,obGfx(a0)
+		bclr	#7,obGfx(a0)	; render waterfall object on low-plane
+		cmpi.w	#$1718,(v_lvllayout_fg+((layout_row*5)+12)).w ; is water slide layout currently altered?
+		bne.s	.animate	; if not, branch
+		bset	#7,obGfx(a0)	; render waterfall object on high-plane
 
 .animate:
 		bra.s	WFall_Animate

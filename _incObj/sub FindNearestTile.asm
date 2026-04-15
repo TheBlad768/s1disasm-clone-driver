@@ -19,7 +19,7 @@ FindNearestTile:
 		andi.w	#$7F,d1			; MJ: get within 7F
 		add.w	d1,d0			; MJ: add calc'd Y to calc'd X
 		moveq	#-1,d1			; MJ: prepare FFFF in d3
-		lea	(v_lvllayout).w,a1	; MJ: load address of Layout to a1
+		lea	(v_lvllayout_fg).w,a1	; MJ: load address of Layout to a1
 		move.b	(a1,d0.w),d1		; MJ: collect correct chunk ID based on the X and Y position
 		andi.w	#$FF,d1			; MJ: keep within FF
 		lsl.w	#7,d1			; MJ: multiply by 80

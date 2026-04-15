@@ -1,3 +1,7 @@
+; ---------------------------------------------------------------------------
+; Subroutine to load basic level data
+; ---------------------------------------------------------------------------
+
 LevelDataLoad:
 		moveq	#0,d0
 		move.b	(v_zone).w,d0
@@ -57,6 +61,6 @@ LevelLayoutLoad:
 		lea	(Level_Index).l,a0
 		move.w	(a0,d0.w),d0
 		lea	(a0,d0.w),a0
-		lea	(v_lvllayout).w,a1
+		lea	(v_lvllayout).w,a1	; MJ: FG and BG rows are interlaced $80 bytes each
 		bra.w	KosDec			; MJ: decompress layout
 ; End of function LevelLayoutLoad

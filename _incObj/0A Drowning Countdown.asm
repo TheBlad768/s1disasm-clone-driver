@@ -243,9 +243,8 @@ Drown_Countdown:; Routine $A
 		move.b	#1,(f_nobgscroll).w
 	if FixBugs
 		; Correct Drowning Bugs
-		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
-		move.b	#$A,obRoutine(a0)	; Force the character to drown
-		clr.b	(f_timecount).w		; Stop the timer immediately 
+		move.b	#2,obRoutine(a0)	; make sure Sonic is in his default state (Sonic_Control)
+		clr.b	(f_timecount).w		; also stop the timer immediately to avoid double deaths from Time Overs
 	endif
 		movea.l	(sp)+,a0
 		rts
@@ -253,13 +252,7 @@ Drown_Countdown:; Routine $A
 
 .loc_13F86:
 		subq.w	#1,objoff_2C(a0)
-	if FixBugs
-		; Correct Drowning Bugs
-		; https://info.sonicretro.org/SCHG_How-to:Correct_Drowning_Bugs_in_Sonic_1
-		bne.s	.nochange
-	else
 		bne.s	.loc_13F94
-	endif
 		move.b	#6,(v_player+obRoutine).w
 		rts
 ; ===========================================================================

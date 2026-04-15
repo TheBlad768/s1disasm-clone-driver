@@ -10,11 +10,15 @@ ramaddr function x,(-(x&$80000000)<<1)|x
 v_ram_start_def:
 v_ram_start:		equ	v_ram_start_def&$FFFFFF	; 24-bit addressing
 
-v_128x128_def:		ds.b	$100*chunk_size_128		; 128x128 tile mappings ($100 chunks)
+v_128x128_def:		ds.b	chunk_size_128*$100	; 128x128 tile mappings ($100 chunks)
 v_128x128:		equ	v_128x128_def&$FFFFFF	; 24-bit addressing
 v_128x128_end:
 
-v_lvllayout:		ds.b	$1000		; level and background layouts
+v_lvllayout:		ds.b	layout_row*$10		; level and background layouts
+v_lvllayout_fg:		equ	v_lvllayout		; start address of foreground's first row
+v_lvllayout_bg:		equ	v_lvllayout+layout_row_interlaced ; start address of background's first row
+v_lvllayout_end:
+
 v_collision1:		ds.b	$300
 v_collision2:		ds.b	$300
 
