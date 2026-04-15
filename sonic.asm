@@ -1747,7 +1747,7 @@ Tit_LoadText:
 		lea	(vdp_control_port).l,a5		; set VDP control port
 		lea	(vdp_data_port).l,a6		; set VDP data port
 		lea	(v_bgscreenposx).w,a3		; get current background X position
-		lea	(v_lvllayout+$40).w,a4		; get location in level layout RAM where background is stored
+		lea	(v_lvllayout_bg).w,a4		; get location in level layout RAM where background is stored
 		move.w	#$4000+(vram_bg-vram_fg),d2	; =$6000 (VRAM write command $4000 + nametable start address relative to vram_fg)
 		bsr.w	DrawChunks			; draw initial background layer
 
@@ -3427,12 +3427,12 @@ End_SlowFade:
 
 		; screen is fully white and emeralds are gone, update level layout with extra flowers and fade back in
 		clr.w	(f_restart).w			; clear level restart flag
-		move.w	#$2E2F,(v_lvllayout+$80).w	; swap chunks in level layout to the variants with flowers (chunk $2E and $2F)
+		move.w	#$2E2F,(v_lvllayout_fg+layout_row).w ; swap chunks in level layout to the variants with flowers (chunks $2E / $2F) (row 1 / column 0)
 
 		lea	(vdp_control_port).l,a5		; set VDP control port
 		lea	(vdp_data_port).l,a6		; set VDP data port
 		lea	(v_screenposx).w,a3		; get current foreground X position
-		lea	(v_lvllayout).w,a4		; get location in level layout RAM where foreground is stored
+		lea	(v_lvllayout_fg).w,a4		; get location in level layout RAM where foreground is stored
 		move.w	#$4000,d2			; set VRAM write command to vram_fg nametable start address
 		bsr.w	DrawChunks			; update drawn chunks to show the new flowers
 

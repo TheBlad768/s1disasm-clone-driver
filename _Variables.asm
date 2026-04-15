@@ -8,12 +8,15 @@ ramaddr function x,(-(x&$80000000)<<1)|x
 v_ram_start_def:
 v_ram_start:		equ	v_ram_start_def&$FFFFFF	; 24-bit addressing
 
-v_256x256_def:		ds.b	$52*chunk_size		; 256x256 tile mappings ($52 chunks)
+v_256x256_def:		ds.b	chunk_size*$52		; 256x256 tile mappings ($52 chunks)
 v_256x256:		equ	v_256x256_def&$FFFFFF	; 24-bit addressing
 v_256x256_end:
 
-v_lvllayout:		ds.b	$400		; level and background layouts
+v_lvllayout:		ds.b	layout_row*8		; level layouts (FG/BG rows interlaced, 8 rows and $400 total)
+v_lvllayout_fg:		equ	v_lvllayout		; start address of foreground's first row
+v_lvllayout_bg:		equ	v_lvllayout+layout_row_interlaced ; start address of background's first row
 v_lvllayout_end:
+
 v_bgscroll_buffer:	ds.b	$200		; background scroll buffer
 v_ngfx_buffer:		ds.b	$200		; Nemesis graphics decompression buffer
 v_ngfx_buffer_end:
@@ -328,7 +331,7 @@ v_framebyte = v_framecount+1			; low byte for frame counter
 v_debugitem:		ds.b	1		; debug item currently selected (NOT the object number of the item)
 			ds.b	1		; unused
 v_debuguse:		ds.w	1		; debug mode use & routine counter (when Sonic is a ring/item)
-v_debugspeedtimer:		ds.b	1		; debug mode - timer before movement starts
+v_debugspeedtimer:	ds.b	1		; debug mode - timer before movement starts
 v_debugspeed:		ds.b	1		; debug mode - movement speed
 v_vbla_count:		ds.l	1		; vertical interrupt counter (adds 1 every VBlank)
 v_vbla_word = v_vbla_count+2 			; low word for vertical interrupt counter (2 bytes)
