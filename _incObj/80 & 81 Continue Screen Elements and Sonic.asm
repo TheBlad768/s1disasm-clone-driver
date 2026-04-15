@@ -79,7 +79,7 @@ CSI_ChkDel:	; Routine 6
 		beq.s	CSI_Animate	; if yes, branch
 		cmpi.b	#6,(v_player+obRoutine).w ; is Sonic running?
 		blo.s	CSI_Animate	; if not, branch
-		move.b	(v_vbla_byte).w,d0
+		move.b	(v_vblank_byte).w,d0
 		andi.b	#1,d0
 		bne.s	CSI_Animate
 		tst.w	(v_player+obVelX).w ; is Sonic running?
@@ -87,7 +87,7 @@ CSI_ChkDel:	; Routine 6
 		rts
 
 CSI_Animate:
-		move.b	(v_vbla_byte).w,d0
+		move.b	(v_vblank_byte).w,d0
 		andi.b	#$F,d0
 		bne.s	CSI_Display2
 		bchg	#0,obFrame(a0)

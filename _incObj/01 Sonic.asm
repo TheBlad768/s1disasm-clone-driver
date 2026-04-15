@@ -2232,7 +2232,7 @@ Sonic_LoadGfx:
 		bmi.s	.nochange				; if this was an empty entry, nothing to do, branch
 
 		lea	(v_sgfx_buffer).w,a3			; load Sonic's graphics transfer buffer
-		move.b	#1,(f_sonframechg).w			; set flag for V-Blank to update Sonic graphics via DMA
+		move.b	#1,(f_sonframechg).w			; set flag for VBlank to update Sonic graphics via DMA
 
 ; SPLC_ReadEntry:
 .readentry:
