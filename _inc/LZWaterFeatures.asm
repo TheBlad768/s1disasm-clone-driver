@@ -389,22 +389,22 @@ LZWaterSlides:
 		lea	(v_player).w,a1
 		btst	#1,obStatus(a1)	; is Sonic jumping?
 		bne.s	loc_3F6A	; if not, branch
-		move.w	obY(a1),d0		; MJ: Load Y position
+		move.w	obY(a1),d0
 		add.w	d0,d0			; MJ: multiply by 2 (Because every 80 bytes switch from FG to BG..)
 		andi.w	#$F00,d0		; MJ: keep Y position within 800 pixels (in multiples of 80)
 		move.w	obX(a1),d1		; MJ: Load Y position
 		lsr.w	#7,d1			; MJ: divide X position by 80 (00 = 0, 80 = 1, etc)
-		andi.w	#$7F,d1			; MJ: keep within 4000 pixels (4000 / 80 = 80)
-		add.w	d1,d0			; MJ: add together
-		lea	(v_lvllayout_fg).w,a2	; MJ: Load address of layout
-		move.b	(a2,d0.w),d0		; MJ: collect correct chunk ID based on the position of Sonic
+		andi.w	#$7F,d1
+		add.w	d1,d0
+		lea	(v_lvllayout_fg).w,a2
+		move.b	(a2,d0.w),d0
 		lea	Slide_Chunks_End(pc),a2
 		moveq	#Slide_Chunks_End-Slide_Chunks-1,d1
 
 loc_3F62:
-		cmp.b	-(a2),d0	; MJ: does the chunk match?
-		dbeq	d1,loc_3F62	; MJ: if not, loop
-		beq.s	LZSlide_Move	; MJ: if so, branch
+		cmp.b	-(a2),d0
+		dbeq	d1,loc_3F62
+		beq.s	LZSlide_Move
 
 loc_3F6A:
 		tst.b	(f_slidemode).w

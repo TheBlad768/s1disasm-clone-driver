@@ -4,7 +4,7 @@ LoadTilesAsYouMove_BGOnly:
 		lea	(vdp_data_port).l,a6
 		lea	(v_bg1_scroll_flags).w,a2
 		lea	(v_bgscreenposx).w,a3
-		lea	(v_lvllayout_bg).w,a4		; MJ: Load address of layout BG
+		lea	(v_lvllayout_bg).w,a4
 		move.w	#$6000,d2
 		bsr.w	DrawBGScrollBlock1
 		lea	(v_bg2_scroll_flags).w,a2
@@ -23,7 +23,7 @@ LoadTilesAsYouMove:
 		; First, update the background
 		lea	(v_bg1_scroll_flags_dup).w,a2	; Scroll block 1 scroll flags
 		lea	(v_bgscreenposx_dup).w,a3	; Scroll block 1 X coordinate
-		lea	(v_lvllayout_bg).w,a4		; MJ: Load address of layout BG
+		lea	(v_lvllayout_bg).w,a4
 		move.w	#$6000,d2			; VRAM thing for selecting Plane B
 		bsr.w	DrawBGScrollBlock1
 		lea	(v_bg2_scroll_flags_dup).w,a2	; Scroll block 2 scroll flags
@@ -39,7 +39,7 @@ LoadTilesAsYouMove:
 		; Then, update the foreground
 		lea	(v_fg_scroll_flags_dup).w,a2	; Foreground scroll flags
 		lea	(v_screenposx_dup).w,a3		; Foreground X coordinate
-		lea	(v_lvllayout_fg).w,a4		; MJ: Load address of layout
+		lea	(v_lvllayout_fg).w,a4
 		move.w	#$4000,d2			; VRAM thing for selecting Plane A
 		; The FG's update function is inlined here
 		tst.b	(a2)
@@ -282,7 +282,7 @@ loc_6A3E:
 		bsr.w	DrawBlocks_TB_2
 
 locret_6A80:
-		rts	
+		rts
 ; End of function DrawBGScrollBlock2
 
 ; ===========================================================================
@@ -625,7 +625,7 @@ DrawBlock:
 		add.l	d7,d0		; Next row
 		move.l	d0,(a5)
 		move.l	(a1)+,(a6)	; Write bottom two tiles
-		rts	
+		rts
 ; ===========================================================================
 
 DrawFlipX:
@@ -640,7 +640,7 @@ DrawFlipX:
 		eori.l	#$8000800,d4
 		swap	d4
 		move.l	d4,(a6)		; Write bottom two tiles
-		rts	
+		rts
 ; ===========================================================================
 
 DrawFlipY:
@@ -655,7 +655,7 @@ DrawFlipY:
 		move.l	d0,(a5)
 		eori.l	#$10001000,d5
 		move.l	d5,(a6)
-		rts	
+		rts
 ; ===========================================================================
 
 DrawFlipXY:
@@ -670,7 +670,7 @@ DrawFlipXY:
 		eori.l	#$18001800,d5
 		swap	d5
 		move.l	d5,(a6)
-		rts	
+		rts
 ; End of function DrawBlocks
 
 ; ===========================================================================
@@ -680,7 +680,7 @@ DrawFlipXY:
 ; incrementing its palette lines by 1. This may have been
 ; a debug function to discolour mirrored tiles, to test
 ; if they're loading properly.
-		rts	
+		rts
 		move.l	d0,(a5)
 		move.w	#$2000,d5
 		move.w	(a1)+,d4
@@ -854,7 +854,7 @@ DrawChunks:
 		movem.l	(sp)+,d4-d6
 		addi.w	#16,d4
 		dbf	d6,.loop
-		rts	
+		rts
 ; End of function DrawChunks
 
 		if Revision>=1

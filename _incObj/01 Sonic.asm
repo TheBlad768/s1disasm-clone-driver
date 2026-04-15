@@ -1854,7 +1854,7 @@ Sonic_HandleDeath:
 		addq.b	#1,(f_lifecount).w			; update lives counter
 		subq.b	#1,(v_lives).w				; subtract 1 from number of lives
 		bne.s	.extraLivesRemaining			; did you run out of extra lives? if not, branch
-		
+
 		; GAME OVER
 		move.w	#0,restartime(a0)			; set to not restart the level
 		move.b	#id_GameOverCard,(v_gameovertext1).w	; load GAME object
@@ -1895,7 +1895,7 @@ Sonic_HandleDeath:
 ; ---------------------------------------------------------------------------
 
 ; Obj01_ResetLevel:
-Sonic_ResetLevel:; Routine 8
+Sonic_ResetLevel: ; Routine 8
 		tst.w	restartime(a0)				; was no restart time set? (game over / time over)
 		beq.s	.return					; if yes, don't restart level
 		subq.w	#1,restartime(a0)			; subtract 1 from time delay
@@ -1910,18 +1910,15 @@ Sonic_ResetLevel:; Routine 8
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to make Sonic run around loops (GHZ).
 ; (Adjusted for ProjectSonic1TwoEight)
+; The name's a misnomer: loops are no longer handled here, only the S-tunnels.
+; Loops are dealt with by pathswappers with the 128x128 system.
 ; ---------------------------------------------------------------------------
 
 Sonic_Loops:
-	; The name's a misnomer: loops are no longer handled here, only the windtunnels. Loops are dealt with by pathswappers
-	;	cmpi.b	#id_SLZ,(v_zone).w ; is level SLZ ?	; MJ: Commented out, we don't want SLZ having any rolling chunks =P
-	;	beq.s	.isstarlight	; if yes, branch
-		tst.b	(v_zone).w	; is level GHZ ?
-		bne.w	.noloops	; if not, branch
+		tst.b	(v_zone).w				; is level GHZ?
+		bne.w	.return					; if not, branch
 
-;.isstarlight:
 		move.w	obY(a0),d0		; MJ: Load Y position
 		move.w	obX(a0),d1		; MJ: Load X position
 		andi.w	#$780,d0		; MJ: keep Y position within 800 pixels (in multiples of 80)
@@ -1940,7 +1937,7 @@ Sonic_Loops:
 		dbeq	d2,.loop	; MJ: check for each listed S-Tunnel chunk
 		beq.w	Sonic_ChkRoll	; MJ: if so, branch
 
-.noloops:
+.return:
 		rts	
 ; End of function Sonic_Loops
 

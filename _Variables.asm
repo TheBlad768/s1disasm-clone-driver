@@ -14,7 +14,7 @@ v_128x128_def:		ds.b	chunk_size_128*$100	; 128x128 tile mappings ($100 chunks)
 v_128x128:		equ	v_128x128_def&$FFFFFF	; 24-bit addressing
 v_128x128_end:
 
-v_lvllayout:		ds.b	layout_row*$10		; level and background layouts
+v_lvllayout:		ds.b	layout_row*$10		; level layouts (FG/BG rows interlaced, 8 rows and $400 total)
 v_lvllayout_fg:		equ	v_lvllayout		; start address of foreground's first row
 v_lvllayout_bg:		equ	v_lvllayout+layout_row_interlaced ; start address of background's first row
 v_lvllayout_end:
@@ -331,7 +331,7 @@ v_framebyte = v_framecount+1			; low byte for frame counter
 v_debugitem:		ds.b	1		; debug item currently selected (NOT the object number of the item)
 			ds.b	1		; unused
 v_debuguse:		ds.w	1		; debug mode use & routine counter (when Sonic is a ring/item)
-v_debugspeedtimer:		ds.b	1		; debug mode - timer before movement starts
+v_debugspeedtimer:	ds.b	1		; debug mode - timer before movement starts
 v_debugspeed:		ds.b	1		; debug mode - movement speed
 v_vbla_count:		ds.l	1		; vertical interrupt counter (adds 1 every VBlank)
 v_vbla_word = v_vbla_count+2 			; low word for vertical interrupt counter (2 bytes)
@@ -474,7 +474,7 @@ v_ssbuffer2		= v_ram_start+$4000
 v_ssblocktypes		= v_ssbuffer2
 v_ssitembuffer		= v_ssbuffer2+$400 ; ($100 bytes)
 v_ssitembuffer_end	= v_ssitembuffer+$100
-v_ssbuffer3		= v_ssitembuffer_end
+v_ssbuffer3		= v_ram_start_def+$8000
 v_ssscroll_buffer	= v_ngfx_buffer+$100
 
 ; Error handler

@@ -44,15 +44,13 @@ LevelDataLoad:
 		bsr.w	AddPLC		; load pattern load cues
 
 .skipPLC:
-		rts	
+		rts
 ; End of function LevelDataLoad
 
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Level layout loading subroutine
 ; ---------------------------------------------------------------------------
-
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 LevelLayoutLoad:
 		move.w	(v_zone).w,d0

@@ -35,7 +35,7 @@ PaddingOptimization = 0|AllOptimizations
 
 EnableSRAM = 0
 ;	| If 1, enable SRAM support
-BackupSRAM	  = 1
+BackupSRAM = 1
 ;	| 0 = no saving (read-only SRAM); 1 = allow saving
 AddressSRAM = 3
 ;	| 0 = odd+even; 2 = even only; 3 = odd only
@@ -538,7 +538,7 @@ ShowErrorMessage:
 		addi.w	#-'0'+ArtTile_Error_Handler_Font,d0 ; rebase from ASCII to a VRAM index
 		move.w	d0,(a6)
 		dbf	d1,.showchars	; repeat for number of characters
-		rts	
+		rts
 ; End of function ShowErrorMessage
 ; ===========================================================================
 
@@ -577,7 +577,7 @@ ShowErrorValue:
 		rol.l	#4,d0
 		bsr.s	.shownumber	; display 8 numbers
 		dbf	d2,.loop
-		rts	
+		rts
 ; End of function ShowErrorValue
 ; ===========================================================================
 
@@ -591,7 +591,7 @@ ShowErrorValue:
 .chars0to9:
 		addi.w	#ArtTile_Error_Handler_Font,d1
 		move.w	d1,(a6)
-		rts	
+		rts
 ; End of function sub_5CA
 ; ===========================================================================
 
@@ -599,7 +599,7 @@ ErrorWaitForC:
 		bsr.w	ReadJoypads
 		cmpi.b	#btnC,(v_jpadpress1).w ; is button C pressed?
 		bne.w	ErrorWaitForC	; if not, branch
-		rts	
+		rts
 ; End of function ErrorWaitForC
 
 
@@ -726,7 +726,7 @@ VBla_14:
 		beq.w	.end
 		subq.w	#1,(v_generictimer).w
 .end:
-		rts	
+		rts
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -742,7 +742,7 @@ VBla_04:
 		beq.w	.end
 		subq.w	#1,(v_generictimer).w
 .end:
-		rts	
+		rts
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -752,7 +752,7 @@ VBla_04:
 ; loc_C5E:
 VBla_06:
 		bsr.w	VBla_StandardTransfers
-		rts	
+		rts
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -826,10 +826,10 @@ VBla_UpdateScreen:
 		bsr.w	ProcessPLC_3Tiles	; run a bit of PLC decompression
 
 		tst.w	(v_generictimer).w	; is there time left in the generic timer left?
-		beq.w	.end		; if not, branch
+		beq.w	.end			; if not, branch
 		subq.w	#1,(v_generictimer).w	; subtract 1 from time left
 .end:
-		rts	
+		rts
 ; End of function VBla_UpdateScreen
 
 ; ===========================================================================
@@ -857,7 +857,7 @@ VBla_0A:
 		beq.w	.end	; if not, return
 		subq.w	#1,(v_generictimer).w	; subtract 1 from time left in demo
 .end:
-		rts	
+		rts
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -897,7 +897,7 @@ VBla_18:
 		jsr	(AnimateLevelGfx).l
 		jsr	(HUD_Update).l
 		bsr.w	ProcessPLC_9Tiles
-		rts	
+		rts
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -908,7 +908,7 @@ VBla_0E:
 		bsr.w	VBla_StandardTransfers
 		addq.b	#1,(v_vbla_0e_counter).w ; Unused besides this one write...
 		move.b	#$E,(v_vbla_routine).w
-		rts	
+		rts
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -945,7 +945,7 @@ VBla_16:
 		subq.w	#1,(v_generictimer).w
 
 .end:
-		rts	
+		rts
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -970,7 +970,7 @@ VBla_StandardTransfers:
 		writeVRAM	v_spritetablebuffer,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
 		startZ80
-		rts	
+		rts
 ; End of function VBla_StandardTransfers
 
 ; ===========================================================================
@@ -981,14 +981,14 @@ VBla_StandardTransfers:
 ; PalToCRAM: <-- old misnomer
 HBlank:
 		disable_ints
-		tst.w	(f_hbla_pal).w	; is palette set to change?
-		beq.s	.nochg		; if not, branch
+		tst.w	(f_hbla_pal).w		; is palette set to change?
+		beq.s	.nochg			; if not, branch
 		move.w	#0,(f_hbla_pal).w	; clear palette change flag
 
 		movem.l	a0-a1,-(sp)
 		lea	(vdp_data_port).l,a1
 		lea	(v_palette_water).w,a0	; get water palette from RAM
-		move.l	#$C0000000,4(a1) ; set VDP to CRAM write
+		move.l	#$C0000000,4(a1)	; set VDP to CRAM write
 		rept (4*$10)/2			; overwrite full palette (4 rows, 2 colors per move)
 			move.l	(a0)+,(a1)	; move water palette to CRAM
 		endr
@@ -1026,7 +1026,7 @@ JoypadInit:
 		move.b	d0,(port_2_control).l		; init port 2 (joypad 2)
 		move.b	d0,(expansion_control).l	; init port 3 (expansion/extra)
 		startZ80
-		rts	
+		rts
 ; End of function JoypadInit
 
 ; ---------------------------------------------------------------------------
@@ -1034,9 +1034,9 @@ JoypadInit:
 ; ---------------------------------------------------------------------------
 
 ReadJoypads:
-		lea	(v_jpadhold1).w,a0 ; address where joypad states are written
+		lea	(v_jpadhold1).w,a0	; address where joypad states are written
 		lea	(port_1_data).l,a1	; first joypad port
-		bsr.s	.read		; do the first joypad
+		bsr.s	.read			; do the first joypad
 		addq.w	#2,a1			; do the second joypad (port_2_data)
 
 .read:
@@ -1058,7 +1058,7 @@ ReadJoypads:
 		move.b	d0,(a0)+
 		and.b	d0,d1
 		move.b	d1,(a0)+
-		rts	
+		rts
 ; End of function ReadJoypads
 
 ; ===========================================================================
@@ -1092,7 +1092,7 @@ VDPSetupGame:
 		move.l	d1,-(sp)
 		fillVRAM	0,0,$10000	; clear the entirety of VRAM
 		move.l	(sp)+,d1
-		rts	
+		rts
 ; End of function VDPSetupGame
 ; ===========================================================================
 
@@ -1142,7 +1142,7 @@ ClearScreen:
 		clearRAM v_hscrolltablebuffer,v_hscrolltablebuffer_end_padded+4 ; Clears too much RAM, clearing the first 4 bytes of v_objspace.
 	endif
 
-		rts	
+		rts
 ; End of function ClearScreen
 
 ; ===========================================================================
@@ -1165,19 +1165,19 @@ DACDriverLoad:
 		nop	
 		deassertZ80Reset
 		startZ80
-		rts	
+		rts
 ; End of function DACDriverLoad
 
 ; ===========================================================================
 ; >>> Subroutines to queue sound commands to be executed by the sound driver during V-Blank
-		; includes QueueSound1, QueueSound2, QueueSound3
-		; (formerly called PlaySound, PlaySound_Special, PlaySound_Unknown)
-		include	"_inc/Queue Sound Routines.asm"
+	; includes QueueSound1, QueueSound2, QueueSound3
+	; (formerly called PlaySound, PlaySound_Special, PlaySound_Unknown)
+	include	"_inc/Queue Sound Routines.asm"
 
 
 ; ===========================================================================
 ; >>> Subroutine to allow pausing the game
-		include	"_inc/PauseGame.asm"
+	include	"_inc/PauseGame.asm"
 
 
 ; ===========================================================================
@@ -1204,12 +1204,12 @@ Tilemap_Cell:
 		dbf	d3,Tilemap_Cell	; next tile
 		add.l	d4,d0		; goto next line
 		dbf	d2,Tilemap_Line	; next line
-		rts	
+		rts
 ; End of function TilemapToVRAM
 
 ; ===========================================================================
 ; >>> Nemesis decompression algorithm, primarily (but not exclusively) used for PLCs
-		include	"_inc/Decompression/Nemesis Decompression.asm"
+	include	"_inc/Decompression/Nemesis Decompression.asm"
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to add entries from a given Pattern Load Cue list ID to the
@@ -1252,7 +1252,7 @@ AddPLC:
 
 .skip:
 		movem.l	(sp)+,a1-a2 ; a1=object
-		rts	
+		rts
 ; End of function AddPLC
 
 ; ===========================================================================
@@ -1280,7 +1280,7 @@ NewPLC:
 
 .skip:
 		movem.l	(sp)+,a1-a2
-		rts	
+		rts
 ; End of function NewPLC
 
 ; ===========================================================================
@@ -1296,7 +1296,7 @@ ClearPLC:
 .loop:
 		clr.l	(a2)+
 		dbf	d0,.loop
-		rts	
+		rts
 ; End of function ClearPLC
 
 ; ===========================================================================
@@ -1342,7 +1342,7 @@ loc_160E:
 	endif
 
 Rplc_Exit:
-		rts	
+		rts
 ; End of function RunPLC
 
 ; ===========================================================================
@@ -1408,7 +1408,7 @@ loc_16AA:
 		move.l	d6,(v_plc_shiftvalue).w
 
 locret_16DA:
-		rts	
+		rts
 ; ===========================================================================
 
 loc_16DC:
@@ -1434,7 +1434,7 @@ loc_16E2:
 		clr.l	(v_plc_buffer_only_end-6).w
 	endif
 
-		rts	
+		rts
 ; End of function ProcessPLC
 
 ; ===========================================================================
@@ -1462,18 +1462,18 @@ Qplc_Loop:
 		move.l	d0,(vdp_control_port).l ; converted VRAM address to VDP format
 		bsr.w	NemDec		; decompress
 		dbf	d1,Qplc_Loop	; repeat for length of PLC
-		rts	
+		rts
 ; End of function QuickPLC
 
 ; ===========================================================================
 ; >>> Other decompression algorithms
-		include	"_inc/Decompression/Enigma Decompression.asm"
-		include	"_inc/Decompression/Kosinski Decompression.asm"
+	include	"_inc/Decompression/Enigma Decompression.asm"
+	include	"_inc/Decompression/Kosinski Decompression.asm"
 
 
 ; ===========================================================================
 ; >>> Palette logic routines
-		include	"_inc/PaletteCycle.asm"
+	include	"_inc/PaletteCycle.asm"
 	include	"_inc/Palette Fading.asm" ; includes "PaletteFadeIn", "PaletteFadeOut", "PaletteWhiteIn", and "PaletteWhiteOut"
 
 
@@ -1699,23 +1699,23 @@ PalLoad_Water:
 
 ; DelayProgram: <--- old misnomer
 WaitForVBla:
-		enable_ints		; enable interrupts so vertical interrupts can occur
+		enable_ints				; enable interrupts so vertical interrupts can occur
 
 .wait:
-		tst.b	(v_vbla_routine).w ; has VBlank routine finished?
-		bne.s	.wait		; if not, loop until it has
-		rts			; resume normal operation
+		tst.b	(v_vbla_routine).w		; has VBlank routine finished?
+		bne.s	.wait				; if not, loop until it has
+		rts					; resume normal operation
 ; End of function WaitForVBla
 
 ; ===========================================================================
 ; >>> Subroutines for generic calculations
-		include	"_incObj/sub RandomNumber.asm"
-		include	"_incObj/sub CalcSine.asm"
-	if Revision=0
-		; Only in REV00, and even there it was never used
-		include	"_incObj/sub CalcSqrt.asm"
-	endif
-		include	"_incObj/sub CalcAngle.asm"
+	include	"_incObj/sub RandomNumber.asm"
+	include	"_incObj/sub CalcSine.asm"
+    if Revision=0
+	; Only in REV00, and even there it was never used
+	include	"_incObj/sub CalcSqrt.asm"
+    endif
+	include	"_incObj/sub CalcAngle.asm"
 
 
 ; ===========================================================================
@@ -1800,7 +1800,7 @@ Sega_WaitEnd:
 
 Sega_GotoTitle:	; transition to title screen
 		move.b	#id_Title,(v_gamemode).w	; go to title screen
-		rts	
+		rts
 ; End of function GM_Sega
 
 
@@ -1812,7 +1812,7 @@ Sega_GotoTitle:	; transition to title screen
 ; TitleScreen:
 GM_Title:	; fading out from previous game mode
 		move.b	#bgm_Stop,d0			; set stop music command
-		bsr.w	QueueSound2 ; stop music
+		bsr.w	QueueSound2			; stop music
 		bsr.w	ClearPLC			; stop any potential in-progress PLC
 		bsr.w	PaletteFadeOut			; fade-out previous game mode
 ; ---------------------------------------------------------------------------
@@ -1995,7 +1995,7 @@ Tit_MainLoop:
 		; Will never happen due to the short title screen generic timer.
 		; This likely was an old failsafe before Demos were introduced.
 		move.b	#id_Sega,(v_gamemode).w		; return to Sega screen
-		rts	
+		rts
 ; ===========================================================================
 
 Tit_ChkRegion:
@@ -2017,7 +2017,7 @@ Tit_EnterCheat:
 		addq.w	#1,(v_title_dcount).w		; increment number of successful D-Pad cheat inputs
 		tst.b	d0				; has end of cheat code been reached? (0-entry in cheat)
 		bne.s	Tit_CountC			; if not, branch
-
+		
 Tit_ActivateCheat:
 		; (On JAPANESE consoles only) Activated cheat depends on the amount of times C was pressed:
 		; 0-1 level select -- 2-3 slow motion -- 4-5 debug mode -- 6-7: hidden Japanese credits / sound test skips
@@ -2128,9 +2128,9 @@ LevSel_PlaySnd:
 ; ===========================================================================
 
 LevSel_Ending:
-		move.b	#id_Ending,(v_gamemode).w	; set screen mode to $18 (Ending)
-		move.w	#id_EndZ_good,(v_zone).w	; set level to 0600 (good Ending)
-		rts	
+		move.b	#id_Ending,(v_gamemode).w 	; set screen mode to $18 (Ending)
+		move.w	#id_EndZ_good,(v_zone).w  	; set level to 0600 (good Ending)
+		rts
 ; ===========================================================================
 
 LevSel_Credits:
@@ -2138,7 +2138,7 @@ LevSel_Credits:
 		move.b	#bgm_Credits,d0			; set credits music
 		bsr.w	QueueSound2			; play it
 		move.w	#0,(v_creditsnum).w		; start at the first credits page
-		rts	
+		rts
 ; ===========================================================================
 
 LevSel_Level_SS:
@@ -2157,7 +2157,7 @@ LevSel_Level_SS:
 	if Revision<>0
 		move.l	#5000,(v_scorelife).w		; extra life is awarded at 50000 points
 	endif
-		rts	
+		rts
 ; ===========================================================================
 
 LevSel_Level:
@@ -2272,7 +2272,7 @@ GotoDemo_PreDelayLoop:
 		; Will never happen due to the short title screen generic timer.
 		; This likely was an old failsafe before Demos were introduced.
 		move.b	#id_Sega,(v_gamemode).w		; return to Sega screen
-		rts	
+		rts
 ; ===========================================================================
 
 ; loc_33E4:
@@ -2369,7 +2369,7 @@ LevSel_Down:
 LevSel_Refresh:
 		move.w	d0,(v_levselitem).w		; set new selection
 		bsr.w	LevSelTextLoad			; refresh text
-		rts	
+		rts
 ; ===========================================================================
 
 LevSel_SndTest:
@@ -2399,7 +2399,7 @@ LevSel_Refresh2:
 		bsr.w	LevSelTextLoad			; refresh text
 
 LevSel_NoMove:
-		rts	
+		rts
 ; End of function LevSelControls
 
 ; ===========================================================================
@@ -2471,7 +2471,7 @@ LevSel_DrawSnd:
 		bsr.w	LevSel_ChgSnd			; draw 1st digit
 		move.b	d2,d0				; restore backup
 		bsr.w	LevSel_ChgSnd			; draw 2nd digit
-		rts	
+		rts
 ; ===========================================================================
 
 LevSel_ChgSnd:
@@ -2481,7 +2481,7 @@ LevSel_ChgSnd:
 		addi.b	#7,d0				; use letter characters
 .DrawNum:	add.w	d3,d0				; combine number with VRAM setting (white or yellow)
 		move.w	d0,(a6)				; send to VRAM
-		rts	
+		rts
 ; ===========================================================================
 
 LevSel_ChgLine:
@@ -2492,12 +2492,12 @@ LevSel_ChgLine:
 		bpl.s	.CharOk				; is it a valid ASCII character? if yes, branch
 		move.w	#0,(a6)				; draw a blank character
 		dbf	d2,.LineLoop			; loop until all characters are drawn
-		rts	
+		rts
 
 .CharOk:	add.w	d3,d0				; combine char with VRAM setting (white or yellow)
 		move.w	d0,(a6)				; send to VRAM
 		dbf	d2,.LineLoop			; loop until all characters are drawn
-		rts	
+		rts
 ; End of function LevSelTextLoad
 
 ; ===========================================================================
@@ -2962,8 +2962,8 @@ Level_FDLoop_NoDim:
 
 ; ===========================================================================
 ; >>> Misc level logic for specific circumstances
-		include	"_inc/LZWaterFeatures.asm"
-		include	"_inc/MoveSonicInDemo.asm"
+	include	"_inc/LZWaterFeatures.asm"
+	include	"_inc/MoveSonicInDemo.asm"
 
 
 ; ===========================================================================
@@ -3007,7 +3007,7 @@ ColPointers:	dc.l Col_GHZ_1	; MJ: each zone now has two entries
 		;dc.l Col_GHZ_2
 ; ===========================================================================
 ; >>> Routines to set and update values that change on a fixed timer
-		include	"_inc/Oscillatory Routines.asm"
+	include	"_inc/Oscillatory Routines.asm"
 
 
 ; ===========================================================================
@@ -3309,7 +3309,7 @@ SS_ToNextScreen:
 ; ===========================================================================
 
 ; >>> Special Stage background drawing and palette cycle logic
-		include	"_inc/Special Stage Background & Palette Cycle.asm"
+	include	"_inc/Special Stage Background & Palette Cycle.asm"
 
 
 ; ===========================================================================
@@ -3489,7 +3489,7 @@ End_LoadData:
 
 	if FixBugs
 		; Fix being able to enable debug mode without having entered the cheat code for it
-		tst.b	(f_debugcheat).w ; has debug cheat been entered?
+		tst.b	(f_debugcheat).w		; has debug cheat been entered?
 		beq.s	End_LoadSonic			; if not, branch
 	endif
 		btst	#bitA,(v_jpadhold1).w		; was button A held while entering ending sequence?
@@ -3575,7 +3575,7 @@ End_ChkEmerald:
 		clr.w	(v_palchgspeed).w		; trigger the first brightening immediately
 ; ---------------------------------------------------------------------------
 
-
+		
 End_AllEmlds:	; during the slow white-in
 		bsr.w	PauseGame			; still allow pausing the game
 		move.b	#$18,(v_vbla_routine).w		; set V-Int routine to $18
@@ -4007,11 +4007,11 @@ Map_Missile:	include	"_maps/Buzz Bomber Missile.asm"
 		include	"_anim/Rings.asm"
 Map_Ring:   if Revision=0
 		include	"_maps/Rings (REV00).asm"
-	else
+	    else
 		; REV01 added an extra blank frame, possibly to mitigate
 		; rings occasionally popping up in the sign post sparkles
 		include	"_maps/Rings (REV01).asm"
-	endif
+	    endif
 Map_GRing:	include	"_maps/Giant Ring.asm"
 Map_Flash:	include	"_maps/Ring Flash.asm"
 		include	"_incObj/26 Monitor.asm"
@@ -4317,7 +4317,7 @@ Map_Pri:	include	"_maps/Prison Capsule.asm"
 ; ===========================================================================
 ; >>> Special Stage rendering and objects
 		include	"_inc/Special Stage Loading & Drawing.asm" ; includes the subroutines "SS_ShowLayout", "SS_AniWallsRings", 
-		; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
+								   ; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
 SS_MapIndex:	include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
 SS_MapIndex_End:
 Map_SS_R:	include	"_maps/SS R Block.asm"
@@ -4344,9 +4344,9 @@ Map_HUD:	include	"_maps/HUD.asm"
 		include	"_incObj/sub AddPoints.asm"
 		include	"_inc/HUD Update.asm"	; includes "ContScrCounter" subroutine
 
-Art_Hud:	binclude	"artunc/HUD Numbers.bin" ; 8x16 pixel numbers on HUD
+Art_Hud:	binclude "artunc/HUD Numbers.bin" ; 8x16 pixel numbers on HUD
 		even
-Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers on lives counter
+Art_LivesNums:	binclude "artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers on lives counter
 		even
 
 
@@ -4368,16 +4368,16 @@ Art_LivesNums:	binclude	"artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 ; >> END OF PRIMARY INCLUDES - Everything below this point is art includes <<
 ; ---------------------------------------------------------------------------
 
-		; Nem_SegaLogo has a bunch of padding before it that differs between revisions:
-		; - in rev00, it starts at $1DC00, which amounts to $EE bytes
-		; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
-		; From a technical standpoint, this padding serves no purpose.
-		if PaddingOptimization=0
-			align	$200
-			if Revision<>0
-				dc.b	[$300]$FF
-			endif
+	; Nem_SegaLogo has a bunch of padding before it that differs between revisions:
+	; - in rev00, it starts at $1DC00, which amounts to $EE bytes
+	; - in rev01/rev02, it starts at $1E700, which amounts to $48E bytes
+	; From a technical standpoint, this padding serves no purpose.
+	if PaddingOptimization=0
+		align	$200
+		if Revision<>0
+			dc.b	[$300]$FF
 		endif
+	endif
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -4835,16 +4835,16 @@ Nem_EndStH:	binclude	"artnem/Ending - StH Logo.nem"
 
 ; ---------------------------------------------------------------------------
 
-		; AngleMap starts at $62900 in all revisions, which amounts
-		; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
-		; From a technical standpoint, this padding serves no purpose.
-		if PaddingOptimization=0
-			if Revision=0
-				dc.b	[$104]$FF
-			else
-				dc.b	[$40]$FF
-			endif
+	; AngleMap starts at $62900 in all revisions, which amounts
+	; to $104 bytes of padding for rev00 and $40 for rev01/rev02.
+	; From a technical standpoint, this padding serves no purpose.
+	if PaddingOptimization=0
+		if Revision=0
+			dc.b	[$104]$FF
+		else
+			dc.b	[$40]$FF
 		endif
+	endif
 
 ; ---------------------------------------------------------------------------
 ; Collision data
@@ -5029,12 +5029,12 @@ Art_BigRing:	binclude	"artunc/Giant Ring.bin"
 
 ; ---------------------------------------------------------------------------
 
-		; ObjPos_Index starts at $6B000 in all revisions, which amounts
-		; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
-		; From a technical standpoint, this padding serves no purpose.
-		if PaddingOptimization=0
-			align	$100
-		endif
+	; ObjPos_Index starts at $6B000 in all revisions, which amounts
+	; to $9C bytes of padding for rev00 and $DC for rev01/rev02.
+	; From a technical standpoint, this padding serves no purpose.
+	if PaddingOptimization=0
+		align	$100
+	endif
 	
 ; ---------------------------------------------------------------------------
 ; Sprite locations index
@@ -5201,19 +5201,19 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 
 ; ---------------------------------------------------------------------------
 
-		; SoundDriver starts at $71990 in all revisions, which amounts
-		; to $62A bytes of padding for rev00 and $63C for rev01/rev02.
-		; It appears to be placed in such a way that the sound driver
-		; ends right on the $80000 mark in the ROM in all revisions.
-		; From a technical standpoint, this padding serves no purpose.
-		if PaddingOptimization=0
-			if Revision=0
-				dc.b	[$62A]$FF
-			else
-				dc.b	[$63C]$FF
-			endif
+	; SoundDriver starts at $71990 in all revisions, which amounts
+	; to $62A bytes of padding for rev00 and $63C for rev01/rev02.
+	; It appears to be placed in such a way that the sound driver
+	; ends right on the $80000 mark in the ROM in all revisions.
+	; From a technical standpoint, this padding serves no purpose.
+	if PaddingOptimization=0
+		if Revision=0
+			dc.b	[$62A]$FF
+		else
+			dc.b	[$63C]$FF
 		endif
-
+	endif
+		
 ; ---------------------------------------------------------------------------
 
 SoundDriver:	include "s1.sounddriver.asm"
