@@ -1922,7 +1922,7 @@ Sonic_Loops:
 		move.b	obX(a0),d1				; get Sonic's current X-position
 		andi.w	#$7F,d1					; mask out irrelevant bits for X-position
 		add.w	d1,d0					; combine the two (this is now the index to get the current 256x256 chunk in the level)
-		lea	(v_lvllayout).w,a1			; load level layout
+		lea	(v_lvllayout_fg).w,a1			; load foreground level layout
 		move.b	(a1,d0.w),d1				; load ID of 256x256 chunk Sonic is currently standing on
 
 		cmp.b	(v_256roll1).w,d1			; is Sonic on a "roll tunnel" tile? (type A, entrance from the left)
