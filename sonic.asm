@@ -1780,7 +1780,7 @@ GM_Sega:
 
 		lea	(v_ram_start).l,a1		; set start of RAM to be used as decompression buffer
 		lea	(Eni_SegaLogo).l,a0		; load Sega logo mappings
-		move.w	#make_art_tile(ArtTile_Sega_Tiles,0,FALSE),d0 ; set art tile for Sega screen mappings
+		move.w	#ArtTile_Sega_Tiles,d0		; set art tile for Sega screen mappings
 		bsr.w	EniDec				; decompress Enigma-compressed mappings to RAM buffer
 		copyTilemap	v_ram_start,vram_bg+$510,24,8 ; transfer decompressed patterns to VRAM (BG plane, light scanning effect)
 		copyTilemap	v_ram_start+24*8*2,vram_fg,40,28 ; transfer decompressed patterns to VRAM (FG plane, Sega logo cutout)
@@ -1871,7 +1871,7 @@ GM_Title:	; fading out from previous game mode
 
 		lea	(v_ram_start).l,a1		; set start of RAM to be used as decompression buffer
 		lea	(Eni_JapNames).l,a0		; load mappings for Japanese credits
-		move.w	#make_art_tile(ArtTile_Title_Japanese_Text,0,FALSE),d0 ; set art tile for hidden credits
+		move.w	#ArtTile_Title_Japanese_Text,d0	; set art tile for hidden credits
 		bsr.w	EniDec				; decompress Enigma-compressed mappings to RAM buffer
 		copyTilemap	v_ram_start,vram_fg,40,28 ; transfer decompressed patterns from RAM buffer to VRAM
 
@@ -1918,7 +1918,7 @@ Tit_LoadText:
 
 		lea	(v_16x16).w,a1			; set target buffer for blocks mappings
 		lea	(Blk16_GHZ).l,a0		; load GHZ 16x16 blocks mappings
-		move.w	#make_art_tile(ArtTile_Level,0,FALSE),d0 ; set to target VRAM address $0000
+		move.w	#ArtTile_Level,d0		; set to target VRAM address $0000
 		bsr.w	EniDec				; decompress Enigma-compressed blocks mappings to buffer
 
 		lea	(Blk256_GHZ).l,a0		; load GHZ 256x256 mappings
@@ -1942,7 +1942,7 @@ Tit_LoadText:
 
 		lea	(v_ram_start).l,a1		; set start of RAM to be used as decompression buffer (this overwrites unused chunk RAM)
 		lea	(Eni_Title).l,a0		; load title screen emblem mappings
-		move.w	#make_art_tile(ArtTile_Level,0,FALSE),d0 ; =$0000 (emblem mappings are themselves set up with a +$2000 offset per tile)
+		move.w	#ArtTile_Level,d0		; =$0000 (emblem mappings are themselves set up with a +$2000 offset per tile)
 		bsr.w	EniDec				; decompress Enigma-compressed emblem mappings to buffer
 	if FixBugs
 		; Fix title screen position
@@ -2446,8 +2446,8 @@ levsel_start_col:	equ 8	; left tile offset for start position
 levsel_vram_main:	equ vram_bg+(levsel_start_row<<7)+(levsel_start_col<<1)	; nametable address in VRAM
 levsel_vram_sndtestnum:	equ levsel_vram_main+(levsel_sndtest_row<<7)+(levsel_sndtest_col<<1) ; nametable address for sound test numbers
 
-levsel_white:		equ make_art_tile(ArtTile_Level_Select_Font,3,TRUE) ; VRAM setting for white text (non-selected lines)
-levsel_yellow:		equ make_art_tile(ArtTile_Level_Select_Font,2,TRUE) ; VRAM setting for yellow text (selected line)
+levsel_white:		equ ArtTile_Level_Select_Font|Tile_Pal4|Tile_Prio ; VRAM setting for white text (non-selected lines)
+levsel_yellow:		equ ArtTile_Level_Select_Font|Tile_Pal3|Tile_Prio ; VRAM setting for yellow text (selected line)
 
 ; ---------------------------------------------------------------------------
 
@@ -3510,7 +3510,7 @@ End_LoadData:
 		enable_ints				; enable interrupts
 
 		lea	(Kos_EndFlowers).l,a0		; load extra flower patterns
-		lea	(v_256x256+$4A*chunk_size).w,a1	; set RAM address to be used as decompression buffer (this overwrites unused chunk RAM)
+		lea	(v_256x256_def+$4A*chunk_size).w,a1 ; set RAM address to be used as decompression buffer (this overwrites unused chunk RAM)
 		bsr.w	KosDec				; decompress Kosinski-compressed chunks mappings to buffer
 
 		moveq	#palid_Sonic,d0			; load Sonic's palette...

@@ -93,8 +93,9 @@ Map_Vanish_internal:	mappingsTable
 	spritePiece	$48, -4, 1, 1, $26, 0, 1, 0, 0
 	spritePiece	$48, $C, 1, 1, $27, 1, 0, 0, 0
 	spritePiece	$50, 4, 1, 1, $26, 1, 1, 0, 0
-.blank	EQU	*+1
 	spritePiece	$58, 4, 1, 1, $27, 1, 0, 0, 0
-.sparkle4_End
+.sparkle4_End:
+
+.blank:	EQU	*-4
 
 	even

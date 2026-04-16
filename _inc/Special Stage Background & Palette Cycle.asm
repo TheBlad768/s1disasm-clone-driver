@@ -5,7 +5,7 @@
 SS_BGLoad:
 		lea	(v_ssbuffer1).l,a1
 		lea	(Eni_SSBg1).l,a0 ; load mappings for the birds and fish
-		move.w	#make_art_tile(ArtTile_SS_Background_Fish,2,0),d0
+		move.w	#ArtTile_SS_Background_Fish|Tile_Pal3,d0
 		bsr.w	EniDec
 		locVRAM	ArtTile_SS_Plane_1*tile_size+plane_size_64x32,d3
 		lea	(v_ssbuffer1+$80).l,a2
@@ -58,7 +58,7 @@ loc_491C:
 
 		lea	(v_ssbuffer1).l,a1
 		lea	(Eni_SSBg2).l,a0 ; load mappings for the clouds
-		move.w	#make_art_tile(ArtTile_SS_Background_Clouds,2,0),d0
+		move.w	#ArtTile_SS_Background_Clouds|Tile_Pal3,d0
 		bsr.w	EniDec
 		copyTilemap	v_ssbuffer1,ArtTile_SS_Plane_5*tile_size,64,32
 		copyTilemap	v_ssbuffer1,ArtTile_SS_Plane_5*tile_size+plane_size_64x32,64,64
@@ -176,43 +176,43 @@ SSBGData:	macro time,anim,vram,index,flag1,flag2
 
 byte_4A3C:
 		; Time, anim, BG VRAM, palette cycle index & flags
-		SSBGData  3,  0, ArtTile_SS_Plane_6, 18, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_6, 16, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_6, 14, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_6, 12, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_6, 10, TRUE , TRUE
+		SSBGData  3,  0, ArtTile_SS_Plane_6, 18, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_6, 16, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_6, 14, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_6, 12, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_6, 10, TRUE,	TRUE
 
-		SSBGData  3,  0, ArtTile_SS_Plane_6,  0, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_6,  2, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_6,  4, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_6,  6, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_6,  8, TRUE , FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_6,  0, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_6,  2, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_6,  4, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_6,  6, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_6,  8, TRUE,	FALSE
 
 
-		SSBGData  7,  8, ArtTile_SS_Plane_6,  0, FALSE, FALSE
-		SSBGData  7, 10, ArtTile_SS_Plane_6,  1, FALSE, FALSE
-		SSBGData -1, 12, ArtTile_SS_Plane_6,  2, FALSE, FALSE
-		SSBGData -1, 12, ArtTile_SS_Plane_6,  2, FALSE, FALSE
-		SSBGData  7, 10, ArtTile_SS_Plane_6,  1, FALSE, FALSE
-		SSBGData  7,  8, ArtTile_SS_Plane_6,  0, FALSE, FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_5,  8, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_5,  6, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_5,  4, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_5,  2, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_5,  0, TRUE , TRUE
+		SSBGData  7,  8, ArtTile_SS_Plane_6,  0, FALSE,	FALSE
+		SSBGData  7, 10, ArtTile_SS_Plane_6,  1, FALSE,	FALSE
+		SSBGData -1, 12, ArtTile_SS_Plane_6,  2, FALSE,	FALSE
+		SSBGData -1, 12, ArtTile_SS_Plane_6,  2, FALSE,	FALSE
+		SSBGData  7, 10, ArtTile_SS_Plane_6,  1, FALSE,	FALSE
+		SSBGData  7,  8, ArtTile_SS_Plane_6,  0, FALSE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5,  8, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5,  6, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5,  4, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5,  2, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5,  0, TRUE,	TRUE
 
-		SSBGData  3,  0, ArtTile_SS_Plane_5, 10, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_5, 12, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_5, 14, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_5, 16, TRUE , FALSE
-		SSBGData  3,  0, ArtTile_SS_Plane_5, 18, TRUE , FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5, 10, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5, 12, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5, 14, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5, 16, TRUE,	FALSE
+		SSBGData  3,  0, ArtTile_SS_Plane_5, 18, TRUE,	FALSE
 
-		SSBGData  7,  2, ArtTile_SS_Plane_5,  3, FALSE, FALSE
-		SSBGData  7,  4, ArtTile_SS_Plane_5,  4, FALSE, FALSE
-		SSBGData -1,  6, ArtTile_SS_Plane_5,  5, FALSE, FALSE
-		SSBGData -1,  6, ArtTile_SS_Plane_5,  5, FALSE, FALSE
-		SSBGData  7,  4, ArtTile_SS_Plane_5,  4, FALSE, FALSE
-		SSBGData  7,  2, ArtTile_SS_Plane_5,  3, FALSE, FALSE
+		SSBGData  7,  2, ArtTile_SS_Plane_5,  3, FALSE,	FALSE
+		SSBGData  7,  4, ArtTile_SS_Plane_5,  4, FALSE,	FALSE
+		SSBGData -1,  6, ArtTile_SS_Plane_5,  5, FALSE,	FALSE
+		SSBGData -1,  6, ArtTile_SS_Plane_5,  5, FALSE,	FALSE
+		SSBGData  7,  4, ArtTile_SS_Plane_5,  4, FALSE,	FALSE
+		SSBGData  7,  2, ArtTile_SS_Plane_5,  3, FALSE,	FALSE
 		even
 
 SSFGData:	macro vram,y

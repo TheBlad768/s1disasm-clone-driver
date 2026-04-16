@@ -29,7 +29,7 @@ BossSpikeball_Index:
 
 BossSpikeball_Main:	; Routine 0
 		move.l	#Map_SSawBall,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Eggman_Spikeball,0,0),obGfx(a0)
+		move.w	#ArtTile_Eggman_Spikeball,obGfx(a0)
 		move.b	#1,obFrame(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
@@ -355,7 +355,7 @@ BossSpikeball_Loop:
 		move.b	#$A,obRoutine(a1)
 		move.l	#Map_BSBall,obMap(a1)
 		move.b	#3,obPriority(a1)
-		move.w	#make_art_tile(ArtTile_Eggman_Spikeball,0,0),obGfx(a1)
+		move.w	#ArtTile_Eggman_Spikeball,obGfx(a1)
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.w	(a2)+,obVelX(a1)
