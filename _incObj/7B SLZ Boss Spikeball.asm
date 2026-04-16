@@ -383,7 +383,7 @@ BossSpikeball_MoveFrag:	; Routine $A
 		move.w	obY(a0),objoff_34(a0)
 		addi.w	#$18,obVelY(a0)
 		moveq	#4,d0
-		and.w	(v_vbla_word).w,d0
+		and.w	(v_vblank_word).w,d0
 		lsr.w	#2,d0
 		move.b	d0,obFrame(a0)
 		tst.b	obRender(a0)

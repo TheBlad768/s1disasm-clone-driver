@@ -254,7 +254,7 @@ RLoss_Bounce:	; Routine 2
 		bsr.w	SpeedToPos
 		addi.w	#$18,obVelY(a0)
 		bmi.s	.chkdel
-		move.b	(v_vbla_byte).w,d0
+		move.b	(v_vblank_byte).w,d0
 		add.b	d7,d0
 		andi.b	#3,d0
 		bne.s	.chkdel

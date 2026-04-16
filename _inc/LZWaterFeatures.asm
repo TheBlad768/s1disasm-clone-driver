@@ -29,7 +29,7 @@ LZWaterFeatures:
 		tst.w	d0
 		bpl.s	.isbelow	; if water is below top of screen, branch
 
-		move.b	#223,(v_hbla_line).w
+		move.b	#223,(v_hblank_line).w
 		move.b	#1,(f_wtr_state).w ; screen is all underwater
 
 .isbelow:
@@ -38,7 +38,7 @@ LZWaterFeatures:
 		move.w	#223,d0
 
 .isvisible:
-		move.b	d0,(v_hbla_line).w ; set water surface as on-screen
+		move.b	d0,(v_hblank_line).w ; set water surface as on-screen
 
 .notlabyrinth:
 		rts
@@ -310,7 +310,7 @@ LZWindTunnels:
 		; d0 is overwritten but later used as if it wasn't!
 		move.w	d0,d1
 	endif
-		move.b	(v_vbla_byte).w,d0
+		move.b	(v_vblank_byte).w,d0
 		andi.b	#$3F,d0		; does VInt counter fall on 0, $40, $80 or $C0?
 		bne.s	.skipsound	; if not, branch
 		move.w	#sfx_Waterfall,d0
@@ -432,7 +432,7 @@ loc_3F9A:
 		clr.b	obInertia+1(a1)
 		move.b	#id_Slide,obAnim(a1) ; use Sonic's "water slide" animation
 		move.b	#1,(f_slidemode).w	; set water slide flag
-		move.b	(v_vbla_byte).w,d0
+		move.b	(v_vblank_byte).w,d0
 		andi.b	#$1F,d0
 		bne.s	locret_3FBE
 		move.w	#sfx_Waterfall,d0
