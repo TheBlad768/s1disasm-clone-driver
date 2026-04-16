@@ -1438,8 +1438,22 @@ Sonic_FloorDown:
 		bsr.w	Sonic_FindFloor				; find distance between Sonic and floor
 		move.b	d1,(v_unused6).w			; (unused) store distance to floor
 		tst.w	d1					; has Sonic touched the floor again?
+	if FixBugs=0
 		bpl.s	.return					; if not, branch
+	else
+		bpl.w	.return					; if not, branch
 
+		; The floor depth check should only be done if the floor is top solid,
+		; not fully solid. Otherwise, if Sonic manages to clip into a fully
+		; solid floor (i.e. the Lava Reef Zone stairs clip in Sonic & Knuckles),
+		; Sonic could potentially fall right through.
+
+		; Note that modifications to FindWall, FindFloor, Sonic_FindFloor,
+		; Sonic_FindWallRight, Sonic_FindCeiling, Sonic_FindWallLeft, and
+		; Sonic_FindSmaller are needed for this fix to work.
+		btst	#$E,d4					; is the floor fully solid?
+		bne.s	.landed					; if so, branch
+	endif
 		move.b	obVelY(a0),d2				; get Sonic's fall speed at the time of impact (upper byte only, pixel delta)
 		addq.b	#8,d2					; increase it by one tile
 		neg.b	d2					; mirror it
@@ -1557,6 +1571,10 @@ Sonic_FloorLeft:
 		tst.w	d1					; has Sonic touched the floor?
 		bpl.s	.return					; if not, branch
 	if FixBugs
+		; See explanation in .norightgraze under Sonic_FloorDown
+		btst	#$E,d4					; is the floor fully solid?
+		bne.s	.landed					; if so, branch
+
 		; When Sonic is moving down and a floor collision is detected, there exists
 		; a check that makes it so that he doesn't clip on top of a surface that
 		; he's too far below from. However, said check doesn't exist for when Sonic
@@ -1692,6 +1710,10 @@ Sonic_FloorRight:
 		tst.w	d1					; has Sonic touched the floor?
 		bpl.s	.return					; if not, branch
 	if FixBugs
+		; See explanation in .norightgraze under Sonic_FloorDown
+		btst	#$E,d4					; is the floor fully solid?
+		bne.s	.landed					; if so, branch
+
 		; See explanation in .noceiling under Sonic_FloorLeft
 		move.b	obVelY(a0),d2				; get Sonic's fall speed at the time of impact (upper byte only, pixel delta)
 		addq.b	#8,d2					; increase it by one tile
