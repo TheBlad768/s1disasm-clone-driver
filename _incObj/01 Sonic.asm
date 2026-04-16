@@ -1556,6 +1556,24 @@ Sonic_FloorLeft:
 		bsr.w	Sonic_FindFloor				; find Sonic's distance to floor
 		tst.w	d1					; has Sonic touched the floor?
 		bpl.s	.return					; if not, branch
+	if FixBugs
+		; When Sonic is moving down and a floor collision is detected, there exists
+		; a check that makes it so that he doesn't clip on top of a surface that
+		; he's too far below from. However, said check doesn't exist for when Sonic
+		; is moving left or right. The effects of this can easily be seen if you
+		; place a solid object on a top solid surface and hit the object from the bottom,
+		; where Sonic's Y movement will be cancelled out, causing him to start checking
+		; for floor collision, which makes him clip onto the surface.
+		move.b	obVelY(a0),d2				; get Sonic's fall speed at the time of impact (upper byte only, pixel delta)
+		addq.b	#8,d2					; increase it by one tile
+		neg.b	d2					; mirror it
+		cmp.b	d2,d1					; is result bigger than distance to floor?
+		bge.s	.landed					; if yes, branch
+		cmp.b	d2,d0					; is result bigger than distance to floor? (sloped variant)
+		blt.s	.return					; if not, branch
+
+.landed:
+	endif
 		add.w	d1,obY(a0)				; align Sonic with floor
 	if FixBugs
 		clr.w	obSubpixelY(a0)				; reset subpixel portion
@@ -1673,6 +1691,18 @@ Sonic_FloorRight:
 		bsr.w	Sonic_FindFloor				; find Sonic's distance to floor
 		tst.w	d1					; has Sonic touched the floor?
 		bpl.s	.return					; if not, branch
+	if FixBugs
+		; See explanation in .noceiling under Sonic_FloorLeft
+		move.b	obVelY(a0),d2				; get Sonic's fall speed at the time of impact (upper byte only, pixel delta)
+		addq.b	#8,d2					; increase it by one tile
+		neg.b	d2					; mirror it
+		cmp.b	d2,d1					; is result bigger than distance to floor?
+		bge.s	.landed					; if yes, branch
+		cmp.b	d2,d0					; is result bigger than distance to floor? (sloped variant)
+		blt.s	.return					; if not, branch
+
+.landed:
+	endif
 		add.w	d1,obY(a0)				; align Sonic with floor
 	if FixBugs
 		clr.w	obSubpixelY(a0)				; reset subpixel portion
