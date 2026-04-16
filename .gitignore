@@ -15,6 +15,9 @@ Utility Project Files/S1SSEdit.undo
 sonic.lst
 sonic.log
 errors.txt
+sonic.p
+
+# Built ROMs.
 s1built.bin
 s1built.prev.bin
 

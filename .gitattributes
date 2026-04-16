@@ -2,6 +2,7 @@
 *.txt		text
 *.xml		text
 *.cs		text
+*.cpp		text
 *.ini		text
 *.bin		binary
 

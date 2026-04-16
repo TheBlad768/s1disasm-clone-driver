@@ -3959,6 +3959,7 @@ TryAg_Exit:	; exit end screen and restart the gam
 ; ---------------------------------------------------------------------------
 ; Ending sequence demos
 ; ---------------------------------------------------------------------------
+
 Demo_EndGHZ1:	include	"demodata/Ending - GHZ1.asm"
 Demo_EndMZ:	include	"demodata/Ending - MZ.asm"
 Demo_EndSYZ:	include	"demodata/Ending - SYZ.asm"

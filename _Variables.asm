@@ -456,7 +456,7 @@ v_init:			ds.l	1		; 'init' text string
 v_ram_end:
 	if *>0	; Don't declare more space than the RAM can contain!
 		inform 2, "The RAM variable declarations are too large."
-	endc
+	endif
 	objend
 
 ; Special stage
@@ -470,6 +470,7 @@ v_ssitembuffer_end:	equ	v_ssitembuffer+$100
 v_ssbuffer3:		equ	v_ram_start_def+$8000
 v_ssscroll_buffer:	equ	v_ngfx_buffer+$100
 
+; Error handler
 	obj v_objstate
 v_regbuffer:	ds.b	$40	; stores registers d0-a7 during an error event
 v_spbuffer:	ds.l	1	; stores most recent sp address
