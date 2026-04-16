@@ -25,7 +25,7 @@ PSB_Main:	; Routine 0
 	endif
 		move.w	#$130,obScreenY(a0)
 		move.l	#Map_PSB,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Title_Foreground,0,0),obGfx(a0)
+		move.w	#ArtTile_Title_Foreground,obGfx(a0)
 		cmpi.b	#2,obFrame(a0)	; is object "PRESS START"?
 		blo.s	PSB_PrsStart	; if yes, branch
 
@@ -33,7 +33,7 @@ PSB_Main:	; Routine 0
 		cmpi.b	#3,obFrame(a0)	; is the object "TM"?
 		bne.s	PSB_Exit	; if not, branch
 
-		move.w	#make_art_tile(ArtTile_Title_Trademark,1,0),obGfx(a0) ; "TM" specific code
+		move.w	#ArtTile_Title_Trademark|Tile_Pal2,obGfx(a0) ; "TM" specific code
 	if FixBugs
 		; Fix title screen position
 		; https://info.sonicretro.org/SCHG_How-to:Fix_the_Title_Screen_position_in_Sonic_1

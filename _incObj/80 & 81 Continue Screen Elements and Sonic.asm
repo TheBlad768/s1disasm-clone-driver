@@ -17,7 +17,7 @@ CSI_Index:	dc.w CSI_Main-CSI_Index
 CSI_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_ContScr,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Continue_Sonic,0,1),obGfx(a0)
+		move.w	#ArtTile_Continue_Sonic|Tile_Prio,obGfx(a0)
 		move.b	#0,obRender(a0)
 		move.b	#$3C,obActWid(a0)
 		move.w	#$120,obX(a0)
@@ -66,7 +66,7 @@ CSI_Even:
 		move.b	#6,obFrame(a1)
 		move.b	#6,obRoutine(a1)
 		move.l	#Map_ContScr,obMap(a1)
-		move.w	#make_art_tile(ArtTile_Mini_Sonic,0,1),obGfx(a1)
+		move.w	#ArtTile_Mini_Sonic|Tile_Prio,obGfx(a1)
 		move.b	#0,obRender(a1)
 		lea	object_size(a1),a1
 		dbf	d1,CSI_MiniSonicLoop ; repeat for number of continues
@@ -122,7 +122,7 @@ CSon_Main:	; Routine 0
 		move.w	#$A0,obX(a0)
 		move.w	#$C0,obY(a0)
 		move.l	#Map_Sonic,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Sonic,0,0),obGfx(a0)
+		move.w	#ArtTile_Sonic,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#2,obPriority(a0)
 		move.b	#id_Float3,obAnim(a0) ; use "floating" animation
@@ -135,7 +135,7 @@ CSon_ChkLand:	; Routine 2
 		addq.b	#2,obRoutine(a0)
 		clr.w	obVelY(a0)	; stop Sonic falling
 		move.l	#Map_ContScr,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Continue_Sonic,0,1),obGfx(a0)
+		move.w	#ArtTile_Continue_Sonic|Tile_Prio,obGfx(a0)
 		move.b	#id_Walk,obAnim(a0)
 		bra.s	CSon_Animate
 
@@ -154,7 +154,7 @@ CSon_Animate:	; Routine 4
 CSon_GetUp:
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Sonic,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Sonic,0,0),obGfx(a0)
+		move.w	#ArtTile_Sonic,obGfx(a0)
 		move.b	#id_Float4,obAnim(a0) ; use "getting up" animation
 		clr.w	obInertia(a0)
 		subq.w	#8,obY(a0)

@@ -21,6 +21,9 @@ debug_reg:		equ $C0001C
 
 ; Z80 addresses
 z80_ram:		equ $A00000	; start of Z80 RAM
+z80_dac3_pitch:		equ $A000EA
+z80_dac_status:		equ $A01FFD
+z80_dac_sample:		equ $A01FFF
 z80_ram_end:		equ $A02000	; end of non-reserved Z80 RAM
 ym2612_a0:		equ $A04000
 ym2612_d0:		equ $A04001
@@ -344,7 +347,7 @@ boss_fz_x:	equ $2450		; Final Zone
 boss_fz_y:	equ $510
 boss_fz_end:	equ boss_fz_x+$2B0
 
-; Tile flags (ASM68K-specific, replaces "make_art_tile" function from AS, added here for cross-compatibility)
+; Tile flags (replaces the old "make_art_tile" function)
 Tile_Prio:	equ	1<<15
 Tile_Pal1:	equ	0<<13
 Tile_Pal2:	equ	1<<13

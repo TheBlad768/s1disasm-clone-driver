@@ -26,10 +26,10 @@ LBall_Main:	; Routine 0
 		move.b	#8,obHeight(a0)
 		move.b	#8,obWidth(a0)
 		move.l	#Map_Fire,obMap(a0)
-		move.w	#make_art_tile(ArtTile_MZ_Fireball,0,0),obGfx(a0)
+		move.w	#ArtTile_MZ_Fireball,obGfx(a0)
 		cmpi.b	#id_SLZ,(v_zone).w	; check if level is SLZ
 		bne.s	.notSLZ
-		move.w	#make_art_tile(ArtTile_SLZ_Fireball,0,0),obGfx(a0)	; SLZ specific code
+		move.w	#ArtTile_SLZ_Fireball,obGfx(a0)	; SLZ specific code
 
 .notSLZ:
 		move.b	#4,obRender(a0)

@@ -41,73 +41,73 @@ v_hscrolltablebuffer_end_padded:
 v_objspace:		ds.b	object_size*$80	; object variable space ($40 bytes per object)
 
 ; Title screen objects
-v_sonicteam	= v_objspace+object_size*2	; object variable space for the "SONIC TEAM PRESENTS" text ($40 bytes)
-v_titlesonic	= v_objspace+object_size*1	; object variable space for Sonic in the title screen ($40 bytes)
-v_pressstart	= v_objspace+object_size*2	; object variable space for the "PRESS START BUTTON" text ($40 bytes)
-v_titletm	= v_objspace+object_size*3	; object variable space for the trademark symbol ($40 bytes)
-v_ttlsonichide	= v_objspace+object_size*4	; object variable space for hiding part of Sonic ($40 bytes)
+v_sonicteam:	equ	v_objspace+object_size*2	; object variable space for the "SONIC TEAM PRESENTS" text ($40 bytes)
+v_titlesonic:	equ	v_objspace+object_size*1	; object variable space for Sonic in the title screen ($40 bytes)
+v_pressstart:	equ	v_objspace+object_size*2	; object variable space for the "PRESS START BUTTON" text ($40 bytes)
+v_titletm:	equ	v_objspace+object_size*3	; object variable space for the trademark symbol ($40 bytes)
+v_ttlsonichide:	equ	v_objspace+object_size*4	; object variable space for hiding part of Sonic ($40 bytes)
 
 ; Level objects
-v_player	= v_objspace+object_size*0	; object variable space for Sonic ($40 bytes)
-v_hud		= v_objspace+object_size*1	; object variable space for the HUD ($40 bytes)
+v_player:	equ	v_objspace+object_size*0	; object variable space for Sonic ($40 bytes)
+v_hud:		equ	v_objspace+object_size*1	; object variable space for the HUD ($40 bytes)
 
-v_titlecard	= v_objspace+object_size*2	; object variable space for the title card ($100 bytes)
-v_ttlcardname	= v_titlecard+object_size*0		; object variable space for the title card zone name text ($40 bytes)
-v_ttlcardzone	= v_titlecard+object_size*1	; object variable space for the title card "ZONE" text ($40 bytes)
-v_ttlcardact	= v_titlecard+object_size*2	; object variable space for the title card act text ($40 bytes)
-v_ttlcardoval	= v_titlecard+object_size*3	; object variable space for the title card oval ($40 bytes)
+v_titlecard:	equ	v_objspace+object_size*2	; object variable space for the title card ($100 bytes)
+v_ttlcardname:	equ	v_titlecard+object_size*0	; object variable space for the title card zone name text ($40 bytes)
+v_ttlcardzone:	equ	v_titlecard+object_size*1	; object variable space for the title card "ZONE" text ($40 bytes)
+v_ttlcardact:	equ	v_titlecard+object_size*2	; object variable space for the title card act text ($40 bytes)
+v_ttlcardoval:	equ	v_titlecard+object_size*3	; object variable space for the title card oval ($40 bytes)
 
-v_gameovertext1	= v_objspace+object_size*2	; object variable space for the "GAME"/"TIME" in "GAME OVER"/"TIME OVER" text ($40 bytes)
-v_gameovertext2	= v_objspace+object_size*3	; object variable space for the "OVER" in "GAME OVER"/"TIME OVER" text ($40 bytes)
+v_gameovertext1:equ	v_objspace+object_size*2	; object variable space for the "GAME"/"TIME" in "GAME OVER"/"TIME OVER" text ($40 bytes)
+v_gameovertext2:equ	v_objspace+object_size*3	; object variable space for the "OVER" in "GAME OVER"/"TIME OVER" text ($40 bytes)
 
-v_shieldobj	= v_objspace+object_size*6	; object variable space for the shield ($40 bytes)
-v_starsobj1	= v_objspace+object_size*8	; object variable space for the invincibility stars #1 ($40 bytes)
-v_starsobj2	= v_objspace+object_size*9	; object variable space for the invincibility stars #2 ($40 bytes)
-v_starsobj3	= v_objspace+object_size*10	; object variable space for the invincibility stars #3 ($40 bytes)
-v_starsobj4	= v_objspace+object_size*11	; object variable space for the invincibility stars #4 ($40 bytes)
+v_shieldobj:	equ	v_objspace+object_size*6	; object variable space for the shield ($40 bytes)
+v_starsobj1:	equ	v_objspace+object_size*8	; object variable space for the invincibility stars #1 ($40 bytes)
+v_starsobj2:	equ	v_objspace+object_size*9	; object variable space for the invincibility stars #2 ($40 bytes)
+v_starsobj3:	equ	v_objspace+object_size*10	; object variable space for the invincibility stars #3 ($40 bytes)
+v_starsobj4:	equ	v_objspace+object_size*11	; object variable space for the invincibility stars #4 ($40 bytes)
 
-v_splash	= v_objspace+object_size*12	; object variable space for the water splash ($40 bytes)
-v_sonicbubbles	= v_objspace+object_size*13	; object variable space for the bubbles that come out of Sonic's mouth/drown countdown ($40 bytes)
-v_watersurface1	= v_objspace+object_size*30	; object variable space for the water surface #1 ($40 bytes)
-v_watersurface2	= v_objspace+object_size*31	; object variable space for the water surface #1 ($40 bytes)
+v_splash:	equ	v_objspace+object_size*12	; object variable space for the water splash ($40 bytes)
+v_sonicbubbles:	equ	v_objspace+object_size*13	; object variable space for the bubbles that come out of Sonic's mouth/drown countdown ($40 bytes)
+v_watersurface1:equ	v_objspace+object_size*30	; object variable space for the water surface #1 ($40 bytes)
+v_watersurface2:equ	v_objspace+object_size*31	; object variable space for the water surface #1 ($40 bytes)
 
-v_endcard	= v_objspace+object_size*23	; object variable space for the level results card ($1C0 bytes)
-v_endcardsonic	= v_endcard+object_size*0	; object variable space for the level results card "SONIC HAS" text ($40 bytes)
-v_endcardpassed	= v_endcard+object_size*1	; object variable space for the level results card "PASSED" text ($40 bytes)
-v_endcardact	= v_endcard+object_size*2	; object variable space for the level results card act text ($40 bytes)
-v_endcardscore	= v_endcard+object_size*3	; object variable space for the level results card score tally ($40 bytes)
-v_endcardtime	= v_endcard+object_size*4	; object variable space for the level results card time bonus tally ($40 bytes)
-v_endcardring	= v_endcard+object_size*5	; object variable space for the level results card ring bonus tally ($40 bytes)
-v_endcardoval	= v_endcard+object_size*6	; object variable space for the level results card oval ($40 bytes)
+v_endcard:	equ	v_objspace+object_size*23	; object variable space for the level results card ($1C0 bytes)
+v_endcardsonic:	equ	v_endcard+object_size*0		; object variable space for the level results card "SONIC HAS" text ($40 bytes)
+v_endcardpassed:equ	v_endcard+object_size*1		; object variable space for the level results card "PASSED" text ($40 bytes)
+v_endcardact:	equ	v_endcard+object_size*2		; object variable space for the level results card act text ($40 bytes)
+v_endcardscore:	equ	v_endcard+object_size*3		; object variable space for the level results card score tally ($40 bytes)
+v_endcardtime:	equ	v_endcard+object_size*4		; object variable space for the level results card time bonus tally ($40 bytes)
+v_endcardring:	equ	v_endcard+object_size*5		; object variable space for the level results card ring bonus tally ($40 bytes)
+v_endcardoval:	equ	v_endcard+object_size*6		; object variable space for the level results card oval ($40 bytes)
 
-v_lvlobjspace	= v_objspace+object_size*32	; level object variable space ($1800 bytes)
-v_lvlobjend	= v_lvlobjspace+object_size*96
-v_objspace_end	= v_lvlobjend
+v_lvlobjspace:	equ	v_objspace+object_size*32	; level object variable space ($1800 bytes)
+v_lvlobjend:	equ	v_lvlobjspace+object_size*96
+v_objspace_end:	equ	v_lvlobjend
 
 ; Special Stage objects
-v_ssrescard	= v_objspace+object_size*23	; object variable space for the Special Stage results card ($140 bytes)
-v_ssrestext	= v_ssrescard+object_size*0	; object variable space for the Special Stage results card text ($40 bytes)
-v_ssresscore	= v_ssrescard+object_size*1	; object variable space for the Special Stage results card score tally ($40 bytes)
-v_ssresring	= v_ssrescard+object_size*2	; object variable space for the Special Stage results card ring bonus tally ($40 bytes)
-v_ssresoval	= v_ssrescard+object_size*3	; object variable space for the Special Stage results card oval ($40 bytes)
-v_ssrescontinue	= v_ssrescard+object_size*4	; object variable space for the Special Stage results card continue icon ($40 bytes)
-v_ssresemeralds	= v_objspace+object_size*32	; object variable space for the emeralds in the Special Stage results ($180 bytes)
+v_ssrescard:	equ	v_objspace+object_size*23	; object variable space for the Special Stage results card ($140 bytes)
+v_ssrestext:	equ	v_ssrescard+object_size*0	; object variable space for the Special Stage results card text ($40 bytes)
+v_ssresscore:	equ	v_ssrescard+object_size*1	; object variable space for the Special Stage results card score tally ($40 bytes)
+v_ssresring:	equ	v_ssrescard+object_size*2	; object variable space for the Special Stage results card ring bonus tally ($40 bytes)
+v_ssresoval:	equ	v_ssrescard+object_size*3	; object variable space for the Special Stage results card oval ($40 bytes)
+v_ssrescontinue:equ	v_ssrescard+object_size*4	; object variable space for the Special Stage results card continue icon ($40 bytes)
+v_ssresemeralds:equ	v_objspace+object_size*32	; object variable space for the emeralds in the Special Stage results ($180 bytes)
 
 ; Continue screen objects
-v_continuetext	= v_objspace+object_size*1	; object variable space for the continue screen text ($40 bytes)
-v_continuelight	= v_objspace+object_size*2	; object variable space for the continue screen light spot ($40 bytes)
-v_continueicon	= v_objspace+object_size*3	; object variable space for the continue screen icon ($40 bytes)
+v_continuetext:	equ	v_objspace+object_size*1	; object variable space for the continue screen text ($40 bytes)
+v_continuelight:equ	v_objspace+object_size*2	; object variable space for the continue screen light spot ($40 bytes)
+v_continueicon:	equ	v_objspace+object_size*3	; object variable space for the continue screen icon ($40 bytes)
 
 ; Ending objects
-v_endemeralds	= v_objspace+object_size*16	; object variable space for the emeralds in the ending ($180 bytes)
-v_endemeralds_end	= v_objspace+object_size*32
-v_endlogo	= v_objspace+object_size*16	; object variable space for the logo in the ending ($40 bytes)
+v_endemeralds:	equ	v_objspace+object_size*16	; object variable space for the emeralds in the ending ($180 bytes)
+v_endemeralds_end:equ	v_objspace+object_size*32
+v_endlogo:	equ	v_objspace+object_size*16	; object variable space for the logo in the ending ($40 bytes)
 
 ; Credits objects
-v_credits	= v_objspace+object_size*2	; object variable space for the credits text ($40 bytes)
-v_endeggman	= v_objspace+object_size*2	; object variable space for Eggman after the credits ($40 bytes)
-v_tryagain	= v_objspace+object_size*3	; object variable space for the "TRY AGAIN" text ($40 bytes)
-v_eggmanchaos	= v_objspace+object_size*32	; object variable space for the emeralds juggled by Eggman ($180 bytes)
+v_credits:	equ	v_objspace+object_size*2	; object variable space for the credits text ($40 bytes)
+v_endeggman:	equ	v_objspace+object_size*2	; object variable space for Eggman after the credits ($40 bytes)
+v_tryagain:	equ	v_objspace+object_size*3	; object variable space for the "TRY AGAIN" text ($40 bytes)
+v_eggmanchaos:	equ	v_objspace+object_size*32	; object variable space for the emeralds juggled by Eggman ($180 bytes)
 
 v_snddriver_ram:	SMPS_RAM		; sound driver state
 			ds.b	$40		; unused
@@ -250,7 +250,7 @@ v_obj31ypos:		ds.w	1		; y-position of object 31 (MZ stomper)
 			ds.b	1		; unused
 v_bossstatus:		ds.b	1		; status of boss and prison capsule (01 = boss defeated; 02 = prison opened)
 v_trackpos:		ds.w	1		; position tracking reference number
-v_trackbyte = v_trackpos+1			; low byte for position tracking
+v_trackbyte:		equ	v_trackpos+1	; low byte for position tracking
 f_lockscreen:		ds.b	1		; flag set to lock screen during bosses
 			ds.b	5		; unused
 v_lani0_frame:		ds.b	1		; level graphics animation 0 - current frame
@@ -327,7 +327,7 @@ v_crossresetram:				; RAM beyond this point is only cleared on a cold-boot
 			ds.b	2		; unused
 f_restart:		ds.w	1		; restart level flag
 v_framecount:		ds.w	1		; frame counter (adds 1 every frame)
-v_framebyte = v_framecount+1			; low byte for frame counter
+v_framebyte:	equ	v_framecount+1		; low byte for frame counter
 v_debugitem:		ds.b	1		; debug item currently selected (NOT the object number of the item)
 			ds.b	1		; unused
 v_debuguse:		ds.w	1		; debug mode use & routine counter (when Sonic is a ring/item)
@@ -341,7 +341,7 @@ v_act:			ds.b	1		; current act number
 v_lives:		ds.b	1		; number of lives
 			ds.b	1		; unused
 v_air:			ds.w	1		; air remaining while underwater
-v_airbyte = v_air+1				; low byte for air
+v_airbyte:	equ	v_air+1			; low byte for air
 v_lastspecial:		ds.b	1		; last special stage number
 			ds.b	1		; unused
 v_continues:		ds.b	1		; number of continues
@@ -353,11 +353,11 @@ f_ringcount:		ds.b	1		; ring counter update flag
 f_timecount:		ds.b	1		; time counter update flag
 f_scorecount:		ds.b	1		; score counter update flag
 v_rings:		ds.w	1		; rings
-v_ringbyte = v_rings+1				; low byte for rings
+v_ringbyte:	equ	v_rings+1		; low byte for rings
 v_time:			ds.l	1		; time
-v_timemin = v_time+1				; time - minutes
-v_timesec = v_time+2				; time - seconds
-v_timecent = v_time+3				; time - centiseconds
+v_timemin:	equ	v_time+1		; time - minutes
+v_timesec:	equ	v_time+2		; time - seconds
+v_timecent:	equ	v_time+3		; time - centiseconds
 v_score:		ds.l	1		; score
 			ds.b	2		; unused
 v_shield:		ds.b	1		; shield status (00 = no; 01 = yes)
@@ -467,15 +467,15 @@ v_ram_end:
 	dephase
 
 ; Special stage
-v_ssbuffer1		= v_ram_start
-v_ssblockbuffer		= v_ssbuffer1+$1020 ; ($2000 bytes)
-v_ssblockbuffer_end	= v_ssblockbuffer+$80*$40
-v_ssbuffer2		= v_ram_start+$4000
-v_ssblocktypes		= v_ssbuffer2
-v_ssitembuffer		= v_ssbuffer2+$400 ; ($100 bytes)
-v_ssitembuffer_end	= v_ssitembuffer+$100
-v_ssbuffer3		= v_ram_start_def+$8000
-v_ssscroll_buffer	= v_ngfx_buffer+$100
+v_ssbuffer1:		equ	v_ram_start
+v_ssblockbuffer:	equ	v_ssbuffer1+$1020 ; ($2000 bytes)
+v_ssblockbuffer_end:	equ	v_ssblockbuffer+$80*$40
+v_ssbuffer2:		equ	v_ram_start+$4000
+v_ssblocktypes:		equ	v_ssbuffer2
+v_ssitembuffer:		equ	v_ssbuffer2+$400 ; ($100 bytes)
+v_ssitembuffer_end:	equ	v_ssitembuffer+$100
+v_ssbuffer3:		equ	v_ram_start_def+$8000
+v_ssscroll_buffer:	equ	v_ngfx_buffer+$100
 
 ; Error handler
 	phase v_objstate

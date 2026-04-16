@@ -25,20 +25,20 @@ MBlock_Var:	dc.b $10, 0		; object width, frame number
 MBlock_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_MBlock,obMap(a0)
-		move.w	#make_art_tile(ArtTile_MZ_Block,2,0),obGfx(a0)
+		move.w	#ArtTile_MZ_Block|Tile_Pal3,obGfx(a0)
 		cmpi.b	#id_LZ,(v_zone).w ; check if level is LZ
 		bne.s	loc_FE44
 		move.l	#Map_MBlockLZ,obMap(a0) ; LZ specific code
-		move.w	#make_art_tile(ArtTile_LZ_Moving_Block,2,0),obGfx(a0)
+		move.w	#ArtTile_LZ_Moving_Block|Tile_Pal3,obGfx(a0)
 		move.b	#7,obHeight(a0)
 
 loc_FE44:
 		cmpi.b	#id_SBZ,(v_zone).w ; check if level is SBZ
 		bne.s	loc_FE60
-		move.w	#make_art_tile(ArtTile_SBZ_Moving_Block_Short,1,0),obGfx(a0) ; SBZ specific code (object 5228)
+		move.w	#ArtTile_SBZ_Moving_Block_Short|Tile_Pal2,obGfx(a0) ; SBZ specific code (object 5228)
 		cmpi.b	#$28,obSubtype(a0) ; is object 5228 ?
 		beq.s	loc_FE60	; if yes, branch
-		move.w	#make_art_tile(ArtTile_SBZ_Moving_Block_Long,2,0),obGfx(a0) ; SBZ specific code (object 523x)
+		move.w	#ArtTile_SBZ_Moving_Block_Long|Tile_Pal3,obGfx(a0) ; SBZ specific code (object 523x)
 
 loc_FE60:
 		move.b	#4,obRender(a0)
