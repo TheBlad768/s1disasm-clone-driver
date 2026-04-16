@@ -125,10 +125,12 @@ Mus86_SBZ_Loop06:
 	smpsCall            Mus86_SBZ_Call07
 	smpsLoop            $00, $02, Mus86_SBZ_Loop06
 	smpsAlterVol        $08
+    if FixMusicAndSFXDataBugs
 	; [BUG] The detune in this channel is not reset upon loop,
 	;   thus causing the looped intro to be slightly off-tune.
-	;   Uncomment the following line to fix this.
-	;smpsAlterNote       $00
+	;   The following line fixes this.
+	smpsAlterNote       $00
+    endif
 	smpsJump            Mus86_SBZ_FM3
 
 ; FM4 Data
