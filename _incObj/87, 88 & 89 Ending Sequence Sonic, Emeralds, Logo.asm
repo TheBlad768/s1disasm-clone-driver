@@ -136,10 +136,10 @@ EndChaos:
 ECha_Index:	dc.w ECha_Main-ECha_Index
 		dc.w ECha_Move-ECha_Index
 
-echa_origX = objoff_38	; x-axis centre of emerald circle (2 bytes)
-echa_origY = objoff_3A	; y-axis centre of emerald circle (2 bytes)
-echa_radius = objoff_3C	; radius (2 bytes)
-echa_angle = objoff_3E	; angle for rotation (2 bytes)
+echa_origX:	equ objoff_38	; x-axis centre of emerald circle (2 bytes)
+echa_origY:	equ objoff_3A	; y-axis centre of emerald circle (2 bytes)
+echa_radius:	equ objoff_3C	; radius (2 bytes)
+echa_angle:	equ objoff_3E	; angle for rotation (2 bytes)
 ; ===========================================================================
 
 ECha_Main:	; Routine 0

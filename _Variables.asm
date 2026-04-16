@@ -121,15 +121,15 @@ v_bgscrposx_vdp:	ds.w	1		; background screen position x (VDP)
 v_bg3scrposy_vdp:	ds.w	1
 v_bg3scrposx_vdp:	ds.w	1
 			ds.b	2		; unused
-v_hbla_hreg:		ds.w	1		; VDP H.interrupt register buffer (8Axx)
-v_hbla_line:	equ v_hbla_hreg+1		; screen line where water starts and palette is changed by HBlank
+v_hblank_hreg:		ds.w	1		; VDP H.interrupt register buffer (8Axx) (previously called v_hbla_hreg)
+v_hblank_line = v_hblank_hreg+1			; screen line where water starts and palette is changed by HBlank (previously called v_hbla_line)
 v_pfade_start:		ds.b	1		; palette fading - start position in bytes
 v_pfade_size:		ds.b	1		; palette fading - number of colours
 
 v_misc_variables:
-v_vbla_0e_counter:	ds.b	1		; tracks how many times vertical interrupts routine 0E occured (pretty much unused because routine 0E is unused)
+v_vblank_0e_counter:	ds.b	1		; tracks how many times vertical interrupts routine 0E occured (pretty much unused because routine 0E is unused)
 			ds.b	1		; unused
-v_vbla_routine:		ds.b	1		; VBlank - routine counter
+v_vblank_routine:	ds.b	1		; VBlank - routine counter (previously called v_vbla_routine)
 			ds.b	1		; unused
 v_spritecount:		ds.b	1		; number of sprites on-screen
 			ds.b	5		; unused
@@ -140,14 +140,14 @@ f_pause:		ds.w	1		; flag set to pause the game
 			ds.b	4		; unused
 v_vdp_buffer2:		ds.w	1		; VDP instruction buffer
 			ds.b	2		; unused
-f_hbla_pal:		ds.w	1		; flag set to change palette during HBlank (0000 = no; 0001 = change)
+f_hblank_pal:		ds.w	1		; flag set to change palette during HBlank (0000 = no; 0001 = change) (previously called f_hbla_pal)
 v_waterpos1:		ds.w	1		; water height, actual
 v_waterpos2:		ds.w	1		; water height, ignoring sway
 v_waterpos3:		ds.w	1		; water height, next target
 f_water:		ds.b	1		; flag set for water
 v_wtr_routine:		ds.b	1		; water event - routine counter
 f_wtr_state:		ds.b	1		; water palette state when water is above/below the screen (00 = partly/all dry; 01 = all underwater)
-f_doupdatesinhblank:	ds.b	1		; defers performing various tasks to the Horizontal Interrupt (H-Blank)
+f_doupdatesinhblank:	ds.b	1		; defers performing various tasks to the Horizontal Interrupt (HBlank)
 v_pal_buffer:		ds.b	$30		; palette data buffer (used for palette cycling)
 v_misc_variables_end:
 
@@ -328,9 +328,9 @@ v_debugitem:		ds.b	1		; debug item currently selected (NOT the object number of 
 v_debuguse:		ds.w	1		; debug mode use & routine counter (when Sonic is a ring/item)
 v_debugspeedtimer:	ds.b	1		; debug mode - timer before movement starts
 v_debugspeed:		ds.b	1		; debug mode - movement speed
-v_vbla_count:		ds.l	1		; vertical interrupt counter (adds 1 every VBlank)
-v_vbla_word:	equ	v_vbla_count+2		; low word for vertical interrupt counter (2 bytes)
-v_vbla_byte:	equ	v_vbla_word+1		; low byte for vertical interrupt counter
+v_vblank_count:		ds.l	1		; vertical interrupt counter (adds 1 every VBlank)
+v_vblank_word = v_vblank_count+2 			; low word for vertical interrupt counter (2 bytes)
+v_vblank_byte = v_vblank_word+1			; low byte for vertical interrupt counter
 v_zone:			ds.b	1		; current zone number
 v_act:			ds.b	1		; current act number
 v_lives:		ds.b	1		; number of lives
