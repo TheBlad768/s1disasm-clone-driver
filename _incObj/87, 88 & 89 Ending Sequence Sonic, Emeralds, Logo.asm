@@ -34,7 +34,7 @@ ESon_Main:	; Routine 0
 ESon_Main2:
 		addq.b	#2,ob2ndRout(a0)
 		move.l	#Map_ESon,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Ending_Sonic,0,0),obGfx(a0)
+		move.w	#ArtTile_Ending_Sonic,obGfx(a0)
 		move.b	#4,obRender(a0)
 		clr.b	obStatus(a0)
 		move.b	#2,obPriority(a0)
@@ -105,7 +105,7 @@ ESon_Leap:	; Routine $10
 		bne.s	ESon_Wait4
 		addq.b	#2,ob2ndRout(a0)
 		move.l	#Map_ESon,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Ending_Sonic,0,0),obGfx(a0)
+		move.w	#ArtTile_Ending_Sonic,obGfx(a0)
 		move.b	#4,obRender(a0)
 		clr.b	obStatus(a0)
 		move.b	#2,obPriority(a0)
@@ -136,10 +136,10 @@ EndChaos:
 ECha_Index:	dc.w ECha_Main-ECha_Index
 		dc.w ECha_Move-ECha_Index
 
-echa_origX = objoff_38	; x-axis centre of emerald circle (2 bytes)
-echa_origY = objoff_3A	; y-axis centre of emerald circle (2 bytes)
-echa_radius = objoff_3C	; radius (2 bytes)
-echa_angle = objoff_3E	; angle for rotation (2 bytes)
+echa_origX:	equ objoff_38	; x-axis centre of emerald circle (2 bytes)
+echa_origY:	equ objoff_3A	; y-axis centre of emerald circle (2 bytes)
+echa_radius:	equ objoff_3C	; radius (2 bytes)
+echa_angle:	equ objoff_3E	; angle for rotation (2 bytes)
 ; ===========================================================================
 
 ECha_Main:	; Routine 0
@@ -161,7 +161,7 @@ ECha_LoadLoop:
 		move.b	#id_EndChaos,obID(a1) ; load chaos emerald object
 		addq.b	#2,obRoutine(a1)
 		move.l	#Map_ECha,obMap(a1)
-		move.w	#make_art_tile(ArtTile_Ending_Emeralds,0,0),obGfx(a1)
+		move.w	#ArtTile_Ending_Emeralds,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#1,obPriority(a1)
 		move.w	obX(a0),echa_origX(a1)
@@ -236,7 +236,7 @@ ESth_Main:	; Routine 0
 		move.w	#-$20,obX(a0)	; object starts outside the level boundary
 		move.w	#$D8,obScreenY(a0)
 		move.l	#Map_ESth,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Ending_STH,0,0),obGfx(a0)
+		move.w	#ArtTile_Ending_STH,obGfx(a0)
 		move.b	#0,obRender(a0)
 		move.b	#0,obPriority(a0)
 

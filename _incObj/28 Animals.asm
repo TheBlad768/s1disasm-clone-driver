@@ -42,17 +42,17 @@ Anml_VarIndex:	; two index IDs for Anml_Variables
 
 Anml_Variables:	; horizontal speed, vertical speed, mappings
 		dc.w -$200, -$400	; type 0 - GHZ/SBZ
-		dc.l Map_Animal1 
+		dc.l Map_Animal1
 		dc.w -$200, -$300	; type 1 - SYZ/SBZ
 		dc.l Map_Animal2 
 		dc.w -$180, -$300	; type 2 - LZ
-		dc.l Map_Animal1 
+		dc.l Map_Animal1
 		dc.w -$140, -$180	; type 3 - MZ/LZ
-		dc.l Map_Animal2 
+		dc.l Map_Animal2
 		dc.w -$1C0, -$300	; type 4 - SYZ/SLZ
-		dc.l Map_Animal3 
+		dc.l Map_Animal3
 		dc.w -$300, -$400	; type 5 - GHZ/SLZ
-		dc.l Map_Animal2 
+		dc.l Map_Animal2
 		dc.w -$280, -$380	; type 6 - MZ
 		dc.l Map_Animal3
 
@@ -142,10 +142,10 @@ Anml_FromEnemy:
 		move.w	(a1)+,objoff_32(a0)	; load horizontal speed
 		move.w	(a1)+,objoff_34(a0)	; load vertical speed
 		move.l	(a1)+,obMap(a0)	; load mappings
-		move.w	#make_art_tile(ArtTile_Animal_1,0,0),obGfx(a0)	; VRAM setting for 1st animal
+		move.w	#ArtTile_Animal_1,obGfx(a0)	; VRAM setting for 1st animal
 		btst	#0,objoff_30(a0)	; is 1st animal used?
 		beq.s	loc_90C0	; if yes, branch
-		move.w	#make_art_tile(ArtTile_Animal_2,0,0),obGfx(a0)	; VRAM setting for 2nd animal
+		move.w	#ArtTile_Animal_2,obGfx(a0)	; VRAM setting for 2nd animal
 
 loc_90C0:
 		move.b	#$C,obHeight(a0)

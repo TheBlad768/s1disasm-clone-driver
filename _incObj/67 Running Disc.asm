@@ -21,7 +21,7 @@ disc_sonic_attached = objoff_3A
 Disc_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Disc,obMap(a0)
-		move.w	#make_art_tile(ArtTile_SBZ_Disc,2,1),obGfx(a0)
+		move.w	#ArtTile_SBZ_Disc|Tile_Pal3|Tile_Prio,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#8,obActWid(a0)
