@@ -505,7 +505,7 @@ SS_LoadData:
 		; Load layout data
 		movea.l	SS_LayoutIndex(pc,d0.w),a0
 		lea	(v_ssbuffer2).l,a1
-		move.w	#make_art_tile(ArtTile_SS_Background_Clouds,0,FALSE),d0
+		move.w	#ArtTile_SS_Background_Clouds,d0
 		jsr	(EniDec).l
 
 		; Clear everything from v_ssbuffer1 to v_ssbuffer2

@@ -19,7 +19,7 @@ BossPlasma_Index:
 BossPlasma_Main:	; Routine 0
 		move.w	#boss_fz_x+$138,obX(a0)
 		move.w	#boss_fz_y+$2C,obY(a0)
-		move.w	#make_art_tile(ArtTile_FZ_Boss,0,0),obGfx(a0)
+		move.w	#ArtTile_FZ_Boss,obGfx(a0)
 		move.l	#Map_PLaunch,obMap(a0)
 		move.b	#0,obAnim(a0)
 		move.b	#3,obPriority(a0)
@@ -84,7 +84,7 @@ BossPlasma_Loop:
 		move.w	obX(a0),obX(a1)
 		move.w	#boss_fz_y+$2C,obY(a1)
 		move.b	#8,obRoutine(a1)
-		move.w	#make_art_tile(ArtTile_FZ_Boss,1,0),obGfx(a1)
+		move.w	#ArtTile_FZ_Boss|Tile_Pal2,obGfx(a1)
 		move.l	#Map_Plasma,obMap(a1)
 		move.b	#$C,obHeight(a1)
 		move.b	#$C,obWidth(a1)

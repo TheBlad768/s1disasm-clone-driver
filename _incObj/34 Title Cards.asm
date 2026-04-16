@@ -13,8 +13,8 @@ Card_Index:	dc.w Card_CheckSBZ3-Card_Index
 		dc.w Card_Wait-Card_Index
 		dc.w Card_Wait-Card_Index
 
-card_mainX = objoff_30		; position for card to display on
-card_finalX = objoff_32		; position for card to finish on
+card_mainX:	equ	objoff_30		; position for card to display on
+card_finalX:	equ	objoff_32		; position for card to finish on
 ; ===========================================================================
 
 Card_CheckSBZ3:	; Routine 0
@@ -61,7 +61,7 @@ Card_ActNumber:
 Card_MakeSprite:
 		move.b	d0,obFrame(a1)	; display frame number d0
 		move.l	#Map_Card,obMap(a1)
-		move.w	#make_art_tile(ArtTile_Title_Card,0,1),obGfx(a1)
+		move.w	#ArtTile_Title_Card|Tile_Prio,obGfx(a1)
 		move.b	#$78,obActWid(a1)
 		move.b	#0,obRender(a1)
 		move.b	#0,obPriority(a1)

@@ -47,7 +47,7 @@ BossMarble_LoadBoss:
 		move.b	(a2)+,obAnim(a1)
 		move.b	(a2)+,obPriority(a1)
 		move.l	#Map_Eggman,obMap(a1)
-		move.w	#make_art_tile(ArtTile_Eggman,0,0),obGfx(a1)
+		move.w	#ArtTile_Eggman,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#$20,obActWid(a1)
 		move.l	a0,objoff_34(a1)
@@ -445,7 +445,7 @@ BossMarble_TubeMain:	; Routine 8
 
 loc_18688:
 		move.l	#Map_BossItems,obMap(a0)
-		move.w	#make_art_tile(ArtTile_Eggman_Weapons,1,0),obGfx(a0)
+		move.w	#ArtTile_Eggman_Weapons|Tile_Pal2,obGfx(a0)
 		move.b	#4,obFrame(a0)
 		bra.s	loc_1864A
 ; ===========================================================================

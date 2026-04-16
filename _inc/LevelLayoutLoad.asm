@@ -12,7 +12,7 @@ LevelDataLoad:
 		addq.l	#4,a2
 		movea.l	(a2)+,a0
 		lea	(v_16x16).w,a1	; RAM address for 16x16 mappings
-		move.w	#make_art_tile(ArtTile_Level,0,FALSE),d0
+		move.w	#ArtTile_Level,d0
 		bsr.w	EniDec
 		movea.l	(a2)+,a0
 		lea	(v_256x256).l,a1 ; RAM address for 256x256 mappings

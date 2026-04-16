@@ -281,6 +281,7 @@ mSBZp:	macro duration,colours,sourceAddress,destinationPaletteIndex
 		endm
 
 ; duration in frames, number of colours, palette address, RAM address
+
 Pal_SBZCycList1: mSBZh
 		mSBZp	 7, 8,Pal_SBZCyc1,$28
 		mSBZp	13, 8,Pal_SBZCyc2,$29
@@ -305,6 +306,8 @@ Pal_SBZCycList2: mSBZh
 Pal_SBZCycList2_end:
 		even
 
+
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; SBZ palette cycle data bincludes
 ; ---------------------------------------------------------------------------

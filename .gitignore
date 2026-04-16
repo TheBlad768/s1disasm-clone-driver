@@ -16,6 +16,7 @@ Utility Project Files/S1SSEdit.undo
 # Misc. compiler output.
 sonic.lst
 sonic.log
+errors.txt
 sonic.p
 sonic.h
 

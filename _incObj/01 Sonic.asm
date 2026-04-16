@@ -31,7 +31,7 @@ Sonic_Main:	; Routine 0
 		move.b	#$13,obHeight(a0)			; set default height
 		move.b	#9,obWidth(a0)				; set default width
 		move.l	#Map_Sonic,obMap(a0)			; set mappings
-		move.w	#make_art_tile(ArtTile_Sonic,0,0),obGfx(a0) ; set VRAM location
+		move.w	#ArtTile_Sonic,obGfx(a0)		; set VRAM location
 		move.b	#2,obPriority(a0)			; set sprite priority
 		move.b	#$18,obActWid(a0)			; set render width
 		move.b	#4,obRender(a0)				; set to playfield-positioned mode
