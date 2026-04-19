@@ -37,7 +37,8 @@
                         }
                     ],
                     "isDirectory": true,
-                    "expanded": false
+                    "expanded": false,
+                    "uuid": "d669b34c-98ce-4536-a530-cc6eae1eb70a"
                 },
                 {
                     "name": "HUD",
@@ -148,7 +149,8 @@
                         }
                     ],
                     "isDirectory": true,
-                    "expanded": false
+                    "expanded": false,
+                    "uuid": "69b34c98-ce15-4665-b0cc-6eae1eb70a5b"
                 },
                 {
                     "name": "Boss",
@@ -185,7 +187,8 @@
                         }
                     ],
                     "isDirectory": true,
-                    "expanded": false
+                    "expanded": false,
+                    "uuid": "b34c98ce-1536-4530-8c6e-ae1eb70a5bc1"
                 },
                 {
                     "name": "Special Stage",
@@ -656,15 +659,18 @@
                                 }
                             ],
                             "isDirectory": true,
-                            "expanded": false
+                            "expanded": false,
+                            "uuid": "98ce1536-6530-4c6e-ae1e-b70a5bc10919"
                         }
                     ],
                     "isDirectory": true,
-                    "expanded": true
+                    "expanded": false,
+                    "uuid": "4c98ce15-3665-40cc-aeae-1eb70a5bc109"
                 }
             ],
             "isDirectory": true,
-            "expanded": true
+            "expanded": false,
+            "uuid": "8fd669b3-4c98-4e15-b665-30cc6eae1eb7"
         },
         {
             "name": "Title Screen",
@@ -749,7 +755,8 @@
                 }
             ],
             "isDirectory": true,
-            "expanded": false
+            "expanded": false,
+            "uuid": "ce153665-30cc-4eae-9eb7-0a5bc10919c3"
         },
         {
             "name": "Common",
@@ -1095,7 +1102,8 @@
                         }
                     ],
                     "isDirectory": true,
-                    "expanded": false
+                    "expanded": false,
+                    "uuid": "15366530-cc6e-4e1e-b70a-5bc10919c379"
                 },
                 {
                     "name": "Spring Orientation",
@@ -1154,7 +1162,8 @@
                         }
                     ],
                     "isDirectory": true,
-                    "expanded": false
+                    "expanded": false,
+                    "uuid": "366530cc-6eae-4eb7-8a5b-c10919c37975"
                 },
                 {
                     "name": "Animals",
@@ -1336,7 +1345,8 @@
                         }
                     ],
                     "isDirectory": true,
-                    "expanded": false
+                    "expanded": false,
+                    "uuid": "6530cc6e-ae1e-470a-9bc1-0919c37975be"
                 }
             ],
             "isDirectory": true,
@@ -1498,7 +1508,8 @@
                 }
             ],
             "isDirectory": true,
-            "expanded": false
+            "expanded": false,
+            "uuid": "30cc6eae-1eb7-4a5b-8109-19c37975be09"
         },
         {
             "name": "GHZ",
@@ -4131,7 +4142,8 @@
                 }
             ],
             "isDirectory": true,
-            "expanded": false
+            "expanded": false,
+            "uuid": "cc6eae1e-b70a-4bc1-8919-c37975be094a"
         },
         {
             "name": "Continue Screen",
@@ -4227,7 +4239,8 @@
                 }
             ],
             "isDirectory": true,
-            "expanded": true
+            "expanded": false,
+            "uuid": "6eae1eb7-0a5b-4109-99c3-7975be094a90"
         }
     ]
 }
