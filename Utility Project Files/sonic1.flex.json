@@ -395,6 +395,32 @@
                                 "path": "",
                                 "label": ""
                             },
+                            "uuid": "fe4b09dc-b352-41de-a04a-ebb7ed912737",
+                            "expanded": true
+                        },
+                        {
+                            "format": "Sonic 1.js",
+                            "name": "Chaos Emeralds (Results)",
+                            "palettes": [
+                                {
+                                    "path": "..\\palette\\Special Stage Results.bin",
+                                    "length": 4
+                                }
+                            ],
+                            "art": {
+                                "path": "..\\artnem\\Special Result Emeralds.nem",
+                                "compression": "Nemesis",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "Scratch Mappings (Flex2 only)\\resultsChaosEmeralds.asm",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "label": ""
+                            },
                             "uuid": "98ea6f7a-4afe-4b09-9cb3-52a1dee04aeb",
                             "expanded": true
                         },
@@ -4133,7 +4159,8 @@
                         "path": "",
                         "label": ""
                     },
-                    "uuid": "97716849-c634-4f9d-abfb-b75bf5fd12d8"
+                    "uuid": "97716849-c634-4f9d-abfb-b75bf5fd12d8",
+                    "expanded": true
                 },
                 {
                     "format": "Sonic 1.js",
@@ -4158,12 +4185,49 @@
                         "path": "",
                         "label": ""
                     },
-                    "uuid": "bd1bea51-99fe-4ab5-81bc-2197716849c6"
+                    "uuid": "bd1bea51-99fe-4ab5-81bc-2197716849c6",
+                    "expanded": true
                 }
             ],
             "isDirectory": true,
             "expanded": false,
             "uuid": "6bfbb75b-f5fd-42d8-ac5d-bf1015198609"
+        },
+        {
+            "name": "Misc.",
+            "children": [
+                {
+                    "format": "Sonic 1.js",
+                    "name": "HUD Mappings",
+                    "palettes": [
+                        {
+                            "path": "..\\palette\\Sonic.bin",
+                            "length": 1
+                        },
+                        {
+                            "path": "..\\palette\\Green Hill Zone.bin",
+                            "length": 3
+                        }
+                    ],
+                    "art": {
+                        "path": "..\\artnem\\HUD.nem",
+                        "compression": "Nemesis",
+                        "offset": 0
+                    },
+                    "mappings": {
+                        "path": "..\\_maps\\HUD.asm",
+                        "label": ""
+                    },
+                    "dplcs": {
+                        "enabled": false,
+                        "path": "",
+                        "label": ""
+                    },
+                    "uuid": "4afe4b09-dcb3-42a1-9ee0-4aebb7ed9127"
+                }
+            ],
+            "isDirectory": true,
+            "expanded": true
         }
     ]
 }
