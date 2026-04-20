@@ -1,7 +1,7 @@
 {
     "Flex": 2,
     "name": "Sonic 1",
-    "node": "98ea6f7a-4afe-4b09-9cb3-52a1dee04aeb",
+    "node": "4afe4b09-dcb3-42a1-9ee0-4aebb7ed9127",
     "objects": [
         {
             "name": "Mapless Objects",
@@ -39,118 +39,6 @@
                     "isDirectory": true,
                     "expanded": false,
                     "uuid": "d669b34c-98ce-4536-a530-cc6eae1eb70a"
-                },
-                {
-                    "name": "HUD",
-                    "children": [
-                        {
-                            "format": "Sonic 1.js",
-                            "name": "8x8 Lives Numbers",
-                            "palettes": [
-                                {
-                                    "path": "..\\palette\\Sonic.bin",
-                                    "length": 1
-                                }
-                            ],
-                            "art": {
-                                "path": "..\\artunc\\Lives Counter Numbers.bin",
-                                "compression": "Uncompressed",
-                                "offset": 0
-                            },
-                            "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\8x8 Hud Numbers.asm",
-                                "label": ""
-                            },
-                            "dplcs": {
-                                "enabled": false,
-                                "path": "",
-                                "label": ""
-                            },
-                            "uuid": "bc219771-6849-4634-8f9d-6bfbb75bf5fd",
-                            "expanded": true
-                        },
-                        {
-                            "format": "Sonic 1.js",
-                            "name": "Sonic Lives Icon",
-                            "palettes": [
-                                {
-                                    "path": "..\\palette\\Sonic.bin",
-                                    "length": 1
-                                }
-                            ],
-                            "art": {
-                                "path": "..\\artnem\\HUD - Life Counter Icon.nem",
-                                "compression": "Nemesis",
-                                "offset": 0
-                            },
-                            "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\Lives Icon.asm",
-                                "label": ""
-                            },
-                            "dplcs": {
-                                "enabled": false,
-                                "path": "",
-                                "label": ""
-                            },
-                            "uuid": "fe1ab581-bc21-4771-a849-c6348f9d6bfb",
-                            "expanded": true
-                        },
-                        {
-                            "format": "Sonic 1.js",
-                            "name": "8x16 Numbers and E",
-                            "palettes": [
-                                {
-                                    "path": "..\\palette\\Sonic.bin",
-                                    "length": 1
-                                }
-                            ],
-                            "art": {
-                                "path": "..\\artunc\\HUD Numbers.bin",
-                                "compression": "Uncompressed",
-                                "offset": 0
-                            },
-                            "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\8x16 Hud Numbers.asm",
-                                "label": ""
-                            },
-                            "dplcs": {
-                                "enabled": false,
-                                "path": "",
-                                "label": ""
-                            },
-                            "uuid": "b581bc21-9771-4849-8634-8f9d6bfbb75b",
-                            "expanded": true
-                        },
-                        {
-                            "format": "Sonic 1.js",
-                            "name": "Debug Font",
-                            "palettes": [
-                                {
-                                    "path": "..\\palette\\Sonic.bin",
-                                    "length": 1
-                                }
-                            ],
-                            "art": {
-                                "path": "..\\artunc\\Level Select & Debug Text.bin",
-                                "compression": "Uncompressed",
-                                "offset": 0
-                            },
-                            "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\DebugSymbols.asm",
-                                "label": ""
-                            },
-                            "dplcs": {
-                                "enabled": false,
-                                "path": "",
-                                "label": ""
-                            },
-                            "uuid": "5199fe1a-b581-4c21-9771-6849c6348f9d",
-                            "expanded": true
-                        }
-                    ],
-                    "isDirectory": true,
-                    "expanded": false,
-                    "uuid": "69b34c98-ce15-4665-b0cc-6eae1eb70a5b"
                 },
                 {
                     "name": "Boss",
@@ -669,7 +557,7 @@
                 }
             ],
             "isDirectory": true,
-            "expanded": false,
+            "expanded": true,
             "uuid": "8fd669b3-4c98-4e15-b665-30cc6eae1eb7"
         },
         {
@@ -703,7 +591,7 @@
                 },
                 {
                     "format": "Sonic 1.js",
-                    "name": "Press Start Button",
+                    "name": "PSB & Overflow",
                     "palettes": [
                         {
                             "path": "../palette/Title Screen.bin",
@@ -711,7 +599,7 @@
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Title Screen TM.nem",
+                        "path": "..\\artnem\\Title Screen Foreground.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
@@ -769,7 +657,7 @@
                             "length": 1
                         }
                     ],
-                    "format": "Sonic 1.js",
+                    "format": "Sonic 2.js",
                     "art": {
                         "path": "../artunc/Sonic.bin",
                         "compression": "Uncompressed",
@@ -1350,7 +1238,7 @@
                 }
             ],
             "isDirectory": true,
-            "expanded": false,
+            "expanded": true,
             "uuid": "14da472a-b9f3-4355-a6ce-e3a83fd70d6d"
         },
         {
@@ -4206,7 +4094,7 @@
             "uuid": "6bfbb75b-f5fd-42d8-ac5d-bf1015198609"
         },
         {
-            "name": "Misc.",
+            "name": "UI Stuff",
             "children": [
                 {
                     "format": "Sonic 1.js",
@@ -4236,6 +4124,117 @@
                         "label": ""
                     },
                     "uuid": "4afe4b09-dcb3-42a1-9ee0-4aebb7ed9127"
+                },
+                {
+                    "name": "Fonts and Lives Icon",
+                    "children": [
+                        {
+                            "format": "Sonic 1.js",
+                            "name": "Sonic Lives Icon",
+                            "palettes": [
+                                {
+                                    "path": "..\\palette\\Sonic.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "..\\artnem\\HUD - Life Counter Icon.nem",
+                                "compression": "Nemesis",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "Scratch Mappings (Flex2 only)\\Lives Icon.asm",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "label": ""
+                            },
+                            "uuid": "fe1ab581-bc21-4771-a849-c6348f9d6bfb",
+                            "expanded": true
+                        },
+                        {
+                            "format": "Sonic 1.js",
+                            "name": "8x16 Numbers and E",
+                            "palettes": [
+                                {
+                                    "path": "..\\palette\\Sonic.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "..\\artunc\\HUD Numbers.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "Scratch Mappings (Flex2 only)\\8x16 Hud Numbers.asm",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "label": ""
+                            },
+                            "uuid": "b581bc21-9771-4849-8634-8f9d6bfbb75b",
+                            "expanded": true
+                        },
+                        {
+                            "format": "Sonic 1.js",
+                            "name": "8x8 Lives Numbers",
+                            "palettes": [
+                                {
+                                    "path": "..\\palette\\Sonic.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "..\\artunc\\Lives Counter Numbers.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "Scratch Mappings (Flex2 only)\\8x8 Hud Numbers.asm",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "label": ""
+                            },
+                            "uuid": "bc219771-6849-4634-8f9d-6bfbb75bf5fd",
+                            "expanded": true
+                        },
+                        {
+                            "format": "Sonic 1.js",
+                            "name": "Debug Font",
+                            "palettes": [
+                                {
+                                    "path": "..\\palette\\Sonic.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "..\\artunc\\Level Select & Debug Text.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "Scratch Mappings (Flex2 only)\\DebugSymbols.asm",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "label": ""
+                            },
+                            "uuid": "5199fe1a-b581-4c21-9771-6849c6348f9d",
+                            "expanded": true
+                        }
+                    ],
+                    "isDirectory": true,
+                    "expanded": false
                 }
             ],
             "isDirectory": true,
