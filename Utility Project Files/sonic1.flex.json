@@ -1,7 +1,7 @@
 {
     "Flex": 2,
     "name": "Sonic 1",
-    "node": "4afe4b09-dcb3-42a1-9ee0-4aebb7ed9127",
+    "node": "5199fe1a-b581-4c21-9771-6849c6348f9d",
     "objects": [
         {
             "name": "Mapless Objects",
@@ -14,17 +14,17 @@
                             "name": "Title Card Objects",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Title Cards.nem",
+                                "path": "../artnem/Title Cards.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\TitleCardFont.asm",
+                                "path": "Scratch Mappings (Flex2 only)/TitleCardFont.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -48,21 +48,21 @@
                             "name": "Exhaust Blast",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 },
                                 {
-                                    "path": "..\\palette\\Green Hill Zone.bin",
+                                    "path": "../palette/Green Hill Zone.bin",
                                     "length": 3
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Boss - Exhaust Flame.nem",
+                                "path": "../artnem/Boss - Exhaust Flame.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\Exhaust Flame.asm",
+                                "path": "Scratch Mappings (Flex2 only)/Exhaust Flame.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -86,17 +86,17 @@
                             "name": "Special Stage Walls",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage.bin",
+                                    "path": "../palette/Special Stage.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special Walls.nem",
+                                "path": "../artnem/Special Walls.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\specialWalls.asm",
+                                "path": "Scratch Mappings (Flex2 only)/specialWalls.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -112,17 +112,17 @@
                             "name": "Peppermint Circle",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage.bin",
+                                    "path": "../palette/Special Stage.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special Red-White.nem",
+                                "path": "../artnem/Special Red-White.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -138,17 +138,17 @@
                             "name": "Rotate Circle",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage.bin",
+                                    "path": "../palette/Special Stage.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special R.nem",
+                                "path": "../artnem/Special R.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -164,17 +164,17 @@
                             "name": "UP & DOWN Circles",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage.bin",
+                                    "path": "../palette/Special Stage.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special UP-DOWN.nem",
+                                "path": "../artnem/Special UP-DOWN.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\specialUpAndDown.asm",
+                                "path": "Scratch Mappings (Flex2 only)/specialUpAndDown.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -190,17 +190,17 @@
                             "name": "Ghost Circle",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage.bin",
+                                    "path": "../palette/Special Stage.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special Ghost.nem",
+                                "path": "../artnem/Special Ghost.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -216,17 +216,17 @@
                             "name": "Glass Diamond",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage.bin",
+                                    "path": "../palette/Special Stage.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special Glass.nem",
+                                "path": "../artnem/Special Glass.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -242,17 +242,17 @@
                             "name": "\"GOAL\" Circle",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage.bin",
+                                    "path": "../palette/Special Stage.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special GOAL.nem",
+                                "path": "../artnem/Special GOAL.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\specialGOAL.asm",
+                                "path": "Scratch Mappings (Flex2 only)/specialGOAL.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -268,17 +268,17 @@
                             "name": "Chaos Emeralds",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage.bin",
+                                    "path": "../palette/Special Stage.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special Emeralds.nem",
+                                "path": "../artnem/Special Emeralds.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\specialChaosEmeralds.asm",
+                                "path": "Scratch Mappings (Flex2 only)/specialChaosEmeralds.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -294,17 +294,17 @@
                             "name": "Chaos Emeralds (Results)",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage Results.bin",
+                                    "path": "../palette/Special Stage Results.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special Result Emeralds.nem",
+                                "path": "../artnem/Special Result Emeralds.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\resultsChaosEmeralds.asm",
+                                "path": "Scratch Mappings (Flex2 only)/resultsChaosEmeralds.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -320,17 +320,17 @@
                             "name": "Emerald Twinkle",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Special Stage.bin",
+                                    "path": "../palette/Special Stage.bin",
                                     "length": 4
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Special Emerald Twinkle.nem",
+                                "path": "../artnem/Special Emerald Twinkle.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\specialEmeraldTwinkle.asm",
+                                "path": "Scratch Mappings (Flex2 only)/specialEmeraldTwinkle.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -349,17 +349,17 @@
                                     "name": "Special 1-UP",
                                     "palettes": [
                                         {
-                                            "path": "..\\palette\\Special Stage.bin",
+                                            "path": "../palette/Special Stage.bin",
                                             "length": 4
                                         }
                                     ],
                                     "art": {
-                                        "path": "..\\artnem\\Special 1UP.nem",
+                                        "path": "../artnem/Special 1UP.nem",
                                         "compression": "Nemesis",
                                         "offset": 0
                                     },
                                     "mappings": {
-                                        "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                        "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                         "label": ""
                                     },
                                     "dplcs": {
@@ -375,17 +375,17 @@
                                     "name": "W Circle",
                                     "palettes": [
                                         {
-                                            "path": "..\\palette\\Special Stage.bin",
+                                            "path": "../palette/Special Stage.bin",
                                             "length": 4
                                         }
                                     ],
                                     "art": {
-                                        "path": "..\\artnem\\Special W.nem",
+                                        "path": "../artnem/Special W.nem",
                                         "compression": "Nemesis",
                                         "offset": 0
                                     },
                                     "mappings": {
-                                        "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                        "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                         "label": ""
                                     },
                                     "dplcs": {
@@ -400,17 +400,17 @@
                                     "name": "*1* ZONE",
                                     "palettes": [
                                         {
-                                            "path": "..\\palette\\Special Stage.bin",
+                                            "path": "../palette/Special Stage.bin",
                                             "length": 4
                                         }
                                     ],
                                     "art": {
-                                        "path": "..\\artnem\\Special ZONE1.nem",
+                                        "path": "../artnem/Special ZONE1.nem",
                                         "compression": "Nemesis",
                                         "offset": 0
                                     },
                                     "mappings": {
-                                        "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                        "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                         "label": ""
                                     },
                                     "dplcs": {
@@ -425,17 +425,17 @@
                                     "name": "*2* ZONE",
                                     "palettes": [
                                         {
-                                            "path": "..\\palette\\Special Stage.bin",
+                                            "path": "../palette/Special Stage.bin",
                                             "length": 4
                                         }
                                     ],
                                     "art": {
-                                        "path": "..\\artnem\\Special ZONE2.nem",
+                                        "path": "../artnem/Special ZONE2.nem",
                                         "compression": "Nemesis",
                                         "offset": 0
                                     },
                                     "mappings": {
-                                        "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                        "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                         "label": ""
                                     },
                                     "dplcs": {
@@ -450,17 +450,17 @@
                                     "name": "*3* ZONE",
                                     "palettes": [
                                         {
-                                            "path": "..\\palette\\Special Stage.bin",
+                                            "path": "../palette/Special Stage.bin",
                                             "length": 4
                                         }
                                     ],
                                     "art": {
-                                        "path": "..\\artnem\\Special ZONE3.nem",
+                                        "path": "../artnem/Special ZONE3.nem",
                                         "compression": "Nemesis",
                                         "offset": 0
                                     },
                                     "mappings": {
-                                        "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                        "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                         "label": ""
                                     },
                                     "dplcs": {
@@ -475,17 +475,17 @@
                                     "name": "*4* ZONE",
                                     "palettes": [
                                         {
-                                            "path": "..\\palette\\Special Stage.bin",
+                                            "path": "../palette/Special Stage.bin",
                                             "length": 4
                                         }
                                     ],
                                     "art": {
-                                        "path": "..\\artnem\\Special ZONE4.nem",
+                                        "path": "../artnem/Special ZONE4.nem",
                                         "compression": "Nemesis",
                                         "offset": 0
                                     },
                                     "mappings": {
-                                        "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                        "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                         "label": ""
                                     },
                                     "dplcs": {
@@ -500,17 +500,17 @@
                                     "name": "*5* ZONE",
                                     "palettes": [
                                         {
-                                            "path": "..\\palette\\Special Stage.bin",
+                                            "path": "../palette/Special Stage.bin",
                                             "length": 4
                                         }
                                     ],
                                     "art": {
-                                        "path": "..\\artnem\\Special ZONE5.nem",
+                                        "path": "../artnem/Special ZONE5.nem",
                                         "compression": "Nemesis",
                                         "offset": 0
                                     },
                                     "mappings": {
-                                        "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                        "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                         "label": ""
                                     },
                                     "dplcs": {
@@ -525,17 +525,17 @@
                                     "name": "*6* ZONE",
                                     "palettes": [
                                         {
-                                            "path": "..\\palette\\Special Stage.bin",
+                                            "path": "../palette/Special Stage.bin",
                                             "length": 4
                                         }
                                     ],
                                     "art": {
-                                        "path": "..\\artnem\\Special ZONE6.nem",
+                                        "path": "../artnem/Special ZONE6.nem",
                                         "compression": "Nemesis",
                                         "offset": 0
                                     },
                                     "mappings": {
-                                        "path": "Scratch Mappings (Flex2 only)\\specialItemStandard.asm",
+                                        "path": "Scratch Mappings (Flex2 only)/specialItemStandard.asm",
                                         "label": ""
                                     },
                                     "dplcs": {
@@ -599,12 +599,12 @@
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Title Screen Foreground.nem",
+                        "path": "../artnem/Title Screen Foreground.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Press Start and TM.asm",
+                        "path": "../_maps/Press Start and TM.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -625,12 +625,12 @@
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Title Screen TM.nem",
+                        "path": "../artnem/Title Screen TM.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Press Start and TM.asm",
+                        "path": "../_maps/Press Start and TM.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -943,17 +943,17 @@
                             "name": "Shield",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Shield.nem",
+                                "path": "../artnem/Shield.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "..\\_maps\\Shield and Invincibility.asm",
+                                "path": "../_maps/Shield and Invincibility.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -968,17 +968,17 @@
                             "name": "Invincibility",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Invincibility Stars.nem",
+                                "path": "../artnem/Invincibility Stars.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "..\\_maps\\Shield and Invincibility.asm",
+                                "path": "../_maps/Shield and Invincibility.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -1061,17 +1061,17 @@
                             "name": "Cucky (Chicken)",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Animal Chicken.nem",
+                                "path": "../artnem/Animal Chicken.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "..\\_maps\\Animals 2.asm",
+                                "path": "../_maps/Animals 2.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -1086,17 +1086,17 @@
                             "name": "Flicky (Bluebird)",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Animal Flicky.nem",
+                                "path": "../artnem/Animal Flicky.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "..\\_maps\\Animals 2.asm",
+                                "path": "../_maps/Animals 2.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -1111,17 +1111,17 @@
                             "name": "Pecky (Penguin)",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Animal Penguin.nem",
+                                "path": "../artnem/Animal Penguin.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "..\\_maps\\Animals 1.asm",
+                                "path": "../_maps/Animals 1.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -1136,17 +1136,17 @@
                             "name": "Picky (Pig)",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Animal Pig.nem",
+                                "path": "../artnem/Animal Pig.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "..\\_maps\\Animals 3.asm",
+                                "path": "../_maps/Animals 3.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -1161,17 +1161,17 @@
                             "name": "Pocky (Rabbit)",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Animal Rabbit.nem",
+                                "path": "../artnem/Animal Rabbit.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "..\\_maps\\Animals 1.asm",
+                                "path": "../_maps/Animals 1.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -1186,17 +1186,17 @@
                             "name": "Ricky (Squirrel)",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Animal Squirrel.nem",
+                                "path": "../artnem/Animal Squirrel.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "..\\_maps\\Animals 3.asm",
+                                "path": "../_maps/Animals 3.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -1211,17 +1211,17 @@
                             "name": "Rocky (Seal)",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\Animal Seal.nem",
+                                "path": "../artnem/Animal Seal.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "..\\_maps\\Animals 2.asm",
+                                "path": "../_maps/Animals 2.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -1249,21 +1249,21 @@
                     "name": "Eggman (Eggmobile)",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Sonic.bin",
+                            "path": "../palette/Sonic.bin",
                             "length": 1
                         },
                         {
-                            "path": "..\\palette\\Green Hill Zone.bin",
+                            "path": "../palette/Green Hill Zone.bin",
                             "length": 3
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Boss - Main.nem",
+                        "path": "../artnem/Boss - Main.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Eggman.asm",
+                        "path": "../_maps/Eggman.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -1279,21 +1279,21 @@
                     "name": "Eggman's Attachments",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Sonic.bin",
+                            "path": "../palette/Sonic.bin",
                             "length": 1
                         },
                         {
-                            "path": "..\\palette\\Green Hill Zone.bin",
+                            "path": "../palette/Green Hill Zone.bin",
                             "length": 3
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Boss - Weapons.nem",
+                        "path": "../artnem/Boss - Weapons.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Boss Items.asm",
+                        "path": "../_maps/Boss Items.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -1309,7 +1309,7 @@
                     "name": "Eggman (SBZ2 & FZ)",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Sonic.bin",
+                            "path": "../palette/Sonic.bin",
                             "length": 1
                         },
                         {
@@ -1318,12 +1318,12 @@
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Boss - Eggman in SBZ2 & FZ.nem",
+                        "path": "../artnem/Boss - Eggman in SBZ2 & FZ.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Eggman - Scrap Brain 2.asm",
+                        "path": "../_maps/Eggman - Scrap Brain 2.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -1339,21 +1339,21 @@
                     "name": "Eggman (FZ Exploding)",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Sonic.bin",
+                            "path": "../palette/Sonic.bin",
                             "length": 1
                         },
                         {
-                            "path": "..\\palette\\SBZ Act 2.bin",
+                            "path": "../palette/SBZ Act 2.bin",
                             "length": 3
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Boss - Eggman after FZ Fight.nem",
+                        "path": "../artnem/Boss - Eggman after FZ Fight.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\FZ Damaged Eggmobile.asm",
+                        "path": "../_maps/FZ Damaged Eggmobile.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -1369,21 +1369,21 @@
                     "name": "Eggmobile's Legs (FZ)",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Sonic.bin",
+                            "path": "../palette/Sonic.bin",
                             "length": 1
                         },
                         {
-                            "path": "..\\palette\\SBZ Act 2.bin",
+                            "path": "../palette/SBZ Act 2.bin",
                             "length": 3
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Boss - Eggman after FZ Fight.nem",
+                        "path": "../artnem/Boss - Eggman after FZ Fight.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\FZ Eggmobile Legs.asm",
+                        "path": "../_maps/FZ Eggmobile Legs.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -3931,17 +3931,17 @@
                     "name": "Sonic (Ending)",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Ending.bin",
+                            "path": "../palette/Ending.bin",
                             "length": 4
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Ending - Sonic.nem",
+                        "path": "../artnem/Ending - Sonic.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Ending Sequence Sonic.asm",
+                        "path": "../_maps/Ending Sequence Sonic.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -3956,17 +3956,17 @@
                     "name": "Ending Logo",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Ending.bin",
+                            "path": "../palette/Ending.bin",
                             "length": 4
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Ending - StH Logo.nem",
+                        "path": "../artnem/Ending - StH Logo.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Ending Sequence STH.asm",
+                        "path": "../_maps/Ending Sequence STH.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -3982,17 +3982,17 @@
                     "name": "Ending Chaos Emeralds",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Ending.bin",
+                            "path": "../palette/Ending.bin",
                             "length": 4
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Ending - Emeralds.nem",
+                        "path": "../artnem/Ending - Emeralds.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Ending Sequence Emeralds.asm",
+                        "path": "../_maps/Ending Sequence Emeralds.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -4008,17 +4008,17 @@
                     "name": "Post-credits Eggman",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Ending.bin",
+                            "path": "../palette/Ending.bin",
                             "length": 4
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Ending - Try Again.nem",
+                        "path": "../artnem/Ending - Try Again.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Try Again & End Eggman.asm",
+                        "path": "../_maps/Try Again & End Eggman.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -4041,17 +4041,17 @@
                     "name": "Sonic (Continue)",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Special Stage Continue Bonus.bin",
+                            "path": "../palette/Special Stage Continue Bonus.bin",
                             "length": 1
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\Continue Screen Sonic.nem",
+                        "path": "../artnem/Continue Screen Sonic.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Continue Screen.asm",
+                        "path": "../_maps/Continue Screen.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -4067,17 +4067,17 @@
                     "name": "Continue Objects",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Special Stage Continue Bonus.bin",
+                            "path": "../palette/Special Stage Continue Bonus.bin",
                             "length": 2
                         }
                     ],
                     "art": {
-                        "path": "",
+                        "path": "../artnem/Continue Screen Stuff.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\Continue Screen.asm",
+                        "path": "../_maps/Continue Screen.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -4101,21 +4101,21 @@
                     "name": "HUD Mappings",
                     "palettes": [
                         {
-                            "path": "..\\palette\\Sonic.bin",
+                            "path": "../palette/Sonic.bin",
                             "length": 1
                         },
                         {
-                            "path": "..\\palette\\Green Hill Zone.bin",
+                            "path": "../palette/Green Hill Zone.bin",
                             "length": 3
                         }
                     ],
                     "art": {
-                        "path": "..\\artnem\\HUD.nem",
+                        "path": "../artnem/HUD.nem",
                         "compression": "Nemesis",
                         "offset": 0
                     },
                     "mappings": {
-                        "path": "..\\_maps\\HUD.asm",
+                        "path": "../_maps/HUD.asm",
                         "label": ""
                     },
                     "dplcs": {
@@ -4133,17 +4133,17 @@
                             "name": "Sonic Lives Icon",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artnem\\HUD - Life Counter Icon.nem",
+                                "path": "../artnem/HUD - Life Counter Icon.nem",
                                 "compression": "Nemesis",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\Lives Icon.asm",
+                                "path": "Scratch Mappings (Flex2 only)/Lives Icon.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -4159,17 +4159,17 @@
                             "name": "8x16 Numbers and E",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artunc\\HUD Numbers.bin",
+                                "path": "../artunc/HUD Numbers.bin",
                                 "compression": "Uncompressed",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\8x16 Hud Numbers.asm",
+                                "path": "Scratch Mappings (Flex2 only)/8x16 Hud Numbers.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -4185,17 +4185,17 @@
                             "name": "8x8 Lives Numbers",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artunc\\Lives Counter Numbers.bin",
+                                "path": "../artunc/Lives Counter Numbers.bin",
                                 "compression": "Uncompressed",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\8x8 Hud Numbers.asm",
+                                "path": "Scratch Mappings (Flex2 only)/8x8 Hud Numbers.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -4211,17 +4211,17 @@
                             "name": "Debug Font",
                             "palettes": [
                                 {
-                                    "path": "..\\palette\\Sonic.bin",
+                                    "path": "../palette/Sonic.bin",
                                     "length": 1
                                 }
                             ],
                             "art": {
-                                "path": "..\\artunc\\Level Select & Debug Text.bin",
+                                "path": "../artunc/Level Select & Debug Text.bin",
                                 "compression": "Uncompressed",
                                 "offset": 0
                             },
                             "mappings": {
-                                "path": "Scratch Mappings (Flex2 only)\\DebugSymbols.asm",
+                                "path": "Scratch Mappings (Flex2 only)/DebugSymbols.asm",
                                 "label": ""
                             },
                             "dplcs": {
@@ -4234,7 +4234,8 @@
                         }
                     ],
                     "isDirectory": true,
-                    "expanded": false
+                    "expanded": false,
+                    "uuid": "37a01851-e5b2-4a62-bc6d-418a1716c8ce"
                 }
             ],
             "isDirectory": true,
