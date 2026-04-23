@@ -24,5 +24,13 @@ LTag_Main:	; Routine 0
 		move.b	#$84,obRender(a0)
 
 LTag_ChkDel:	; Routine 2
-		out_of_range.w	DeleteObject,obX(a0),1
+		move.w	obX(a0),d0
+		andi.w	#$FF80,d0
+		move.w	(v_screenposx).w,d1
+		subi.w	#$80,d1
+		andi.w	#$FF80,d1
+		sub.w	d1,d0
+		bmi.w	DeleteObject ; this branch isn't in the common out_of_range macro
+		cmpi.w	#$280,d0
+		bhi.w	DeleteObject
 		rts

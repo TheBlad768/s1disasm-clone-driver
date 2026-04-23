@@ -7,7 +7,15 @@ BossSpikeball:
 		move.b	obRoutine(a0),d0
 		move.w	BossSpikeball_Index(pc,d0.w),d0
 		jsr	BossSpikeball_Index(pc,d0.w)
-		out_of_range.w	BossStarLight_Delete,obBossX(a0),TRUE
+		move.w	obBossX(a0),d0
+		andi.w	#$FF80,d0
+		move.w	(v_screenposx).w,d1
+		subi.w	#$80,d1
+		andi.w	#$FF80,d1
+		sub.w	d1,d0
+		bmi.w	BossStarLight_Delete
+		cmpi.w	#$280,d0
+		bhi.w	BossStarLight_Delete
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 BossSpikeball_Index:

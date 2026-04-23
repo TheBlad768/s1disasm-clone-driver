@@ -39,7 +39,14 @@ Roll_Action:	; Routine 2
 		jsr	Roll_Index2(pc,d1.w)
 		lea	(Ani_Roll).l,a1
 		bsr.w	AnimateSprite
-		out_of_range.w	Roll_ChkGone,obX(a0),,1
+		move.w	obX(a0),d0
+		andi.w	#$FF80,d0
+		move.w	(v_screenposx).w,d1
+		subi.w	#$80,d1
+		andi.w	#$FF80,d1
+		sub.w	d1,d0
+		cmpi.w	#$280,d0
+		bgt.w	Roll_ChkGone
 		bra.w	DisplaySprite
 ; ===========================================================================
 

@@ -13,7 +13,15 @@ Seesaw:
 		move.b	obRoutine(a0),d0
 		move.w	See_Index(pc,d0.w),d1
 		jsr	See_Index(pc,d1.w)
-		out_of_range.w	DeleteObject,see_origX(a0),1
+		move.w	see_origX(a0),d0
+		andi.w	#$FF80,d0
+		move.w	(v_screenposx).w,d1
+		subi.w	#$80,d1
+		andi.w	#$FF80,d1
+		sub.w	d1,d0
+		bmi.w	DeleteObject
+		cmpi.w	#$280,d0
+		bhi.w	DeleteObject
 		bra.w	DisplaySprite
 ; ===========================================================================
 See_Index:	dc.w See_Main-See_Index

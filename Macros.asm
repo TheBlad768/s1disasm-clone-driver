@@ -255,14 +255,10 @@ jmi:		macro loc
 
 ; ---------------------------------------------------------------------------
 ; check if object moves out of range
-; input:
-;   exit - location to jump to if out of range (usually DeleteObject)
-;   pos - x-axis pos (obX(a0) if not specified)
-;   earlyneg - early exit if result is negative (redundant but used by some objects)
-;   ignoreleft - use bgt instead of bhi to ignore left offscreen
+; input: location to jump to if out of range, x-axis pos (obX(a0) by default)
 ; ---------------------------------------------------------------------------
 
-out_of_range:	macro exit,pos,earlyneg,ignoreleft
+out_of_range:	macro exit,pos
 	if ("pos"<>"")
 		move.w	pos,d0		; get object position (if specified as not obX)
 	else
@@ -273,15 +269,8 @@ out_of_range:	macro exit,pos,earlyneg,ignoreleft
 		subi.w	#128,d1
 		andi.w	#$FF80,d1
 		sub.w	d1,d0		; approx distance between object and screen
-	if ("earlyneg"<>"")
-		bmi.ATTRIBUTE	exit ; some objects have this (redundant) extra check
-	endif
 		cmpi.w	#128+320+192,d0
-	if ("ignoreleft"<>"")
-		bgt.ATTRIBUTE	exit ; ignore offscreen to the left (used by Roller badnik)
-	else
 		bhi.ATTRIBUTE	exit
-	endif
 		endm
 
 ; ---------------------------------------------------------------------------
