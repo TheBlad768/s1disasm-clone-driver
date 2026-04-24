@@ -103,7 +103,7 @@ Ledge_TimeZero:
 	endif
 		tst.b	obRender(a0)
 		bpl.s	Ledge_Delete
-	if FixBugs=1
+	if FixBugs
 		bra.w	DisplaySprite
 	else
 		rts

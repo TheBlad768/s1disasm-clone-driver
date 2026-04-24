@@ -43,7 +43,7 @@ Swi_ChkDel:
 		bra.w	DisplaySprite
 	else
 		bsr.w	DisplaySprite
-		out_of_range.w	DeleteObject
+		out_of_range.w	Swi_Delete
 		rts
 	endif
 ; ===========================================================================
