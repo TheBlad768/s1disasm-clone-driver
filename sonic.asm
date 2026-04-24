@@ -2624,14 +2624,14 @@ Level_TtlCardLoop: ; move in title cards, stay on them until PLCs have finished
 		; of decompression finishing and exiting this loop before all of the title
 		; card is finished moving into place is increased.
 		lea	(v_titlecard).w,a0		; get title card elements
-		moveq	#4-1,d0				; number of title card elements
+		moveq	#4-1,d1				; number of title card elements
 
 Level_CheckTtlCard:
 		move.w	obX(a0),d0			; get current position of a title card element
 		cmp.w	card_mainX(a0),d0		; has this title card element reached its target position?
 		bne.s	Level_TtlCardLoop		; if not, loop until it has
 		lea	object_size(a0),a0		; next title card element
-		dbf	d0,Level_CheckTtlCard		; loop until every element has reached its target position
+		dbf	d1,Level_CheckTtlCard		; loop until every element has reached its target position
 	endif
 		tst.l	(v_plc_buffer).w		; have patterns been fully decompressed and loaded?
 		bne.s	Level_TtlCardLoop		; if not, loop until they have
