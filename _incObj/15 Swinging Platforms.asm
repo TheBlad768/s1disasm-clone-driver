@@ -70,7 +70,14 @@ Swing_Main:	; Routine 0
 		subq.w	#1,d1
 
 .makechain:
+	if FixBugs
+		; If an object is allocated before the parent object, then
+		; when the child is deleted, it will have already been queued
+		; for display, which is a display-and-delete bug.
+		bsr.w	FindNextFreeObj
+	else
 		bsr.w	FindFreeObj
+	endif
 		bne.s	.fail
 		addq.b	#1,obSubtype(a0)
 		move.w	a1,d5
@@ -127,7 +134,10 @@ Swing_SetSolid:	; Routine 2
 
 Swing_Action:	; Routine $C
 		bsr.w	Swing_Move
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Swing_ChkDel
 ; ===========================================================================
 
@@ -142,7 +152,10 @@ Swing_Action2:	; Routine 4
 		move.b	obHeight(a0),d3
 		addq.b	#1,d3
 		bsr.w	MvSonicOnPtfm
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Swing_ChkDel
 
 		rts	; redundant rts
@@ -263,7 +276,12 @@ loc_7BCE:
 
 Swing_ChkDel:
 		out_of_range.w	Swing_DelAll,objoff_3A(a0)
+	if FixBugs
+		; This has been moved to prevent a display-after-free bug.
+		bra.w	DisplaySprite
+	else
 		rts
+	endif
 ; ===========================================================================
 
 Swing_DelAll:
