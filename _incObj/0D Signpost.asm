@@ -18,6 +18,7 @@ Signpost:
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
 		rts
+	endif
 ; ===========================================================================
 Sign_Index:	dc.w Sign_Main-Sign_Index
 		dc.w Sign_Touch-Sign_Index

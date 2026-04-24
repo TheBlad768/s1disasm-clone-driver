@@ -145,6 +145,7 @@ Mon_Display:	; Routine 8
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
 		rts
+	endif
 ; ===========================================================================
 
 Mon_BreakOpen:	; Routine 4

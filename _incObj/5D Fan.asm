@@ -103,3 +103,4 @@ Fan_Delay:	; Routine 2
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
 		rts
+	endif
