@@ -12,6 +12,7 @@ REM //     ae-  >>  disable automatic even on dc/dcb/ds/rs .w/l
 REM //     oz+  >>  enable zero offset optimisation
 REM //     c+   >>  enable case sensitivity
 REM //     l+   >>  use '.' as leading character for local labels
+REM //     ws+  >>  allow white space in operands
 REM // 
 REM // Files:
 REM //   sonic.asm    >>  input assembly file
@@ -19,7 +20,7 @@ REM //   s1built.bin  >>  assembled ROM
 REM //   [blank]      >>  symbol file (disabled)
 REM //   sonic.lst    >>  listing file
 REM //   sonic.log    >>  console output redirected to log file
-"build_tools\asm68k.exe" /k /m /p /o ae-,oz+,c+,l+ sonic.asm, s1built.bin, , sonic.lst > sonic.log
+"build_tools\asm68k.exe" /k /m /p /o ae-,oz+,c+,l+,ws+ sonic.asm, s1built.bin, , sonic.lst > sonic.log
 
 REM // Still print redirected log output to console (Batch doesn't suppport tee).
 type sonic.log
