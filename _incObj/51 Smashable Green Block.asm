@@ -86,6 +86,12 @@ sonicAniFrame = objoff_32		; Sonic's current animation number
 		move.b	d2,obFrame(a1)
 
 Smab_Points:	; Routine 4
+	if FixBugs
+		; Avoid returning to SmashBlock to prevent display-and-delete
+		; and double-delete bugs.
+		addq.l	#4,sp
+	endif
+
 		bsr.w	SpeedToPos
 		addi.w	#$38,obVelY(a0)
 	if FixBugs=0

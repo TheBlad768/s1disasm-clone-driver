@@ -43,7 +43,14 @@ Hel_Main:	; Routine 0
 		moveq	#0,d6
 
 Hel_Build:
+	if FixBugs
+		; If an object is allocated before the parent object, then
+		; when the child is deleted, it will have already been queued
+		; for display, which is a display-and-delete bug.
+		bsr.w	FindNextFreeObj
+	else
 		bsr.w	FindFreeObj
+	endif
 		bne.s	Hel_Action
 		addq.b	#1,obSubtype(a0)
 		move.w	a1,d5
