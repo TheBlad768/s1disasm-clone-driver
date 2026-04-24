@@ -81,7 +81,7 @@ But_Display:
 	if FixBugs
 		; Objects shouldn't call DisplaySprite and DeleteObject on
 		; the same frame or else cause a null-pointer dereference.
-		out_of_range.w	But_Delete
+		out_of_range.s	But_Delete
 		bra.w	DisplaySprite
 	else
 		bsr.w	DisplaySprite

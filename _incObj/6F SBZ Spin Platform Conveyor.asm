@@ -7,13 +7,14 @@ SpinConvey:
 		move.b	obRoutine(a0),d0
 		move.w	SpinC_Index(pc,d0.w),d1
 		jsr	SpinC_Index(pc,d1.w)
-		out_of_range.s	loc_1629A,objoff_30(a0)
+		out_of_range.s	SpinC_OutOfRange,objoff_30(a0)
 
 SpinC_Display:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-loc_1629A:
+; loc_1629A:
+SpinC_OutOfRange:
 		cmpi.b	#act3,(v_act).w	; check if act is 3
 		bne.s	SpinC_Act1or2	; if not, branch
 		cmpi.w	#-$80,d0
@@ -98,6 +99,11 @@ loc_16380:
 		lea	(v_obj63).w,a2
 		bset	#0,(a2,d0.w)
 		beq.s	loc_1639A
+	if FixBugs
+		; Avoid returning to SpinConvey to prevent display-and-delete
+		; and double-delete bugs.
+		addq.l	#4,sp
+	endif
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
@@ -113,8 +119,15 @@ loc_1639A:
 ; ===========================================================================
 
 SpinC_Loop:
+	if FixBugs
+		; If an object is allocated before the parent object, then
+		; when the child is deleted, it will have already been queued
+		; for display, which is a display-and-delete bug.
+		jsr	(FindNextFreeObj).l
+	else
 		jsr	(FindFreeObj).l
-		bne.s	loc_163D0
+	endif
+		bne.s	SpinC_LoadNext
 
 SpinC_LoadPform:
 		_move.b	#id_SpinConvey,obID(a1)
@@ -122,8 +135,17 @@ SpinC_LoadPform:
 		move.w	(a2)+,obY(a1)
 		move.w	(a2)+,d0
 		move.b	d0,obSubtype(a1)
+	if FixBugs
+		; Initialize platforms on the upper path to not spinning state as soon
+		; as they are loaded, rather than always starting out spinning.
+		andi.b	#3,d0		; subtype 0-2 is for not spinning state
+		cmpi.b	#3,d0		; is this a lower path platform?
+		beq.s	SpinC_LoadNext	; if yes, branch (keep spinning)
+		move.b	#1,obAnim(a1)	; set to not spinning
+	endif
 
-loc_163D0:
+; loc_163D0:
+SpinC_LoadNext:
 		dbf	d1,SpinC_Loop
 
 		addq.l	#4,sp

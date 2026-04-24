@@ -386,6 +386,17 @@ BossSpikeball_MoveFrag:	; Routine $A
 		and.w	(v_vblank_word).w,d0
 		lsr.w	#2,d0
 		move.b	d0,obFrame(a0)
+
 		tst.b	obRender(a0)
+	if FixBugs
+		; Avoid returning to BossSpikeball to prevent a
+		; display-and-delete bug.
+		bmi.s	.return
+		addq.l	#4,sp
+		bra.w	BossStarLight_Delete
+	else
 		bpl.w	BossStarLight_Delete
+	endif
+
+.return:
 		rts
