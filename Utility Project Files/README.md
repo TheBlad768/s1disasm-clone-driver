@@ -17,6 +17,9 @@ Project file for the [Flex 2](https://info.sonicretro.org/Flex_2) sprites editor
 
 Also see [ClownMapEd](https://info.sonicretro.org/ClownMapEd) as an alternative (does not require project files).
 
+## `Scratch Mappings (Flex 2 only)`
+Folder filled with mappings generated with [Flex 2](https://info.sonicretro.org/Flex_2) not referenced when assembling the rom. Until cross-referencing gets implemented into Flex2, it is unfortunately my only solution for Flex 2 users to edit certain sprites' tiles without as much hassle.
+
 ## `S1SSEdit.ini`
 Project file for the [S1SSEdit](https://info.sonicretro.org/S1SSEdit) special stage editor.
 

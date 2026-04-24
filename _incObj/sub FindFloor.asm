@@ -93,6 +93,9 @@ FindFloor:
 
 
 FindFloor2:
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		bsr.w	FindNearestTile
 		move.w	(a1),d0
 		move.w	d0,d4
@@ -106,6 +109,9 @@ FindFloor2:
 		move.w	d2,d0
 		andi.w	#$F,d0
 		sub.w	d0,d1
+	if FixBugs
+		move.w	(sp)+,d4
+	endif
 		rts
 ; ===========================================================================
 
@@ -150,6 +156,9 @@ FindFloor2:
 		add.w	d1,d0
 		move.w	#$F,d1
 		sub.w	d0,d1
+	if FixBugs
+		addq.w	#2,sp
+	endif
 		rts
 ; ===========================================================================
 
@@ -159,5 +168,8 @@ FindFloor2:
 		add.w	d1,d0
 		bpl.w	.isblank2
 		not.w	d1
+	if FixBugs
+		addq.w	#2,sp
+	endif
 		rts
 ; End of function FindFloor2

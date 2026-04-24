@@ -116,6 +116,9 @@ Sonic_FindFloor:
 		movea.w	#$10,a3
 		move.w	#0,d6
 		bsr.w	FindFloor	; MJ: check solidity
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		move.w	d1,-(sp)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
@@ -131,6 +134,9 @@ Sonic_FindFloor:
 		move.w	#0,d6
 		bsr.w	FindFloor	; MJ: check solidity
 		move.w	(sp)+,d0
+	if FixBugs
+		move.w	(sp)+,d5
+	endif
 		move.b	#0,d2
 
 ; loc_14DD0:
@@ -140,6 +146,9 @@ Sonic_FindSmaller:
 		ble.s	loc_14DDE
 		move.b	(v_anglebuffer).w,d3
 		exg.l	d0,d1
+	if FixBugs
+		exg.l	d5,d4
+	endif
 
 loc_14DDE:
 		btst	#0,d3
@@ -202,6 +211,9 @@ Sonic_FindWallRight:
 		movea.w	#$10,a3
 		move.w	#0,d6
 		bsr.w	FindWall	; MJ: check solidity
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		move.w	d1,-(sp)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
@@ -217,6 +229,9 @@ Sonic_FindWallRight:
 		move.w	#0,d6
 		bsr.w	FindWall	; MJ: check solidity
 		move.w	(sp)+,d0
+	if FixBugs
+		move.w	(sp)+,d5
+	endif
 		move.b	#-$40,d2
 		bra.w	Sonic_FindSmaller
 ; End of function Sonic_FindWallRight
@@ -290,6 +305,9 @@ Sonic_FindCeiling:
 		movea.w	#-$10,a3
 		move.w	#$800,d6	; MJ: $1000/2
 		bsr.w	FindFloor	; MJ: check solidity
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		move.w	d1,-(sp)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
@@ -306,6 +324,9 @@ Sonic_FindCeiling:
 		move.w	#$800,d6	; MJ: $1000/2
 		bsr.w	FindFloor	; MJ: check solidity
 		move.w	(sp)+,d0
+	if FixBugs
+		move.w	(sp)+,d5
+	endif
 		move.b	#-$80,d2
 		bra.w	Sonic_FindSmaller
 ; End of function Sonic_FindCeiling
@@ -381,6 +402,9 @@ Sonic_FindWallLeft:
 		movea.w	#-$10,a3
 		move.w	#$400,d6	; MJ: $800/2
 		bsr.w	FindWall	; MJ: check solidity
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		move.w	d1,-(sp)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
@@ -397,6 +421,9 @@ Sonic_FindWallLeft:
 		move.w	#$400,d6	; MJ: $800/2
 		bsr.w	FindWall	; MJ: check solidity
 		move.w	(sp)+,d0
+	if FixBugs
+		move.w	(sp)+,d5
+	endif
 		move.b	#$40,d2
 		bra.w	Sonic_FindSmaller
 ; End of function Sonic_FindWallLeft
