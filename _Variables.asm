@@ -151,7 +151,9 @@ f_doupdatesinhblank:	ds.b	1		; defers performing various tasks to the Horizontal
 v_pal_buffer:		ds.b	$30		; palette data buffer (used for palette cycling)
 v_misc_variables_end:
 
-v_plc_buffer:		ds.b	6*16		; pattern load cues buffer (maximum $10 PLCs)
+plc_slot_size:		equ	4+2		; size of a single PLC slot: 6 bytes = 4 bytes (data address) + 2 bytes (VRAM target address)
+v_plc_buffer:		ds.b	plc_slot_size*16 ; pattern load cues buffer (maximum $10 PLCs)
+v_plc_buffer_dest:	equ	v_plc_buffer+4	; VRAM destination for 1st item in PLC buffer (2 bytes)
 v_plc_buffer_only_end:
 v_plc_ptrnemcode:	ds.l	1		; pointer for nemesis decompression code ($1502 or $150C)
 v_plc_repeatcount:	ds.l	1
@@ -403,10 +405,15 @@ v_limitbtmdb:		ds.w	1		; level bottom boundary, buffered for debug mode
 			ds.b	$C		; unused
 v_timingvariables_end:
 
+    if FixBugs
+	; With the bug fix introduced in FindNearestTile, this variable will no longer cause any trouble
+			ds.w	1		; (truly) unused
+    else
 v_chunk0collision:	ds.w	1		; very subtly (and perhaps unintentionally) used by FindNearestTile when encountering chunk 0
 	if v_chunk0collision<>$FFFFFF00
 		inform 2, "v_chunk0collision needs to be at address $FFFFFF00 so that FindNearestTile works correctly."
 	endif
+    endif
 			ds.b	$E		; unused
 v_screenposx_dup:	ds.l	1		; screen position x (duplicate)
 v_screenposy_dup:	ds.l	1		; screen position y (duplicate)
@@ -454,9 +461,9 @@ v_megadrive:		ds.b	1		; Megadrive machine type
 f_debugmode:		ds.w	1		; debug mode flag
 v_init:			ds.l	1		; 'init' text string
 v_ram_end:
-	if *>0	; Don't declare more space than the RAM can contain!
-		inform 2, "The RAM variable declarations are too large."
-	endif
+    if * > 0	; Don't declare more space than the RAM can contain!
+	inform 2, "The RAM variable declarations are too large."
+    endif
 	objend
 
 ; Special stage

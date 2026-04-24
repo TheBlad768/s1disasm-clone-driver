@@ -77,6 +77,9 @@ loc_14BA6:
 ; ===========================================================================
 
 FindWall2:
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		bsr.w	FindNearestTile
 		move.w	(a1),d0
 		move.w	d0,d4
@@ -90,6 +93,9 @@ loc_14BC6:
 		move.w	d3,d0
 		andi.w	#$F,d0
 		sub.w	d0,d1
+	if FixBugs
+		move.w	(sp)+,d4
+	endif
 		rts
 ; ===========================================================================
 
@@ -134,6 +140,9 @@ loc_14C26:
 		add.w	d1,d0
 		move.w	#$F,d1
 		sub.w	d0,d1
+	if FixBugs
+		addq.w	#2,sp
+	endif
 		rts
 ; ===========================================================================
 
@@ -143,5 +152,8 @@ loc_14C3C:
 		add.w	d1,d0
 		bpl.w	loc_14BC6
 		not.w	d1
+	if FixBugs
+		addq.w	#2,sp
+	endif
 		rts
 ; End of function FindWall2

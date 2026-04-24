@@ -99,6 +99,9 @@ Sonic_FindFloor:
 		move.w	#0,d6
 		moveq	#$D,d5
 		bsr.w	FindFloor
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		move.w	d1,-(sp)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
@@ -115,6 +118,9 @@ Sonic_FindFloor:
 		moveq	#$D,d5
 		bsr.w	FindFloor
 		move.w	(sp)+,d0
+	if FixBugs
+		move.w	(sp)+,d5
+	endif
 		move.b	#0,d2
 
 ; loc_14DD0:
@@ -124,6 +130,9 @@ Sonic_FindSmaller:
 		ble.s	loc_14DDE
 		move.b	(v_anglebuffer).w,d3
 		exg.l	d0,d1
+	if FixBugs
+		exg.l	d5,d4
+	endif
 
 loc_14DDE:
 		btst	#0,d3
@@ -188,6 +197,9 @@ Sonic_FindWallRight:
 		move.w	#0,d6
 		moveq	#$E,d5
 		bsr.w	FindWall
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		move.w	d1,-(sp)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
@@ -204,6 +216,9 @@ Sonic_FindWallRight:
 		moveq	#$E,d5
 		bsr.w	FindWall
 		move.w	(sp)+,d0
+	if FixBugs
+		move.w	(sp)+,d5
+	endif
 		move.b	#-$40,d2
 		bra.w	Sonic_FindSmaller
 ; End of function Sonic_FindWallRight
@@ -279,6 +294,9 @@ Sonic_FindCeiling:
 		move.w	#$1000,d6
 		moveq	#$E,d5
 		bsr.w	FindFloor
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		move.w	d1,-(sp)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
@@ -296,6 +314,9 @@ Sonic_FindCeiling:
 		moveq	#$E,d5
 		bsr.w	FindFloor
 		move.w	(sp)+,d0
+	if FixBugs
+		move.w	(sp)+,d5
+	endif
 		move.b	#-$80,d2
 		bra.w	Sonic_FindSmaller
 ; End of function Sonic_FindCeiling
@@ -373,6 +394,9 @@ Sonic_FindWallLeft:
 		move.w	#$800,d6
 		moveq	#$E,d5
 		bsr.w	FindWall
+	if FixBugs
+		move.w	d4,-(sp)
+	endif
 		move.w	d1,-(sp)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
@@ -390,6 +414,9 @@ Sonic_FindWallLeft:
 		moveq	#$E,d5
 		bsr.w	FindWall
 		move.w	(sp)+,d0
+	if FixBugs
+		move.w	(sp)+,d5
+	endif
 		move.b	#$40,d2
 		bra.w	Sonic_FindSmaller
 ; End of function Sonic_FindWallLeft

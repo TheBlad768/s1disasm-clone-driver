@@ -1000,36 +1000,36 @@ VBlank_StandardTransfers:
 
 ; PalToCRAM: <-- old misnomer
 HBlank:
-		disable_ints
+		disable_ints				; disable interrupts (VBlank in this context)
 		tst.w	(f_hblank_pal).w		; is palette set to change?
 		beq.s	.nochg				; if not, branch
 		move.w	#0,(f_hblank_pal).w		; clear palette change flag
 
-		movem.l	a0-a1,-(sp)
-		lea	(vdp_data_port).l,a1
+		movem.l	a0-a1,-(sp)			; backup a0 and a1 registers
+		lea	(vdp_data_port).l,a1		; load VDP data port to a1
 		lea	(v_palette_water).w,a0		; get water palette from RAM
 		move.l	#$C0000000,4(a1)		; set VDP to CRAM write
 		rept (4*$10)/2				; overwrite full palette (4 rows, 2 colors per move)
 			move.l	(a0)+,(a1)		; move water palette to CRAM
-		endr
+		endr					; repeat at assembly time
 		move.w	#$8A00+223,4(a1)		; reset horizontal interrupt counter
-		movem.l	(sp)+,a0-a1
+		movem.l	(sp)+,a0-a1			; restore a0 and a1
 
 		tst.b	(f_doupdatesinhblank).w		; was frame update delayed by water surface being near the top of the screen?
 		bne.s	.delayed_transfer		; if yes, resume transfer now
 
 .nochg:
-		rte	
+		rte					; return from horizontal interrupt and resume normal operation
 ; ===========================================================================
 
 ; loc_119E:
 .delayed_transfer:
 		clr.b	(f_doupdatesinhblank).w		; clear delayed updates flag
-		movem.l	d0-a6,-(sp)
+		movem.l	d0-a6,-(sp)			; backup all registers except stack pointer (a7)
 		bsr.w	VBlank_UpdateScreen		; do all the screen updates that were skipped during VBlank now
 		jsr	(UpdateMusic).l			; update the sound driver
-		movem.l	(sp)+,d0-a6
-		rte	
+		movem.l	(sp)+,d0-a6			; restore registers
+		rte					; return from horizontal interrupt and resume normal operation
 ; End of function HBlank
 
 
@@ -1039,14 +1039,14 @@ HBlank:
 ; ---------------------------------------------------------------------------
 
 JoypadInit:
-		stopZ80
-		waitZ80
-		moveq	#$40,d0
+		stopZ80					; request Z80 stop on
+		waitZ80					; wait until it has stopped
+		moveq	#$40,d0				; prepare intialise value
 		move.b	d0,(port_1_control).l		; init port 1 (joypad 1)
 		move.b	d0,(port_2_control).l		; init port 2 (joypad 2)
 		move.b	d0,(expansion_control).l	; init port 3 (expansion/extra)
-		startZ80
-		rts
+		startZ80				; request Z80 stop off
+		rts					; return
 ; End of function JoypadInit
 
 ; ---------------------------------------------------------------------------
@@ -1054,32 +1054,38 @@ JoypadInit:
 ; ---------------------------------------------------------------------------
 
 ReadJoypads:
-		lea	(v_jpadhold1).w,a0	; address where joypad states are written
-		lea	(port_1_data).l,a1	; first joypad port
-		bsr.s	.read			; do the first joypad
-		addq.w	#2,a1			; do the second joypad (port_2_data)
+		lea	(v_jpadhold1).w,a0		; address where joypad states are written
+		lea	(port_1_data).l,a1		; first joypad port
+		bsr.s	.read				; do the first joypad
+		addq.w	#2,a1				; do the second joypad (port_2_data)
 
 .read:
-		move.b	#0,(a1)
-		nop	
-		nop	
-		move.b	(a1),d0
-		lsl.b	#2,d0
-		andi.b	#$C0,d0
-		move.b	#$40,(a1)
-		nop	
-		nop	
-		move.b	(a1),d1
-		andi.b	#$3F,d1
-		or.b	d1,d0
-		not.b	d0
-		move.b	(a0),d1
-		eor.b	d0,d1
-		move.b	d0,(a0)+
-		and.b	d0,d1
-		move.b	d1,(a0)+
-		rts
+		move.b	#0,(a1)				; read A and Start input (TH poll low)
+		nop					; wait a bit
+		nop					; ''
+		move.b	(a1),d0				; write A and Start input states to d0
+
+		lsl.b	#2,d0				; move A and Start to topmost bits
+		andi.b	#%11000000,d0			; clear all other inputs from the poll
+
+		move.b	#$40,(a1)			; read D-Pad, B, and C input (TH poll high)
+		nop					; wait a bit
+		nop					; ''
+		move.b	(a1),d1				; write D-Pad, B, and C input states to d1
+
+		andi.b	#%00111111,d1			; clear all other inputs from the poll
+		or.b	d1,d0				; merge but poll results into d0
+		not.b	d0				; flip bits so that 0=released and 1=pressed
+
+		move.b	(a0),d1				; get buttons pressed the previous frame
+		eor.b	d0,d1				; XOR with buttons pressed this frame
+
+		move.b	d0,(a0)+			; write HELD buttons
+		and.b	d0,d1				; find buttons pressed this frame
+		move.b	d1,(a0)+			; write PRESSED buttons
+		rts					; return to VBlank routine
 ; End of function ReadJoypads
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1087,59 +1093,69 @@ ReadJoypads:
 ; ---------------------------------------------------------------------------
 
 VDPSetupGame:
-		lea	(vdp_control_port).l,a0
-		lea	(vdp_data_port).l,a1
-		lea	(VDPSetupArray).l,a2
-		moveq	#(VDPSetupArray_End-VDPSetupArray)/2-1,d7
-
+		lea	(vdp_control_port).l,a0		; load VDP control port
+		lea	(vdp_data_port).l,a1		; load VDP data port
+		lea	(VDPSetupArray).l,a2		; load address of register values
+		moveq	#(VDPSetupArray_End-VDPSetupArray)/2-1,d7 ; set repeat times
 .setreg:
-		move.w	(a2)+,(a0)
-		dbf	d7,.setreg	; set the VDP registers
+		move.w	(a2)+,(a0)			; save register value to VDP
+		dbf	d7,.setreg			; repeat until all register values have been sent
 
-		move.w	(VDPSetupArray+2).l,d0
+		move.w	(VDPSetupArray+2).l,d0		; get second entry of VDPSetupArray
 		move.w	d0,(v_vdp_buffer1).w		; buffer register $81 (used for enabling/disabling display)
+
 		move.w	#$8A00+223,(v_hblank_hreg).w	; HBlank every 224th scanline
-		moveq	#0,d0
-		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
-		move.w	#($80)/2-1,d7
 
+		moveq	#cBlack,d0			; set d0 to 0 (black)
+		move.l	#$C0000000,(vdp_control_port).l	; set VDP to CRAM write
+		move.w	#($80)/2-1,d7			; set repeat times to cover full CRAM
 .clrCRAM:
-		move.w	d0,(a1)
-		dbf	d7,.clrCRAM	; clear the CRAM
+		move.w	d0,(a1)				; clear colours
+		dbf	d7,.clrCRAM                     ; repeat until the entire palette is clear (black)
 
-		clr.l	(v_scrposy_vdp).w
-		clr.l	(v_scrposx_vdp).w
-		move.l	d1,-(sp)
-		fillVRAM	0,0,$10000	; clear the entirety of VRAM
-		move.l	(sp)+,d1
-		rts
+		clr.l	(v_scrposy_vdp).w		; clear single vertical scroll buffer
+		clr.l	(v_scrposx_vdp).w		; clear single horizontal scroll buffer
+		move.l	d1,-(sp)			; store d1 data in the stack for now
+		fillVRAM	0,0,$10000		; clear the entirety of VRAM
+		move.l	(sp)+,d1			; reload d1 data back out of the stack
+		rts					; return
 ; End of function VDPSetupGame
-; ===========================================================================
 
-VDPSetupArray:	dc.w $8004		; 8-colour mode
-		dc.w $8134		; enable V.interrupts, enable DMA
-		dc.w $8200+(vram_fg>>10) ; set foreground nametable address
-		dc.w $8300+($A000>>10)	; set window nametable address
-		dc.w $8400+(vram_bg>>13) ; set background nametable address
-		dc.w $8500+(vram_sprites>>9) ; set sprite table address
-		dc.w $8600		; unused
-		dc.w $8700		; set background colour (palette entry 0)
-		dc.w $8800		; unused
-		dc.w $8900		; unused
-		dc.w $8A00		; default H.interrupt register
-		dc.w $8B00		; full-screen vertical scrolling
-		dc.w $8C81		; 40-cell display mode
-		dc.w $8D00+(vram_hscroll>>10) ; set background hscroll address
-		dc.w $8E00		; unused
-		dc.w $8F02		; set VDP increment size
-		dc.w $9001		; 64-cell hscroll size
-		dc.w $9100		; window horizontal position
-		dc.w $9200		; window vertical position
+; ---------------------------------------------------------------------------
+; VDP register settings to use for the game. Do note that a handful of these
+; are getting rewritten for every game mode change, though the majority
+; will stay at their initial settings defined in this array.
+; ---------------------------------------------------------------------------
+; See here for details on VDP registers:
+; https://segaretro.org/Sega_Mega_Drive/VDP_registers
+; ---------------------------------------------------------------------------
+
+VDPSetupArray:
+		dc.w $8000|%00000100			; 8-color mode
+		dc.w $8100|%00110100			; vertical interrupts, DMA, Mega Drive display
+		dc.w $8200|(vram_fg>>10)		; foreground nametable address
+		dc.w $8300|($A000>>10)			; window nametable address
+		dc.w $8400|(vram_bg>>13)		; background nametable address
+		dc.w $8500|(vram_sprites>>9)		; sprite table address
+		dc.w $8600				; (unused, only relevant for 128KB VRAM mode)
+		dc.w $8700|$00				; background colour (palette line 0, entry 0)
+		dc.w $8800				; (unused, only relevant for Master System)
+		dc.w $8900				; (unused, only relevant for Master System)
+		dc.w $8A00|$00				; horizontal interrupt register
+		dc.w $8B00|%00000000			; full-screen vertical scrolling
+		dc.w $8C00|%10000001			; 40-cell display mode
+		dc.w $8D00|(vram_hscroll>>10)		; background H-scroll address
+		dc.w $8E00				; (unused, only relevant for 128KB VRAM mode)
+		dc.w $8F00|$02				; VDP auto-increment size (2)
+		dc.w $9000|%00000001			; 64-cell H-scroll size
+		dc.w $9100				; window horizontal position
+		dc.w $9200				; window vertical position
 VDPSetupArray_End:
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to clear the screen
+; Subroutine to clear the screen (plane mappings, sprites, and scroll data)
 ; ---------------------------------------------------------------------------
 
 ClearScreen:
@@ -1147,19 +1163,22 @@ ClearScreen:
 		fillVRAM	0, vram_bg, vram_bg+plane_size_64x32 ; clear background namespace
 
 	if Revision=0
-		move.l	#0,(v_scrposy_vdp).w
-		move.l	#0,(v_scrposx_vdp).w
+		move.l	#0,(v_scrposy_vdp).w		; clear single vertical scroll buffer
+		move.l	#0,(v_scrposx_vdp).w		; clear single horizontal scroll buffer
 	else
-		clr.l	(v_scrposy_vdp).w
-		clr.l	(v_scrposx_vdp).w
+		; REV01 changed this from moving 0 to clears, but functionally identical
+		clr.l	(v_scrposy_vdp).w		; clear single vertical scroll buffer
+		clr.l	(v_scrposx_vdp).w		; clear single horizontal scroll buffer
 	endif
 
 	if FixBugs
-		clearRAM v_spritetablebuffer,v_spritetablebuffer_end
-		clearRAM v_hscrolltablebuffer,v_hscrolltablebuffer_end_padded
+		clearRAM v_spritetablebuffer,v_spritetablebuffer_end ; clear sprite table buffer
+		clearRAM v_hscrolltablebuffer,v_hscrolltablebuffer_end_padded ; clear H-Scroll table buffer
 	else
-		clearRAM v_spritetablebuffer,v_spritetablebuffer_end+4 ; Clears too much RAM, clearing the first 4 bytes of v_palette_water.
-		clearRAM v_hscrolltablebuffer,v_hscrolltablebuffer_end_padded+4 ; Clears too much RAM, clearing the first 4 bytes of v_objspace.
+		; Both of these clear loops clear one more longwords than they should.
+		; This will clear the first 4 bytes of v_palette_water and v_objspace, respectively.
+		clearRAM v_spritetablebuffer,v_spritetablebuffer_end+4 ; clear sprite table buffer
+		clearRAM v_hscrolltablebuffer,v_hscrolltablebuffer_end_padded+4 ; clear H-Scroll table buffer
 	endif
 
 		rts
@@ -1172,20 +1191,20 @@ ClearScreen:
 
 ; SoundDriverLoad: <--- old misnomer
 DACDriverLoad:
-		nop	
-		stopZ80
-		deassertZ80Reset
-		lea	(DACDriver).l,a0	; load DAC driver
-		lea	(z80_ram).l,a1		; target Z80 RAM
-		bsr.w	KosDec			; decompress
-		assertZ80Reset
-		nop	
-		nop	
-		nop	
-		nop	
-		deassertZ80Reset
-		startZ80
-		rts
+		nop					; delay
+		stopZ80                                 ; request Z80 stop on
+		deassertZ80Reset                        ; request Z80 reset off
+		lea	(DACDriver).l,a0                ; load compressed DAC driver address as source
+		lea	(z80_ram).l,a1	                ; set Z80 RAM address as target
+		bsr.w	KosDec		                ; decompress the DAC driver into Z80 RAM
+		assertZ80Reset                          ; request Z80 reset on
+		nop	                                ; delay (while the Z80 resets)
+		nop	                                ; ''
+		nop	                                ; ''
+		nop	                                ; ''
+		deassertZ80Reset                        ; request Z80 reset off
+		startZ80                                ; request Z80 stop off
+		rts                                     ; return
 ; End of function DACDriverLoad
 
 ; ===========================================================================
@@ -1212,19 +1231,19 @@ DACDriverLoad:
 ; ---------------------------------------------------------------------------
 
 TilemapToVRAM:
-		lea	(vdp_data_port).l,a6
-		move.l	#$800000,d4
+		lea	(vdp_data_port).l,a6		; load VDP data port address
+		move.l	#$800000,d4			; prepare plane width size for VDP address advancing (row)
 
 Tilemap_Line:
-		move.l	d0,4(a6)	; move d0 to VDP_control_port
-		move.w	d1,d3
+		move.l	d0,4(a6)			; set the VDP the VRAM write mode with address
+		move.w	d1,d3				; load width of rectangle
 
 Tilemap_Cell:
-		move.w	(a1)+,(a6)	; write value to namespace
-		dbf	d3,Tilemap_Cell	; next tile
-		add.l	d4,d0		; goto next line
-		dbf	d2,Tilemap_Line	; next line
-		rts
+		move.w	(a1)+,(a6)			; copy tile map to VRAM plane space
+		dbf	d3,Tilemap_Cell			; repeat for the entire width
+		add.l	d4,d0				; advance VDP value address to the next row
+		dbf	d2,Tilemap_Line			; repeat for the entire height
+		rts					; return
 ; End of function TilemapToVRAM
 
 ; ===========================================================================
@@ -1242,37 +1261,37 @@ Tilemap_Cell:
 ;         (or hacker) is responsible for making sure that no more than
 ;         16 load requests are copied into the buffer.
 ;         _________DO NOT PUT MORE THAN 16 LOAD REQUESTS IN A LIST!__________
-;         (or if you change the size of Plc_Buffer, the limit becomes (Plc_Buffer_Only_End-Plc_Buffer)/6)
+;         (or if you change the size of Plc_Buffer, the limit becomes (Plc_Buffer_Only_End-Plc_Buffer)/plc_slot_size)
 ; ---------------------------------------------------------------------------
 
 ; LoadPLC:
 AddPLC:
-		movem.l	a1-a2,-(sp)
-		lea	(ArtLoadCues).l,a1
-		add.w	d0,d0
-		move.w	(a1,d0.w),d0
-		lea	(a1,d0.w),a1		; jump to relevant PLC
-		lea	(v_plc_buffer).w,a2 ; PLC buffer space
-
-.findspace:
-		tst.l	(a2)		; is space available in RAM?
-		beq.s	.copytoRAM	; if yes, branch
-		addq.w	#6,a2		; if not, try next space
-		bra.s	.findspace
+		movem.l	a1-a2,-(sp)			; store register data
+		lea	(ArtLoadCues).l,a1		; load PLC list address
+		add.w	d0,d0				; double for word-based indexing
+		move.w	(a1,d0.w),d0			; load correct relative add address
+		lea	(a1,d0.w),a1			; add and load actual address of list
+		lea	(v_plc_buffer).w,a2		; load PLC process list
+		
+.findspace:		
+		tst.l	(a2)				; is this slot taken?
+		beq.s	.copytoRAM			; if not, branch
+		addq.w	#plc_slot_size,a2		; advance to next slot
+		bra.s	.findspace			; recheck
 ; ===========================================================================
 
 .copytoRAM:
-		move.w	(a1)+,d0	; get length of PLC
-		bmi.s	.skip
-
-.loop:
-		move.l	(a1)+,(a2)+
-		move.w	(a1)+,(a2)+	; copy PLC to RAM
-		dbf	d0,.loop	; repeat for length of PLC
-
-.skip:
-		movem.l	(sp)+,a1-a2 ; a1=object
-		rts
+		move.w	(a1)+,d0			; load size of list
+		bmi.s	.return				; if there is no list, branch
+		
+.loop:		
+		move.l	(a1)+,(a2)+			; copy Nemesis art address
+		move.w	(a1)+,(a2)+			; copy VRAM location to dump to
+		dbf	d0,.loop			; repeat for all entries
+		
+.return:		
+		movem.l	(sp)+,a1-a2			; restore register data
+		rts					; return
 ; End of function AddPLC
 
 ; ===========================================================================
@@ -1283,24 +1302,24 @@ AddPLC:
 
 ; LoadPLC2:
 NewPLC:
-		movem.l	a1-a2,-(sp)
-		lea	(ArtLoadCues).l,a1
-		add.w	d0,d0
-		move.w	(a1,d0.w),d0
-		lea	(a1,d0.w),a1	; jump to relevant PLC
-		bsr.s	ClearPLC	; erase any data in PLC buffer space
-		lea	(v_plc_buffer).w,a2
-		move.w	(a1)+,d0	; get length of PLC
-		bmi.s	.skip		; if it's negative, skip the next loop
-
-.loop:
-		move.l	(a1)+,(a2)+
-		move.w	(a1)+,(a2)+	; copy PLC to RAM
-		dbf	d0,.loop		; repeat for length of PLC
-
-.skip:
-		movem.l	(sp)+,a1-a2
-		rts
+		movem.l	a1-a2,-(sp)			; store register data
+		lea	(ArtLoadCues).l,a1		; load PLC list address
+		add.w	d0,d0				; double for word-based indexing
+		move.w	(a1,d0.w),d0			; load correct relative add address
+		lea	(a1,d0.w),a1			; add and load actual address of list
+		bsr.s	ClearPLC			; clear the current PLC entries first
+		lea	(v_plc_buffer).w,a2		; load PLC process list
+		move.w	(a1)+,d0			; load size of list
+		bmi.s	.return				; if there is no list, branch
+		
+.loop:		
+		move.l	(a1)+,(a2)+			; copy Nemesis art address
+		move.w	(a1)+,(a2)+			; copy VRAM location to dump to
+		dbf	d0,.loop			; repeat for all entries
+		
+.return:		
+		movem.l	(sp)+,a1-a2			; restore register data
+		rts					; return
 ; End of function NewPLC
 
 ; ===========================================================================
@@ -1310,59 +1329,62 @@ NewPLC:
 ; ---------------------------------------------------------------------------
 
 ClearPLC:
-		lea	(v_plc_buffer).w,a2 ; PLC buffer space in RAM
-		moveq	#(v_plc_buffer_end-v_plc_buffer)/4-1,d0
-
-.loop:
-		clr.l	(a2)+
-		dbf	d0,.loop
-		rts
+		lea	(v_plc_buffer).w,a2		; load PLC process list
+		moveq	#(v_plc_buffer_end-v_plc_buffer)/4-1,d0 ; set size of list
+		
+.loop:		
+		clr.l	(a2)+				; clear PLC process list
+		dbf	d0,.loop			; repeat until entire list is cleared
+		rts					; return
 ; End of function ClearPLC
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to use graphics listed in a pattern load cue
+; Subroutine to	check the PLC buffer and begin decompression if it contains
+; anything. ProcessPLC handles the actual decompression during VBlank
 ; ---------------------------------------------------------------------------
 
 RunPLC:
-		tst.l	(v_plc_buffer).w
-		beq.s	Rplc_Exit
-		tst.w	(v_plc_patternsleft).w
-		bne.s	Rplc_Exit
-		movea.l	(v_plc_buffer).w,a0
-		lea	(NemPCD_WriteRowToVDP).l,a3
-		lea	(v_ngfx_buffer).w,a1
-		move.w	(a0)+,d2
-		bpl.s	loc_160E
-		adda.w	#NemPCD_WriteRowToVDP_XOR-NemPCD_WriteRowToVDP,a3
+		tst.l	(v_plc_buffer).w		; are there any PLC entries left to process?
+		beq.s	.return				; if not, branch
+		tst.w	(v_plc_patternsleft).w		; is a section counter already set (is art already being decompressed)?
+		bne.s	.return				; if so, branch
 
-loc_160E:
-		andi.w	#$7FFF,d2
+		movea.l	(v_plc_buffer).w,a0		; load address of first entry's art
+		lea	(NemPCD_WriteRowToVDP).l,a3	; load address of dumping routine to use (VDP variant)
+		lea	(v_ngfx_buffer).w,a1		; load RLE huffman buffer
+		move.w	(a0)+,d2			; load number of sections to decompress (Each section is $20 bytes)
+		bpl.s	.skipXor			; if this data doesn't use XOR variant, branch
+		adda.w	#NemPCD_WriteRowToVDP_XOR-NemPCD_WriteRowToVDP,a3 ; advance to XOR variant
+; loc_160E:
+.skipXor:
+		andi.w	#$7FFF,d2			; clear XOR flag
+
 	if FixBugs=0
 		; Relocated to bugfix below
-		move.w	d2,(v_plc_patternsleft).w
+		move.w	d2,(v_plc_patternsleft).w	; save section counter
 	endif
-		bsr.w	NemDec_BuildCodeTable
-		move.b	(a0)+,d5
-		asl.w	#8,d5
-		move.b	(a0)+,d5
-		moveq	#$10,d6
-		moveq	#0,d0
-		move.l	a0,(v_plc_buffer).w
-		move.l	a3,(v_plc_ptrnemcode).w
-		move.l	d0,(v_plc_repeatcount).w
-		move.l	d0,(v_plc_paletteindex).w
-		move.l	d0,(v_plc_previousrow).w
-		move.l	d5,(v_plc_dataword).w
-		move.l	d6,(v_plc_shiftvalue).w
+		bsr.w	NemDec_BuildCodeTable		; decompress the huffman tree RLE table
+		move.b	(a0)+,d5			; load lookup field
+		asl.w	#8,d5				; ''
+		move.b	(a0)+,d5			; ''
+		moveq	#$10,d6				; prepare bit shift counter (shifting up to a word in size)
+		moveq	#0,d0				; clear d0
+		move.l	a0,(v_plc_buffer).w		; store current entry address
+		move.l	a3,(v_plc_ptrnemcode).w		; store dumping routine (XOR/Non-XOR)
+		move.l	d0,(v_plc_repeatcount).w	; clear RLE dump counter
+		move.l	d0,(v_plc_paletteindex).w	; clear RLE dump nybble
+		move.l	d0,(v_plc_previousrow).w	; clear previous XOR dump
+		move.l	d5,(v_plc_dataword).w		; store lookup field
+		move.l	d6,(v_plc_shiftvalue).w		; store bit shift counter
 	if FixBugs
 		; Fix a race condition with Pattern Load Cues
 		; https://info.sonicretro.org/SCHG_How-to:Fix_a_race_condition_with_Pattern_Load_Cues
-		move.w	d2,(v_plc_patternsleft).w
+		move.w	d2,(v_plc_patternsleft).w	; save section counter
 	endif
 
-Rplc_Exit:
-		rts
+.return:
+		rts					; return
 ; End of function RunPLC
 
 ; ===========================================================================
@@ -1375,86 +1397,92 @@ Rplc_Exit:
 
 ; sub_1642: ProcessDPLC_9Tiles:
 ProcessPLC_9Tiles:
-		tst.w	(v_plc_patternsleft).w
-		beq.w	locret_16DA
-		move.w	#9,(v_plc_framepatternsleft).w	; process 9 Nemesis-compressed tiles
-		moveq	#0,d0
-		move.w	(v_plc_buffer+4).w,d0
-		addi.w	#$120,(v_plc_buffer+4).w
-		bra.s	ProcessPLC
+		tst.w	(v_plc_patternsleft).w		; is a section counter set (is art being decompressed)?
+		beq.w	ProcessPLC_Return		; if not, branch (nothing to decompress)
+		
+		move.w	#9,(v_plc_framepatternsleft).w	; set tile counter to 9 (number of tiles to decompress in a frame)
+		moveq	#0,d0				; clear d0
+		move.w	(v_plc_buffer_dest).w,d0	; load VRAM address for this frame
+		addi.w	#9*tile_size,(v_plc_buffer_dest).w ; increase address for next frame
+		bra.s	ProcessPLC			; continue
 ; ===========================================================================
 
 ; sub_165E: ProcessDPLC2: ProcessPLC_3Tiles:
 ProcessPLC_3Tiles:
-		tst.w	(v_plc_patternsleft).w
-		beq.s	locret_16DA
-		move.w	#3,(v_plc_framepatternsleft).w	; process 3 Nemesis-compressed tiles
-		moveq	#0,d0
-		move.w	(v_plc_buffer+4).w,d0
-		addi.w	#$60,(v_plc_buffer+4).w
+		tst.w	(v_plc_patternsleft).w		; is a section counter set (is art being decompressed)?
+		beq.s	ProcessPLC_Return		; if not, branch (nothing to decompress)
+		
+		move.w	#3,(v_plc_framepatternsleft).w	; set tile counter to 3 (number of tiles to decompress in a frame)
+		moveq	#0,d0				; clear d0
+		move.w	(v_plc_buffer_dest).w,d0	; load VRAM address for this frame
+		addi.w	#3*tile_size,(v_plc_buffer_dest).w ; increase address for next frame
+		; fall-through to ProcessPLC...
 ; ---------------------------------------------------------------------------
 
 ; loc_1676: ProcessPLC:
 ProcessPLC:
-		lea	(vdp_control_port).l,a4
-		lsl.l	#2,d0
-		lsr.w	#2,d0
-		ori.w	#$4000,d0
-		swap	d0
-		move.l	d0,(a4)
-		subq.w	#4,a4
-		movea.l	(v_plc_buffer).w,a0
-		movea.l	(v_plc_ptrnemcode).w,a3
-		move.l	(v_plc_repeatcount).w,d0
-		move.l	(v_plc_paletteindex).w,d1
-		move.l	(v_plc_previousrow).w,d2
-		move.l	(v_plc_dataword).w,d5
-		move.l	(v_plc_shiftvalue).w,d6
-		lea	(v_ngfx_buffer).w,a1
+		lea	(vdp_control_port).l,a4		; load VDP control port address
+		lsl.l	#2,d0				; get address MSB bits and send to LSB of long-word
+		lsr.w	#2,d0				; send rest back
+		ori.w	#$4000,d0			; set mode bits
+		swap	d0				; align for VDP port
+		move.l	d0,(a4)				; set VDP address/mode
+		subq.w	#4,a4				; move a4 down to VDP data port
+		movea.l	(v_plc_buffer).w,a0		; load current entry address
+		movea.l	(v_plc_ptrnemcode).w,a3		; load dumping routine to use (XOR/Non-XOR)
+		move.l	(v_plc_repeatcount).w,d0	; load RLE dump counter
+		move.l	(v_plc_paletteindex).w,d1	; load RLE dump nybble
+		move.l	(v_plc_previousrow).w,d2	; load previous XOR dump
+		move.l	(v_plc_dataword).w,d5		; load lookup field
+		move.l	(v_plc_shiftvalue).w,d6		; load bit shift counter
+		lea	(v_ngfx_buffer).w,a1		; load RLE huffman buffer
 
-loc_16AA:
-		movea.w	#8,a5
-		bsr.w	NemPCD_NewRow
-		subq.w	#1,(v_plc_patternsleft).w
-		beq.s	loc_16DC
-		subq.w	#1,(v_plc_framepatternsleft).w
-		bne.s	loc_16AA
-		move.l	a0,(v_plc_buffer).w
-		move.l	a3,(v_plc_ptrnemcode).w
-		move.l	d0,(v_plc_repeatcount).w
-		move.l	d1,(v_plc_paletteindex).w
-		move.l	d2,(v_plc_previousrow).w
-		move.l	d5,(v_plc_dataword).w
-		move.l	d6,(v_plc_shiftvalue).w
+; loc_16AA:
+.loop:
+		movea.w	#8,a5				; set size of data to decompress (20 bytes, 1 tile)
+		bsr.w	NemPCD_NewRow			; continue the decompression
+		subq.w	#1,(v_plc_patternsleft).w	; decrease section count by 1
+		beq.s	ProcessPLC_ShiftCue		; if decompression is finished, branch
+		subq.w	#1,(v_plc_framepatternsleft).w	; decrease tile counter
+		bne.s	.loop				; if still running, branch to decompress another tile
+		
+		move.l	a0,(v_plc_buffer).w		; store current entry address
+		move.l	a3,(v_plc_ptrnemcode).w		; store dumping routine to use (XOR/Non-XOR)
+		move.l	d0,(v_plc_repeatcount).w	; store RLE dump counter
+		move.l	d1,(v_plc_paletteindex).w	; store RLE dump nybble
+		move.l	d2,(v_plc_previousrow).w	; store previous XOR dump
+		move.l	d5,(v_plc_dataword).w		; store lookup field
+		move.l	d6,(v_plc_shiftvalue).w		; store bit shift counter
 
-locret_16DA:
-		rts
+ProcessPLC_Return:
+		rts					; return
 ; ===========================================================================
 
-loc_16DC:
-		lea	(v_plc_buffer).w,a0
-		moveq	#(v_plc_buffer_only_end-v_plc_buffer-6)/4-1,d0
+; loc_16DC:
+ProcessPLC_ShiftCue:
+		lea	(v_plc_buffer).w,a0		; load PLC process list
+		moveq	#(v_plc_buffer_only_end-v_plc_buffer-plc_slot_size)/4-1,d0 ; set size of list
 
-loc_16E2:
-		move.l	6(a0),(a0)+
-		dbf	d0,loc_16E2
+; loc_16E2:
+.loop:
+		move.l	plc_slot_size(a0),(a0)+		; shift contents of PLC buffer up 6 bytes
+		dbf	d0,.loop			; repeat til done
 
 	if FixBugs
 		; The above code does not properly 'pop' the 16th PLC entry.
 		; Because of this, occupying the 16th slot will cause it to
 		; be repeatedly decompressed infinitely.
-		; Granted, this could be conisdered more of an optimisation
+		; Granted, this could be considered more of an optimisation
 		; than a bug: treating the 16th entry as a dummy that
 		; should never be occupied makes this code unnecessary.
 		; Still, the overhead of this code is minimal.
-		if (v_plc_buffer_only_end-v_plc_buffer-6)&2
-			move.w	6(a0),(a0)
+		if (v_plc_buffer_only_end-v_plc_buffer-plc_slot_size)&2
+			move.w	plc_slot_size(a0),(a0)
 		endif
-
-		clr.l	(v_plc_buffer_only_end-6).w
+		clr.l	(v_plc_buffer_only_end-plc_slot_size).w
 	endif
 
-		rts
+		rts					; return
 ; End of function ProcessPLC
 
 ; ===========================================================================
@@ -1465,24 +1493,24 @@ loc_16E2:
 ; ---------------------------------------------------------------------------
 
 QuickPLC:
-		lea	(ArtLoadCues).l,a1 ; load the PLC index
-		add.w	d0,d0
-		move.w	(a1,d0.w),d0
-		lea	(a1,d0.w),a1
-		move.w	(a1)+,d1	; get length of PLC
+		lea	(ArtLoadCues).l,a1		; load PLC list address
+		add.w	d0,d0				; double for word-based indexing
+		move.w	(a1,d0.w),d0			; load correct relative add address
+		lea	(a1,d0.w),a1			; add and load actual address of list
+		move.w	(a1)+,d1			; load size of list
 
-Qplc_Loop:
-		movea.l	(a1)+,a0	; get art pointer
-		moveq	#0,d0
-		move.w	(a1)+,d0	; get VRAM address
-		lsl.l	#2,d0
-		lsr.w	#2,d0
-		ori.w	#$4000,d0
-		swap	d0
-		move.l	d0,(vdp_control_port).l ; converted VRAM address to VDP format
-		bsr.w	NemDec		; decompress
-		dbf	d1,Qplc_Loop	; repeat for length of PLC
-		rts
+.loop:
+		movea.l	(a1)+,a0			; load Nemesis art address
+		moveq	#0,d0				; clear d0
+		move.w	(a1)+,d0			; load VRAM dump address
+		lsl.l	#2,d0				; get address MSB bits and send to LSB of long-word
+		lsr.w	#2,d0				; send rest back
+		ori.w	#$4000,d0			; set mode bits
+		swap	d0				; align for VDP port
+		move.l	d0,(vdp_control_port).l		; set VDP address/mode
+		bsr.w	NemDec				; decompress the entire entry
+		dbf	d1,.loop			; repeat for all entries in the list
+		rts					; return
 ; End of function QuickPLC
 
 ; ===========================================================================
