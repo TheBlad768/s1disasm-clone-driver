@@ -1459,7 +1459,8 @@ Sonic_FloorDown:
 		; Note that modifications to FindWall, FindFloor, Sonic_FindFloor,
 		; Sonic_FindWallRight, Sonic_FindCeiling, Sonic_FindWallLeft, and
 		; Sonic_FindSmaller are needed for this fix to work.
-		btst	#$E,d4					; is the floor fully solid?
+		move.b	(v_lrb_solid_bit).w,d2			; get left/right/bottom solid bit to check
+		btst	d2,d4					; is the floor fully solid?
 		bne.s	.landed					; if so, branch
 	endif
 		move.b	obVelY(a0),d2				; get Sonic's fall speed at the time of impact (upper byte only, pixel delta)
@@ -1580,7 +1581,8 @@ Sonic_FloorLeft:
 		bpl.s	.return					; if not, branch
 	if FixBugs
 		; See explanation in .norightgraze under Sonic_FloorDown
-		btst	#$E,d4					; is the floor fully solid?
+		move.b	(v_lrb_solid_bit).w,d2			; get left/right/bottom solid bit to check
+		btst	d2,d4					; is the floor fully solid?
 		bne.s	.landed					; if so, branch
 
 		; When Sonic is moving down and a floor collision is detected, there exists
@@ -1719,7 +1721,8 @@ Sonic_FloorRight:
 		bpl.s	.return					; if not, branch
 	if FixBugs
 		; See explanation in .norightgraze under Sonic_FloorDown
-		btst	#$E,d4					; is the floor fully solid?
+		move.b	(v_lrb_solid_bit).w,d2			; get left/right/bottom solid bit to check
+		btst	d2,d4					; is the floor fully solid?
 		bne.s	.landed					; if so, branch
 
 		; See explanation in .noceiling under Sonic_FloorLeft
