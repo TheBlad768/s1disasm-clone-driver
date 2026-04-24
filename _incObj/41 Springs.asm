@@ -7,6 +7,12 @@ Springs:
 		move.b	obRoutine(a0),d0
 		move.w	Spring_Index(pc,d0.w),d1
 		jsr	Spring_Index(pc,d1.w)
+	if FixBugs
+		; Objects shouldn't call DisplaySprite and DeleteObject in
+		; the same frame or else cause a null-pointer dereference.
+		out_of_range.w	DeleteObject
+		bra.w	DisplaySprite
+	else
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
 		rts

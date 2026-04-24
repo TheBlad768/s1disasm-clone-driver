@@ -78,7 +78,10 @@ Hel_NotCentre:
 
 Hel_Action:	; Routine 2, 4
 		bsr.w	Hel_RotateSpikes
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Hel_ChkDel
 ; ===========================================================================
 
@@ -120,7 +123,12 @@ Hel_DelLoop:
 
 Hel_Delete:	; Routine 6
 		bsr.w	DeleteObject
+	if FixBugs
+		; This has been moved to prevent a display-after-free bug.
+		bra.w	DisplaySprite
+	else
 		rts
+	endif
 ; ===========================================================================
 
 Hel_Display:	; Routine 8

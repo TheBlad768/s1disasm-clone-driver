@@ -81,7 +81,10 @@ Bri_Action:	; Routine 2
 		bsr.w	Bri_Bend
 
 .display:
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Bri_ChkDel
 ; ===========================================================================
 
@@ -111,7 +114,10 @@ Bri_Solid:
 
 Bri_Platform:	; Routine 4
 		bsr.s	Bri_WalkOff
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Bri_ChkDel
 
 ; ===========================================================================
@@ -249,7 +255,12 @@ Obj11_BendData2:binclude	"misc/ghzbend2.bin"
 
 Bri_ChkDel:
 		out_of_range.w	.deletebridge
+	if FixBugs
+		; This has been moved to prevent a display-after-free bug.
+		bra.w	DisplaySprite
+	else
 		rts
+	endif
 ; ===========================================================================
 
 .deletebridge:

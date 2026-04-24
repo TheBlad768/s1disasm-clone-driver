@@ -136,6 +136,12 @@ Mon_Animate:	; Routine 6
 		bsr.w	AnimateSprite
 
 Mon_Display:	; Routine 8
+	if FixBugs
+		; Objects shouldn't call DisplaySprite and DeleteObject in
+		; the same frame or else cause a null-pointer dereference.
+		out_of_range.w	DeleteObject
+		bra.w	DisplaySprite
+	else
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
 		rts

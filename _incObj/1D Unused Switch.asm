@@ -36,8 +36,14 @@ Swi_Action:	; Routine 2
 		move.w	d0,(f_switch).w	; set switch 0 as "pressed"
 
 Swi_ChkDel:
+	if FixBugs
+		; Objects shouldn't call DisplaySprite and DeleteObject in
+		; the same frame or else cause a null-pointer dereference.
+		out_of_range.w	DeleteObject
+		bra.w	DisplaySprite
+	else
 		bsr.w	DisplaySprite
-		out_of_range.w	Swi_Delete
+		out_of_range.w	DeleteObject
 		rts
 ; ===========================================================================
 
