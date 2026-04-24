@@ -16,6 +16,7 @@ Springs:
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
 		rts
+	endif
 ; ===========================================================================
 Spring_Index:	dc.w Spring_Main-Spring_Index
 		dc.w Spring_Up-Spring_Index

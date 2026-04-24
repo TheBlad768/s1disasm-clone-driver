@@ -157,6 +157,7 @@ Spik_Display:
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
 		rts
+	endif
 ; ===========================================================================
 
 Spik_Type0x:

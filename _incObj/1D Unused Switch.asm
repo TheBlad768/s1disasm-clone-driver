@@ -45,6 +45,7 @@ Swi_ChkDel:
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject
 		rts
+	endif
 ; ===========================================================================
 
 Swi_Delete:	; Routine 4
