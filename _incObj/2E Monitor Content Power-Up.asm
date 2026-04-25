@@ -156,5 +156,15 @@ Pow_ChkEnd:
 
 Pow_Delete:	; Routine 4
 		subq.w	#1,obTimeFrame(a0)
+	if FixBugs
+		; Avoid returning to PowerUp to prevent display-and-delete
+		; and double-delete bugs.
+		bpl.s	.return
+		addq.l	#4,sp
+		bra.w	DeleteObject	; delete after half a second
+	else
 		bmi.w	DeleteObject	; delete after half a second
+	endif
+
+.return:
 		rts

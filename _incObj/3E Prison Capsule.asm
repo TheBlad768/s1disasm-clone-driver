@@ -204,6 +204,12 @@ Pri_EndAct:	; Routine $E
 		dbf	d0,.findanimal	; repeat $3E times
 
 		jsr	(GotThroughAct).l
+
+	if FixBugs
+		; Avoid returning to Prison to prevent display-and-delete
+		; and double-delete bugs.
+		addq.l	#4,sp
+	endif
 		jmp	(DeleteObject).l
 
 .found:

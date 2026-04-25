@@ -112,10 +112,18 @@ locret_843A:
 
 CFlo_TimeZero:
 		bsr.w	ObjectFall
+	if FixBugs=0
+		; Objects should not call DisplaySprite and DeleteObject on
+		; the same frame or else cause a null-pointer dereference.
 		bsr.w	DisplaySprite
+	endif
 		tst.b	obRender(a0)
 		bpl.s	CFlo_Delete
+	if FixBugs
+		bra.w	DisplaySprite
+	else
 		rts
+	endif
 ; ===========================================================================
 
 CFlo_Delete:	; Routine 8
@@ -163,7 +171,14 @@ loc_8486:
 ; ===========================================================================
 
 loc_84AA:
+	if FixBugs
+		; If an object is allocated before the parent object, then
+		; when the child is deleted, it will have already been queued
+		; for display, which is a display-and-delete bug.
+		bsr.w	FindNextFreeObj
+	else
 		bsr.w	FindFreeObj
+	endif
 		bne.s	loc_84F2
 		addq.w	#5,a3
 

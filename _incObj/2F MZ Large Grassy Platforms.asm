@@ -225,11 +225,12 @@ sub_B09C:
 
 LGrass_ChkDel:
 		tst.b	objoff_35(a0)
-		beq.s	loc_B0C6
+		beq.s	LGrass_ChkGone
 		tst.b	obRender(a0)
 		bpl.s	LGrass_DelFlames
 
-loc_B0C6:
+; loc_B0C6:
+LGrass_ChkGone:
 		out_of_range.w	DeleteObject,lgrass_origX(a0)
 	if FixBugs
 		; This has been moved to prevent a display-after-free bug.
@@ -264,7 +265,7 @@ loc_B0F4:
 locret_B116:
 	if FixBugs
 		; This has been moved to prevent a display-after-free bug.
-		bra.w	DisplaySprite
+		bra.s	LGrass_ChkGone
 	else
 		rts
 	endif

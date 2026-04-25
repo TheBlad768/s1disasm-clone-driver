@@ -98,13 +98,21 @@ LWall_Solid:	; Routine 2
 		bsr.w	SpeedToPos
 
 .rangechk:
+	if FixBugs=0
+		; Objects shouldn't call DisplaySprite and DeleteObject on
+		; the same frame or else cause a null-pointer dereference.
 		bsr.w	DisplaySprite
+	endif
 		tst.b	lwall_flag(a0)	; is wall already moving?
 		bne.s	.moving		; if yes, branch
 		out_of_range.s	.chkgone
 
 .moving:
+	if FixBugs
+		bra.w	DisplaySprite
+	else
 		rts
+	endif
 ; ===========================================================================
 
 .chkgone:

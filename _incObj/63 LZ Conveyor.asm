@@ -121,7 +121,14 @@ loc_12460:
 ; ===========================================================================
 
 LCon_Loop:
+	if FixBugs
+		; If an object is allocated before the parent object, then
+		; when the child is deleted, it will have already been queued
+		; for display, which is a display-and-delete bug.
+		bsr.w	FindNextFreeObj
+	else
 		bsr.w	FindFreeObj
+	endif
 		bne.s	loc_124AA
 
 LCon_MakePtfms:
