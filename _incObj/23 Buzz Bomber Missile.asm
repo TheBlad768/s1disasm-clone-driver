@@ -46,7 +46,9 @@ Msl_Animate:	; Routine 2
 		; Sonic 2. Fun fact: Sonic 2 REV00 has some leftover debug
 		; code in its BuildSprites function for detecting this type
 		; of bug.
-		beq.s	Msl_ChkCancel.return
+		bne.s	.notgone
+		rts
+.notgone:
 	endif
 		lea	(Ani_Missile).l,a1
 		bsr.w	AnimateSprite

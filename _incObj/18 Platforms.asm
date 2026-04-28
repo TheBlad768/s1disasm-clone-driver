@@ -64,7 +64,10 @@ loc_7EE0:
 Plat_Action:	; Routine 8
 		bsr.w	Plat_Move
 		bsr.w	Plat_Nudge
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Plat_ChkDel
 ; ===========================================================================
 
@@ -82,7 +85,10 @@ loc_7F06:
 		bsr.w	Plat_Nudge
 		move.w	(sp)+,d2
 		bsr.w	MvSonicOnPtfm2
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Plat_ChkDel
 
 		rts	; redundant rts
@@ -294,7 +300,12 @@ Plat_Move:
 
 Plat_ChkDel:
 		out_of_range.s	Plat_Delete,objoff_32(a0)
+	if FixBugs
+		; This has been moved to prevent a display-after-free bug.
+		bra.w	DisplaySprite
+	else
 		rts
+	endif
 ; ===========================================================================
 
 Plat_Delete:	; Routine 6

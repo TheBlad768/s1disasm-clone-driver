@@ -43,7 +43,14 @@ Hel_Main:	; Routine 0
 		moveq	#0,d6
 
 Hel_Build:
+	if FixBugs
+		; If an object is allocated before the parent object, then
+		; when the child is deleted, it will have already been queued
+		; for display, which is a display-and-delete bug.
+		bsr.w	FindNextFreeObj
+	else
 		bsr.w	FindFreeObj
+	endif
 		bne.s	Hel_Action
 		addq.b	#1,obSubtype(a0)
 		move.w	a1,d5
@@ -78,7 +85,10 @@ Hel_NotCentre:
 
 Hel_Action:	; Routine 2, 4
 		bsr.w	Hel_RotateSpikes
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Hel_ChkDel
 ; ===========================================================================
 
@@ -120,7 +130,12 @@ Hel_DelLoop:
 
 Hel_Delete:	; Routine 6
 		bsr.w	DeleteObject
+	if FixBugs
+		; This has been moved to prevent a display-after-free bug.
+		bra.w	DisplaySprite
+	else
 		rts
+	endif
 ; ===========================================================================
 
 Hel_Display:	; Routine 8

@@ -103,9 +103,16 @@ loc_9C0E:
 
 Ring_Animate:	; Routine 2
 		move.b	(v_ani1_frame).w,obFrame(a0) ; set frame
+	if FixBugs
+		; Objects shouldn't call DisplaySprite and DeleteObject in
+		; the same frame or else cause a null-pointer dereference.
+		out_of_range.s	Ring_Delete,objoff_32(a0)
+		bra.w	DisplaySprite
+	else
 		bsr.w	DisplaySprite
 		out_of_range.s	Ring_Delete,objoff_32(a0)
 		rts
+	endif
 ; ===========================================================================
 
 Ring_Collect:	; Routine 4

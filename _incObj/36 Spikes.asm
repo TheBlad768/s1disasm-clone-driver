@@ -148,9 +148,16 @@ loc_CF20:
 		movea.l	(sp)+,a0
 
 Spik_Display:
+	if FixBugs
+		; Objects shouldn't call DisplaySprite and DeleteObject in
+		; the same frame or else cause a null-pointer dereference.
+		out_of_range.w	DeleteObject,spik_origX(a0)
+		bra.w	DisplaySprite
+	else
 		bsr.w	DisplaySprite
 		out_of_range.w	DeleteObject,spik_origX(a0)
 		rts
+	endif
 ; ===========================================================================
 
 Spik_Type0x:

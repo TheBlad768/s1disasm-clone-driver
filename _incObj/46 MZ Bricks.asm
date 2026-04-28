@@ -98,15 +98,21 @@ Brick_Type03:
 		clr.w	obVelY(a0)	; stop the block falling
 		move.w	obY(a0),brick_origY(a0)
 		move.b	#4,obSubtype(a0)
-		move.w	(a1),d0
-		andi.w	#$3FF,d0
+
+		move.w	(a1),d0		; a1 = 16x16 block ID the brick is resting on
+		andi.w	#$3FF,d0	; mask out mirror/flip flags
 	if Revision=0
-		cmpi.w	#$2E8,d0
+		; The bricks did not wobble on lava in REV00, which was corrected in REV01.
+		; Looking at the prototype, this is because Marble Zone originally had
+		; a lot of unused blank 16x16 blocks between the main stuff and lava.
+		; At some point, the unused blocks were deleted, but the devs forgot to
+		; adjust this value accordingly, which resulted in the static bricks.
+		cmpi.w	#$2E8,d0	; impossible condition (there aren't this many blocks in MZ)
 	else
-		cmpi.w	#$16A,d0
+		cmpi.w	#$16A,d0	; is it a lava block? (block ID $16A and above)
 	endif
-		bcc.s	locret_E8EE
-		move.b	#0,obSubtype(a0)
+		bcc.s	locret_E8EE	; if yes, branch (keep it wobbling)
+		move.b	#0,obSubtype(a0) ; otherwise, reset it back to static
 
 locret_E8EE:
 		rts

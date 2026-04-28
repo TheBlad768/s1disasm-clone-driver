@@ -546,7 +546,7 @@ Sonic_WallSpeedAdjust:
 		bset	#5,obStatus(a0)				; set pushing flag
 		move.w	#0,obInertia(a0)			; clear ground speed
 	if FixBugs
-		clr.w	obSubpixelY(a0)				; reset subpixel portion
+		clr.w	obSubpixelX(a0)				; reset subpixel portion
 	endif
 		rts						; return
 ; ===========================================================================
@@ -563,7 +563,7 @@ Sonic_WallSpeedAdjust:
 		bset	#5,obStatus(a0)				; set pushing flag
 		move.w	#0,obInertia(a0)			; clear ground speed
 	if FixBugs
-		clr.w	obSubpixelY(a0)				; reset subpixel portion
+		clr.w	obSubpixelX(a0)				; reset subpixel portion
 	endif
 		rts						; return
 ; ===========================================================================
@@ -1051,7 +1051,7 @@ Sonic_LevelBound:
 ; Jump-redirect to the KillSonic subroutine, as it otherwise results in an out-of-range error
 ; just from enabling FixBugs. This is also a very common beginner's trap
 JumpTo_KillSonic:
-		jmp	(KillSonic).l				; 
+		jmp	(KillSonic).l				; kill Sonic
 	endif
 ; End of function Sonic_LevelBound
 

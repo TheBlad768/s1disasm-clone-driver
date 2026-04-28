@@ -163,7 +163,15 @@ Bas_Action:	; Routine 2
 ; ===========================================================================
 ; unused crap
 		bsr.w	SpeedToPos
+	if FixBugs=0
+		; Objects should not call DisplaySprite and DeleteObject on
+		; the same frame or else cause a null-pointer dereference.
 		bsr.w	DisplaySprite
+	endif
 		tst.b	obRender(a0)
 		bpl.w	DeleteObject
+	if FixBugs
+		bra.w	DisplaySprite
+	else
 		rts
+	endif

@@ -80,7 +80,10 @@ SStom_Solid:	; Routine 2
 		move.w	#$20,d3
 		move.w	(sp)+,d4
 		bsr.w	SolidObject
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	SStom_ChkDel
 ; ===========================================================================
 
@@ -102,11 +105,18 @@ SStom_Spikes:	; Routine 4
 		move.w	d0,obX(a0)
 
 SStom_Display:	; Routine 6
+	if FixBugs=0
 		bsr.w	DisplaySprite
+	endif
 
 SStom_ChkDel:
 		out_of_range.w	DeleteObject,objoff_3A(a0)
+	if FixBugs
+		; This has been moved to prevent a display-after-free bug.
+		bra.w	DisplaySprite
+	else
 		rts
+	endif
 ; ===========================================================================
 
 SStom_Move:

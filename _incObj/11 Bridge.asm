@@ -38,7 +38,14 @@ Bri_Main:	; Routine 0
 		bcs.s	Bri_Action	; don't make more if bridge has only 1 log
 
 .buildloop:
+	if FixBugs
+		; If an object is allocated before the parent object, then
+		; when the child is deleted, it will have already been queued
+		; for display, which is a display-and-delete bug.
+		bsr.w	FindNextFreeObj
+	else
 		bsr.w	FindFreeObj
+	endif
 		bne.s	Bri_Action
 		addq.b	#1,obSubtype(a0)
 		cmp.w	obX(a0),d3	; is this log the leftmost one?
@@ -81,7 +88,10 @@ Bri_Action:	; Routine 2
 		bsr.w	Bri_Bend
 
 .display:
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Bri_ChkDel
 ; ===========================================================================
 
@@ -111,7 +121,10 @@ Bri_Solid:
 
 Bri_Platform:	; Routine 4
 		bsr.s	Bri_WalkOff
+	if FixBugs=0
+		; This has been moved to prevent a display-after-free bug.
 		bsr.w	DisplaySprite
+	endif
 		bra.w	Bri_ChkDel
 
 ; ===========================================================================
@@ -249,7 +262,12 @@ Obj11_BendData2:binclude	"misc/ghzbend2.bin"
 
 Bri_ChkDel:
 		out_of_range.w	.deletebridge
+	if FixBugs
+		; This has been moved to prevent a display-after-free bug.
+		bra.w	DisplaySprite
+	else
 		rts
+	endif
 ; ===========================================================================
 
 .deletebridge:
