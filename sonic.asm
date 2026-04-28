@@ -2812,8 +2812,8 @@ Level_CheckTtlCard:
 		jsr	(Hud_Base).l			; load basic HUD graphics (only in levels, not in the ending demos)
 
 Level_SkipTtlCard:
-		moveq	#palid_Sonic,d0			; load Sonic's palette...
-		bsr.w	PalLoad_Fade			; ...to fade-in buffer (just to avoid it turning black, it won't actually fade)
+		moveq	#palid_Sonic,d0			; load Sonic's palette to fade-in buffer
+		bsr.w	PalLoad_Fade			; (doesn't actually do anything, the PalFadeIn_Alt call below skips the first palette line)
 		bsr.w	LevelSizeLoad			; load level size and set default level boundaries
 		bsr.w	DeformLayers			; initialize background deformation
 		bset	#2,(v_fg_scroll_flags).w	; draw an extra column at the left side of the screen during level start
