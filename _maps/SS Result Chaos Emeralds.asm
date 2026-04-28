@@ -2,39 +2,39 @@
 ; Sprite mappings - chaos emeralds from the special stage results screen
 ; ---------------------------------------------------------------------------
 Map_SSRC_internal:	mappingsTable
-	mappingsTableEntry.w	byte_CE02
-	mappingsTableEntry.w	byte_CE08
-	mappingsTableEntry.w	byte_CE0E
-	mappingsTableEntry.w	byte_CE14
-	mappingsTableEntry.w	byte_CE1A
-	mappingsTableEntry.w	byte_CE20
-	mappingsTableEntry.w	byte_CE26
+	mappingsTableEntry.w	.chaos_blue
+	mappingsTableEntry.w	.chaos_yellow
+	mappingsTableEntry.w	.chaos_pink
+	mappingsTableEntry.w	.chaos_green
+	mappingsTableEntry.w	.chaos_red
+	mappingsTableEntry.w	.chaos_gray
+	mappingsTableEntry.w	.blank
 
-byte_CE02:	spriteHeader
+.chaos_blue:	spriteHeader
 	spritePiece	-8, -8, 2, 2, 4, 0, 0, 1, 0
-byte_CE02_End
+.chaos_blue_End
 
-byte_CE08:	spriteHeader
+.chaos_yellow:	spriteHeader
 	spritePiece	-8, -8, 2, 2, 0, 0, 0, 0, 0
-byte_CE08_End
+.chaos_yellow_End
 
-byte_CE0E:	spriteHeader
+.chaos_pink:	spriteHeader
 	spritePiece	-8, -8, 2, 2, 4, 0, 0, 2, 0
-byte_CE0E_End
+.chaos_pink_End
 
-byte_CE14:	spriteHeader
+.chaos_green:	spriteHeader
 	spritePiece	-8, -8, 2, 2, 4, 0, 0, 3, 0
-byte_CE14_End
+.chaos_green_End
 
-byte_CE1A:	spriteHeader
+.chaos_red:	spriteHeader
 	spritePiece	-8, -8, 2, 2, 8, 0, 0, 1, 0
-byte_CE1A_End
+.chaos_red_End
 
-byte_CE20:	spriteHeader
+.chaos_gray:	spriteHeader
 	spritePiece	-8, -8, 2, 2, $C, 0, 0, 1, 0
-byte_CE20_End
+.chaos_gray_End
 
-byte_CE26:	spriteHeader	; Blank frame
-byte_CE26_End
+.blank:	spriteHeader	; Blank frame
+.blank_End
 
 	even

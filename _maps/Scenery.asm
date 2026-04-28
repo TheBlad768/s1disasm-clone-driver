@@ -2,10 +2,10 @@
 ; Sprite mappings - SLZ lava thrower
 ; ---------------------------------------------------------------------------
 Map_Scen_internal:	mappingsTable
-	mappingsTableEntry.w	byte_8858
+	mappingsTableEntry.w	.slz_fire_launcher
 
-byte_8858:	spriteHeader
+.slz_fire_launcher:	spriteHeader
 	spritePiece	-8, -$10, 2, 4, 0, 0, 0, 0, 0
-byte_8858_End
+.slz_fire_launcher_End
 
 	even

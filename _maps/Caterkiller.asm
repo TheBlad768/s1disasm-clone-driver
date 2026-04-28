@@ -2,125 +2,125 @@
 ; Sprite mappings - Caterkiller enemy (MZ, SBZ)
 ; ---------------------------------------------------------------------------
 Map_Cat_internal:	mappingsTable
-	mappingsTableEntry.w	byte_16D9E
-	mappingsTableEntry.w	byte_16DA4
-	mappingsTableEntry.w	byte_16DAA
-	mappingsTableEntry.w	byte_16DB0
-	mappingsTableEntry.w	byte_16DB6
-	mappingsTableEntry.w	byte_16DBC
-	mappingsTableEntry.w	byte_16DC2
-	mappingsTableEntry.w	byte_16DC8
-	mappingsTableEntry.w	byte_16DCE
-	mappingsTableEntry.w	byte_16DD4
-	mappingsTableEntry.w	byte_16DDA
-	mappingsTableEntry.w	byte_16DE0
-	mappingsTableEntry.w	byte_16DE6
-	mappingsTableEntry.w	byte_16DEC
-	mappingsTableEntry.w	byte_16DF2
-	mappingsTableEntry.w	byte_16DF8
-	mappingsTableEntry.w	byte_16DFE
-	mappingsTableEntry.w	byte_16E04
-	mappingsTableEntry.w	byte_16E0A
-	mappingsTableEntry.w	byte_16E10
-	mappingsTableEntry.w	byte_16E16
-	mappingsTableEntry.w	byte_16E1C
-	mappingsTableEntry.w	byte_16E22
-	mappingsTableEntry.w	byte_16E28
+	mappingsTableEntry.w	.head1
+	mappingsTableEntry.w	.head2
+	mappingsTableEntry.w	.head3
+	mappingsTableEntry.w	.head4
+	mappingsTableEntry.w	.head5
+	mappingsTableEntry.w	.head6
+	mappingsTableEntry.w	.head7
+	mappingsTableEntry.w	.head8
+	mappingsTableEntry.w	.body1
+	mappingsTableEntry.w	.body2
+	mappingsTableEntry.w	.body3
+	mappingsTableEntry.w	.body4
+	mappingsTableEntry.w	.body5
+	mappingsTableEntry.w	.body6
+	mappingsTableEntry.w	.body7
+	mappingsTableEntry.w	.body8
+	mappingsTableEntry.w	.mouth1
+	mappingsTableEntry.w	.mouth2
+	mappingsTableEntry.w	.mouth3
+	mappingsTableEntry.w	.mouth4
+	mappingsTableEntry.w	.mouth5
+	mappingsTableEntry.w	.mouth6
+	mappingsTableEntry.w	.mouth7
+	mappingsTableEntry.w	.mouth8
 
-byte_16D9E:	spriteHeader
+.head1:	spriteHeader
 	spritePiece	-8, -$E, 2, 3, 0, 0, 0, 0, 0
-byte_16D9E_End
+.head1_End
 
-byte_16DA4:	spriteHeader
+.head2:	spriteHeader
 	spritePiece	-8, -$F, 2, 3, 0, 0, 0, 0, 0
-byte_16DA4_End
+.head2_End
 
-byte_16DAA:	spriteHeader
+.head3:	spriteHeader
 	spritePiece	-8, -$10, 2, 3, 0, 0, 0, 0, 0
-byte_16DAA_End
+.head3_End
 
-byte_16DB0:	spriteHeader
+.head4:	spriteHeader
 	spritePiece	-8, -$11, 2, 3, 0, 0, 0, 0, 0
-byte_16DB0_End
+.head4_End
 
-byte_16DB6:	spriteHeader
+.head5:	spriteHeader
 	spritePiece	-8, -$12, 2, 3, 0, 0, 0, 0, 0
-byte_16DB6_End
+.head5_End
 
-byte_16DBC:	spriteHeader
+.head6:	spriteHeader
 	spritePiece	-8, -$13, 2, 3, 0, 0, 0, 0, 0
-byte_16DBC_End
+.head6_End
 
-byte_16DC2:	spriteHeader
+.head7:	spriteHeader
 	spritePiece	-8, -$14, 2, 3, 0, 0, 0, 0, 0
-byte_16DC2_End
+.head7_End
 
-byte_16DC8:	spriteHeader
+.head8:	spriteHeader
 	spritePiece	-8, -$15, 2, 3, 0, 0, 0, 0, 0
-byte_16DC8_End
+.head8_End
 
-byte_16DCE:	spriteHeader
+.body1:	spriteHeader
 	spritePiece	-8, -8, 2, 2, $C, 0, 0, 0, 0
-byte_16DCE_End
+.body1_End
 
-byte_16DD4:	spriteHeader
+.body2:	spriteHeader
 	spritePiece	-8, -9, 2, 2, $C, 0, 0, 0, 0
-byte_16DD4_End
+.body2_End
 
-byte_16DDA:	spriteHeader
+.body3:	spriteHeader
 	spritePiece	-8, -$A, 2, 2, $C, 0, 0, 0, 0
-byte_16DDA_End
+.body3_End
 
-byte_16DE0:	spriteHeader
+.body4:	spriteHeader
 	spritePiece	-8, -$B, 2, 2, $C, 0, 0, 0, 0
-byte_16DE0_End
+.body4_End
 
-byte_16DE6:	spriteHeader
+.body5:	spriteHeader
 	spritePiece	-8, -$C, 2, 2, $C, 0, 0, 0, 0
-byte_16DE6_End
+.body5_End
 
-byte_16DEC:	spriteHeader
+.body6:	spriteHeader
 	spritePiece	-8, -$D, 2, 2, $C, 0, 0, 0, 0
-byte_16DEC_End
+.body6_End
 
-byte_16DF2:	spriteHeader
+.body7:	spriteHeader
 	spritePiece	-8, -$E, 2, 2, $C, 0, 0, 0, 0
-byte_16DF2_End
+.body7_End
 
-byte_16DF8:	spriteHeader
+.body8:	spriteHeader
 	spritePiece	-8, -$F, 2, 2, $C, 0, 0, 0, 0
-byte_16DF8_End
+.body8_End
 
-byte_16DFE:	spriteHeader
+.mouth1:	spriteHeader
 	spritePiece	-8, -$E, 2, 3, 6, 0, 0, 0, 0
-byte_16DFE_End
+.mouth1_End
 
-byte_16E04:	spriteHeader
+.mouth2:	spriteHeader
 	spritePiece	-8, -$F, 2, 3, 6, 0, 0, 0, 0
-byte_16E04_End
+.mouth2_End
 
-byte_16E0A:	spriteHeader
+.mouth3:	spriteHeader
 	spritePiece	-8, -$10, 2, 3, 6, 0, 0, 0, 0
-byte_16E0A_End
+.mouth3_End
 
-byte_16E10:	spriteHeader
+.mouth4:	spriteHeader
 	spritePiece	-8, -$11, 2, 3, 6, 0, 0, 0, 0
-byte_16E10_End
+.mouth4_End
 
-byte_16E16:	spriteHeader
+.mouth5:	spriteHeader
 	spritePiece	-8, -$12, 2, 3, 6, 0, 0, 0, 0
-byte_16E16_End
+.mouth5_End
 
-byte_16E1C:	spriteHeader
+.mouth6:	spriteHeader
 	spritePiece	-8, -$13, 2, 3, 6, 0, 0, 0, 0
-byte_16E1C_End
+.mouth6_End
 
-byte_16E22:	spriteHeader
+.mouth7:	spriteHeader
 	spritePiece	-8, -$14, 2, 3, 6, 0, 0, 0, 0
-byte_16E22_End
+.mouth7_End
 
-byte_16E28:	spriteHeader
+.mouth8:	spriteHeader
 	spritePiece	-8, -$15, 2, 3, 6, 0, 0, 0, 0
-byte_16E28_End
+.mouth8_End
 
 	even

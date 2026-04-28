@@ -2,25 +2,25 @@
 ; Sprite mappings - special stage breakable glass blocks and red-white blocks
 ; ---------------------------------------------------------------------------
 Map_SS_Glass_internal:	mappingsTable
-	mappingsTableEntry.w	byte_1B928
-	mappingsTableEntry.w	byte_1B92E
-	mappingsTableEntry.w	byte_1B934
-	mappingsTableEntry.w	byte_1B93A
+	mappingsTableEntry.w	.glass0
+	mappingsTableEntry.w	.glass1
+	mappingsTableEntry.w	.glass2
+	mappingsTableEntry.w	.glass3
 
-byte_1B928:	spriteHeader
+.glass0:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 0, 0, 0, 0, 0
-byte_1B928_End
+.glass0_End
 
-byte_1B92E:	spriteHeader
+.glass1:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 0, 1, 0, 0, 0
-byte_1B92E_End
+.glass1_End
 
-byte_1B934:	spriteHeader
+.glass2:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 0, 1, 1, 0, 0
-byte_1B934_End
+.glass2_End
 
-byte_1B93A:	spriteHeader
+.glass3:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 0, 0, 1, 0, 0
-byte_1B93A_End
+.glass3_End
 
 	even
