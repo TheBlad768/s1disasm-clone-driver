@@ -2,15 +2,15 @@
 ; Sprite mappings - special stage "UP" block
 ; ---------------------------------------------------------------------------
 Map_SS_Up_internal:	mappingsTable
-	mappingsTableEntry.w	byte_1B944
-	mappingsTableEntry.w	byte_1B94A
+	mappingsTableEntry.w	.up0
+	mappingsTableEntry.w	.up1
 
-byte_1B944:	spriteHeader
+.up0:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 0, 0, 0, 0, 0
-byte_1B944_End
+.up0_End
 
-byte_1B94A:	spriteHeader
+.up1:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, $12, 0, 0, 0, 0
-byte_1B94A_End
+.up1_End
 
 	even

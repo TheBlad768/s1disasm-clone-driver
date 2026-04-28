@@ -2,7 +2,7 @@
 ; Sprite mappings - shield and invincibility stars
 ; ---------------------------------------------------------------------------
 Map_Shield_internal:	mappingsTable
-	mappingsTableEntry.w	.shield1
+	mappingsTableEntry.w	.shield1	; This is a nasty hack to render the sprite invisible by pointing at a random 00 byte.
 	mappingsTableEntry.w	.shield2
 	mappingsTableEntry.w	.shield3
 	mappingsTableEntry.w	.shield4

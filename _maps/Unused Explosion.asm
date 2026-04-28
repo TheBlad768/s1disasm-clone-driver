@@ -2,25 +2,25 @@
 ; Sprite mappings - unused small explosion (used for prototype Ball Hog)
 ; ---------------------------------------------------------------------------
 Map_UnkExplode_internal:	mappingsTable
-	mappingsTableEntry.w	byte_8EAE
-	mappingsTableEntry.w	byte_8EB4
-	mappingsTableEntry.w	byte_8EBA
-	mappingsTableEntry.w	byte_8EC0
+	mappingsTableEntry.w	.unexpl0
+	mappingsTableEntry.w	.unexpl1
+	mappingsTableEntry.w	.unexpl2
+	mappingsTableEntry.w	.unexpl3
 
-byte_8EAE:	spriteHeader
+.unexpl0:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 0, 0, 0, 0, 0
-byte_8EAE_End
+.unexpl0_End
 
-byte_8EB4:	spriteHeader
+.unexpl1:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 9, 0, 0, 0, 0
-byte_8EB4_End
+.unexpl1_End
 
-byte_8EBA:	spriteHeader
+.unexpl2:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, $12, 0, 0, 0, 0
-byte_8EBA_End
+.unexpl2_End
 
-byte_8EC0:	spriteHeader
+.unexpl3:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, $1B, 0, 0, 0, 0
-byte_8EC0_End
+.unexpl3_End
 
 	even

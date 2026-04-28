@@ -2,19 +2,19 @@
 ; Sprite mappings - special stage "R" block
 ; ---------------------------------------------------------------------------
 Map_SS_R_internal:	mappingsTable
-	mappingsTableEntry.w	byte_1B912
-	mappingsTableEntry.w	byte_1B918
-	mappingsTableEntry.w	byte_1B91E
+	mappingsTableEntry.w	.r0
+	mappingsTableEntry.w	.r1
+	mappingsTableEntry.w	.ghost_switch ; blank
 
-byte_1B912:	spriteHeader
+.r0:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 0, 0, 0, 0, 0
-byte_1B912_End
+.r0_End
 
-byte_1B918:	spriteHeader
+.r1:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 9, 0, 0, 0, 0
-byte_1B918_End
+.r1_End
 
-byte_1B91E:	spriteHeader
-byte_1B91E_End
+.ghost_switch:	spriteHeader
+.ghost_switch_End
 
 	even
