@@ -105,18 +105,19 @@ loc_19E5A:
 BossFinal_Eggman:	; Routine 2
 		moveq	#0,d0
 		move.b	objoff_34(a0),d0
-		move.w	off_19E80(pc,d0.w),d0
-		jsr	off_19E80(pc,d0.w)
+		move.w	BossFinal_Eggman_Index(pc,d0.w),d0
+		jsr	BossFinal_Eggman_Index(pc,d0.w)
 		jmp	(DisplaySprite).l
 ; ===========================================================================
-off_19E80:	dc.w BossFinal_Eggman_Wait-off_19E80
-		dc.w BossFinal_Eggman_Crush-off_19E80
-		dc.w BossFinal_Eggman_Plasma-off_19E80
-		dc.w BossFinal_Eggman_Fall-off_19E80
-		dc.w BossFinal_Eggman_Run-off_19E80
-		dc.w BossFinal_Eggman_Jump-off_19E80
-		dc.w BossFinal_Eggman_Ship-off_19E80
-		dc.w BossFinal_Eggman_Escape-off_19E80
+BossFinal_Eggman_Index:
+		dc.w BossFinal_Eggman_Wait-BossFinal_Eggman_Index
+		dc.w BossFinal_Eggman_Crush-BossFinal_Eggman_Index
+		dc.w BossFinal_Eggman_Plasma-BossFinal_Eggman_Index
+		dc.w BossFinal_Eggman_Fall-BossFinal_Eggman_Index
+		dc.w BossFinal_Eggman_Run-BossFinal_Eggman_Index
+		dc.w BossFinal_Eggman_Jump-BossFinal_Eggman_Index
+		dc.w BossFinal_Eggman_Ship-BossFinal_Eggman_Index
+		dc.w BossFinal_Eggman_Escape-BossFinal_Eggman_Index
 ; ===========================================================================
 
 ; loc_19E90:
