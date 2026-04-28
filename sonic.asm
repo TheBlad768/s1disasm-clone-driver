@@ -2891,7 +2891,7 @@ Level_Demo:
 		tst.w	(f_demo).w			; is this a regular (not-credits) demo?
 		bpl.s	Level_ChkWaterPal		; if not, branch
 		move.w	#540,(v_generictimer).w		; run credits demos for 9 seconds each
-		cmpi.w	#4,(v_creditsnum).w		; is this credits demo 4? (Labyrint)
+		cmpi.w	#4,(v_creditsnum).w		; is this credits demo 4? (Labyrinth)
 		bne.s	Level_ChkWaterPal		; if not, branch
 		move.w	#510,(v_generictimer).w		; run this specific demo for 0.5 seconds less
 
