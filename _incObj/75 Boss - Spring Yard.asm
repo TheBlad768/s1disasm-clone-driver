@@ -194,13 +194,14 @@ loc_192E8:
 BSYZ_Attack:
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
-		move.w	off_192FA(pc,d0.w),d0
-		jmp	off_192FA(pc,d0.w)
+		move.w	BSYZ_Attack_Index(pc,d0.w),d0
+		jmp	BSYZ_Attack_Index(pc,d0.w)
 ; ===========================================================================
-off_192FA:	dc.w BSYZ_Descend-off_192FA
-		dc.w BSYZ_Lift-off_192FA
-		dc.w BSYZ_LiftStop-off_192FA
-		dc.w BSYZ_BreakBlock-off_192FA
+BSYZ_Attack_Index:
+		dc.w BSYZ_Descend-BSYZ_Attack_Index
+		dc.w BSYZ_Lift-BSYZ_Attack_Index
+		dc.w BSYZ_LiftStop-BSYZ_Attack_Index
+		dc.w BSYZ_BreakBlock-BSYZ_Attack_Index
 ; ===========================================================================
 
 ; loc_19302:
@@ -472,8 +473,8 @@ BossSpringYard_FaceMain:	; Routine 4
 		movea.l	objoff_34(a0),a1
 		moveq	#0,d0
 		move.b	ob2ndRout(a1),d0
-		move.w	off_19546(pc,d0.w),d0
-		jsr	off_19546(pc,d0.w)
+		move.w	BSYZ_FaceMain_Index(pc,d0.w),d0
+		jsr	BSYZ_FaceMain_Index(pc,d0.w)
 		move.b	d1,obAnim(a0)
 		move.b	(a0),d0
 		cmp.b	(a1),d0
@@ -484,12 +485,13 @@ BossSpringYard_FaceMain:	; Routine 4
 BossSpringYard_FaceDelete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
-off_19546:	dc.w BSYZ_Face_ChkHit-off_19546
-		dc.w BSYZ_Face_ChkHit-off_19546
-		dc.w BSYZ_Face_Attack-off_19546
-		dc.w BSYZ_Face_Defeat-off_19546
-		dc.w BSYZ_Face_Defeat-off_19546
-		dc.w BSYZ_Face_Escape-off_19546
+BSYZ_FaceMain_Index:
+		dc.w BSYZ_Face_ChkHit-BSYZ_FaceMain_Index
+		dc.w BSYZ_Face_ChkHit-BSYZ_FaceMain_Index
+		dc.w BSYZ_Face_Attack-BSYZ_FaceMain_Index
+		dc.w BSYZ_Face_Defeat-BSYZ_FaceMain_Index
+		dc.w BSYZ_Face_Defeat-BSYZ_FaceMain_Index
+		dc.w BSYZ_Face_Escape-BSYZ_FaceMain_Index
 ; ===========================================================================
 
 ; loc_19552:
@@ -508,13 +510,14 @@ BSYZ_Face_Escape:
 BSYZ_Face_Attack:
 		moveq	#0,d0
 		move.b	obSubtype(a1),d0
-		move.w	off_19568(pc,d0.w),d0
-		jmp	off_19568(pc,d0.w)
+		move.w	BSYZ_FaceAttack_Index(pc,d0.w),d0
+		jmp	BSYZ_FaceAttack_Index(pc,d0.w)
 ; ===========================================================================
-off_19568:	dc.w BSYZ_Face_Attack_Other-off_19568
-		dc.w BSYZ_Face_Attack_Lift-off_19568
-		dc.w BSYZ_Face_Attack_Other-off_19568
-		dc.w BSYZ_Face_Attack_Other-off_19568
+BSYZ_FaceAttack_Index:
+		dc.w BSYZ_Face_Attack_Other-BSYZ_FaceAttack_Index
+		dc.w BSYZ_Face_Attack_Lift-BSYZ_FaceAttack_Index
+		dc.w BSYZ_Face_Attack_Other-BSYZ_FaceAttack_Index
+		dc.w BSYZ_Face_Attack_Other-BSYZ_FaceAttack_Index
 ; ===========================================================================
 
 ; loc_19570:
