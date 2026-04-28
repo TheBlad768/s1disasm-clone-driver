@@ -81,7 +81,7 @@ PalCycle_SS:
 		addq.w	#1,(v_palss_num).w
 		andi.w	#$1F,d0
 		lsl.w	#2,d0
-		lea	(SS_FG_Modes).l,a0
+		lea	(SS_BG_Modes).l,a0
 		adda.w	d0,a0
 
 		; Time
@@ -174,7 +174,7 @@ SSBGData:	macro time,anim,vram,index,flag1,flag2
 	endif
 		endm
 
-SS_FG_Modes:
+SS_BG_Modes:
 		; Time, anim, BG VRAM, palette cycle index & flags
 		SSBGData  3,  0, ArtTile_SS_Plane_6, 18, TRUE,	FALSE
 		SSBGData  3,  0, ArtTile_SS_Plane_6, 16, TRUE,	FALSE
