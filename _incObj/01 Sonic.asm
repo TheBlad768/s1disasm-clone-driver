@@ -545,9 +545,6 @@ Sonic_WallSpeedAdjust:
 		add.w	d1,obVelX(a0)				; adjust X-velocity to prevent Sonic from walking into the wall
 		bset	#5,obStatus(a0)				; set pushing flag
 		move.w	#0,obInertia(a0)			; clear ground speed
-	if FixBugs
-		clr.w	obSubpixelX(a0)				; reset subpixel portion
-	endif
 		rts						; return
 ; ===========================================================================
 
@@ -562,9 +559,6 @@ Sonic_WallSpeedAdjust:
 		sub.w	d1,obVelX(a0)				; adjust X-velocity to prevent Sonic from walking into the wall
 		bset	#5,obStatus(a0)				; set pushing flag
 		move.w	#0,obInertia(a0)			; clear ground speed
-	if FixBugs
-		clr.w	obSubpixelX(a0)				; reset subpixel portion
-	endif
 		rts						; return
 ; ===========================================================================
 
@@ -1201,7 +1195,10 @@ Sonic_JumpHeight:
 
 ; locret_134C2:
 .return:
+	if FixBugs=0
+		; This prevents the max Y-vel cap from running while jumping
 		rts						; return
+	endif
 ; ===========================================================================
 
 ; loc_134C4:
