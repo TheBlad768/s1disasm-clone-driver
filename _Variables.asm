@@ -416,7 +416,7 @@ v_timingvariables_end:
     else
 v_chunk0collision:	ds.w	1		; very subtly (and perhaps unintentionally) used by FindNearestTile when encountering chunk 0
 	if v_chunk0collision<>ramaddr($FFFFFF00)
-		fatal "v_chunk0collision needs to be at address $FFFFFF00 so that FindNearestTile works correctly (currently offset by \{signedToString(v_chunk0collision-ramaddr($FFFFFF00))} bytes) ."
+		error "v_chunk0collision needs to be at address $FFFFFF00 so that FindNearestTile works correctly (currently offset by \{signedToString(v_chunk0collision-ramaddr($FFFFFF00))} bytes) ."
 	endif	
     endif
 			ds.b	$E		; unused
@@ -466,9 +466,12 @@ v_megadrive:		ds.b	1		; Megadrive machine type
 f_debugmode:		ds.w	1		; debug mode flag
 v_init:			ds.l	1		; 'init' text string
 v_ram_end:
-    if * > 0	; Don't declare more space than the RAM can contain!
+    if * > 0	 ; Don't declare more space than the RAM can contain!
 	fatal "The RAM variable declarations are too large by $\{*} bytes."
+    elseif * < 0 ; Likely missing or misaligned RAM declarations!
+	warning "RAM variable declarations are \{signedToString(*)} bytes smaller than expected. Some variables may be missing or not aligned correctly!"
     endif
+
 	dephase
 
 ; Special stage
