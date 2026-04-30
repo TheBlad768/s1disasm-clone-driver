@@ -5285,10 +5285,13 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 	; ends right on the $80000 mark in the ROM in all revisions.
 	; From a technical standpoint, this padding serves no purpose.
 	if PaddingOptimization=0
+		; ProjectSonic1TwoEight requires $416 bytes of additional
+		; padding to have the sound driver aligned to the same
+		; position as the original game ($71990).
 		if Revision=0
-			dc.b	[$62A]$FF
+			dc.b	[$62A+$416]$FF
 		else
-			dc.b	[$63C]$FF
+			dc.b	[$63C+$416]$FF
 		endif
 	endif
 		
