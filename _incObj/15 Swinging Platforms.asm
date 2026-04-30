@@ -214,34 +214,42 @@ Swing_Move:
 loc_7B78:
 		bra.s	Swing_Move2
 ; End of function Swing_Move
-; ===========================================================================
 
-Obj48_Move:
-		tst.b	objoff_3D(a0)
-		bne.s	loc_7B9C
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to update swinging angle and positions for chain links and ball
+; (Called from Object 48)
+; ---------------------------------------------------------------------------
+
+; Obj48_Move:
+GBall_Move:
+		tst.b	objoff_3D(a0)			; is ball on the left side of the screen?
+		bne.s	.left_side			; if yes, branch
 		move.w	objoff_3E(a0),d0
 		addq.w	#8,d0
-		move.w	d0,objoff_3E(a0)
-		add.w	d0,obAngle(a0)
-		cmpi.w	#$200,d0
-		bne.s	loc_7BB6
-		move.b	#1,objoff_3D(a0)
-		bra.s	loc_7BB6
+		move.w	d0,objoff_3E(a0)		; increase swing speed
+		add.w	d0,obAngle(a0)			; update angle
+		cmpi.w	#$200,d0			; is speed at max?
+		bne.s	.not_at_highest			; if not, branch
+		move.b	#1,objoff_3D(a0)		; switch side flag
+		bra.s	.not_at_highest
 ; ===========================================================================
 
-loc_7B9C:
+	.left_side:
 		move.w	objoff_3E(a0),d0
 		subq.w	#8,d0
-		move.w	d0,objoff_3E(a0)
-		add.w	d0,obAngle(a0)
-		cmpi.w	#-$200,d0
-		bne.s	loc_7BB6
-		move.b	#0,objoff_3D(a0)
+		move.w	d0,objoff_3E(a0)		; decrease swing speed
+		add.w	d0,obAngle(a0)			; update angle
+		cmpi.w	#-$200,d0			; is speed at max?
+		bne.s	.not_at_highest			; if not, branch
+		move.b	#0,objoff_3D(a0)		; switch side flag
 
-loc_7BB6:
-		move.b	obAngle(a0),d0
-; End of function Obj48_Move
-; ===========================================================================
+	.not_at_highest:
+		move.b	obAngle(a0),d0			; get latest angle
+		; fall-through to Swing_Move2...
+
+; End of function GBall_Move
+; ---------------------------------------------------------------------------
 
 Swing_Move2:
 		bsr.w	CalcSine
