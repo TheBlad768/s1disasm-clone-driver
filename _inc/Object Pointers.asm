@@ -3,10 +3,10 @@
 ; ---------------------------------------------------------------------------
 Obj_Index:
 
-objptr:	macro objectpointer,{INTLABEL},{GLOBALSYMBOLS}
-__LABEL__: = ((*-Obj_Index)/4)+1
-	dc.l	objectpointer
-	endm
+objptr:	macro objectpointer,{INTLABEL}
+__LABEL__:	label	((*-Obj_Index)/4)+1
+		dc.l	objectpointer
+		endm
 
 ; ---------------------------------------------------------------------------
 ; ID label:	non-zero index byte (see ID value)

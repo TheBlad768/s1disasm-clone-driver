@@ -2,85 +2,85 @@
 ; Sprite mappings - walls of the special stage
 ; ---------------------------------------------------------------------------
 Map_SSWalls_internal:	mappingsTable
-	mappingsTableEntry.w	byte_2C584
-	mappingsTableEntry.w	byte_2C58A
-	mappingsTableEntry.w	byte_2C590
-	mappingsTableEntry.w	byte_2C596
-	mappingsTableEntry.w	byte_2C59C
-	mappingsTableEntry.w	byte_2C5A2
-	mappingsTableEntry.w	byte_2C5A8
-	mappingsTableEntry.w	byte_2C5AE
-	mappingsTableEntry.w	byte_2C5B4
-	mappingsTableEntry.w	byte_2C5BA
-	mappingsTableEntry.w	byte_2C5C0
-	mappingsTableEntry.w	byte_2C5C6
-	mappingsTableEntry.w	byte_2C5CC
-	mappingsTableEntry.w	byte_2C5D2
-	mappingsTableEntry.w	byte_2C5D8
-	mappingsTableEntry.w	byte_2C5DE
+	mappingsTableEntry.w	.straight ; 00/90 degrees
+	mappingsTableEntry.w	.angled1
+	mappingsTableEntry.w	.angled2
+	mappingsTableEntry.w	.angled3
+	mappingsTableEntry.w	.angled4
+	mappingsTableEntry.w	.angled5
+	mappingsTableEntry.w	.angled6
+	mappingsTableEntry.w	.angled7
+	mappingsTableEntry.w	.angled8 ; 45 degrees
+	mappingsTableEntry.w	.angled9
+	mappingsTableEntry.w	.angledA
+	mappingsTableEntry.w	.angledB
+	mappingsTableEntry.w	.angledC
+	mappingsTableEntry.w	.angledD
+	mappingsTableEntry.w	.angledE
+	mappingsTableEntry.w	.angledF
 
-byte_2C584:	spriteHeader
+.straight:	spriteHeader
 	spritePiece	-$C, -$C, 3, 3, 0, 0, 0, 0, 0
-byte_2C584_End
+.straight_End
 
-byte_2C58A:	spriteHeader
+.angled1:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, 9, 0, 0, 0, 0
-byte_2C58A_End
+.angled1_End
 
-byte_2C590:	spriteHeader
+.angled2:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $19, 0, 0, 0, 0
-byte_2C590_End
+.angled2_End
 
-byte_2C596:	spriteHeader
+.angled3:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $29, 0, 0, 0, 0
-byte_2C596_End
+.angled3_End
 
-byte_2C59C:	spriteHeader
+.angled4:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $39, 0, 0, 0, 0
-byte_2C59C_End
+.angled4_End
 
-byte_2C5A2:	spriteHeader
+.angled5:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $49, 0, 0, 0, 0
-byte_2C5A2_End
+.angled5_End
 
-byte_2C5A8:	spriteHeader
+.angled6:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $59, 0, 0, 0, 0
-byte_2C5A8_End
+.angled6_End
 
-byte_2C5AE:	spriteHeader
+.angled7:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $69, 0, 0, 0, 0
-byte_2C5AE_End
+.angled7_End
 
-byte_2C5B4:	spriteHeader
+.angled8:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $79, 0, 0, 0, 0
-byte_2C5B4_End
+.angled8_End
 
-byte_2C5BA:	spriteHeader
+.angled9:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $89, 0, 0, 0, 0
-byte_2C5BA_End
+.angled9_End
 
-byte_2C5C0:	spriteHeader
+.angledA:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $99, 0, 0, 0, 0
-byte_2C5C0_End
+.angledA_End
 
-byte_2C5C6:	spriteHeader
+.angledB:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $A9, 0, 0, 0, 0
-byte_2C5C6_End
+.angledB_End
 
-byte_2C5CC:	spriteHeader
+.angledC:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $B9, 0, 0, 0, 0
-byte_2C5CC_End
+.angledC_End
 
-byte_2C5D2:	spriteHeader
+.angledD:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $C9, 0, 0, 0, 0
-byte_2C5D2_End
+.angledD_End
 
-byte_2C5D8:	spriteHeader
+.angledE:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $D9, 0, 0, 0, 0
-byte_2C5D8_End
+.angledE_End
 
-byte_2C5DE:	spriteHeader
+.angledF:	spriteHeader
 	spritePiece	-$10, -$10, 4, 4, $E9, 0, 0, 0, 0
-byte_2C5DE_End
+.angledF_End
 
 	even

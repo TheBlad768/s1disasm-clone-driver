@@ -460,9 +460,12 @@ v_megadrive:		ds.b	1		; Megadrive machine type
 f_debugmode:		ds.w	1		; debug mode flag
 v_init:			ds.l	1		; 'init' text string
 v_ram_end:
-    if * > 0	; Don't declare more space than the RAM can contain!
+    if * > 0	 ; Don't declare more space than the RAM can contain!
 	fatal "The RAM variable declarations are too large by $\{*} bytes."
+    elseif * < 0 ; Likely missing or misaligned RAM declarations!
+	warning "RAM variable declarations are \{signedToString(*)} bytes smaller than expected. Some variables may be missing or not aligned correctly!"
     endif
+
 	dephase
 
 ; Special stage

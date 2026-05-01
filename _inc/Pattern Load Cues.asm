@@ -3,14 +3,15 @@
 ; ---------------------------------------------------------------------------
 
 ; Macro to define PLC pointer entry
-plcptr:		macro plc,{INTLABEL},{GLOBALSYMBOLS}
-__LABEL__: =	(*-ArtLoadCues)/2
+plcptr:		macro plc,{INTLABEL}
+__LABEL__:	label	(*-ArtLoadCues)/2
 		dc.w	plc-ArtLoadCues
 		endm
 
 ; Macro for the header of a PLC list
-plcheader:	macro {INTLABEL},{GLOBALSYMBOLS}
-__LABEL__:	dc.w ((__LABEL___end-__LABEL__-2)/6)-1
+plcheader:	macro {INTLABEL}
+__LABEL__:	label	*
+		dc.w ((__LABEL___end-__LABEL__-2)/6)-1
 		endm
 
 ; Macro for single pattern load cue entry

@@ -86,7 +86,12 @@ ds macro
 			db 0
 		endm
 	endif
-   endm
+    endm
+
+; adds easy cross-compatibility with ASM68K
+dcb macro count,value
+	dc.ATTRIBUTE	[count]value
+    endm
 
 ; define a trace macro
 ; lets you easily check what address a location in this disassembly assembles to
@@ -99,7 +104,7 @@ trace macro optionalMessageWithoutQuotes
 		endif
 tracenum := (tracenum+1)
 	endif
-   endm
+    endm
 tracenum := 0
 
     if ZeroOffsetOptimization=0
@@ -111,26 +116,26 @@ chkop function op,ref,(substr(lowstring(op),0,strlen(ref))<>ref)
 
 ; 1-arg instruction that's self-patching to remove 0-offset optimization
 insn1op	 macro oper,x
-	  if (chkop("x","0(") && chkop("x","obid(") && chkop("x","smps_ram.v_sndprio("))
+	if (chkop("x","0(") && chkop("x","obid(") && chkop("x","smps_ram.v_sndprio("))
 		!oper	x
-	  else
+	else
 		!oper	1+x
 		!org	*-1
 		!dc.b	0
-	  endif
-	 endm
+	endif
+    endm
 
 ; 2-arg instruction that's self-patching to remove 0-offset optimization
 insn2op	 macro oper,x,y
-	  if (chkop("x","0(") && chkop("x","obid(") && chkop("x","smps_ram.v_sndprio("))
-		  if (chkop("y","0(") && chkop("y","obid(") && chkop("y","smps_ram.v_sndprio("))
+	if (chkop("x","0(") && chkop("x","obid(") && chkop("x","smps_ram.v_sndprio("))
+		if (chkop("y","0(") && chkop("y","obid(") && chkop("y","smps_ram.v_sndprio("))
 			!oper	x,y
-		  else
+		else
 			!oper	x,1+y
 			!org	*-1
 			!dc.b	0
-		  endif
-	  else
+		endif
+	else
 		if chkop("y","d")
 		  if (chkop("y","0(") && chkop("y","obid(") && chkop("y","smps_ram.v_sndprio("))
 .start:
@@ -151,8 +156,8 @@ insn2op	 macro oper,x,y
 			!org	*-1
 			!dc.b	0
 		endif
-	  endif
-	 endm
+	endif
+    endm
 
 	; instructions that were used with 0(a#) syntax
 	; defined to assemble as they originally did

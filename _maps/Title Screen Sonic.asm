@@ -2,16 +2,16 @@
 ; Sprite mappings - Sonic on the title screen
 ; ---------------------------------------------------------------------------
 Map_TSon_internal:	mappingsTable
-	mappingsTableEntry.w	byte_A898
-	mappingsTableEntry.w	byte_A8CB
-	mappingsTableEntry.w	byte_A917
-	mappingsTableEntry.w	byte_A96D
-	mappingsTableEntry.w	byte_A9AF
-	mappingsTableEntry.w	byte_A9E7
-	mappingsTableEntry.w	byte_AA47
-	mappingsTableEntry.w	byte_AAB1
+	mappingsTableEntry.w	.appear0
+	mappingsTableEntry.w	.appear1
+	mappingsTableEntry.w	.appear2
+	mappingsTableEntry.w	.appear3
+	mappingsTableEntry.w	.appear4
+	mappingsTableEntry.w	.appear5
+	mappingsTableEntry.w	.fingerwag1
+	mappingsTableEntry.w	.fingerwag2
 
-byte_A898:	spriteHeader
+.appear0:	spriteHeader
 	spritePiece	8, 8, 3, 1, 0, 0, 0, 0, 0
 	spritePiece	8, $10, 4, 4, 3, 0, 0, 0, 0
 	spritePiece	$28, $10, 4, 4, $13, 0, 0, 0, 0
@@ -22,9 +22,9 @@ byte_A898:	spriteHeader
 	spritePiece	$38, $48, 1, 1, $49, 0, 0, 0, 0
 	spritePiece	8, $58, 4, 1, $4A, 0, 0, 0, 0
 	spritePiece	$28, $58, 1, 1, $4E, 0, 0, 0, 0
-byte_A898_End
+.appear0_End
 
-byte_A8CB:	spriteHeader
+.appear1:	spriteHeader
 	spritePiece	$20, $48, 4, 3, $1BD, 0, 0, 0, 0
 	spritePiece	$38, $38, 2, 2, $1C9, 0, 0, 0, 0
 	spritePiece	$30, $40, 1, 1, $1CD, 0, 0, 0, 0
@@ -40,9 +40,9 @@ byte_A8CB:	spriteHeader
 	spritePiece	$10, $48, 4, 3, $8F, 0, 0, 0, 0
 	spritePiece	$30, $48, 3, 2, $9B, 0, 0, 0, 0
 	spritePiece	$30, $58, 2, 1, $A1, 0, 0, 0, 0
-byte_A8CB_End
+.appear1_End
 
-byte_A917:	spriteHeader
+.appear2:	spriteHeader
 	spritePiece	$28, $38, 4, 3, $1BD, 0, 0, 0, 0
 	spritePiece	$40, $28, 2, 2, $1C9, 0, 0, 0, 0
 	spritePiece	$38, $30, 1, 1, $1CD, 0, 0, 0, 0
@@ -60,9 +60,9 @@ byte_A917:	spriteHeader
 	spritePiece	$10, $48, 4, 3, $8F, 0, 0, 0, 0
 	spritePiece	$30, $48, 3, 2, $9B, 0, 0, 0, 0
 	spritePiece	$30, $58, 2, 1, $A1, 0, 0, 0, 0
-byte_A917_End
+.appear2_End
 
-byte_A96D:	spriteHeader
+.appear3:	spriteHeader
 	spritePiece	8, $10, 4, 4, $A3, 0, 0, 0, 0
 	spritePiece	$28, 8, 3, 1, $B3, 0, 0, 0, 0
 	spritePiece	$28, $10, 4, 4, $B6, 0, 0, 0, 0
@@ -76,9 +76,9 @@ byte_A96D:	spriteHeader
 	spritePiece	8, $50, 1, 2, $F1, 0, 0, 0, 0
 	spritePiece	$28, $50, 2, 1, $F3, 0, 0, 0, 0
 	spritePiece	$28, $58, 1, 1, $F5, 0, 0, 0, 0
-byte_A96D_End
+.appear3_End
 
-byte_A9AF:	spriteHeader
+.appear4:	spriteHeader
 	spritePiece	$10, 8, 4, 4, $F6, 0, 0, 0, 0
 	spritePiece	$30, 8, 3, 4, $106, 0, 0, 0, 0
 	spritePiece	$48, $10, 2, 3, $112, 0, 0, 0, 0
@@ -90,9 +90,9 @@ byte_A9AF:	spriteHeader
 	spritePiece	$40, $40, 2, 1, $144, 0, 0, 0, 0
 	spritePiece	$40, $48, 1, 1, $146, 0, 0, 0, 0
 	spritePiece	$18, $58, 3, 1, $147, 0, 0, 0, 0
-byte_A9AF_End
+.appear4_End
 
-byte_A9E7:	spriteHeader
+.appear5:	spriteHeader
 	spritePiece	$38, $28, 4, 3, $1E4, 0, 0, 0, 0
 	spritePiece	$48, $18, 2, 2, $1F0, 0, 0, 0, 0
 	spritePiece	$38, $40, 3, 1, $1F4, 0, 0, 0, 0
@@ -112,9 +112,9 @@ byte_A9E7:	spriteHeader
 	spritePiece	8, $50, 4, 2, $19A, 0, 0, 0, 0
 	spritePiece	$28, $50, 4, 1, $1A2, 0, 0, 0, 0
 	spritePiece	$28, $58, 3, 1, $1A6, 0, 0, 0, 0
-byte_A9E7_End
+.appear5_End
 
-byte_AA47:	spriteHeader
+.fingerwag1:	spriteHeader
 	spritePiece	$38, $28, 4, 3, $1E4, 0, 0, 0, 0
 	spritePiece	$48, $18, 2, 2, $1F0, 0, 0, 0, 0
 	spritePiece	$38, $40, 3, 1, $1F4, 0, 0, 0, 0
@@ -136,9 +136,9 @@ byte_AA47:	spriteHeader
 	spritePiece	8, $50, 4, 2, $19A, 0, 0, 0, 0
 	spritePiece	$28, $50, 4, 1, $1A2, 0, 0, 0, 0
 	spritePiece	$28, $58, 3, 1, $1A6, 0, 0, 0, 0
-byte_AA47_End
+.fingerwag1_End
 
-byte_AAB1:	spriteHeader
+.fingerwag2:	spriteHeader
 	spritePiece	$38, $18, 2, 1, $1F9, 0, 0, 0, 0
 	spritePiece	$38, $20, 1, 1, $1FB, 0, 0, 0, 0
 	spritePiece	$30, $28, 3, 1, $1FC, 0, 0, 0, 0
@@ -161,6 +161,6 @@ byte_AAB1:	spriteHeader
 	spritePiece	8, $50, 4, 2, $19A, 0, 0, 0, 0
 	spritePiece	$28, $50, 4, 1, $1A2, 0, 0, 0, 0
 	spritePiece	$28, $58, 3, 1, $1A6, 0, 0, 0, 0
-byte_AAB1_End
+.fingerwag2_End
 
 	even

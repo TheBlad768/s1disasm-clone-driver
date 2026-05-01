@@ -97,8 +97,8 @@ fr_Slide:	equ $57 ; formerly mamed fr_WaterSlide (was too long...)
 ; ---------------------------------------------------------------------------
 
 ; Macro to map an ID to a label while defining the offset table entries
-sonani:		macro anim,{INTLABEL},{GLOBALSYMBOLS}
-__LABEL__: =	(*-Ani_Sonic)/2
+sonani:		macro anim,{INTLABEL}
+__LABEL__:	label	(*-Ani_Sonic)/2
 		dc.w	anim-Ani_Sonic
 		endm
 ; ---------------------------------------------------------------------------

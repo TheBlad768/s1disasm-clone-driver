@@ -121,14 +121,15 @@ loc_1A578:
 EggmanCylinder_Move: ; Routine 4
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
-		move.w	off_1A590(pc,d0.w),d0
-		jsr	off_1A590(pc,d0.w)
+		move.w	EggmanCylinder_Move_Index(pc,d0.w),d0
+		jsr	EggmanCylinder_Move_Index(pc,d0.w)
 		bra.w	loc_1A4EA
 ; ===========================================================================
-off_1A590:	dc.w EggmanCylinder_Bottom-off_1A590	; bottom left
-		dc.w EggmanCylinder_Bottom-off_1A590	; bottom right
-		dc.w EggmanCylinder_Top-off_1A590	; top left
-		dc.w EggmanCylinder_Top-off_1A590	; top right
+EggmanCylinder_Move_Index:
+		dc.w EggmanCylinder_Bottom-EggmanCylinder_Move_Index	; bottom left
+		dc.w EggmanCylinder_Bottom-EggmanCylinder_Move_Index	; bottom right
+		dc.w EggmanCylinder_Top-EggmanCylinder_Move_Index	; top left
+		dc.w EggmanCylinder_Top-EggmanCylinder_Move_Index	; top right
 ; ===========================================================================
 
 ; loc_1A598:

@@ -350,7 +350,8 @@ incbin:		macro path
 ; Macro to binclude something with an end marker
 ; ---------------------------------------------------------------------------
 
-bincludeEndMarker macro path,{INTLABEL},{GLOBALSYMBOLS}
-__LABEL__:	binclude	path
-__LABEL___end:
-	endm
+bincludeEndMarker macro path,{INTLABEL}
+__LABEL__:	label	 *
+		binclude path
+__LABEL___end:	label	 *
+		endm

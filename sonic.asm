@@ -406,8 +406,8 @@ MainGameLoop:
 
 GameModeArray:
 
-gmptr:		macro gamemode,{INTLABEL},{GLOBALSYMBOLS}
-__LABEL__: =	(*-GameModeArray)
+gmptr:		macro gamemode,{INTLABEL}
+__LABEL__:	label	*-GameModeArray
 		bra.w	gamemode
 		endm
 
@@ -2894,7 +2894,7 @@ Level_Demo:
 		tst.w	(f_demo).w			; is this a regular (not-credits) demo?
 		bpl.s	Level_ChkWaterPal		; if not, branch
 		move.w	#540,(v_generictimer).w		; run credits demos for 9 seconds each
-		cmpi.w	#4,(v_creditsnum).w		; is this credits demo 4? (Labyrint)
+		cmpi.w	#4,(v_creditsnum).w		; is this credits demo 4? (Labyrinth)
 		bne.s	Level_ChkWaterPal		; if not, branch
 		move.w	#510,(v_generictimer).w		; run this specific demo for 0.5 seconds less
 
@@ -4453,7 +4453,7 @@ Art_LivesNums:	binclude "artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers o
 	if PaddingOptimization=0
 		align	$200
 		if Revision<>0
-			dc.b	[$300]$FF
+			dcb.b	$300,$FF
 		endif
 	endif
 
@@ -4918,9 +4918,9 @@ Nem_EndStH:	binclude	"artnem/Ending - StH Logo.nem"
 	; From a technical standpoint, this padding serves no purpose.
 	if PaddingOptimization=0
 		if Revision=0
-			dc.b	[$104]$FF
+			dcb.b	$104,$FF
 		else
-			dc.b	[$40]$FF
+			dcb.b	$40,$FF
 		endif
 	endif
 
@@ -5289,9 +5289,9 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 		; padding to have the sound driver aligned to the same
 		; position as the original game ($71990).
 		if Revision=0
-			dc.b	[$62A+$416]$FF
+			dcb.b	$62A+$416,$FF
 		else
-			dc.b	[$63C+$416]$FF
+			dcb.b	$63C+$416,$FF
 		endif
 	endif
 		

@@ -271,8 +271,9 @@ Pal_SYZCyc2:	binclude	"palette/Cycle - SYZ2.bin"
 ; Scrap Brain Zone palette cycling script
 ; ---------------------------------------------------------------------------
 
-mSBZh:	macro {INTLABEL},{GLOBALSYMBOLS}
-__LABEL__:	dc.w ((__LABEL___end-__LABEL__-2)/6)-1
+mSBZh:	macro {INTLABEL}
+__LABEL__:	label	*
+		dc.w ((__LABEL___end-__LABEL__-2)/6)-1
 		endm
 
 mSBZp:	macro duration,colours,sourceAddress,destinationPaletteIndex
