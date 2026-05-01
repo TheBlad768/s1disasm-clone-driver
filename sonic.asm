@@ -403,8 +403,8 @@ MainGameLoop:
 
 GameModeArray:
 
-gmptr:		macro gamemode,{INTLABEL},{GLOBALSYMBOLS}
-__LABEL__: =	(*-GameModeArray)
+gmptr:		macro gamemode,{INTLABEL}
+__LABEL__:	label	*-GameModeArray
 		bra.w	gamemode
 		endm
 
