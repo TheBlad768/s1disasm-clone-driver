@@ -444,7 +444,7 @@ incbin:		macro path
 ; ---------------------------------------------------------------------------
 
 bincludeEndMarker macro path,{INTLABEL}
-__LABEL__:	label	*
+__LABEL__:	label	 *
 		binclude path
-__LABEL___end:
-	endm
+__LABEL___end:	label	 *
+		endm
