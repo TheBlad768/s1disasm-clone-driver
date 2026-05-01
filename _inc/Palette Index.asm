@@ -2,11 +2,11 @@
 ; Palette index
 ; ---------------------------------------------------------------------------
 
-makePalEntry:	macro paletteLabel,paletteRAMaddress,{INTLABEL},{GLOBALSYMBOLS}
-__LABEL__: = (*-Pal_Index)/8
-	dc.l paletteLabel
-	dc.w paletteRAMaddress,(paletteLabel_end-paletteLabel)/4-1
-	endm
+makePalEntry:	macro paletteLabel,paletteRAMaddress,{INTLABEL}
+__LABEL__:	label	(*-Pal_Index)/8
+		dc.l paletteLabel
+		dc.w paletteRAMaddress,(paletteLabel_end-paletteLabel)/4-1
+		endm
 ; ---------------------------------------------------------------------------
 
 Pal_Index:
