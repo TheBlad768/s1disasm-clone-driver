@@ -2,40 +2,40 @@
 ; Sprite mappings - chaos emeralds on the ending sequence
 ; ---------------------------------------------------------------------------
 Map_ECha_internal:	mappingsTable
-	mappingsTableEntry.w	M_ECha_1
-	mappingsTableEntry.w	M_ECha_2
-	mappingsTableEntry.w	M_ECha_3
-	mappingsTableEntry.w	M_ECha_4
-	mappingsTableEntry.w	M_ECha_5
-	mappingsTableEntry.w	M_ECha_6
-	mappingsTableEntry.w	M_ECha_7
+	mappingsTableEntry.w	.eCha_1
+	mappingsTableEntry.w	.eCha_2
+	mappingsTableEntry.w	.eCha_3
+	mappingsTableEntry.w	.eCha_4
+	mappingsTableEntry.w	.eCha_5
+	mappingsTableEntry.w	.eCha_6
+	mappingsTableEntry.w	.eCha_7
 
-M_ECha_1:	spriteHeader
+.eCha_1:	spriteHeader
 	spritePiece	-8, -8, 2, 2, 0, 0, 0, 0, 0
-M_ECha_1_End
+.eCha_1_End
 
-M_ECha_2:	spriteHeader
+.eCha_2:	spriteHeader
 	spritePiece	-8, -8, 2, 2, 4, 0, 0, 0, 0
-M_ECha_2_End
+.eCha_2_End
 
-M_ECha_3:	spriteHeader
+.eCha_3:	spriteHeader
 	spritePiece	-8, -8, 2, 2, $10, 0, 0, 2, 0
-M_ECha_3_End
+.eCha_3_End
 
-M_ECha_4:	spriteHeader
+.eCha_4:	spriteHeader
 	spritePiece	-8, -8, 2, 2, $18, 0, 0, 1, 0
-M_ECha_4_End
+.eCha_4_End
 
-M_ECha_5:	spriteHeader
+.eCha_5:	spriteHeader
 	spritePiece	-8, -8, 2, 2, $14, 0, 0, 2, 0
-M_ECha_5_End
+.eCha_5_End
 
-M_ECha_6:	spriteHeader
+.eCha_6:	spriteHeader
 	spritePiece	-8, -8, 2, 2, 8, 0, 0, 0, 0
-M_ECha_6_End
+.eCha_6_End
 
-M_ECha_7:	spriteHeader
+.eCha_7:	spriteHeader
 	spritePiece	-8, -8, 2, 2, $C, 0, 0, 0, 0
-M_ECha_7_End
+.eCha_7_End
 
 	even

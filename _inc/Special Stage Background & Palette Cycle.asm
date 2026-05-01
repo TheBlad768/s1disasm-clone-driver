@@ -81,7 +81,7 @@ PalCycle_SS:
 		addq.w	#1,(v_palss_num).w
 		andi.w	#$1F,d0
 		lsl.w	#2,d0
-		lea	(byte_4A3C).l,a0
+		lea	(SS_BG_Modes).l,a0
 		adda.w	d0,a0
 
 		; Time
@@ -96,7 +96,7 @@ loc_4992:
 		moveq	#0,d0
 		move.b	(a0)+,d0
 		move.w	d0,(v_ssbganim).w
-		lea	(byte_4ABC).l,a1
+		lea	(SS_FG_Modes).l,a1
 		lea	(a1,d0.w),a1
 		; FG VRAM
 		move.w	#$8200,d0
@@ -174,7 +174,7 @@ SSBGData:	macro time,anim,vram,index,flag1,flag2
 	endif
 		endm
 
-byte_4A3C:
+SS_BG_Modes:
 		; Time, anim, BG VRAM, palette cycle index & flags
 		SSBGData  3,  0, ArtTile_SS_Plane_6, 18, TRUE,	FALSE
 		SSBGData  3,  0, ArtTile_SS_Plane_6, 16, TRUE,	FALSE
@@ -219,7 +219,7 @@ SSFGData:	macro vram,y
 		dc.b ((\vram)*tile_size)>>10, (\y)>>8
 		endm
 
-byte_4ABC:
+SS_FG_Modes:
 		; FG VRAM, Y coordinate
 		SSFGData ArtTile_SS_Plane_1, $100
 		SSFGData ArtTile_SS_Plane_2,    0
@@ -261,7 +261,7 @@ loc_4C10:
 		move.w	(v_bgscreenposx).w,d0
 		neg.w	d0
 		swap	d0
-		lea	(byte_4CCC).l,a1
+		lea	(SS_Bubble_WobbleData).l,a1
 		lea	(v_ngfx_buffer).w,a3
 		moveq	#$A-1,d3
 
@@ -278,7 +278,7 @@ loc_4C26:
 		add.w	d2,(a3)+
 		dbf	d3,loc_4C26
 		lea	(v_ngfx_buffer).w,a3
-		lea	(byte_4CB8).l,a2
+		lea	(SS_Bubble_ScrollBlocks).l,a2
 		bra.s	loc_4C7E
 ; ===========================================================================
 
@@ -299,7 +299,7 @@ loc_4C64:
 
 loc_4C74:
 		lea	(v_ssscroll_buffer).w,a3
-		lea	(byte_4CC4).l,a2
+		lea	(SS_Cloud_ScrollBlocks).l,a2
 
 loc_4C7E:
 		lea	(v_hscrolltablebuffer).w,a1
@@ -330,10 +330,26 @@ loc_4CA4:
 ; End of function SS_BGAnimate
 
 ; ===========================================================================
-byte_4CB8:	dc.b 9,	$28, $18, $10, $28, $18, $10, $30, $18,	8, $10,	0
+SS_Bubble_ScrollBlocks:
+		dc.b 10-1
+		dc.b $28, $18, $10, $28, $18, $10, $30, $18, 8, $10
 		even
-byte_4CC4:	dc.b 6,	$30, $30, $30, $28, $18, $18, $18
+
+SS_Cloud_ScrollBlocks:
+		dc.b 7-1
+		dc.b $30, $30, $30, $28, $18, $18, $18
 		even
-byte_4CCC:	dc.b 8,	2, 4, $FF, 2, 3, 8, $FF, 4, 2, 2, 3, 8,	$FD, 4,	2, 2, 3, 2, $FF
+
+SS_Bubble_WobbleData:
+		dc.b 8, 2
+		dc.b 4, -1
+		dc.b 2, 3
+		dc.b 8, -1
+		dc.b 4, 2
+		dc.b 2, 3
+		dc.b 8, -3
+		dc.b 4, 2
+		dc.b 2, 3
+		dc.b 2, -1
 		even
 ; ===========================================================================

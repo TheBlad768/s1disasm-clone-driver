@@ -4,24 +4,27 @@
 
 SonicSpecial:
 		tst.w	(v_debuguse).w	; is debug mode being used?
-		beq.s	Obj09_Normal	; if not, branch
+		beq.s	SonicSS_Normal	; if not, branch
 		bsr.w	SS_FixCamera
 		bra.w	DebugMode
 ; ===========================================================================
 
-Obj09_Normal:
+; Obj09_Normal:
+SonicSS_Normal:
 		moveq	#0,d0
 		move.b	obRoutine(a0),d0
-		move.w	Obj09_Index(pc,d0.w),d1
-		jmp	Obj09_Index(pc,d1.w)
+		move.w	SonicSS_Index(pc,d0.w),d1
+		jmp	SonicSS_Index(pc,d1.w)
 ; ===========================================================================
-Obj09_Index:	dc.w Obj09_Main-Obj09_Index
-		dc.w Obj09_ChkDebug-Obj09_Index
-		dc.w Obj09_ExitStage-Obj09_Index
-		dc.w Obj09_Exit2-Obj09_Index
+; Obj09_Index:
+SonicSS_Index:	dc.w SonicSS_Main-SonicSS_Index
+		dc.w SonicSS_ChkDebug-SonicSS_Index
+		dc.w SonicSS_ExitStage-SonicSS_Index
+		dc.w SonicSS_Exit2-SonicSS_Index
 ; ===========================================================================
 
-Obj09_Main:	; Routine 0
+; Obj09_Main:
+SonicSS_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.b	#$E,obHeight(a0)
 		move.b	#7,obWidth(a0)
@@ -33,42 +36,48 @@ Obj09_Main:	; Routine 0
 		bset	#2,obStatus(a0)
 		bset	#1,obStatus(a0)
 
-Obj09_ChkDebug:	; Routine 2
+; Obj09_ChkDebug:
+SonicSS_ChkDebug:	; Routine 2
 		tst.w	(f_debugmode).w	; is debug mode cheat enabled?
-		beq.s	Obj09_NoDebug	; if not, branch
+		beq.s	SonicSS_NoDebug	; if not, branch
 		btst	#bitB,(v_jpadpress1).w ; is button B pressed?
-		beq.s	Obj09_NoDebug	; if not, branch
+		beq.s	SonicSS_NoDebug	; if not, branch
 		move.w	#1,(v_debuguse).w ; change Sonic into a ring
 
-Obj09_NoDebug:
+; Obj09_NoDebug:
+SonicSS_NoDebug:
 		move.b	#0,objoff_30(a0)
 		moveq	#0,d0
 		move.b	obStatus(a0),d0
 		andi.w	#2,d0
-		move.w	Obj09_Modes(pc,d0.w),d1
-		jsr	Obj09_Modes(pc,d1.w)
+		move.w	SonicSS_Modes(pc,d0.w),d1
+		jsr	SonicSS_Modes(pc,d1.w)
 		jsr	(Sonic_LoadGfx).l
 		jmp	(DisplaySprite).l
 ; ===========================================================================
-Obj09_Modes:	dc.w Obj09_OnWall-Obj09_Modes
-		dc.w Obj09_InAir-Obj09_Modes
+; Obj09_Modes:
+SonicSS_Modes:	dc.w SonicSS_OnWall-SonicSS_Modes
+		dc.w SonicSS_InAir-SonicSS_Modes
 ; ===========================================================================
 
-Obj09_OnWall:
-		bsr.w	Obj09_Jump
-		bsr.w	Obj09_Move
-		bsr.w	Obj09_Fall
-		bra.s	Obj09_Display
+; Obj09_OnWall:
+SonicSS_OnWall:
+		bsr.w	SonicSS_Jump
+		bsr.w	SonicSS_Move
+		bsr.w	SonicSS_Fall
+		bra.s	SonicSS_Display
 ; ===========================================================================
 
-Obj09_InAir:
+; Obj09_InAir:
+SonicSS_InAir:
 		bsr.w	nullsub_2
-		bsr.w	Obj09_Move
-		bsr.w	Obj09_Fall
+		bsr.w	SonicSS_Move
+		bsr.w	SonicSS_Fall
 
-Obj09_Display:
-		bsr.w	Obj09_ChkItems
-		bsr.w	Obj09_ChkItems2
+; Obj09_Display:
+SonicSS_Display:
+		bsr.w	SonicSS_ChkItems
+		bsr.w	SonicSS_ChkItems2
 		jsr	(SpeedToPos).l
 		bsr.w	SS_FixCamera
 		move.w	(v_ssangle).w,d0
@@ -78,15 +87,17 @@ Obj09_Display:
 		rts
 ; ===========================================================================
 
-Obj09_Move:
+; Obj09_Move:
+SonicSS_Move:
 		btst	#bitL,(v_jpadhold2).w ; is left being held?
-		beq.s	Obj09_ChkRight	; if not, branch
-		bsr.w	Obj09_MoveLeft
+		beq.s	SonicSS_ChkRight	; if not, branch
+		bsr.w	SonicSS_MoveLeft
 
-Obj09_ChkRight:
+; Obj09_ChkRight:
+SonicSS_ChkRight:
 		btst	#bitR,(v_jpadhold2).w ; is right being held?
 		beq.s	loc_1BA78	; if not, branch
-		bsr.w	Obj09_MoveRight
+		bsr.w	SonicSS_MoveRight
 
 loc_1BA78:
 		move.b	(v_jpadhold2).w,d0 ; get held buttons
@@ -137,10 +148,11 @@ loc_1BAA8:
 loc_1BAF2:
 		movem.l	(sp)+,d0-d1
 		rts
-; End of function Obj09_Move
+; End of function SonicSS_Move
 ; ===========================================================================
 
-Obj09_MoveLeft:
+; Obj09_MoveLeft:
+SonicSS_MoveLeft:
 		bset	#0,obStatus(a0)
 		move.w	obInertia(a0),d0
 		beq.s	loc_1BB06
@@ -165,10 +177,11 @@ loc_1BB1A:
 loc_1BB22:
 		move.w	d0,obInertia(a0)
 		rts
-; End of function Obj09_MoveLeft
+; End of function SonicSS_MoveLeft
 ; ===========================================================================
 
-Obj09_MoveRight:
+; Obj09_MoveRight:
+SonicSS_MoveRight:
 		bclr	#0,obStatus(a0)
 		move.w	obInertia(a0),d0
 		bmi.s	loc_1BB48
@@ -192,13 +205,14 @@ loc_1BB50:
 
 locret_1BB54:
 		rts
-; End of function Obj09_MoveRight
+; End of function SonicSS_MoveRight
 ; ===========================================================================
 
-Obj09_Jump:
+; Obj09_Jump:
+SonicSS_Jump:
 		move.b	(v_jpadpress2).w,d0
 		andi.b	#btnABC,d0	; is A, B or C pressed?
-		beq.s	Obj09_NoJump	; if not, branch
+		beq.s	SonicSS_NoJump	; if not, branch
 		move.b	(v_ssangle).w,d0
 		andi.b	#$FC,d0
 		neg.b	d0
@@ -214,9 +228,10 @@ Obj09_Jump:
 		move.w	#sfx_Jump,d0
 		jsr	(QueueSound2).l	; play jumping sound
 
-Obj09_NoJump:
+; Obj09_NoJump:
+SonicSS_NoJump:
 		rts
-; End of function Obj09_Jump
+; End of function SonicSS_Jump
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -269,7 +284,8 @@ locret_1BBDE:
 
 ; ===========================================================================
 
-Obj09_ExitStage:
+; Obj09_ExitStage:
+SonicSS_ExitStage:
 		addi.w	#$40,(v_ssrotate).w
 		cmpi.w	#$1800,(v_ssrotate).w
 		bne.s	loc_1BBF4
@@ -293,7 +309,8 @@ loc_1BC12:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-Obj09_Exit2:
+; Obj09_Exit2:
+SonicSS_Exit2:
 		subq.w	#1,objoff_38(a0)
 		bne.s	loc_1BC40
 		move.b	#id_Level,(v_gamemode).w
@@ -305,7 +322,8 @@ loc_1BC40:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
-Obj09_Fall:
+; Obj09_Fall:
+SonicSS_Fall:
 		move.l	obY(a0),d2
 		move.l	obX(a0),d3
 		move.b	(v_ssangle).w,d0
@@ -361,7 +379,7 @@ loc_1BCD4:
 		move.w	d1,obVelY(a0)
 		bset	#1,obStatus(a0)
 		rts
-; End of function Obj09_Fall
+; End of function SonicSS_Fall
 ; ===========================================================================
 
 sub_1BCE8:
@@ -417,7 +435,8 @@ loc_1BD46:
 ; End of function sub_1BD30
 ; ===========================================================================
 
-Obj09_ChkItems:
+; Obj09_ChkItems:
+SonicSS_ChkItems:
 		lea	(v_ssbuffer1).l,a1
 		moveq	#0,d4
 		move.w	obY(a0),d4
@@ -431,45 +450,50 @@ Obj09_ChkItems:
 		divu.w	#$18,d4
 		adda.w	d4,a1
 		move.b	(a1),d4
-		bne.s	Obj09_ChkCont
+		bne.s	SonicSS_ChkCont
 		tst.b	objoff_3A(a0)
-		bne.w	Obj09_MakeGhostSolid
+		bne.w	SonicSS_MakeGhostSolid
 		moveq	#0,d4
 		rts
 ; ===========================================================================
 
-Obj09_ChkCont:
+; Obj09_ChkCont:
+SonicSS_ChkCont:
 		cmpi.b	#$3A,d4		; is the item a ring?
-		bne.s	Obj09_Chk1Up
+		bne.s	SonicSS_Chk1Up
 		bsr.w	SS_RemoveCollectedItem
-		bne.s	Obj09_GetCont
+		bne.s	SonicSS_GetCont
 		move.b	#1,(a2)
 		move.l	a1,4(a2)
 
-Obj09_GetCont:
+; Obj09_GetCont:
+SonicSS_GetCont:
 		jsr	(CollectRing).l
 		cmpi.w	#50,(v_rings).w	; check if you have 50 rings
-		blo.s	Obj09_NoCont
+		blo.s	SonicSS_NoCont
 		bset	#0,(v_lifecount).w
-		bne.s	Obj09_NoCont
+		bne.s	SonicSS_NoCont
 		addq.b	#1,(v_continues).w ; add 1 to number of continues
 		move.w	#sfx_Continue,d0
 		jsr	(QueueSound1).l	; play extra continue sound
 
-Obj09_NoCont:
+; Obj09_NoCont:
+SonicSS_NoCont:
 		moveq	#0,d4
 		rts
 ; ===========================================================================
 
-Obj09_Chk1Up:
+; Obj09_Chk1Up:
+SonicSS_Chk1Up:
 		cmpi.b	#$28,d4		; is the item an extra life?
-		bne.s	Obj09_ChkEmer
+		bne.s	SonicSS_ChkEmer
 		bsr.w	SS_RemoveCollectedItem
-		bne.s	Obj09_Get1Up
+		bne.s	SonicSS_Get1Up
 		move.b	#3,(a2)
 		move.l	a1,4(a2)
 
-Obj09_Get1Up:
+; Obj09_Get1Up:
+SonicSS_Get1Up:
 		addq.b	#1,(v_lives).w	; add 1 to number of lives
 		addq.b	#1,(f_lifecount).w ; update the lives counter
 		move.w	#bgm_ExtraLife,d0
@@ -478,19 +502,21 @@ Obj09_Get1Up:
 		rts
 ; ===========================================================================
 
-Obj09_ChkEmer:
+; Obj09_ChkEmer:
+SonicSS_ChkEmer:
 		cmpi.b	#$3B,d4		; is the item an emerald?
-		blo.s	Obj09_ChkGhost
+		blo.s	SonicSS_ChkGhost
 		cmpi.b	#$40,d4
-		bhi.s	Obj09_ChkGhost
+		bhi.s	SonicSS_ChkGhost
 		bsr.w	SS_RemoveCollectedItem
-		bne.s	Obj09_GetEmer
+		bne.s	SonicSS_GetEmer
 		move.b	#5,(a2)
 		move.l	a1,4(a2)
 
-Obj09_GetEmer:
+; Obj09_GetEmer:
+SonicSS_GetEmer:
 		cmpi.b	#6,(v_emeralds).w ; do you have all the emeralds?
-		beq.s	Obj09_NoEmer	; if yes, branch
+		beq.s	SonicSS_NoEmer	; if yes, branch
 		subi.b	#$3B,d4
 		moveq	#0,d0
 		move.b	(v_emeralds).w,d0
@@ -498,60 +524,70 @@ Obj09_GetEmer:
 		move.b	d4,(a2,d0.w)
 		addq.b	#1,(v_emeralds).w ; add 1 to number of emeralds
 
-Obj09_NoEmer:
+; Obj09_NoEmer:
+SonicSS_NoEmer:
 		move.w	#bgm_Emerald,d0
 		jsr	(QueueSound2).l ; play emerald music
 		moveq	#0,d4
 		rts
 ; ===========================================================================
 
-Obj09_ChkGhost:
+; Obj09_ChkGhost:
+SonicSS_ChkGhost:
 		cmpi.b	#$41,d4		; is the item a ghost block?
-		bne.s	Obj09_ChkGhostTag
+		bne.s	SonicSS_ChkGhostTag
 		move.b	#1,objoff_3A(a0)	; mark the ghost block as "passed"
 
-Obj09_ChkGhostTag:
+; Obj09_ChkGhostTag:
+SonicSS_ChkGhostTag:
 		cmpi.b	#$4A,d4		; is the item a switch for ghost blocks?
-		bne.s	Obj09_NoGhost
+		bne.s	SonicSS_NoGhost
 		cmpi.b	#1,objoff_3A(a0)	; have the ghost blocks been passed?
-		bne.s	Obj09_NoGhost	; if not, branch
+		bne.s	SonicSS_NoGhost	; if not, branch
 		move.b	#2,objoff_3A(a0)	; mark the ghost blocks as "solid"
 
-Obj09_NoGhost:
+; Obj09_NoGhost:
+SonicSS_NoGhost:
 		moveq	#-1,d4
 		rts
 ; ===========================================================================
 
-Obj09_MakeGhostSolid:
+; Obj09_MakeGhostSolid:
+SonicSS_MakeGhostSolid:
 		cmpi.b	#2,objoff_3A(a0)	; is the ghost marked as "solid"?
-		bne.s	Obj09_GhostNotSolid ; if not, branch
+		bne.s	SonicSS_GhostNotSolid ; if not, branch
 		lea	(v_ssblockbuffer).l,a1
 		moveq	#(v_ssblockbuffer_end-v_ssblockbuffer)/$80-1,d1
 
-Obj09_GhostLoop2:
+; Obj09_GhostLoop2:
+SonicSS_GhostLoop2:
 		moveq	#$40-1,d2
 
-Obj09_GhostLoop:
+; Obj09_GhostLoop:
+SonicSS_GhostLoop:
 		cmpi.b	#$41,(a1)	; is the item a ghost block?
-		bne.s	Obj09_NoReplace	; if not, branch
+		bne.s	SonicSS_NoReplace	; if not, branch
 		move.b	#$2C,(a1)	; replace ghost block with a solid block
 
-Obj09_NoReplace:
+; Obj09_NoReplace:
+SonicSS_NoReplace:
 		addq.w	#1,a1
-		dbf	d2,Obj09_GhostLoop
+		dbf	d2,SonicSS_GhostLoop
 		lea	$40(a1),a1
-		dbf	d1,Obj09_GhostLoop2
+		dbf	d1,SonicSS_GhostLoop2
 
-Obj09_GhostNotSolid:
+; Obj09_GhostNotSolid:
+SonicSS_GhostNotSolid:
 		clr.b	objoff_3A(a0)
 		moveq	#0,d4
 		rts
-; End of function Obj09_ChkItems
+; End of function SonicSS_ChkItems
 ; ===========================================================================
 
-Obj09_ChkItems2:
+; Obj09_ChkItems2:
+SonicSS_ChkItems2:
 		move.b	objoff_30(a0),d0
-		bne.s	Obj09_ChkBumper
+		bne.s	SonicSS_ChkBumper
 		subq.b	#1,objoff_36(a0)
 		bpl.s	loc_1BEA0
 		move.b	#0,objoff_36(a0)
@@ -565,9 +601,10 @@ locret_1BEAC:
 		rts
 ; ===========================================================================
 
-Obj09_ChkBumper:
+; Obj09_ChkBumper:
+SonicSS_ChkBumper:
 		cmpi.b	#$25,d0		; is the item a bumper?
-		bne.s	Obj09_GOAL
+		bne.s	SonicSS_GOAL
 		move.l	objoff_32(a0),d1
 		subi.l	#$FF0001,d1
 		move.w	d1,d2
@@ -590,94 +627,104 @@ Obj09_ChkBumper:
 		move.w	d0,obVelY(a0)
 		bset	#1,obStatus(a0)
 		bsr.w	SS_RemoveCollectedItem
-		bne.s	Obj09_BumpSnd
+		bne.s	SonicSS_BumpSnd
 		move.b	#2,(a2)
 		move.l	objoff_32(a0),d0
 		subq.l	#1,d0
 		move.l	d0,4(a2)
 
-Obj09_BumpSnd:
+; Obj09_BumpSnd:
+SonicSS_BumpSnd:
 		move.w	#sfx_Bumper,d0
 		jmp	(QueueSound2).l	; play bumper sound
 ; ===========================================================================
 
-Obj09_GOAL:
+; Obj09_GOAL:
+SonicSS_GOAL:
 		cmpi.b	#$27,d0		; is the item a "GOAL"?
-		bne.s	Obj09_UPblock
-		addq.b	#2,obRoutine(a0) ; run routine "Obj09_ExitStage"
+		bne.s	SonicSS_UPblock
+		addq.b	#2,obRoutine(a0) ; run routine "SonicSS_ExitStage"
 		move.w	#sfx_SSGoal,d0
 		jsr	(QueueSound2).l	; play "GOAL" sound
 		rts
 ; ===========================================================================
 
-Obj09_UPblock:
+; Obj09_UPblock:
+SonicSS_UPblock:
 		cmpi.b	#$29,d0		; is the item an "UP" block?
-		bne.s	Obj09_DOWNblock
+		bne.s	SonicSS_DOWNblock
 		tst.b	objoff_36(a0)
-		bne.w	Obj09_NoGlass
+		bne.w	SonicSS_NoGlass
 		move.b	#$1E,objoff_36(a0)
 		btst	#6,(v_ssrotate+1).w
-		beq.s	Obj09_UPsnd
+		beq.s	SonicSS_UPsnd
 		asl.w	(v_ssrotate).w	; increase stage rotation speed
 		movea.l	objoff_32(a0),a1
 		subq.l	#1,a1
 		move.b	#$2A,(a1)	; change item to a "DOWN" block
 
-Obj09_UPsnd:
+; Obj09_UPsnd:
+SonicSS_UPsnd:
 		move.w	#sfx_SSItem,d0
 		jmp	(QueueSound2).l	; play up/down sound
 ; ===========================================================================
 
-Obj09_DOWNblock:
+; Obj09_DOWNblock:
+SonicSS_DOWNblock:
 		cmpi.b	#$2A,d0		; is the item a "DOWN" block?
-		bne.s	Obj09_Rblock
+		bne.s	SonicSS_Rblock
 		tst.b	objoff_36(a0)
-		bne.w	Obj09_NoGlass
+		bne.w	SonicSS_NoGlass
 		move.b	#$1E,objoff_36(a0)
 		btst	#6,(v_ssrotate+1).w
-		bne.s	Obj09_DOWNsnd
+		bne.s	SonicSS_DOWNsnd
 		asr.w	(v_ssrotate).w	; reduce stage rotation speed
 		movea.l	objoff_32(a0),a1
 		subq.l	#1,a1
 		move.b	#$29,(a1)	; change item to an "UP" block
 
-Obj09_DOWNsnd:
+; Obj09_DOWNsnd:
+SonicSS_DOWNsnd:
 		move.w	#sfx_SSItem,d0
 		jmp	(QueueSound2).l	; play up/down sound
 ; ===========================================================================
 
-Obj09_Rblock:
+; Obj09_Rblock:
+SonicSS_Rblock:
 		cmpi.b	#$2B,d0		; is the item an "R" block?
-		bne.s	Obj09_ChkGlass
+		bne.s	SonicSS_ChkGlass
 		tst.b	objoff_37(a0)
-		bne.w	Obj09_NoGlass
+		bne.w	SonicSS_NoGlass
 		move.b	#$1E,objoff_37(a0)
 		bsr.w	SS_RemoveCollectedItem
-		bne.s	Obj09_RevStage
+		bne.s	SonicSS_RevStage
 		move.b	#4,(a2)
 		move.l	objoff_32(a0),d0
 		subq.l	#1,d0
 		move.l	d0,4(a2)
 
-Obj09_RevStage:
+; Obj09_RevStage:
+SonicSS_RevStage:
 		neg.w	(v_ssrotate).w	; reverse stage rotation
 		move.w	#sfx_SSItem,d0
 		jmp	(QueueSound2).l	; play sound
 ; ===========================================================================
 
-Obj09_ChkGlass:
+; Obj09_ChkGlass:
+SonicSS_ChkGlass:
 		cmpi.b	#$2D,d0		; is the item a glass block?
-		beq.s	Obj09_Glass	; if yes, branch
+		beq.s	SonicSS_Glass	; if yes, branch
 		cmpi.b	#$2E,d0
-		beq.s	Obj09_Glass
+		beq.s	SonicSS_Glass
 		cmpi.b	#$2F,d0
-		beq.s	Obj09_Glass
+		beq.s	SonicSS_Glass
 		cmpi.b	#$30,d0
-		bne.s	Obj09_NoGlass	; if not, branch
+		bne.s	SonicSS_NoGlass	; if not, branch
 
-Obj09_Glass:
+; Obj09_Glass:
+SonicSS_Glass:
 		bsr.w	SS_RemoveCollectedItem
-		bne.s	Obj09_GlassSnd
+		bne.s	SonicSS_GlassSnd
 		move.b	#6,(a2)
 		movea.l	objoff_32(a0),a1
 		subq.l	#1,a1
@@ -685,17 +732,20 @@ Obj09_Glass:
 		move.b	(a1),d0
 		addq.b	#1,d0		; change glass type when touched
 		cmpi.b	#$30,d0
-		bls.s	Obj09_GlassUpdate ; if glass is still there, branch
+		bls.s	SonicSS_GlassUpdate ; if glass is still there, branch
 		clr.b	d0		; remove the glass block when it's destroyed
 
-Obj09_GlassUpdate:
+; Obj09_GlassUpdate:
+SonicSS_GlassUpdate:
 		move.b	d0,4(a2)	; update the stage layout
 
-Obj09_GlassSnd:
+; Obj09_GlassSnd:
+SonicSS_GlassSnd:
 		move.w	#sfx_SSGlass,d0
 		jmp	(QueueSound2).l	; play glass block sound
 ; ===========================================================================
 
-Obj09_NoGlass:
+; Obj09_NoGlass:
+SonicSS_NoGlass:
 		rts
-; End of function Obj09_ChkItems2
+; End of function SonicSS_ChkItems2

@@ -374,6 +374,7 @@ binclude:	macro path,offset,length
 ; ---------------------------------------------------------------------------
 
 bincludeEndMarker: macro *,path
-\*:	binclude \path
+\*:
+		binclude \path
 \*_end:
-	endm
+		endm

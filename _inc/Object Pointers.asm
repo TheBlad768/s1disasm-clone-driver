@@ -3,10 +3,10 @@
 ; ---------------------------------------------------------------------------
 Obj_Index:
 
-objptr:	macro *,objectpointer
-\*: equ	((*-Obj_Index)/4)+1
-	dc.l	objectpointer
-	endm
+objptr:		macro *,objectpointer
+\*:	equ	((*-Obj_Index)/4)+1
+		dc.l	objectpointer
+		endm
 
 ; ---------------------------------------------------------------------------
 ; ID label:	non-zero index byte (see ID value)

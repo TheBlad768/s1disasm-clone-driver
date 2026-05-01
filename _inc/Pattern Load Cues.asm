@@ -3,15 +3,16 @@
 ; ---------------------------------------------------------------------------
 
 ; Macro to define PLC pointer entry
-plcptr:	macro *,plc
-\*: equ (*-ArtLoadCues)/2
-	dc.w	plc-ArtLoadCues
-	endm
+plcptr:		macro *,plc
+\*:	equ	(*-ArtLoadCues)/2
+		dc.w	plc-ArtLoadCues
+		endm
 
 ; Macro for the header of a PLC list
-plcheader: macro *
-\*:	dc.w ((\*_end-\*-2)/6)-1
-	endm
+plcheader:	macro *
+\*:
+		dc.w ((\*_end-\*-2)/6)-1
+		endm
 
 ; Macro for single pattern load cue entry
 plcm:	macro gfx,vram

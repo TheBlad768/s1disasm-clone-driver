@@ -2,19 +2,19 @@
 ; Sprite mappings - collapsing floors (MZ, SLZ, SBZ)
 ; ---------------------------------------------------------------------------
 Map_CFlo_internal:	mappingsTable
-	mappingsTableEntry.w	byte_874E
-	mappingsTableEntry.w	byte_8763
-	mappingsTableEntry.w	byte_878C
-	mappingsTableEntry.w	byte_87A1
+	mappingsTableEntry.w	.leftfacing
+	mappingsTableEntry.w	.rightfacing
+	mappingsTableEntry.w	.leftsmash
+	mappingsTableEntry.w	.rightsmash
 
-byte_874E:	spriteHeader
+.leftfacing:	spriteHeader
 	spritePiece	-$20, -8, 4, 2, 0, 0, 0, 0, 0	; MZ and SBZ blocks
 	spritePiece	-$20, 8, 4, 2, 0, 0, 0, 0, 0
 	spritePiece	0, -8, 4, 2, 0, 0, 0, 0, 0
 	spritePiece	0, 8, 4, 2, 0, 0, 0, 0, 0
-byte_874E_End
+.leftfacing_End
 
-byte_8763:	spriteHeader
+.rightfacing:	spriteHeader
 	spritePiece	-$20, -8, 2, 2, 0, 0, 0, 0, 0
 	spritePiece	-$10, -8, 2, 2, 0, 0, 0, 0, 0
 	spritePiece	0, -8, 2, 2, 0, 0, 0, 0, 0
@@ -23,16 +23,16 @@ byte_8763:	spriteHeader
 	spritePiece	-$10, 8, 2, 2, 0, 0, 0, 0, 0
 	spritePiece	0, 8, 2, 2, 0, 0, 0, 0, 0
 	spritePiece	$10, 8, 2, 2, 0, 0, 0, 0, 0
-byte_8763_End
+.rightfacing_End
 
-byte_878C:	spriteHeader
+.leftsmash:	spriteHeader
 	spritePiece	-$20, -8, 4, 2, 0, 0, 0, 0, 0	; SLZ blocks
 	spritePiece	-$20, 8, 4, 2, 8, 0, 0, 0, 0
 	spritePiece	0, -8, 4, 2, 0, 0, 0, 0, 0
 	spritePiece	0, 8, 4, 2, 8, 0, 0, 0, 0
-byte_878C_End
+.leftsmash_End
 
-byte_87A1:	spriteHeader
+.rightsmash:	spriteHeader
 	spritePiece	-$20, -8, 2, 2, 0, 0, 0, 0, 0
 	spritePiece	-$10, -8, 2, 2, 4, 0, 0, 0, 0
 	spritePiece	0, -8, 2, 2, 0, 0, 0, 0, 0
@@ -41,6 +41,6 @@ byte_87A1:	spriteHeader
 	spritePiece	-$10, 8, 2, 2, $C, 0, 0, 0, 0
 	spritePiece	0, 8, 2, 2, 8, 0, 0, 0, 0
 	spritePiece	$10, 8, 2, 2, $C, 0, 0, 0, 0
-byte_87A1_End
+.rightsmash_End
 
 	even

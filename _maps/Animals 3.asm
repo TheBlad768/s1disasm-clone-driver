@@ -2,20 +2,20 @@
 ; Sprite mappings - animals
 ; ---------------------------------------------------------------------------
 Map_Animal3_internal:	mappingsTable
-	mappingsTableEntry.w	byte_94A2
-	mappingsTableEntry.w	byte_94A8
-	mappingsTableEntry.w	byte_949C
+	mappingsTableEntry.w	.flap1
+	mappingsTableEntry.w	.flap2
+	mappingsTableEntry.w	.drop
 
-byte_949C:	spriteHeader
+.drop:	spriteHeader
 	spritePiece	-8, -$C, 2, 3, 0, 0, 0, 0, 0
-byte_949C_End
+.drop_End
 
-byte_94A2:	spriteHeader
+.flap1:	spriteHeader
 	spritePiece	-$C, -4, 3, 2, 6, 0, 0, 0, 0
-byte_94A2_End
+.flap1_End
 
-byte_94A8:	spriteHeader
+.flap2:	spriteHeader
 	spritePiece	-$C, -4, 3, 2, $C, 0, 0, 0, 0
-byte_94A8_End
+.flap2_End
 
 	even

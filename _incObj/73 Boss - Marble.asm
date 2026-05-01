@@ -138,15 +138,15 @@ loc_18392:
 BMZ_ShipMove:
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
-		move.w	off_183C2(pc,d0.w),d0
-		jsr	off_183C2(pc,d0.w)
+		move.w	BMZ_ShipMove_Index(pc,d0.w),d0
+		jsr	BMZ_ShipMove_Index(pc,d0.w)
 		andi.b	#6,obSubtype(a0)
 		bra.w	loc_1833E
 ; ===========================================================================
-off_183C2:	dc.w BMZ_ChgDir-off_183C2
-		dc.w BMZ_DropFire-off_183C2
-		dc.w BMZ_ChgDir-off_183C2
-		dc.w BMZ_DropFire-off_183C2
+BMZ_ShipMove_Index: dc.w BMZ_ChgDir-BMZ_ShipMove_Index
+		dc.w BMZ_DropFire-BMZ_ShipMove_Index
+		dc.w BMZ_ChgDir-BMZ_ShipMove_Index
+		dc.w BMZ_DropFire-BMZ_ShipMove_Index
 ; ===========================================================================
 
 ; loc_183CA:

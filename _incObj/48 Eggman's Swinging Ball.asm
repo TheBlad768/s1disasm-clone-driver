@@ -108,7 +108,7 @@ GBall_Display:
 ; GBall_Display2:
 GBall_Base2:	; Routine 4
 		bsr.w	sub_17C2A
-		jsr	(Obj48_Move).l
+		jsr	(GBall_Move).l
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
