@@ -2,13 +2,13 @@
 ; Sprite mappings - "PRESS START BUTTON" and "TM" from title screen
 ; ---------------------------------------------------------------------------
 Map_PSB_internal:	mappingsTable
-	mappingsTableEntry.w	.blank	; This is a nasty hack to render the sprite invisible by pointing at a random 00 byte.
+	mappingsTableEntry.w	.psb+1	; This is a nasty hack to render the sprite invisible by pointing at a random 00 byte.
 	mappingsTableEntry.w	.psb
 	mappingsTableEntry.w	.spritemask
 	mappingsTableEntry.w	.tm
 
 .psb:	spriteHeader
-.blank:	spritePiece	0, 0, 4, 1, $F0, 0, 0, 0, 0	; "PRESS START BUTTON"
+	spritePiece	0, 0, 4, 1, $F0, 0, 0, 0, 0	; "PRESS START BUTTON"
 	spritePiece	$20, 0, 1, 1, $F3, 0, 0, 0, 0
 	spritePiece	$30, 0, 1, 1, $F3, 0, 0, 0, 0
 	spritePiece	$38, 0, 4, 1, $F4, 0, 0, 0, 0

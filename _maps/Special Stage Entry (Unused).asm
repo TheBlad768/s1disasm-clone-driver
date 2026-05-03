@@ -9,7 +9,7 @@ Map_Vanish_internal:	mappingsTable
 	mappingsTableEntry.w	.sparkle2
 	mappingsTableEntry.w	.sparkle3
 	mappingsTableEntry.w	.sparkle4
-	mappingsTableEntry.w	.blank
+	mappingsTableEntry.w	.sparkle4_End-4 ; This is a nasty hack to render the sprite invisible by pointing at a random 00 byte.
 
 .flash1:	spriteHeader
 	spritePiece	8, -8, 1, 1, 0, 0, 0, 0, 0
@@ -95,7 +95,5 @@ Map_Vanish_internal:	mappingsTable
 	spritePiece	$50, 4, 1, 1, $26, 1, 1, 0, 0
 	spritePiece	$58, 4, 1, 1, $27, 1, 0, 0, 0
 .sparkle4_End:
-
-.blank:	EQU	*-4
 
 	even
