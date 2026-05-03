@@ -2,35 +2,36 @@
 ; Sprite mappings - shield and invincibility stars
 ; ---------------------------------------------------------------------------
 Map_Shield_internal:	mappingsTable
-	mappingsTableEntry.w	.shield1	; This is a nasty hack to render the sprite invisible by pointing at a random 00 byte.
+	mappingsTableEntry.w	.shield1+$B	; This is a nasty hack to render the sprite invisible by pointing at a random 00 byte.
+	mappingsTableEntry.w	.shield1
 	mappingsTableEntry.w	.shield2
 	mappingsTableEntry.w	.shield3
-	mappingsTableEntry.w	.shield4
 	mappingsTableEntry.w	.stars1
 	mappingsTableEntry.w	.stars2
 	mappingsTableEntry.w	.stars3
 	mappingsTableEntry.w	.stars4
 
-.shield2:	spriteHeader
+.shield1:	spriteHeader
 	spritePiece	-$18, -$18, 3, 3, 0, 0, 0, 0, 0
 	spritePiece	0, -$18, 3, 3, 9, 0, 0, 0, 0
-.shield1:spritePiece	-$18, 0, 3, 3, 0, 0, 1, 0, 0
+	spritePiece	-$18, 0, 3, 3, 0, 0, 1, 0, 0
 	spritePiece	0, 0, 3, 3, 9, 0, 1, 0, 0
-.shield2_End
+.shield1_End
 
-.shield3:	spriteHeader
+.shield2:	spriteHeader
 	spritePiece	-$17, -$18, 3, 3, $12, 1, 0, 0, 0
 	spritePiece	0, -$18, 3, 3, $12, 0, 0, 0, 0
 	spritePiece	-$17, 0, 3, 3, $12, 1, 1, 0, 0
 	spritePiece	0, 0, 3, 3, $12, 0, 1, 0, 0
-.shield3_End
+.shield2_End
 
-.shield4:	spriteHeader
+.shield3:	spriteHeader
 	spritePiece	-$18, -$18, 3, 3, 9, 1, 0, 0, 0
 	spritePiece	0, -$18, 3, 3, 0, 1, 0, 0, 0
 	spritePiece	-$18, 0, 3, 3, 9, 1, 1, 0, 0
 	spritePiece	0, 0, 3, 3, 0, 1, 1, 0, 0
-.shield4_End
+.shield3_End
+
 
 .stars1:	spriteHeader
 	spritePiece	-$18, -$18, 3, 3, 0, 0, 0, 0, 0
