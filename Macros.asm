@@ -82,6 +82,17 @@ clearRAM:	macro startAddress,endAddress
 		move.b	d0,(a1)+
 	endif
 		endm
+; ---------------------------------------------------------------------------
+
+; calculates initial loop counter value for a dbf loop
+; that writes n bytes total at x bytes per iteration
+bytesToXcnt function n,x,n/x-1
+
+; ---------------------------------------------------------------------------
+; function to make a little-endian 16-bit pointer for the Z80 sound driver
+; ---------------------------------------------------------------------------
+
+z80_ptr function x,(x)<<8&$FF00|(x)>>8&$7F|$80
 
 ; ---------------------------------------------------------------------------
 ; Copy a tilemap from 68K (ROM/RAM) to the VRAM without using DMA
@@ -97,11 +108,48 @@ copyTilemap:	macro source,destination,width,height
 		endm
 
 ; ---------------------------------------------------------------------------
+; disable interrupts
+; ---------------------------------------------------------------------------
+
+disableInts macro
+	move.w	#$2700,sr
+    endm
+
+; ---------------------------------------------------------------------------
+; enable interrupts
+; ---------------------------------------------------------------------------
+
+enableInts macro
+	move.w	#$2300,sr
+    endm
+
+; ---------------------------------------------------------------------------
+; disable interrupts
+; ---------------------------------------------------------------------------
+
+disableIntsSave macro
+	move.w	sr,-(sp)		; Save current interrupt mask
+	disableInts			; Mask off interrupts
+    endm
+
+; ---------------------------------------------------------------------------
+; enable interrupts
+; ---------------------------------------------------------------------------
+
+enableIntsSave macro
+	move.w	(sp)+,sr		; Restore interrupts to previous state
+    endm
+
+; ---------------------------------------------------------------------------
 ; stop the Z80
 ; ---------------------------------------------------------------------------
 
 stopZ80:	macro
+
+	if OptimiseStopZ80=0
 		move.w	#$100,(z80_bus_request).l
+	endif
+
 		endm
 
 ; ---------------------------------------------------------------------------
@@ -109,8 +157,12 @@ stopZ80:	macro
 ; ---------------------------------------------------------------------------
 
 waitZ80:	macro
-.wait:		btst	#0,(z80_bus_request).l
+
+	if OptimiseStopZ80=0
+.wait:	btst	#0,(z80_bus_request).l
 		bne.s	.wait
+	endif
+
 		endm
 
 ; ---------------------------------------------------------------------------
@@ -130,7 +182,48 @@ assertZ80Reset:	macro
 ; ---------------------------------------------------------------------------
 
 startZ80:	macro
+
+	if OptimiseStopZ80=0
 		move.w	#0,(z80_bus_request).l
+	endif
+
+		endm
+
+; ---------------------------------------------------------------------------
+; stop the Z80 (2)
+; ---------------------------------------------------------------------------
+
+stopZ802: macro
+
+	if OptimiseStopZ80=2
+		move.w	#$100,(z80_bus_request).l
+	endif
+
+		endm
+
+; ---------------------------------------------------------------------------
+; wait for Z80 to stop
+; ---------------------------------------------------------------------------
+
+waitZ802:	macro
+
+	if OptimiseStopZ80=2
+.wait:	btst	#0,(z80_bus_request).l
+		bne.s	.wait
+	endif
+
+		endm
+
+; ---------------------------------------------------------------------------
+; start the Z80 (2)
+; ---------------------------------------------------------------------------
+
+startZ802: macro
+
+	if OptimiseStopZ80=2
+		move.w	#0,(z80_bus_request).l
+	endif
+
 		endm
 
 ; ---------------------------------------------------------------------------
