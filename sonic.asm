@@ -448,9 +448,13 @@ CheckSumError:
 		bra.s	.endlessloop
 	endif
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; Uncompressed art text for debug mode, level select, and errors
+; (formerly "menutext.bin")
+; ---------------------------------------------------------------------------
 
-Art_Text:	binclude	"artunc/menutext.bin" ; text used in level select and debug mode
-Art_Text_End:	even
+Art_Text:	bincludeEndMarker	"artunc/Level Select & Debug Text.bin"
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1670,7 +1674,7 @@ Sega_WaitPal:	; while light scanning effect is active
 ; ---------------------------------------------------------------------------
 
 		; while "SEGA" sound is playing
-		move.b	#sfx_Sega,d0			; set "SEGA" sound
+		move.b	#bgm_Sega,d0			; set "SEGA" sound
 		bsr.w	QueueSound1			; queue it
 		move.b	#id_VBlank_SegaPCM,(v_vblank_routine).w ; set VBlank routine to $14
 		bsr.w	WaitForVBlank			; wait for VBlank to play the sound (CPU is frozen here until sound finished playing)
@@ -1680,7 +1684,7 @@ Sega_WaitPal:	; while light scanning effect is active
 		move.w	#3*60,(v_generictimer).w	; wait 3 seconds before automatic fade-out
 
 Sega_WaitEnd:
-		move.b	#id_VBlank_Sega,(v_vblank_routine).w ; set VBlank routine to $02
+		move.b	#id_VBlank_SegaPCM,(v_vblank_routine).w ; set VBlank routine to $02
 		bsr.w	WaitForVBlank			; wait for VBlank to finish
 		tst.w	(v_generictimer).w		; has post-chant timer expired?
 		beq.s	Sega_GotoTitle			; if yes, go to title screen
@@ -2284,13 +2288,13 @@ LevSel_SndTest:
 		beq.s	LevSel_Right			; if not, branch
 		subq.w	#1,d0				; subtract 1 from sound test
 		bhs.s	LevSel_Right			; is result still positive? if yes, branch
-		moveq	#sfx__Last,d0 			; if sound test moves below 0, set to last entry (non-$80 based)
+		moveq	#sfx__End,d0 			; if sound test moves below 0, set to last entry (non-$80 based)
 
 LevSel_Right:
 		btst	#bitR,d1			; is right pressed?
 		beq.s	LevSel_Refresh2			; if not, branch
 		addq.w	#1,d0				; add 1 to sound test
-		cmpi.w	#sfx__Last+1,d0			; is result now past the last entry?
+		cmpi.w	#sfx__End+1,d0			; is result now past the last entry?
 		blo.s	LevSel_Refresh2			; if not, branch
 		moveq	#0,d0				; if sound test moves above last entry, set to 0
 
@@ -5129,6 +5133,7 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 		else
 			dcb.b	$63C,$FF
 		endif
+	endif
 
 ; ---------------------------------------------------------------------------
 
