@@ -319,7 +319,7 @@ Pow_ChkShield:
 		move.b	#1,(v_shield).w				; give Sonic a shield
 		move.b	#id_ShieldItem,(v_shieldobj).w		; load shield object ($38)
 		move.w	#sfx_Shield,d0				; set shield sound effect
-		jmp	(QueueSound1).l				; play it
+		jmp	(QueueSound2).l				; play it
 ; ===========================================================================
 
 Pow_ChkInvinc:
@@ -379,7 +379,7 @@ Pow_ChkRings:
 
 Pow_RingSound:
 		move.w	#sfx_Ring,d0				; set ring sound collection effect
-		jmp	(QueueSound1).l				; play it
+		jmp	(QueueSound2).l				; play it
 ; ===========================================================================
 
 Pow_ChkS:
@@ -418,11 +418,11 @@ Pow_Delete:	; Routine 4
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to	make the sides of a monitor solid
-; 
+;
 ; input:
 ;	d1 = width/2
 ;	d2 = height/2
-; 
+;
 ; output:
 ;	d0 = distance from side of monitor
 ;	d1 = collision type: 0 = none; 1 = side collision; -1 = top/bottom collision
