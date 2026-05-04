@@ -15,7 +15,7 @@ PauseGame:
 	; Pause_StopGame:
 	.startPause:
 		move.w	#1,(f_pause).w			; pause the game
-		move.b	#1,(v_snddriver_ram.f_pausemusic).w ; pause music
+		SMPS_PauseMusic				; pause music
 ; ---------------------------------------------------------------------------
 
 ; Pause_Loop:
@@ -47,7 +47,7 @@ PauseGame:
 
 	; Pause_EndMusic:
 	.unpauseMusic:
-		move.b	#$80,(v_snddriver_ram.f_pausemusic).w ; unpause the music
+		SMPS_UnpauseMusic			; unpause the music
 
 	; Unpause:
 	.unpauseGame:
@@ -61,6 +61,6 @@ PauseGame:
 ; Pause_SlowMo:
 .slowMotion:
 		move.w	#1,(f_pause).w			; keep flag set so pause is triggered on next frame again
-		move.b	#$80,(v_snddriver_ram.f_pausemusic).w ; unpause the music
+		SMPS_UnpauseMusic			; unpause the music
 		rts					; return to main levle loop
 ; End of function PauseGame

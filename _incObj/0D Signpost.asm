@@ -49,7 +49,7 @@ Sign_Touch:	; Routine 2
 
 		; Touched
 		move.w	#sfx_Signpost,d0			; set signpost sound
-		jsr	(QueueSound1).l				; play play it
+		jsr	(QueueSound2).l				; play play it
 		clr.b	(f_timecount).w				; stop time counter
 		move.w	(v_limitright2).w,(v_limitleft2).w	; lock screen position
 		addq.b	#2,obRoutine(a0)			; advance to Sign_Spin
@@ -198,7 +198,7 @@ GotThroughAct:
 
 		; SFX
 		move.w	#bgm_GotThrough,d0			; set "Sonic got through" music
-		jsr	(QueueSound2).l				; play it
+		jsr	(QueueSound1).l				; play it
 
 ; locret_ECEE:
 Sign_Return:

@@ -507,11 +507,11 @@ SonicSS_Fall:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to detect a Special Stage wall at a given position
-; 
+;
 ; input:
 ;	d2 = y position (including subpixel)
 ;	d3 = x position (including subpixel)
-; 
+;
 ; output:
 ;	d4 = id of wall or item
 ;	d5 = flag: 0 = no collision (e.g. rings); -1 = collision with solid wall
@@ -586,7 +586,7 @@ SonicSS_FindWall_CheckType:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to check for collision blocks that have no solidity (rings etc.)
-; 
+;
 ; output:
 ;	d4 = (unused) 0 if block is a regular item or blank; -1 otherwise
 ; ---------------------------------------------------------------------------
@@ -637,7 +637,7 @@ SonicSS_GetContinue:
 		bne.s	SonicSS_NoContinue			; if flag was already set, branch
 		addq.b	#1,(v_continues).w			; add 1 to number of continues
 		move.w	#sfx_Continue,d0			; set extra continue sound
-		jsr	(QueueSound1).l				; play it
+		jsr	(QueueSound2).l				; play it
 
 ; Obj09_NoCont:
 SonicSS_NoContinue:
@@ -694,7 +694,7 @@ SonicSS_GetEmerald:
 ; Obj09_NoEmer:
 SonicSS_NoEmerald:
 		move.w	#bgm_Emerald,d0				; set to emerald music
-		jsr	(QueueSound2).l				; play it
+		jsr	(QueueSound1).l				; play it
 
 		moveq	#0,d4					; regular item
 		rts						; return
@@ -745,7 +745,7 @@ SonicSS_MakeGhostSolid:
 ; Obj09_GhostNotSolid:
 SonicSS_GhostNotSolid:
 		clr.b	sonss_ghoststate(a0)			; clear ghost trigger flag so this doesn't run again
-		
+
 		moveq	#0,d4					; not a ghost block (by itself at least)
 		rts						; return
 ; End of function SonicSS_ChkItems_NotSolid

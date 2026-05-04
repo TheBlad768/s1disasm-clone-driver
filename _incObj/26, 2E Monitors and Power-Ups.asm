@@ -318,7 +318,7 @@ Pow_ChkShield:
 		move.b	#1,(v_shield).w			; give Sonic a shield
 		move.b	#id_ShieldItem,(v_shieldobj).w	; load shield object ($38)
 		move.w	#sfx_Shield,d0			; set shield sound effect
-		jmp	(QueueSound1).l			; play it
+		jmp	(QueueSound2).l			; play it
 ; ===========================================================================
 
 Pow_ChkInvinc:
@@ -378,7 +378,7 @@ Pow_ChkRings:
 
 Pow_RingSound:
 		move.w	#sfx_Ring,d0			; set ring sound collection effect
-		jmp	(QueueSound1).l			; play it
+		jmp	(QueueSound2).l			; play it
 ; ===========================================================================
 
 Pow_ChkS:

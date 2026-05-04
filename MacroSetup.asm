@@ -68,7 +68,7 @@ align0 macro alignment
 even macro
 	if notZ80(MOMCPU)
 		if (*)&1
-			dc.b 0 ;ds.b 1 
+			dc.b 0 ;ds.b 1
 		endif
 	else
 		if ($)&1
@@ -116,7 +116,7 @@ chkop function op,ref,(substr(lowstring(op),0,strlen(ref))<>ref)
 
 ; 1-arg instruction that's self-patching to remove 0-offset optimization
 insn1op	 macro oper,x
-	if (chkop("x","0(") && chkop("x","obid(") && chkop("x","smps_ram.v_sndprio("))
+	  if (chkop("x","0(") && chkop("x","obid("))
 		!oper	x
 	else
 		!oper	1+x
@@ -127,8 +127,8 @@ insn1op	 macro oper,x
 
 ; 2-arg instruction that's self-patching to remove 0-offset optimization
 insn2op	 macro oper,x,y
-	if (chkop("x","0(") && chkop("x","obid(") && chkop("x","smps_ram.v_sndprio("))
-		if (chkop("y","0(") && chkop("y","obid(") && chkop("y","smps_ram.v_sndprio("))
+	  if (chkop("x","0(") && chkop("x","obid("))
+		  if (chkop("y","0(") && chkop("y","obid("))
 			!oper	x,y
 		else
 			!oper	x,1+y
@@ -137,7 +137,7 @@ insn2op	 macro oper,x,y
 		endif
 	else
 		if chkop("y","d")
-		  if (chkop("y","0(") && chkop("y","obid(") && chkop("y","smps_ram.v_sndprio("))
+		  if (chkop("y","0(") && chkop("y","obid("))
 .start:
 			!oper	1+x,y
 .end:

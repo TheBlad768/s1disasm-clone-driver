@@ -1,5 +1,3 @@
-	include "s1.sounddriver.ram.asm"
-
 ; Sign-extends a 32-bit integer to 64-bit
 ; (All RAM addresses are run through this function to allow them to work in both 16-bit and 32-bit addressing modes.)
 ramaddr function x,(-(x&$80000000)<<1)|x
@@ -106,8 +104,11 @@ v_endeggman:		equ	v_objspace+object_size*2	; object variable space for Eggman af
 v_tryagain:		equ	v_objspace+object_size*3	; object variable space for the "TRY AGAIN" text ($40 bytes)
 v_eggmanchaos:		equ	v_objspace+object_size*32	; object variable space for the emeralds juggled by Eggman ($180 bytes)
 
-v_snddriver_ram:	SMPS_RAM				; sound driver state
-			ds.b	$40				; unused
+Snd_driver_RAM:		ds.b $400				; sound driver state
+Snd_driver_RAM_end	= *
+SegaCD_Mode:		= Snd_driver_RAM+$3F0
+
+			ds.b	$200				; unused
 
 v_gamemode:		ds.b	1				; game mode (00=Sega; 04=Title; 08=Demo; 0C=Level; 10=SS; 14=Cont; 18=End; 1C=Credit; +8C=PreLevel)
 			ds.b	1				; unused
@@ -423,7 +424,7 @@ v_timingvariables_end:
 v_chunk0collision:	ds.w	1				; very subtly (and perhaps unintentionally) used by FindNearestTile when encountering chunk 0
 		if v_chunk0collision<>ramaddr($FFFFFF00)
 			error "v_chunk0collision needs to be at address $FFFFFF00 so that FindNearestTile works correctly (currently offset by \{signedToString(v_chunk0collision-ramaddr($FFFFFF00))} bytes) ."
-		endif	
+		endif
 	endif
 			ds.b	$E				; unused
 v_screenposx_dup:	ds.l	1				; screen position x (duplicate)

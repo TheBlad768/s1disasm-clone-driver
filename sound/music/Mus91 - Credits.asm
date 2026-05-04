@@ -237,10 +237,6 @@ Mus91_Credits_Loop17:
 	dc.b	nA2, $6C, smpsNoAttack, $60
 	smpsStop
 
-	; Unused data
-	; Could this be a blanked-out 'smpsNop $01'? It's near an smpsStop.
-	dc.b	$00, $01
-
 Mus91_Credits_Call0F:
 	dc.b	$0C, $0C, $0C, $0C, $0C, $0C
 	smpsNoteFill        $00
@@ -727,14 +723,9 @@ Mus91_Credits_Loop29:
 	dc.b	nA6, nA6, nE7, nA6, nD7, nA6, nC7, nA6
 	smpsLoop            $00, $04, Mus91_Credits_Loop29
 	smpsLoop            $01, $02, Mus91_Credits_Loop27
-	dc.b	nRst, $60, nRst, nRst, nRst, nRst, nRst
-    if FixMusicAndSFXDataBugs=0
-	; These rests are unnecessary, and cause the following notes to play way too late.
-	; Delete these three notes to fix this.
-	dc.b	nRst, nRst, nRst
+	dc.b	nRst, $60, nRst, nRst, nRst, nRst, nRst, nRst, nRst, nRst
 	; This erroneous FM-only command causes the following notes to be inaudible.
-	smpsAlterVol        $0C
-    endif
+	;smpsAlterVol        $0C
 	smpsAlterNote       $02
 	smpsPSGAlterVol     $02
 	dc.b	nRst, $0C, nE6, $06, nRst, nB6, nE6, $06, nRst, $0C, nE6, $06
@@ -795,11 +786,11 @@ Mus91_Credits_Loop1D:
 
 Mus91_Credits_Loop1E:
 	smpsPSGvoice        fTone_04
-	dc.b	$03, $03
+	dc.b	nRst, $03, nRst, $03
 	smpsPSGAlterVol     $02
 	smpsPSGvoice        fTone_08
 	smpsNoteFill        $08
-	dc.b	$06
+	dc.b	nRst, $06
 	smpsNoteFill        $03
 	smpsPSGAlterVol     $FE
 	smpsLoop            $00, $20, Mus91_Credits_Loop1E
@@ -931,15 +922,6 @@ Mus91_Credits_Call1A:
 	dc.b	nB5, $0C, nG5, nB5, nD6, nC6, nB5, nA5, nB5, nA5, nFs5, nA5
 	dc.b	nC6, nB5, nA5, nG5, nA5, nG5, nE5, nG5, nB5, nA5, nG5, nFs5
 	dc.b	nG5, nFs5, nG5, nA5
-	smpsReturn
-
-; Unused alternate version of Mus91_Credits_Call0B
-; Mus91_Credits_CallUnk:
-	dc.b	nRst, $0C, nG6, nB6, nD7, nFs7, $0C, nRst, $06, nFs7, $0C, nG7
-	dc.b	$06, nFs7, $0C, nE7, $60, nRst, $0C, nG6, nB6, nD7, nFs7, $0C
-	dc.b	nRst, $06, nFs7, $0C, nG7, $06, nFs7, $0C, nAb7, $5D, nRst, $03
-	dc.b	nA7, $12, nRst, $06, nA7, $12, nRst, $06, nRst, $06, nAb7, $12
-	dc.b	nA7, $06, nRst, $12
 	smpsReturn
 
 Mus91_Credits_Call13:
