@@ -143,7 +143,6 @@ Ring_Delete:	; Routine 8
 CollectRing:
 		addq.w	#1,(v_rings).w	; add 1 to rings
 		ori.b	#1,(f_ringcount).w ; update the rings counter
-		move.w	#sfx_Ring,d0	; play ring sound
 		cmpi.w	#100,(v_rings).w ; do you have < 100 rings?
 		blo.s	.playsnd	; if yes, branch
 		bset	#1,(v_lifecount).w ; update lives counter
@@ -157,8 +156,11 @@ CollectRing:
 		addq.b	#1,(v_lives).w	; add 1 to the number of lives you have
 		addq.b	#1,(f_lifecount).w ; update the lives counter
 		move.w	#bgm_ExtraLife,d0 ; play extra life music
+		jmp	(QueueSound1).l
+; ===========================================================================
 
 .playsnd:
+		move.w	#sfx_Ring,d0	; play ring sound
 		jmp	(QueueSound2).l
 ; End of function CollectRing
 

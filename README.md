@@ -1,15 +1,27 @@
-# Sonic the Hedgehog (16-bit) Disassembly
+You can use this source code for your projects. No problem. :)
 
-For an overview of the folder structure, [refer to this page](https://info.sonicretro.org/SCHG_How-to:Disassembly_Folder_Structure#Sonic_1).
+Port by TheBlad768
 
-Also See: http://info.sonicretro.org/Disassemblies
+The sound driver is ported from SCE:
 
-# Project Sonic 1: Two-Eight 
+See: https://github.com/TheBlad768/Sonic-Clean-Engine-S.C.E.-
+
+s1disasm_git
+============
+
 This branch has been modified to use Sonic 2's 128x128 chunk and path-swapper systems. Modifications originally made by MarkeyJester.
 
 See: http://info.sonicretro.org/Project_Sonic_1:_Two-Eight
 
-# DISCLAIMER
+The very latest Sonic 1 Disassembly with Sonic 2 Clone Driver v2 (Mega PCM 2.0 version).
+
+See: http://info.sonicretro.org/Disassemblies
+
+DISCLAIMER:
 Any and all content presented in this repository is presented for informational and educational purposes only.
 Commercial usage is expressly prohibited. Sonic Retro claims no ownership of any code in these repositories.
 You assume any and all responsibility for using this content responsibly. Sonic Retro claims no responsibiliy or warranty.
+
+Check out the Sonic Retro Disassembly:
+
+- https://github.com/sonicretro/s1disasm

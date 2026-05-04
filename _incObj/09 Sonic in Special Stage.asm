@@ -475,7 +475,7 @@ SonicSS_GetCont:
 		bne.s	SonicSS_NoCont
 		addq.b	#1,(v_continues).w ; add 1 to number of continues
 		move.w	#sfx_Continue,d0
-		jsr	(QueueSound1).l	; play extra continue sound
+		jsr	(QueueSound2).l	; play extra continue sound
 
 ; Obj09_NoCont:
 SonicSS_NoCont:
@@ -527,7 +527,7 @@ SonicSS_GetEmer:
 ; Obj09_NoEmer:
 SonicSS_NoEmer:
 		move.w	#bgm_Emerald,d0
-		jsr	(QueueSound2).l ; play emerald music
+		jsr	(QueueSound1).l ; play emerald music
 		moveq	#0,d4
 		rts
 ; ===========================================================================

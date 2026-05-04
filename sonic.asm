@@ -13,6 +13,11 @@
 
 DebugPathSwappers: = 1
 ;	| If 1, show path swappers in debug mode (ProjectSonic1TwoEight only)
+MSUMode = 0
+; 	| If 1, enable MSU
+
+OptimiseStopZ80	= 2
+; 	| If 1, remove stopZ80 and startZ80, if 2, use only for controllers (no effect on sound driver)
 
 Revision = 1
 ; 	| If 0, build the original version of the game, dubbed REV00
@@ -20,17 +25,17 @@ Revision = 1
 ; 	| If 2, build the hacked version from Sonic Mega Collection, dubbed REVXB,
 ;	|       which (sloppily) fixes the infamous "spike bug" -- not recommended
 
-FixBugs = 0
+FixBugs = 1
 ;	| If 1, enables various bugfixes across the game and sound driver
 ;	| See also FixMusicAndSFXDataBugs
 
-AllOptimizations = 0
+AllOptimizations = 1
 ;	| If 1, enables all optimizations
-SkipChecksumCheck = 0|AllOptimizations
+SkipChecksumCheck = 1|AllOptimizations
 ;	| If 1, disables the slow bootup checksum calculation
-ZeroOffsetOptimization = 0|AllOptimizations
+ZeroOffsetOptimization = 1|AllOptimizations
 ;	| If 1, makes a handful of zero-offset instructions smaller
-PaddingOptimization = 0|AllOptimizations
+PaddingOptimization = 1|AllOptimizations
 ;	| If 1, removes about 3 KB of various superfluous padding
 
 EnableSRAM = 0
@@ -61,6 +66,14 @@ ZoneCount = 6
 ; ===========================================================================
 ; Equates section - Names for variables
 	include	"_Variables.asm"
+
+; ===========================================================================
+; Include sound driver macros and functions
+	include "sound/Definitions.asm"
+
+; ===========================================================================
+; Include debugger macros and functions
+	include "ErrorHandler/Debugger.asm"
 
 ; ===========================================================================
 ; Expressing sprite mappings and DPLCs in a portable and human-readable form
@@ -188,13 +201,6 @@ RomEndLoc:	dc.l EndOfRom-1		; End address of ROM
 EndOfHeader:
 
 ; ===========================================================================
-; Crash/Freeze the 68000. Unlike Sonic 2, Sonic 1 uses the 68000 for playing music, so it stops too
-
-ErrorTrap:
-		nop	
-		nop	
-		bra.s	ErrorTrap
-; ===========================================================================
 
 EntryPoint:
 		tst.l	(port_1_control_hi).l	; test port A & B control registers
@@ -222,7 +228,7 @@ VDPInitLoop:
 		move.w	d5,(a4)		; move value to VDP register
 		add.w	d7,d5		; next register
 		dbf	d1,VDPInitLoop
-		
+
 		move.l	(a5)+,(a4)
 		move.w	d0,(a3)		; clear the VRAM
 		move.w	d7,(a1)		; stop the Z80
@@ -236,7 +242,7 @@ WaitForZ80:
 Z80InitLoop:
 		move.b	(a5)+,(a0)+
 		dbf	d2,Z80InitLoop
-		
+
 		move.w	d0,(a2)
 		move.w	d0,(a1)		; start the Z80
 		move.w	d7,(a2)		; reset the Z80
@@ -389,6 +395,13 @@ GameInit:
 		move.l	d7,(a6)+
 		dbf	d6,.clearRAM	; clear RAM ($0000-$FDFF)
 
+	if MSUMode
+		jsr	(Init_MSU_Driver).l
+		seq	(SegaCD_Mode).w
+	else
+		clr.b	(SegaCD_Mode).w
+	endif
+
 		bsr.w	VDPSetupGame
 		bsr.w	DACDriverLoad
 		bsr.w	JoypadInit
@@ -436,173 +449,6 @@ CheckSumError:
 .endlessloop:
 		bra.s	.endlessloop
 	endif
-; ===========================================================================
-
-BusError:
-		move.b	#2,(v_errortype).w
-		bra.s	ErrorHandler_WithAddress
-
-AddressError:
-		move.b	#4,(v_errortype).w
-		bra.s	ErrorHandler_WithAddress
-
-IllegalInstr:
-		move.b	#6,(v_errortype).w
-		addq.l	#2,2(sp)
-		bra.s	ErrorHandler_WithoutAddress
-
-ZeroDivide:
-		move.b	#8,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-ChkInstr:
-		move.b	#10,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-TrapvInstr:
-		move.b	#12,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-PrivilegeViol:
-		move.b	#14,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-Trace:
-		move.b	#16,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-Line1010Emu:
-		move.b	#18,(v_errortype).w
-		addq.l	#2,2(sp)
-		bra.s	ErrorHandler_WithoutAddress
-
-Line1111Emu:
-		move.b	#20,(v_errortype).w
-		addq.l	#2,2(sp)
-		bra.s	ErrorHandler_WithoutAddress
-
-ErrorExcept:
-		move.b	#0,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-; ===========================================================================
-
-; loc_43A:
-ErrorHandler_WithAddress:
-		disable_ints
-		addq.w	#2,sp
-		move.l	(sp)+,(v_spbuffer).w
-		addq.w	#2,sp
-		movem.l	d0-a7,(v_regbuffer).w
-		bsr.w	ShowErrorMessage
-		move.l	2(sp),d0
-		bsr.w	ShowErrorValue
-		move.l	(v_spbuffer).w,d0
-		bsr.w	ShowErrorValue
-		bra.s	loc_478
-; ===========================================================================
-
-; loc_462:
-ErrorHandler_WithoutAddress:
-		disable_ints
-		movem.l	d0-a7,(v_regbuffer).w
-		bsr.w	ShowErrorMessage
-		move.l	2(sp),d0
-		bsr.w	ShowErrorValue
-
-loc_478:
-		bsr.w	ErrorWaitForC
-		movem.l	(v_regbuffer).w,d0-a7
-		enable_ints
-		rte	
-; ===========================================================================
-
-ShowErrorMessage:
-		lea	(vdp_data_port).l,a6
-		locVRAM	ArtTile_Error_Handler_Font*tile_size
-		lea	(Art_Text).l,a0
-		move.w	#(Art_Text_end-Art_Text-tile_size)/2-1,d1 ; strangely, this does not load the final tile
-.loadgfx:
-		move.w	(a0)+,(a6)
-		dbf	d1,.loadgfx
-
-		moveq	#0,d0		; clear d0
-		move.b	(v_errortype).w,d0 ; load error code
-		move.w	ErrorText(pc,d0.w),d0
-		lea	ErrorText(pc,d0.w),a0
-		locVRAM	vram_fg+$604
-		moveq	#19-1,d1		; number of characters (minus 1)
-
-.showchars:
-		moveq	#0,d0
-		move.b	(a0)+,d0
-		addi.w	#-'0'+ArtTile_Error_Handler_Font,d0 ; rebase from ASCII to a VRAM index
-		move.w	d0,(a6)
-		dbf	d1,.showchars	; repeat for number of characters
-		rts
-; End of function ShowErrorMessage
-; ===========================================================================
-
-ErrorText:	dc.w .exception-ErrorText
-		dc.w .bus-ErrorText
-		dc.w .address-ErrorText
-		dc.w .illinstruct-ErrorText
-		dc.w .zerodivide-ErrorText
-		dc.w .chkinstruct-ErrorText
-		dc.w .trapv-ErrorText
-		dc.w .privilege-ErrorText
-		dc.w .trace-ErrorText
-		dc.w .line1010-ErrorText
-		dc.w .line1111-ErrorText
-
-.exception:	dc.b "ERROR EXCEPTION    "
-.bus:		dc.b "BUS ERROR          "
-.address:	dc.b "ADDRESS ERROR      "
-.illinstruct:	dc.b "ILLEGAL INSTRUCTION"
-.zerodivide:	dc.b "@ERO DIVIDE        " ; @ is Z due to the font arrangement
-.chkinstruct:	dc.b "CHK INSTRUCTION    "
-.trapv:		dc.b "TRAPV INSTRUCTION  "
-.privilege:	dc.b "PRIVILEGE VIOLATION"
-.trace:		dc.b "TRACE              "
-.line1010:	dc.b "LINE 1010 EMULATOR "
-.line1111:	dc.b "LINE 1111 EMULATOR "
-		even
-
-; ===========================================================================
-
-ShowErrorValue:
-		move.w	#ArtTile_Error_Handler_Font+10,(a6)	; display "$" symbol
-		moveq	#8-1,d2
-
-.loop:
-		rol.l	#4,d0
-		bsr.s	.shownumber	; display 8 numbers
-		dbf	d2,.loop
-		rts
-; End of function ShowErrorValue
-; ===========================================================================
-
-.shownumber:
-		move.w	d0,d1
-		andi.w	#$F,d1
-		cmpi.w	#$A,d1
-		blo.s	.chars0to9
-		addq.w	#7,d1		; add 7 for characters A-F
-
-.chars0to9:
-		addi.w	#ArtTile_Error_Handler_Font,d1
-		move.w	d1,(a6)
-		rts
-; End of function sub_5CA
-; ===========================================================================
-
-ErrorWaitForC:
-		bsr.w	ReadJoypads
-		cmpi.b	#btnC,(v_jpadpress1).w ; is button C pressed?
-		bne.w	ErrorWaitForC	; if not, branch
-		rts
-; End of function ErrorWaitForC
-
-
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Uncompressed art text for debug mode, level select, and errors
@@ -660,7 +506,7 @@ VBlank:
 		jsr	VBlank_Index(pc,d0.w)		; jump to VBlank routine and then return here
 
 VBlank_Music:
-		jsr	(UpdateMusic).l			; run sound driver to advance music
+		SMPS_UpdateSoundDriver			; update SMPS ; warning: a5-a6 will be overwritten
 
 VBlank_Exit:
 		addq.l	#1,(v_vblank_count).w		; increment VBlank counter
@@ -796,7 +642,10 @@ VBlank_Paused:
 VBlank_Levels:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
 
 		tst.b	(f_wtr_state).w
 		bne.s	.waterabove
@@ -864,7 +713,11 @@ VBlank_UpdateScreen:
 VBlank_SpecialStage:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
+
 		writeCRAM	v_palette,0
 		writeVRAM	v_spritetablebuffer,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
@@ -894,7 +747,11 @@ VBlank_TitleCards:
 VBlank_Ending:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
+
 		tst.b	(f_wtr_state).w
 		bne.s	.waterabove
 
@@ -948,7 +805,7 @@ VBlank_PaletteFade:
 		bsr.w	VBlank_StandardTransfers
 		move.w	(v_hblank_hreg).w,(a5)
 		bra.w	ProcessPLC_9Tiles
-		
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -959,7 +816,11 @@ VBlank_PaletteFade:
 VBlank_Continue:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
+
 		writeCRAM	v_palette,0
 		writeVRAM	v_spritetablebuffer,vram_sprites
 		writeVRAM	v_hscrolltablebuffer,vram_hscroll
@@ -987,7 +848,10 @@ VBlank_Continue:
 VBlank_StandardTransfers:
 		stopZ80
 		waitZ80
+		stopZ802
+		waitZ802
 		bsr.w	ReadJoypads
+		startZ802
 
 		tst.b	(f_wtr_state).w			; is the screen completely underwater?
 		bne.s	.underwater			; if yes, branch
@@ -1038,7 +902,7 @@ HBlank:
 		clr.b	(f_doupdatesinhblank).w		; clear delayed updates flag
 		movem.l	d0-a6,-(sp)			; backup all registers except stack pointer (a7)
 		bsr.w	VBlank_UpdateScreen		; do all the screen updates that were skipped during VBlank now
-		jsr	(UpdateMusic).l			; update the sound driver
+		SMPS_UpdateSoundDriver			; update SMPS ; warning: a5-a6 will be overwritten
 		movem.l	(sp)+,d0-a6			; restore registers
 		rte					; return from horizontal interrupt and resume normal operation
 ; End of function HBlank
@@ -1052,11 +916,14 @@ HBlank:
 JoypadInit:
 		stopZ80					; request Z80 stop on
 		waitZ80					; wait until it has stopped
+		stopZ802				; "
+		waitZ802				; "
 		moveq	#$40,d0				; prepare intialise value
 		move.b	d0,(port_1_control).l		; init port 1 (joypad 1)
 		move.b	d0,(port_2_control).l		; init port 2 (joypad 2)
 		move.b	d0,(expansion_control).l	; init port 3 (expansion/extra)
-		startZ80				; request Z80 stop off
+		startZ802				; request Z80 stop off
+		startZ80				; "
 		rts					; return
 ; End of function JoypadInit
 
@@ -1194,41 +1061,10 @@ ClearScreen:
 
 		rts
 ; End of function ClearScreen
-
 ; ===========================================================================
-; ---------------------------------------------------------------------------
-; Subroutine to load the DAC driver
-; ---------------------------------------------------------------------------
 
-; SoundDriverLoad: <--- old misnomer
-DACDriverLoad:
-		nop					; delay
-		stopZ80                                 ; request Z80 stop on
-		deassertZ80Reset                        ; request Z80 reset off
-		lea	(DACDriver).l,a0                ; load compressed DAC driver address as source
-		lea	(z80_ram).l,a1	                ; set Z80 RAM address as target
-		bsr.w	KosDec		                ; decompress the DAC driver into Z80 RAM
-		assertZ80Reset                          ; request Z80 reset on
-		nop	                                ; delay (while the Z80 resets)
-		nop	                                ; ''
-		nop	                                ; ''
-		nop	                                ; ''
-		deassertZ80Reset                        ; request Z80 reset off
-		startZ80                                ; request Z80 stop off
-		rts                                     ; return
-; End of function DACDriverLoad
-
-; ===========================================================================
-; >>> Subroutines to queue sound commands to be executed by the sound driver during VBlank
-	; includes QueueSound1, QueueSound2, QueueSound3
-	; (formerly called PlaySound, PlaySound_Special, PlaySound_Unknown)
-	include	"_inc/Queue Sound Routines.asm"
-
-
-; ===========================================================================
-; >>> Subroutine to allow pausing the game
-	include	"_inc/PauseGame.asm"
-
+		include "sound/engine/Functions.asm"
+		include	"_inc/PauseGame.asm"
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -1283,8 +1119,8 @@ AddPLC:
 		move.w	(a1,d0.w),d0			; load correct relative add address
 		lea	(a1,d0.w),a1			; add and load actual address of list
 		lea	(v_plc_buffer).w,a2		; load PLC process list
-		
-.findspace:		
+
+.findspace:
 		tst.l	(a2)				; is this slot taken?
 		beq.s	.copytoRAM			; if not, branch
 		addq.w	#plc_slot_size,a2		; advance to next slot
@@ -1294,13 +1130,13 @@ AddPLC:
 .copytoRAM:
 		move.w	(a1)+,d0			; load size of list
 		bmi.s	.return				; if there is no list, branch
-		
-.loop:		
+
+.loop:
 		move.l	(a1)+,(a2)+			; copy Nemesis art address
 		move.w	(a1)+,(a2)+			; copy VRAM location to dump to
 		dbf	d0,.loop			; repeat for all entries
-		
-.return:		
+
+.return:
 		movem.l	(sp)+,a1-a2			; restore register data
 		rts					; return
 ; End of function AddPLC
@@ -1322,13 +1158,13 @@ NewPLC:
 		lea	(v_plc_buffer).w,a2		; load PLC process list
 		move.w	(a1)+,d0			; load size of list
 		bmi.s	.return				; if there is no list, branch
-		
-.loop:		
+
+.loop:
 		move.l	(a1)+,(a2)+			; copy Nemesis art address
 		move.w	(a1)+,(a2)+			; copy VRAM location to dump to
 		dbf	d0,.loop			; repeat for all entries
-		
-.return:		
+
+.return:
 		movem.l	(sp)+,a1-a2			; restore register data
 		rts					; return
 ; End of function NewPLC
@@ -1342,8 +1178,8 @@ NewPLC:
 ClearPLC:
 		lea	(v_plc_buffer).w,a2		; load PLC process list
 		moveq	#(v_plc_buffer_end-v_plc_buffer)/4-1,d0 ; set size of list
-		
-.loop:		
+
+.loop:
 		clr.l	(a2)+				; clear PLC process list
 		dbf	d0,.loop			; repeat until entire list is cleared
 		rts					; return
@@ -1410,7 +1246,7 @@ RunPLC:
 ProcessPLC_9Tiles:
 		tst.w	(v_plc_patternsleft).w		; is a section counter set (is art being decompressed)?
 		beq.w	ProcessPLC_Return		; if not, branch (nothing to decompress)
-		
+
 		move.w	#9,(v_plc_framepatternsleft).w	; set tile counter to 9 (number of tiles to decompress in a frame)
 		moveq	#0,d0				; clear d0
 		move.w	(v_plc_buffer_dest).w,d0	; load VRAM address for this frame
@@ -1422,7 +1258,7 @@ ProcessPLC_9Tiles:
 ProcessPLC_3Tiles:
 		tst.w	(v_plc_patternsleft).w		; is a section counter set (is art being decompressed)?
 		beq.s	ProcessPLC_Return		; if not, branch (nothing to decompress)
-		
+
 		move.w	#3,(v_plc_framepatternsleft).w	; set tile counter to 3 (number of tiles to decompress in a frame)
 		moveq	#0,d0				; clear d0
 		move.w	(v_plc_buffer_dest).w,d0	; load VRAM address for this frame
@@ -1456,7 +1292,7 @@ ProcessPLC:
 		beq.s	ProcessPLC_ShiftCue		; if decompression is finished, branch
 		subq.w	#1,(v_plc_framepatternsleft).w	; decrease tile counter
 		bne.s	.loop				; if still running, branch to decompress another tile
-		
+
 		move.l	a0,(v_plc_buffer).w		; store current entry address
 		move.l	a3,(v_plc_ptrnemcode).w		; store dumping routine to use (XOR/Non-XOR)
 		move.l	d0,(v_plc_repeatcount).w	; store RLE dump counter
@@ -1614,7 +1450,7 @@ PCycSega_FadeIn:
 
 		move.b	#4,(v_pcyc_time).w		; reset delay between fade-in increments
 		move.w	(v_pcyc_num).w,d0		; get current fade-in position
-		addi.w	#6*2,d0				; go to next set of colors 
+		addi.w	#6*2,d0				; go to next set of colors
 		cmpi.w	#(6*2)*4,d0			; have four color sets been done?
 		blo.s	.doFadeIn			; if not, do next fade-in step
 
@@ -1787,7 +1623,7 @@ WaitForVBlank:
 GM_Sega:
 		; fading out from previous game mode
 		move.b	#bgm_Stop,d0			; set stop music command
-		bsr.w	QueueSound2			; stop music
+		bsr.w	QueueSound1			; stop music
 		bsr.w	ClearPLC			; stop any potential in-progress PLC
 		bsr.w	PaletteFadeOut			; fade-out previous game mode
 ; ---------------------------------------------------------------------------
@@ -1840,17 +1676,17 @@ Sega_WaitPal:	; while light scanning effect is active
 ; ---------------------------------------------------------------------------
 
 		; while "SEGA" sound is playing
-		move.b	#sfx_Sega,d0			; set "SEGA" sound
-		bsr.w	QueueSound2			; queue it
+		move.b	#bgm_Sega,d0			; set "SEGA" sound
+		bsr.w	QueueSound1			; queue it
 		move.b	#id_VBlank_SegaPCM,(v_vblank_routine).w ; set VBlank routine to $14
 		bsr.w	WaitForVBlank			; wait for VBlank to play the sound (CPU is frozen here until sound finished playing)
 ; ---------------------------------------------------------------------------
 
 		; after sound has finished playing
-		move.w	#30,(v_generictimer).w		; wait 30 frames before automatic fade-out
+		move.w	#3*60,(v_generictimer).w	; wait 3 seconds before automatic fade-out
 
 Sega_WaitEnd:
-		move.b	#id_VBlank_Sega,(v_vblank_routine).w ; set VBlank routine to $02
+		move.b	#id_VBlank_SegaPCM,(v_vblank_routine).w ; set VBlank routine to $02
 		bsr.w	WaitForVBlank			; wait for VBlank to finish
 		tst.w	(v_generictimer).w		; has post-chant timer expired?
 		beq.s	Sega_GotoTitle			; if yes, go to title screen
@@ -1859,6 +1695,14 @@ Sega_WaitEnd:
 ; ---------------------------------------------------------------------------
 
 Sega_GotoTitle:	; transition to title screen
+		move.b	#bgm_Stop,d0			; set "stop SEGA" sound
+		bsr.w	QueueSound1			; queue it
+
+		; wait stop SEGA sound
+		move.b	#id_VBlank_Sega,(v_vblank_routine).w ; set VBlank routine to $02
+		bsr.w	WaitForVBlank			; wait for VBlank to finish
+
+		; exit
 		move.b	#id_Title,(v_gamemode).w	; go to title screen
 		rts
 ; End of function GM_Sega
@@ -1872,14 +1716,16 @@ Sega_GotoTitle:	; transition to title screen
 ; TitleScreen:
 GM_Title:	; fading out from previous game mode
 		move.b	#bgm_Stop,d0			; set stop music command
-		bsr.w	QueueSound2			; stop music
+		bsr.w	QueueSound1			; stop music
 		bsr.w	ClearPLC			; stop any potential in-progress PLC
 		bsr.w	PaletteFadeOut			; fade-out previous game mode
 ; ---------------------------------------------------------------------------
 
 		; screen setup and loading "SONIC TEAM PRESENTS" (STP) patterns
 		disable_ints				; disable ints while accessing the VDP
-		bsr.w	DACDriverLoad			; load Z80 driver
+
+;		bsr.w	DACDriverLoad			; load Z80 driver (this is used to force "SEGA" sample to stop, but we no longer need it)
+
 		lea	(vdp_control_port).l,a6		; load VDP control port
 		move.w	#$8004,(a6)			; 8-colour mode
 		move.w	#$8200+(vram_fg>>10),(a6)	; set foreground nametable address
@@ -1933,7 +1779,7 @@ GM_Title:	; fading out from previous game mode
 		lea	(vdp_data_port).l,a6		; load VDP data transfer port
 		locVRAM	ArtTile_Level_Select_Font*tile_size,4(a6) ; set target VRAM location for level select font
 		lea	(Art_Text).l,a5			; load uncompressed level select font
-		move.w	#(Art_Text_end-Art_Text)/2-1,d1	; set loop count for level select 
+		move.w	#(Art_Text_end-Art_Text)/2-1,d1	; set loop count for level select
 Tit_LoadText:
 		move.w	(a5)+,(a6)			; write one row of the level select font to VRAM
 		dbf	d1,Tit_LoadText			; loop until it's fully loaded
@@ -1990,10 +1836,10 @@ Tit_LoadText:
 		moveq	#palid_Title,d0			; load title screen palette...
 		bsr.w	PalLoad_Fade			; ...to fade-in buffer
 		move.b	#bgm_Title,d0			; set title screen music
-		bsr.w	QueueSound2			; play title screen music
+		bsr.w	QueueSound1			; play title screen music
 		move.b	#0,(f_debugmode).w		; disable debug mode (cheat remains active though)
 		move.w	#376,(v_generictimer).w		; run title screen for 376 frames (6 seconds plus some change)
-		
+
 	if FixBugs
 		; Fix the Press Start Button text
 		; https://info.sonicretro.org/SCHG_How-to:Display_the_Press_Start_Button_text
@@ -2023,7 +1869,7 @@ Tit_LoadText:
 		jsr	(ExecuteObjects).l		; load title screen objects
 		bsr.w	DeformLayers			; initialize background deformation before fade-in
 		jsr	(BuildSprites).l		; build sprites for the title screen objects before fade-in
-		moveq	#plcid_Main,d0			; load main patterns (rings, etc.) 
+		moveq	#plcid_Main,d0			; load main patterns (rings, etc.)
 		bsr.w	NewPLC				; (these get loaded once for the title screen and then never again, except when exiting Special Stages)
 
 		move.w	#0,(v_title_dcount).w		; clear D-Pad counter for title screen cheats
@@ -2077,7 +1923,7 @@ Tit_EnterCheat:
 		addq.w	#1,(v_title_dcount).w		; increment number of successful D-Pad cheat inputs
 		tst.b	d0				; has end of cheat code been reached? (0-entry in cheat)
 		bne.s	Tit_CountC			; if not, branch
-		
+
 Tit_ActivateCheat:
 		; (On JAPANESE consoles only) Activated cheat depends on the amount of times C was pressed:
 		; 0-1 level select -- 2-3 slow motion -- 4-5 debug mode -- 6-7: hidden Japanese credits / sound test skips
@@ -2096,7 +1942,7 @@ Tit_PlayRing:
 		move.b	#1,(a0,d1.w)			; activate cheat depending on C-press count
 		move.b	#sfx_Ring,d0			; set ring sound when code is entered
 		bsr.w	QueueSound2			; play it
-		bra.s	Tit_CountC			; skip over cheat reset 
+		bra.s	Tit_CountC			; skip over cheat reset
 ; ===========================================================================
 
 Tit_ResetCheat:
@@ -2167,12 +2013,12 @@ LevSel_SelectionMade:
 		cmpi.w	#levsel_sndtest_row,d0		; have you selected item $14 (sound test)?
 		bne.s	LevSel_Level_SS			; if not, go to Level/SS subroutine
 		move.w	(v_levselsound).w,d0		; get currently selected sound test entry
-		addi.w	#$80,d0				; make it $80-based
+;		addi.w	#$80,d0				; make it $80-based
 		tst.b	(f_creditscheat).w		; is Japanese Credits cheat on?
 		beq.s	LevSel_NoCheat			; if not, branch
-		cmpi.w	#$9F,d0				; is sound $9F being played?
+		cmpi.w	#$1F,d0				; is sound $9F being played?
 		beq.s	LevSel_Ending			; if yes, branch
-		cmpi.w	#$9E,d0				; is sound $9E being played?
+		cmpi.w	#$1E,d0				; is sound $9E being played?
 		beq.s	LevSel_Credits			; if yes, branch
 LevSel_NoCheat:
 	if FixBugs=0
@@ -2196,7 +2042,7 @@ LevSel_Ending:
 LevSel_Credits:
 		move.b	#id_Credits,(v_gamemode).w	; set screen mode to $1C (Credits)
 		move.b	#bgm_Credits,d0			; set credits music
-		bsr.w	QueueSound2			; play it
+		bsr.w	QueueSound1			; play it
 		move.w	#0,(v_creditsnum).w		; start at the first credits page
 		rts
 ; ===========================================================================
@@ -2240,7 +2086,7 @@ PlayLevel:
 		move.l	#5000,(v_scorelife).w		; extra life is awarded at 50000 points
 	endif
 		move.b	#bgm_Fade,d0			; set music fade-out command
-		bsr.w	QueueSound2			; fade out music
+		bsr.w	QueueSound1			; fade out music
 		rts					; return to MainGameLoop to start level
 ; End of function GM_Title
 
@@ -2345,7 +2191,7 @@ GotoDemo_ChkLoop:
 
 		; start loading demo now
 		move.b	#bgm_Fade,d0			; set music fade-out command
-		bsr.w	QueueSound2			; fade out music
+		bsr.w	QueueSound1			; fade out music
 
 		move.w	(v_demonum).w,d0		; load demo number
 		andi.w	#7,d0				; limit to four demo entries
@@ -2444,13 +2290,13 @@ LevSel_SndTest:
 		beq.s	LevSel_Right			; if not, branch
 		subq.w	#1,d0				; subtract 1 from sound test
 		bhs.s	LevSel_Right			; is result still positive? if yes, branch
-		moveq	#sfx__Last-$80,d0 		; if sound test moves below 0, set to last entry (non-$80 based)
+		moveq	#sfx__End,d0 			; if sound test moves below 0, set to last entry (non-$80 based)
 
 LevSel_Right:
 		btst	#bitR,d1			; is right pressed?
 		beq.s	LevSel_Refresh2			; if not, branch
 		addq.w	#1,d0				; add 1 to sound test
-		cmpi.w	#sfx__Last-$80+1,d0		; is result now past the last entry?
+		cmpi.w	#sfx__End+1,d0			; is result now past the last entry?
 		blo.s	LevSel_Refresh2			; if not, branch
 		moveq	#0,d0				; if sound test moves above last entry, set to 0
 
@@ -2470,7 +2316,7 @@ LevSel_NoMove:
 levsel_line_count:	equ 21	; total number of lines
 levsel_line_length:	equ 24	; characters per line
 levsel_sndtest_row:	equ levsel_line_count-1  ; row index of the sound test
-levsel_sndtest_col:	equ levsel_line_length-8 ; column offset for the sound test number 
+levsel_sndtest_col:	equ levsel_line_length-8 ; column offset for the sound test number
 
 levsel_start_row:	equ 4	; top tile offset for start position
 levsel_start_col:	equ 8	; left tile offset for start position
@@ -2525,9 +2371,9 @@ LevSelTextLoad:
 LevSel_DrawSnd:
 		locVRAM	levsel_vram_sndtestnum		; write sound test number position to VRAM
 		move.w	(v_levselsound).w,d0		; get currently selected sound test number
-		addi.w	#$80,d0				; make sound ID to be drawn $80-based
+;		addi.w	#$80,d0				; make sound ID to be drawn $80-based
 		move.b	d0,d2				; backup number
-		lsr.b	#4,d0				; move first digit to lower nybble 
+		lsr.b	#4,d0				; move first digit to lower nybble
 		bsr.w	LevSel_ChgSnd			; draw 1st digit
 		move.b	d2,d0				; restore backup
 		bsr.w	LevSel_ChgSnd			; draw 2nd digit
@@ -2660,7 +2506,7 @@ GM_Level:	; fading out from previous game mode
 		tst.w	(f_demo).w			; is an ending sequence demo running?
 		bmi.s	Level_NoMusicFade		; if yes, don't fade out music
 		move.b	#bgm_Fade,d0			; queue music fade-out command
-		bsr.w	QueueSound2			; fade out music
+		bsr.w	QueueSound1			; fade out music
 
 Level_NoMusicFade:
 		bsr.w	ClearPLC			; clear any remaining PLC entries
@@ -2801,7 +2647,7 @@ Level_CheckTtlCard:
 
 	if FixBugs
 		; Do VBlank for one extra frame to provide enough processing time
-		; for the remaining data initialization below. Without it, it's 
+		; for the remaining data initialization below. Without it, it's
 		; possible for VBlank to interrupt in the middle of a transfer,
 		; resulting in visual corruption. This will also make title cards
 		; smoother should decompression get upgraded with something faster.
@@ -2819,7 +2665,7 @@ Level_SkipTtlCard:
 		bset	#2,(v_fg_scroll_flags).w	; draw an extra column at the left side of the screen during level start
 		bsr.w	LevelDataLoad			; load block mappings and palettes
 		bsr.w	LoadTilesFromStart		; fully draw the foreground and background once before fade-in
-		jsr	(ConvertCollisionArray).l	; call a routine that immediately returns (this is a disabled development function) 
+		jsr	(ConvertCollisionArray).l	; call a routine that immediately returns (this is a disabled development function)
 		bsr.w	ColIndexLoad			; set collision index for current zone
 		bsr.w	LZWaterFeatures			; initialize water features if zone is LZ
 
@@ -3332,7 +3178,7 @@ SS_FinLoop_NoBrighten:
 
 		moveq	#palid_SSResult,d0		; load Special Stage results screen palette...
 		bsr.w	PalLoad				; ...directly to active palette
-		moveq	#plcid_Main,d0			; load main patterns (rings, etc.) 
+		moveq	#plcid_Main,d0			; load main patterns (rings, etc.)
 		bsr.w	NewPLC				; add to new PLC queue
 		moveq	#plcid_SSResult,d0		; load Special Stage results screen patterns
 		bsr.w	AddPLC				; add to PLC queue
@@ -3511,7 +3357,7 @@ Cont_GotoLevel:
 GM_Ending:
 		; fading out from previous game mode
 		move.b	#bgm_Stop,d0			; set stop music command
-		bsr.w	QueueSound2			; stop music
+		bsr.w	QueueSound1			; stop music
 		bsr.w	PaletteFadeOut			; fade-out previous game mode
 ; ---------------------------------------------------------------------------
 
@@ -3638,7 +3484,7 @@ End_MainLoop:
 
 		move.b	#id_Credits,(v_gamemode).w	; change game mode to credits
 		move.b	#bgm_Credits,d0			; play credits music
-		bsr.w	QueueSound2			; play it
+		bsr.w	QueueSound1			; play it
 		move.w	#0,(v_creditsnum).w		; set credits page number to 0 ("Sonic Team Staff")
 		rts					; return to MainGameLoop
 ; ===========================================================================
@@ -3654,7 +3500,7 @@ End_ChkEmerald:
 		clr.w	(v_palchgspeed).w		; trigger the first brightening immediately
 ; ---------------------------------------------------------------------------
 
-		
+
 End_AllEmlds:	; during the slow white-in
 		bsr.w	PauseGame			; still allow pausing the game
 		move.b	#id_VBlank_Ending,(v_vblank_routine).w ; set VBlank routine to $18
@@ -4395,7 +4241,7 @@ Map_Pri:	include	"_maps/Prison Capsule.asm"
 
 ; ===========================================================================
 ; >>> Special Stage rendering and objects
-		include	"_inc/Special Stage Loading & Drawing.asm" ; includes the subroutines "SS_ShowLayout", "SS_AniWallsRings", 
+		include	"_inc/Special Stage Loading & Drawing.asm" ; includes the subroutines "SS_ShowLayout", "SS_AniWallsRings",
 								   ; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
 SS_MapIndex:	include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
 SS_MapIndex_End:
@@ -5114,7 +4960,7 @@ Art_BigRing:	binclude	"artunc/Giant Ring.unc"
 	if PaddingOptimization=0
 		align	$100
 	endif
-	
+
 ; ---------------------------------------------------------------------------
 ; Sprite locations index
 ; ---------------------------------------------------------------------------
@@ -5295,13 +5141,46 @@ ObjPos_Null:	dc.b $FF, $FF, 0, 0, 0,	0
 			dcb.b	$63C+$416,$FF
 		endif
 	endif
-		
-; ---------------------------------------------------------------------------
-
-SoundDriver:	include "s1.sounddriver.asm"
-		even
 
 ; ---------------------------------------------------------------------------
+
+; ---------------------------------------------------------------------------
+; Vladikcomper's Mega PCM 2.1 - DAC Sound Driver
+; ---------------------------------------------------------------------------
+
+		include "sound/engine/MegaPCM.asm"
+		include "sound/MegaPCM - DAC Table.asm"
+		include "sound/DAC Samples.asm"
+
+; ---------------------------------------------------------------------------
+; Clone sound driver subroutines
+; ---------------------------------------------------------------------------
+
+		include "sound/engine/Sonic 2 Clone Driver v2.asm"
+
+	if MSUMode
+
+; ---------------------------------------------------------------------------
+; MegaCD Driver
+; ---------------------------------------------------------------------------
+
+		include "sound/MSU/MSU.asm"
+
+	endif
+
+; --------------------------------------------------------------
+; Debugging modules
+; --------------------------------------------------------------
+
+		include "ErrorHandler/ErrorHandler.asm"
+
+; ---------------------------------------------------------------
+; WARNING!
+;	DO NOT put any data from now on! DO NOT use ROM padding!
+;	Symbol data should be appended here after ROM is compiled
+;	by ConvSym utility, otherwise debugger modules won't be able
+;	to resolve symbol names.
+; ---------------------------------------------------------------
 
 ; end of 'ROM'
 EndOfRom:
