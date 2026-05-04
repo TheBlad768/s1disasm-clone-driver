@@ -185,7 +185,7 @@ Sonic_Display:
 		move.w	#$80,(v_sonspeeddec).w			; restore Sonic's deceleration
 		move.b	#0,(v_shoes).w				; cancel speed shoes
 		move.w	#bgm_Slowdown,d0			; resume music...
-		jmp	(QueueSound1).l				; ...at normal speed
+		jmp	(QueueSound2).l				; ...at normal speed
 ; ===========================================================================
 
 ; Obj01_ExitChk:

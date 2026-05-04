@@ -1,5 +1,3 @@
-	include "s1.sounddriver.ram.asm"
-
 ; sign-extends a 32-bit integer to 64-bit
 ; all RAM addresses are run through this function to allow them to work in both 16-bit and 32-bit addressing modes
 ramaddr function x,(-(x&$80000000)<<1)|x
@@ -105,8 +103,11 @@ v_endeggman:	equ	v_objspace+object_size*2	; object variable space for Eggman aft
 v_tryagain:	equ	v_objspace+object_size*3	; object variable space for the "TRY AGAIN" text ($40 bytes)
 v_eggmanchaos:	equ	v_objspace+object_size*32	; object variable space for the emeralds juggled by Eggman ($180 bytes)
 
-v_snddriver_ram:	SMPS_RAM		; sound driver state
-			ds.b	$40		; unused
+Snd_driver_RAM:			ds.b $400	; $FFFFF100-$FFFFF5FF ; unused, leftover from the Sonic 1 sound driver (and used by it when you port it to Sonic 2)
+Snd_driver_RAM_end		= *
+SegaCD_Mode:		= Snd_driver_RAM+$3F0
+
+			ds.b	$200		; unused
 
 v_gamemode:		ds.b	1		; game mode (00=Sega; 04=Title; 08=Demo; 0C=Level; 10=SS; 14=Cont; 18=End; 1C=Credit; +8C=PreLevel)
 			ds.b	1		; unused

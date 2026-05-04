@@ -78,7 +78,7 @@ Pow_ChkShoes:
 		move.w	#$18,(v_sonspeedacc).w	; change Sonic's acceleration
 		move.w	#$80,(v_sonspeeddec).w	; change Sonic's deceleration
 		move.w	#bgm_Speedup,d0
-		jmp	(QueueSound1).l		; Speed up the music
+		jmp	(PlaySound).l		; Speed up the music
 ; ===========================================================================
 
 Pow_ChkShield:
@@ -88,7 +88,7 @@ Pow_ChkShield:
 		move.b	#1,(v_shield).w	; give Sonic a shield
 		move.b	#id_ShieldItem,(v_shieldobj).w ; load shield object ($38)
 		move.w	#sfx_Shield,d0
-		jmp	(QueueSound1).l	; play shield sound
+		jmp	(QueueSound2).l	; play shield sound
 ; ===========================================================================
 
 Pow_ChkInvinc:
@@ -136,20 +136,20 @@ Pow_ChkRings:
 
 Pow_RingSound:
 		move.w	#sfx_Ring,d0
-		jmp	(QueueSound1).l	; play ring sound
+		jmp	(QueueSound2).l	; play ring sound
 ; ===========================================================================
 
 Pow_ChkS:
 		cmpi.b	#7,d0		; does monitor contain 'S'?
 		bne.s	Pow_ChkGoggles
-		nop	
+		nop
 
 Pow_ChkGoggles:
 ; Uncomment these lines to set up the goggles monitor to work with it
 	;	cmpi.b	#8,d0		; does monitor contain goggles?
 	;	bne.s	Pow_ChkEnd
-	;	nop	
-	
+	;	nop
+
 Pow_ChkEnd:
 		rts		; 'S' and goggles monitors do nothing
 ; ===========================================================================
