@@ -322,8 +322,10 @@ v_palette_fading_end:
 
 v_objstate:		ds.b	$C0		; object state list
 v_objstate_end:
-			ds.b	$140		; stack
-v_systemstack:
+
+v_systemstack_end:	ds.b	$140		; system stack end (items get added backwards)
+v_systemstack:					; system stack start
+
 v_crossresetram:				; RAM beyond this point is only cleared on a cold-boot
 			ds.b	2		; unused
 f_restart:		ds.w	1		; restart level flag
