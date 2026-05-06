@@ -598,7 +598,7 @@ ErrorWaitForC:
 ; (formerly "menutext.bin")
 ; ---------------------------------------------------------------------------
 
-Art_Text:	bincludeEndMarker	"artunc/Level Select & Debug Text.bin" 
+Art_Text:	bincludeEndMarker	"artunc/Level Select & Debug Text.unc" 
 
 
 ; ===========================================================================
@@ -3216,6 +3216,7 @@ GM_Special:	; white fade-out from previous game mode
 		moveq	#palid_Special,d0		; load special stage palette...
 		bsr.w	PalLoad_Fade			; ...into the palette fade-in buffer
 		jsr	(SS_Load).l			; load SS layout data (based on last stage entered and collected emeralds)
+
 		move.l	#0,(v_screenposx).w		; reset X-camera position
 		move.l	#0,(v_screenposy).w		; reset Y-camera position
 		move.b	#id_SonicSpecial,(v_player).w	; load special stage Sonic object
@@ -4418,9 +4419,9 @@ Map_HUD:	include	"_maps/HUD.asm"
 		include	"_incObj/sub AddPoints.asm"
 		include	"_inc/HUD Update.asm"	; includes "ContScrCounter" subroutine
 
-Art_Hud:	binclude "artunc/HUD Numbers.bin" ; 8x16 pixel numbers on HUD
+Art_Hud:	binclude "artunc/HUD Numbers.unc" ; 8x16 pixel numbers on HUD
 		even
-Art_LivesNums:	binclude "artunc/Lives Counter Numbers.bin" ; 8x8 pixel numbers on lives counter
+Art_LivesNums:	binclude "artunc/Lives Counter Numbers.unc" ; 8x8 pixel numbers on lives counter
 		even
 
 
@@ -4492,7 +4493,7 @@ Map_Sonic:	include	"_maps/Sonic.asm"
 
 SonicDynPLC:	include	"_maps/Sonic - Dynamic Gfx Script.asm"
 
-Art_Sonic:	binclude	"artunc/Sonic.bin"	; Sonic
+Art_Sonic:	binclude	"artunc/Sonic.unc"	; Sonic
 		even
 
 ; ---------------------------------------------------------------------------
@@ -4970,19 +4971,19 @@ SS_6:		binclude	"sslayout/6 (REV01).eni"
 ; ---------------------------------------------------------------------------
 ; Animated uncompressed graphics
 ; ---------------------------------------------------------------------------
-Art_GhzWater:	binclude	"artunc/GHZ Waterfall.bin"
+Art_GhzWater:	binclude	"artunc/GHZ Waterfall.unc"
 		even
-Art_GhzFlower1:	binclude	"artunc/GHZ Flower Large.bin"
+Art_GhzFlower1:	binclude	"artunc/GHZ Flower Large.unc"
 		even
-Art_GhzFlower2:	binclude	"artunc/GHZ Flower Small.bin"
+Art_GhzFlower2:	binclude	"artunc/GHZ Flower Small.unc"
 		even
-Art_MzLava1:	binclude	"artunc/MZ Lava Surface.bin"
+Art_MzLava1:	binclude	"artunc/MZ Lava Surface.unc"
 		even
-Art_MzLava2:	binclude	"artunc/MZ Lava.bin"
+Art_MzLava2:	binclude	"artunc/MZ Lava.unc"
 		even
-Art_MzTorch:	binclude	"artunc/MZ Background Torch.bin"
+Art_MzTorch:	binclude	"artunc/MZ Background Torch.unc"
 		even
-Art_SbzSmoke:	binclude	"artunc/SBZ Background Smoke.bin"
+Art_SbzSmoke:	binclude	"artunc/SBZ Background Smoke.unc"
 		even
 
 ; ---------------------------------------------------------------------------
@@ -5116,7 +5117,7 @@ Level_EndUnk:	dc.l 0
 ; ---------------------------------------------------------------------------
 ; Uncompressed graphics - Giant Rings
 ; ---------------------------------------------------------------------------
-Art_BigRing:	binclude	"artunc/Giant Ring.bin"
+Art_BigRing:	binclude	"artunc/Giant Ring.unc"
 		even
 
 ; ---------------------------------------------------------------------------
