@@ -659,7 +659,7 @@
                     ],
                     "format": "Sonic 2.js",
                     "art": {
-                        "path": "../artunc/Sonic.bin",
+                        "path": "../artunc/Sonic.unc",
                         "compression": "Uncompressed",
                         "offset": 0
                     },
@@ -841,7 +841,7 @@
                     ],
                     "format": "Sonic 1.js",
                     "art": {
-                        "path": "../artunc/Giant Ring.bin",
+                        "path": "../artunc/Giant Ring.unc",
                         "compression": "Uncompressed",
                         "offset": 0
                     },
@@ -4164,7 +4164,7 @@
                                 }
                             ],
                             "art": {
-                                "path": "../artunc/HUD Numbers.bin",
+                                "path": "../artunc/HUD Numbers.unc",
                                 "compression": "Uncompressed",
                                 "offset": 0
                             },
@@ -4190,7 +4190,7 @@
                                 }
                             ],
                             "art": {
-                                "path": "../artunc/Lives Counter Numbers.bin",
+                                "path": "../artunc/Lives Counter Numbers.unc",
                                 "compression": "Uncompressed",
                                 "offset": 0
                             },
@@ -4208,7 +4208,7 @@
                         },
                         {
                             "format": "Sonic 1.js",
-                            "name": "Debug Font",
+                            "name": "Debug & Level Select Font",
                             "palettes": [
                                 {
                                     "path": "../palette/Sonic.bin",
@@ -4216,7 +4216,7 @@
                                 }
                             ],
                             "art": {
-                                "path": "../artunc/Level Select & Debug Text.bin",
+                                "path": "../artunc/Level Select & Debug Text.unc",
                                 "compression": "Uncompressed",
                                 "offset": 0
                             },
