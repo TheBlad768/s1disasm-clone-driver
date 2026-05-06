@@ -11,7 +11,7 @@
 ; ===========================================================================
 ; ASSEMBLY OPTIONS:
 
-Revision = 0
+Revision = 1
 ; 	| If 0, build the original version of the game, dubbed REV00
 ; 	| If 1, build the later version, dubbed REV01, which includes various bugfixes and enhancements
 ; 	| If 2, build the hacked version from Sonic Mega Collection, dubbed REVXB,
@@ -3167,7 +3167,6 @@ Demo_SS:	include	"demodata/Intro - Special Stage.asm"
 
 ; SpecialStage:
 GM_Special:	; white fade-out from previous game mode
-		move.b	#5,(v_lastspecial).w
 		move.w	#sfx_EnterSS,d0			; set special stage entry sound
 		bsr.w	QueueSound2			; play it
 		bsr.w	PaletteWhiteOut			; fade-out to white
@@ -3199,20 +3198,6 @@ GM_Special:	; white fade-out from previous game mode
 		moveq	#palid_Special,d0		; load special stage palette...
 		bsr.w	PalLoad_Fade			; ...into the palette fade-in buffer
 		jsr	(SS_Load).l			; load SS layout data (based on last stage entered and collected emeralds)
-
-
-		move.b	#$FF,d3
-		lea	($FF1020).l,a1		; load SS blocks into a1
-		moveq	#$3F,d1			; set normal loop
-.Loop2:		moveq	#$3F,d2			; set alternate loop
-.Loop:		cmp.b	(a1)+,d3		; is the item a	matching block?
-		bne.s	.NoReplace		; if not, branch
-		move.b	#$34,-1(a1)		; delete block
-.NoReplace:	dbf	d2,.Loop		; loop
-		lea	$40(a1),a1		; increase pointer by $40
-		dbf	d1,.Loop2		; loop
-
-
 
 		move.l	#0,(v_screenposx).w		; reset X-camera position
 		move.l	#0,(v_screenposy).w		; reset Y-camera position
