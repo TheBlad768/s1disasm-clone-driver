@@ -79,7 +79,7 @@ Glass_Main:	; Routine 0
 
 Glass_Block012:	; Routine 2
 		bsr.w	Glass_Types
-		move.w	#$2B,d1
+		move.w	#$20+sonic_solid_width,d1
 		move.w	#$48,d2
 		move.w	#$49,d3
 		move.w	obX(a0),d4
@@ -95,7 +95,7 @@ Glass_Reflect012:
 
 Glass_Block34:	; Routine 6
 		bsr.w	Glass_Types
-		move.w	#$2B,d1
+		move.w	#$20+sonic_solid_width,d1
 		move.w	#$38,d2
 		move.w	#$39,d3
 		move.w	obX(a0),d4

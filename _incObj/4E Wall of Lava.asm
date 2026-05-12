@@ -75,7 +75,7 @@ LWall_Action:	; Routine 4
 		subq.b	#2,obRoutine(a0)
 
 LWall_Solid:	; Routine 2
-		move.w	#$2B,d1
+		move.w	#$20+sonic_solid_width,d1
 		move.w	#$18,d2
 		move.w	d2,d3
 		addq.w	#1,d3

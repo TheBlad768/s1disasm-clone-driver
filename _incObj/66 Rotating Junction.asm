@@ -54,7 +54,7 @@ Jun_Action:	; Routine 2
 		bsr.w	Jun_ChkSwitch
 		tst.b	obRender(a0)
 		bpl.w	Jun_Display
-		move.w	#$30,d1
+		move.w	#$25+sonic_solid_width,d1
 		move.w	d1,d2
 		move.w	d2,d3
 		addq.w	#1,d3

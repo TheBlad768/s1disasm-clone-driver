@@ -47,7 +47,7 @@ loc_1A850:
 		move.b	#$3E,obSubtype(a0)
 
 loc_1A86C:
-		move.w	#$13,d1
+		move.w	#8+sonic_solid_width,d1
 		move.w	#8,d2
 		move.w	#$11,d3
 		move.w	obX(a0),d4

@@ -160,7 +160,7 @@ SpinC_Solid:	; Routine 2
 		bne.s	loc_16404
 		move.w	obX(a0),-(sp)
 		bsr.w	loc_16424
-		move.w	#$1B,d1
+		move.w	#$10+sonic_solid_width,d1
 		move.w	#7,d2
 		move.w	d2,d3
 		addq.w	#1,d3

@@ -67,7 +67,7 @@ FFloor_Solid:
 		sub.w	d0,d4
 		move.b	d0,obActWid(a0)
 		move.w	d4,obX(a0)
-		moveq	#$B,d1
+		moveq	#sonic_solid_width,d1
 		add.w	d0,d1
 		moveq	#$10,d2
 		moveq	#$11,d3

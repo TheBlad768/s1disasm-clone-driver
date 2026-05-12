@@ -51,7 +51,7 @@ Spik_Solid:	; Routine 2
 ; Spikes types $1x and $5x face sideways
 
 Spik_SideWays:
-		move.w	#$1B,d1
+		move.w	#$10+sonic_solid_width,d1
 		move.w	d2,d3
 		addq.w	#1,d3
 		move.w	obX(a0),d4
@@ -82,7 +82,7 @@ Spik_SideWays:
 Spik_Upright:
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		move.w	#$10,d2
 		move.w	#$11,d3
 		move.w	obX(a0),d4

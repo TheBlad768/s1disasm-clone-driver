@@ -175,7 +175,7 @@ loc_19F10:
 		bset	#0,obStatus(a0)
 
 loc_19F2E:
-		move.w	#$2B,d1
+		move.w	#$20+sonic_solid_width,d1
 		move.w	#$14,d2
 		move.w	#$14,d3
 		move.w	obX(a0),d4
@@ -411,7 +411,7 @@ loc_1A166:
 loc_1A172:
 		cmpi.b	#$C,objoff_34(a0)
 		bge.s	locret_1A190
-		move.w	#$1B,d1
+		move.w	#$10+sonic_solid_width,d1
 		move.w	#$70,d2
 		move.w	#$71,d3
 		move.w	obX(a0),d4

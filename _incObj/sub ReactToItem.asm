@@ -6,18 +6,18 @@ ReactToItem:
 		nop	
 		move.w	obX(a0),d2	; load Sonic's x-axis position
 		move.w	obY(a0),d3	; load Sonic's y-axis position
-		subq.w	#8,d2
+		subq.w	#sonic_react_width,d2
 		moveq	#0,d5
 		move.b	obHeight(a0),d5	; load Sonic's height
 		subq.b	#3,d5
 		sub.w	d5,d3
 		cmpi.b	#fr_Duck,obFrame(a0) ; is Sonic ducking?
 		bne.s	.notducking	; if not, branch
-		addi.w	#$C,d3
-		moveq	#$A,d5
+		addi.w	#((sonic_height-3)-sonic_duck_height)*2,d3
+		moveq	#sonic_duck_height,d5
 
 .notducking:
-		move.w	#$10,d4
+		move.w	#sonic_react_width*2,d4
 		add.w	d5,d5
 		lea	(v_lvlobjspace).w,a1 ; set object RAM start address
 		move.w	#(v_lvlobjend-v_lvlobjspace)/$40-1,d6

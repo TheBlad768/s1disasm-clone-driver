@@ -50,7 +50,7 @@ LGrass_Action:	; Routine 2
 		beq.s	LGrass_Solid
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		bsr.w	ExitPlatform
 		btst	#3,obStatus(a1)
 		bne.w	LGrass_Slope
@@ -61,7 +61,7 @@ LGrass_Action:	; Routine 2
 LGrass_Slope:
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		movea.l	objoff_30(a0),a2
 		move.w	obX(a0),d2
 		bsr.w	SlopeObject2
@@ -71,7 +71,7 @@ LGrass_Slope:
 LGrass_Solid:
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		move.w	#$20,d2
 		cmpi.b	#2,obFrame(a0)
 		bne.s	loc_AF8E

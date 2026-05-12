@@ -31,7 +31,7 @@ But_IsMZ:
 But_Pressed:	; Routine 2
 		tst.b	obRender(a0)
 		bpl.s	But_Display
-		move.w	#$1B,d1
+		move.w	#$10+sonic_solid_width,d1
 		move.w	#5,d2
 		move.w	#5,d3
 		move.w	obX(a0),d4

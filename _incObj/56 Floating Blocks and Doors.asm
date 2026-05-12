@@ -117,7 +117,7 @@ FBlock_Action:	; Routine 2
 		bpl.s	.chkdel
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		moveq	#0,d2
 		move.b	obHeight(a0),d2
 		move.w	d2,d3
