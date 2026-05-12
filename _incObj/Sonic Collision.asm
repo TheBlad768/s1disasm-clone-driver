@@ -194,7 +194,7 @@ Sonic_FindFloor_Quick_UsePos: ; not called from anywhere
 
 ; loc_14DF0:
 Sonic_FindFloor_Quick:
-		addi.w	#$A,d2
+		addi.w	#sonic_quick_size,d2
 		lea	(v_anglebuffer).w,a4			; write angle here
 		movea.w	#$10,a3					; tile height
 		move.w	#0,d6
@@ -296,7 +296,7 @@ Sonic_FindWallRight_Quick_UsePos:
 
 ; loc_14EBC:
 Sonic_FindWallRight_Quick:
-		addi.w	#$A,d3
+		addi.w	#sonic_quick_size,d3
 		lea	(v_anglebuffer).w,a4			; write angle here
 		movea.w	#$10,a3					; tile height
 		move.w	#0,d6
@@ -424,7 +424,7 @@ Sonic_FindCeiling_Quick_UsePos: ; not called from anywhere
 
 ; loc_14F7C:
 Sonic_FindCeiling_Quick:
-		subi.w	#$A,d2
+		subi.w	#sonic_quick_size,d2
 		eori.w	#$F,d2
 		lea	(v_anglebuffer).w,a4			; write angle here
 		movea.w	#-$10,a3				; tile height
@@ -555,7 +555,7 @@ Sonic_FindWallLeft_Quick_UsePos:
 
 ; loc_1504A:
 Sonic_FindWallLeft_Quick:
-		subi.w	#$A,d3
+		subi.w	#sonic_quick_size,d3
 		eori.w	#$F,d3
 		lea	(v_anglebuffer).w,a4			; write angle here
 		movea.w	#-$10,a3				; tile height

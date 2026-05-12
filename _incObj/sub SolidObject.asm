@@ -2,7 +2,7 @@
 ; Solid object subroutine (includes spikes, blocks, rocks etc)
 ;
 ; input:
-;	d1 = width
+;	d1 = width / 2 + player width / 2
 ;	d2 = height / 2 (when jumping)
 ;	d3 = height / 2 (when walking)
 ;	d4 = x-axis position

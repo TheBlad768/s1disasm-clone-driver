@@ -75,7 +75,7 @@ loc_19718:
 ; ===========================================================================
 
 BossBlock_Solid:
-		move.w	#$1B,d1
+		move.w	#$10+sonic_solid_width,d1
 		move.w	#$10,d2
 		move.w	#$11,d3
 		move.w	obX(a0),d4

@@ -26,8 +26,8 @@ SonicSS_Index:	dc.w SonicSS_Main-SonicSS_Index
 ; Obj09_Main:
 SonicSS_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.b	#$E,obHeight(a0)
-		move.b	#7,obWidth(a0)
+		move.b	#sonic_roll_height,obHeight(a0)
+		move.b	#sonic_roll_width,obWidth(a0)
 		move.l	#Map_Sonic,obMap(a0)
 		move.w	#ArtTile_Sonic,obGfx(a0)
 		move.b	#4,obRender(a0)

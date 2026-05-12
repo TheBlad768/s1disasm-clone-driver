@@ -21,7 +21,7 @@ Rock_Main:	; Routine 0
 		move.b	#4,obPriority(a0)
 
 Rock_Solid:	; Routine 2
-		move.w	#$1B,d1
+		move.w	#$10+sonic_solid_width,d1
 		move.w	#$10,d2
 		move.w	#$10,d3
 		move.w	obX(a0),d4

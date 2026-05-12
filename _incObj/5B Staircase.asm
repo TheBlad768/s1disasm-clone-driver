@@ -78,7 +78,7 @@ Stair_Solid:	; Routine 4
 		move.w	d0,obY(a0)
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		move.w	#$10,d2
 		move.w	#$11,d3
 		move.w	obX(a0),d4

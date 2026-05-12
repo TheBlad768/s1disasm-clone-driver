@@ -57,7 +57,7 @@ PushB_Action:	; Routine 2
 		bne.w	loc_C046
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		move.w	#$10,d2
 		move.w	#$11,d3
 		move.w	obX(a0),d4
@@ -178,7 +178,7 @@ loc_C0D6:
 loc_C0E6:
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		move.w	#$10,d2
 		move.w	#$11,d3
 		move.w	(sp)+,d4

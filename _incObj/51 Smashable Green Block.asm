@@ -30,7 +30,7 @@ sonicAniFrame = objoff_32		; Sonic's current animation number
 
 		move.w	(v_itembonus).w,objoff_34(a0)
 		move.b	(v_player+obAnim).w,sonicAniFrame(a0) ; load Sonic's animation number
-		move.w	#$1B,d1
+		move.w	#$10+sonic_solid_width,d1
 		move.w	#$10,d2
 		move.w	#$11,d3
 		move.w	obX(a0),d4
@@ -47,8 +47,8 @@ sonicAniFrame = objoff_32		; Sonic's current animation number
 		bne.s	.notspinning	; if not, branch
 		move.w	.count(a0),(v_itembonus).w
 		bset	#2,obStatus(a1)
-		move.b	#$E,obHeight(a1)
-		move.b	#7,obWidth(a1)
+		move.b	#sonic_roll_height,obHeight(a1)
+		move.b	#sonic_roll_width,obWidth(a1)
 		move.b	#id_Roll,obAnim(a1) ; make Sonic roll
 		move.w	#-$300,obVelY(a1) ; rebound Sonic
 		bset	#1,obStatus(a1)

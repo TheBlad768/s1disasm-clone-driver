@@ -56,7 +56,7 @@ Pri_Main:	; Routine 0
 Pri_BodyMain:	; Routine 2
 		cmpi.b	#2,(v_bossstatus).w
 		beq.s	.chkopened
-		move.w	#$2B,d1
+		move.w	#$20+sonic_solid_width,d1
 		move.w	#$18,d2
 		move.w	#$18,d3
 		move.w	obX(a0),d4
@@ -76,7 +76,7 @@ Pri_BodyMain:	; Routine 2
 ; ===========================================================================
 
 Pri_Switched:	; Routine 4
-		move.w	#$17,d1
+		move.w	#$C+sonic_solid_width,d1
 		move.w	#8,d2
 		move.w	#8,d3
 		move.w	obX(a0),d4

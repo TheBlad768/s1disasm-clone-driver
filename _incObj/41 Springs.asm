@@ -71,7 +71,7 @@ loc_DB72:
 ; ===========================================================================
 
 Spring_Up:	; Routine 2
-		move.w	#$1B,d1
+		move.w	#$10+sonic_solid_width,d1
 		move.w	#8,d2
 		move.w	#$10,d3
 		move.w	obX(a0),d4
@@ -106,7 +106,7 @@ Spring_ResetUp:	; Routine 6
 ; ===========================================================================
 
 Spring_LR:	; Routine 8
-		move.w	#$13,d1
+		move.w	#8+sonic_solid_width,d1
 		move.w	#$E,d2
 		move.w	#$F,d3
 		move.w	obX(a0),d4
@@ -156,7 +156,7 @@ Spring_ResetLR:	; Routine $C
 ; ===========================================================================
 
 Spring_Dwn:	; Routine $E
-		move.w	#$1B,d1
+		move.w	#$10+sonic_solid_width,d1
 		move.w	#8,d2
 		move.w	#$10,d3
 		move.w	obX(a0),d4

@@ -75,7 +75,7 @@ SStom_Main:	; Routine 0
 SStom_Solid:	; Routine 2
 		move.w	obX(a0),-(sp)
 		bsr.w	SStom_Move
-		move.w	#$17,d1
+		move.w	#$C+sonic_solid_width,d1
 		move.w	#$20,d2
 		move.w	#$20,d3
 		move.w	(sp)+,d4

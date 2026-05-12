@@ -119,7 +119,7 @@ CStom_Block:	; Routine 2
 		move.w	obY(a0),(v_obj31ypos).w
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		move.w	#$C,d2
 		move.w	#$D,d3
 		move.w	obX(a0),d4
