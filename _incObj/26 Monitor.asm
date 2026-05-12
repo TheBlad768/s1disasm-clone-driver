@@ -48,7 +48,7 @@ Mon_Solid:	; Routine 2
 		; 2nd Routine 2
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
-		addi.w	#$B,d1
+		addi.w	#sonic_solid_width,d1
 		bsr.w	ExitPlatform
 		btst	#3,obStatus(a1) ; is Sonic on top of the monitor?
 		bne.w	.ontop		; if yes, branch
@@ -75,7 +75,7 @@ Mon_Solid:	; Routine 2
 ; ===========================================================================
 
 .normal:	; 2nd Routine 0
-		move.w	#$1A,d1
+		move.w	#$F+sonic_solid_width,d1
 		move.w	#$F,d2
 		bsr.w	Mon_SolidSides
 		beq.w	loc_A25C

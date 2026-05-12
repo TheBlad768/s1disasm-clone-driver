@@ -460,7 +460,7 @@ ScrollVertical:
 		sub.w	(v_screenposy).w,d0 ; Sonic's distance from top of screen
 		btst	#2,(v_player+obStatus).w ; is Sonic rolling?
 		beq.s	SV_NotRolling	; if not, branch
-		subq.w	#5,d0
+		subq.w	#sonic_height-sonic_roll_height,d0
 
 SV_NotRolling:
 		btst	#1,(v_player+obStatus).w ; is Sonic jumping?

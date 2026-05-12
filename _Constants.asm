@@ -184,6 +184,16 @@ jumping:	equ $3C	; flag set while Sonic is jumping
 standonobject:	equ $3D	; object index Sonic stands on
 locktime:	equ $3E	; temporary D-Pad control lock timer (2 bytes)
 
+; Sonic's collision sizes
+sonic_width:		equ 9		; Sonic's width
+sonic_height:		equ $13		; Sonic's height
+sonic_roll_width:	equ 7		; Sonic's width (rolling)
+sonic_roll_height:	equ $E		; Sonic's height (rolling)
+sonic_solid_width:	equ $B		; Sonic's width (solid object collision)
+sonic_react_width:	equ 8		; Sonic's width (object collision)
+sonic_duck_height:	equ $A		; Sonic's height (object collision, ducking)
+sonic_quick_size:	equ $A		; Sonic's size (quick terrain find)
+
 ; Miscellaneous object scratch-RAM
 objoff_29:	equ $29
 objoff_2A:	equ $2A

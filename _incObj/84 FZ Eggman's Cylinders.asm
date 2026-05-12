@@ -79,7 +79,7 @@ loc_1A514:
 		move.w	obX(a0),obX(a1)
 
 loc_1A524:
-		move.w	#$2B,d1
+		move.w	#$20+sonic_solid_width,d1
 		move.w	#$60,d2
 		move.w	#$61,d3
 		move.w	obX(a0),d4

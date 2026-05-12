@@ -28,8 +28,8 @@ Sonic_Index:	dc.w Sonic_Main-Sonic_Index			; 0 - object init
 ; Obj01_Main:
 Sonic_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)			; set to Sonic_Control
-		move.b	#$13,obHeight(a0)			; set default height
-		move.b	#9,obWidth(a0)				; set default width
+		move.b	#sonic_height,obHeight(a0)		; set default height
+		move.b	#sonic_width,obWidth(a0)		; set default width
 		move.l	#Map_Sonic,obMap(a0)			; set mappings
 		move.w	#ArtTile_Sonic,obGfx(a0)		; set VRAM location
 		move.b	#2,obPriority(a0)			; set sprite priority
@@ -745,10 +745,10 @@ Sonic_RollSlowdownDone:
 		bne.s	Sonic_AngledRollSpeed			; if not, branch
 
 		bclr	#2,obStatus(a0)				; clear rolling flag
-		move.b	#$13,obHeight(a0)			; reset Sonic's hitbox height to default
-		move.b	#9,obWidth(a0)				; reset Sonic's hitbox width to default
+		move.b	#sonic_height,obHeight(a0)		; reset Sonic's hitbox height to default
+		move.b	#sonic_width,obWidth(a0)		; reset Sonic's hitbox width to default
 		move.b	#id_Wait,obAnim(a0)			; use "standing" animation
-		subq.w	#5,obY(a0)				; adjust Y-position for standing
+		subq.w	#sonic_height-sonic_roll_height,obY(a0)	; adjust Y-position for standing
 ; ---------------------------------------------------------------------------
 
 ; loc_131CC:
@@ -1087,10 +1087,10 @@ Sonic_ChkRoll:
 ; Obj01_DoRoll:
 .roll:
 		bset	#2,obStatus(a0)				; set rolling flag
-		move.b	#$E,obHeight(a0)			; set Sonic's hitbox height to rolling size
-		move.b	#7,obWidth(a0)				; set Sonic's hitbox width to rolling size
+		move.b	#sonic_roll_height,obHeight(a0)		; set Sonic's hitbox height to rolling size
+		move.b	#sonic_roll_width,obWidth(a0)		; set Sonic's hitbox width to rolling size
 		move.b	#id_Roll,obAnim(a0)			; use "rolling" animation
-		addq.w	#5,obY(a0)				; adjust Y-position to align Sonic to the floor
+		addq.w	#sonic_height-sonic_roll_height,obY(a0)	; adjust Y-position to align Sonic to the floor
 		move.w	#sfx_Roll,d0				; set rolling sound
 		jsr	(QueueSound2).l				; play it
 
@@ -1147,17 +1147,17 @@ Sonic_Jump:
 	if FixBugs=0
 		; This sets Sonic's hitbox to standing size when roll-jumping.
 		; A leftover from the victory animation in prototypes.
-		move.b	#$13,obHeight(a0)			; set height to standing size
-		move.b	#9,obWidth(a0)				; set width to standing size
+		move.b	#sonic_height,obHeight(a0)		; set height to standing size
+		move.b	#sonic_width,obWidth(a0)		; set width to standing size
 	endif
 
 		btst	#2,obStatus(a0)				; is Sonic already in a ball state?
 		bne.s	.rolljump				; if so, branch
-		move.b	#$E,obHeight(a0)			; set height to rolling size
-		move.b	#7,obWidth(a0)				; set width to rolling size
+		move.b	#sonic_roll_height,obHeight(a0)		; set height to rolling size
+		move.b	#sonic_roll_width,obWidth(a0)		; set width to rolling size
 		move.b	#id_Roll,obAnim(a0)			; use "jumping" animation
 		bset	#2,obStatus(a0)				; set rolling flag
-		addq.w	#5,obY(a0)				; adjust Y-position to align Sonic to the floor
+		addq.w	#sonic_height-sonic_roll_height,obY(a0)	; adjust Y-position to align Sonic to the floor
 
 ; locret_1348E:
 .return:
@@ -1764,12 +1764,12 @@ Sonic_ResetOnFloor:
 		btst	#2,obStatus(a0)				; check if Sonic is in a ball state
 		beq.s	.notball				; if not, skip
 		bclr	#2,obStatus(a0)				; clear ball flag
-		move.b	#$13,obHeight(a0)			; set Sonic's hitbox height to standing
-		move.b	#9,obWidth(a0)				; set Sonic's hitbox width to standing
+		move.b	#sonic_height,obHeight(a0)		; set Sonic's hitbox height to standing
+		move.b	#sonic_width,obWidth(a0)		; set Sonic's hitbox width to standing
 	if FixBugs=0
 		move.b	#id_Walk,obAnim(a0)			; use running/walking animation
 	endif
-		subq.w	#5,obY(a0)				; raise Sonic up 5 pixels so he's not inside the ground
+		subq.w	#sonic_height-sonic_roll_height,obY(a0)	; raise Sonic up 5 pixels so he's not inside the ground
 
 ; loc_137E4:
 .notball:
