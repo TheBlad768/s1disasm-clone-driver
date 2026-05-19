@@ -151,7 +151,8 @@ BossDefeated:
 		moveq	#0,d1 ; ditch the first byte
 		move.b	d0,d1 ; copy first byte of d0 to first byte of d1
 		lsr.b	#2,d1 ; scale down the random number
-		subi.w	#$20,d1 ; shift left by $20 pixels, otherwise all explosions would be on the right side of the boss
+		subi.w	#$20,d1 ; shift left by $20 pixels, otherwise all explosions would be on the right side of the boss.
+		; No shift is made for the Y position, hard to tell if it was intentional or not, but all explosions are biased downwards due to this.
 		add.w	d1,obX(a1) ; apply random x
 		lsr.w	#8,d0 ; shift high byte into low byte
 		lsr.b	#3,d0 ; scale down the random number
