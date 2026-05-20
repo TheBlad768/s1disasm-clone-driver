@@ -3682,6 +3682,8 @@ End_SlowFade:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine controlling Sonic on the ending sequence
+; Many aspects of the game use the concept of a state machine. If you are interested and want to learn more, these are Mealy and Moore machines which have plenty of resources to teach you!
+; This subroutine is a Moore machine. Once you understand these concepts, Sonic 1's game logic will make a lot more sense to you!
 ; ---------------------------------------------------------------------------
 
 End_MoveSonic:
