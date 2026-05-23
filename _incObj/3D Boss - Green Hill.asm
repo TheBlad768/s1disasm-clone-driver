@@ -17,7 +17,8 @@ BGHZ_BossReference = objoff_34 					; Pointer to main boss controller
 BGHZ_SineCounter = objoff_3F 					; sine counter for bobbing motion
 BGHZ_BossGenericTimer = objoff_3C 				; timer for how many frames to do an action, whether its wait for explosions, or to move in a direction
 
-BGHZ_ObjData:	dc.b 2,	0					; routine counter, animation
+BGHZ_ObjData:	
+		dc.b 2,	0					; routine counter, animation
 		dc.b 4,	1
 		dc.b 6,	7
 ; ===========================================================================
@@ -41,7 +42,7 @@ BGHZ_LoadBoss:
 		move.l	#Map_Eggman,obMap(a1) 			; point to Eggman's mappings
 		move.w	#ArtTile_Eggman,obGfx(a1) 		; point to Eggman's art (VRAM tile index and palette line)
 		move.b	#4,obRender(a1) 			; set the object to position based on where it is in the level and not a static position on screen
-		move.b	#$20,obActWid(a1) 			; set collision to 20 pixel radius box
+		move.b	#$20,obActWid(a1) 			; set width to 20 pixel radius (to know when sprite is off screen and should be hidden)
 		move.b	#3,obPriority(a1) 			; set sprite priority to 3 (0 is front of screen)
 		move.b	(a2)+,obAnim(a1) 			; load appropriate animation index, then increment a2 (now we are one full entry lower in our ObjData table)
 ; ---------------------------------------------------------------------------
@@ -52,8 +53,9 @@ BGHZ_LoadBoss:
 ; ---------------------------------------------------------------------------
 		dbf	d1,BGHZ_Loop				; repeat sequence 2 more times
 
+; loc_17772
 BGHZ_Done:
-		move.w	obX(a0),obBossX(a0) 			; set actual boss position using scratch RAM (objoff_30 and 38 respectively)
+		move.w	obX(a0),obBossX(a0) 			; copy to boss position using scratch RAM (objoff_30 and 38 respectively)
 		move.w	obY(a0),obBossY(a0)
 		move.b	#$F,obColType(a0) 			; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
 		move.b	#8,obBossHits(a0) 			; set number of hits to 8
@@ -91,6 +93,7 @@ BGHZ_ShipStart:
 		move.w	#0,obVelY(a0)				; stop ship
 		addq.b	#2,ob2ndRout(a0) 			; goto next routine
 
+; loc_177E6:
 BGHZ_ShipUpdate:
 		move.b	BGHZ_SineCounter(a0),d0 		; set up some scratch RAM for a sine counter
 		jsr	(CalcSine).l 				; result gets put into d0
@@ -111,6 +114,7 @@ BGHZ_ShipUpdate:
 		move.w	#sfx_HitBoss,d0
 		jsr	(QueueSound2).l				; play boss damage sound
 
+; BGHZ_ShipFlash:
 .flash:
 		lea	(v_palette+$22).w,a1 			; load 2nd palette, 2nd entry
 		moveq	#0,d0					; move 0 (black) to d0
@@ -118,16 +122,19 @@ BGHZ_ShipUpdate:
 		bne.s	.writeColor   				; if not black, already white, so branch
 		move.w	#cWhite,d0				; move 0EEE (white) to d0
 
+; loc_1783C:
 .writeColor:
 		move.w	d0,(a1)					; load color stored in d0
 		subq.b	#1,obBossFlash(a0) 			; subtrack 1 from flash timer
 		bne.s	.exit 					; keep flashing if obBossFlash is not 0
 		move.b	#$F,obColType(a0) 			; restore collision, the timer has hit 0
 
+;locret_1784A:
 .exit:
 		rts
 ; ===========================================================================
 
+; loc_1784C:
 BGHZ_Defeated:
 		moveq	#100,d0
 		bsr.w	AddPoints
@@ -161,6 +168,7 @@ BossDefeated:
 		lsr.b	#3,d0 					; scale down the random number
 		add.w	d0,obY(a1) 				; apply random y
 
+; locret_178A2:
 .noExplosion:
 		rts
 ; End of function BossDefeated
@@ -207,9 +215,11 @@ BGHZ_MakeBall:
 		move.w	obBossY(a0),obY(a1)
 		move.l	a0,BGHZ_BossReference(a1) 		; same thing as way up in LoadBoss, store a pointer of the main boss object for future reference
 
+; loc_17910:
 .skip:
 		move.w	#$77,BGHZ_BossGenericTimer(a0) 		; set a timer to move for 77 frames after ball logic is complete
 
+; loc_17916:
 .return:
 		bra.w	BGHZ_ShipUpdate
 ; ===========================================================================
@@ -230,6 +240,7 @@ BGHZ_Reverse:
 		bne.s	.facingRight 				; if yes, branch
 		neg.w	obVelX(a0)				; reverse direction of the ship
 
+; loc_17950:
 .facingRight:
 		bra.w	BGHZ_ShipUpdate
 ; ===========================================================================
@@ -242,12 +253,14 @@ BGHZ_ChgDir:
 		bra.s	.return
 ; ===========================================================================
 
+; loc_17960:
 .flipDirection:
 		bchg	#0,obStatus(a0) 			; flip bit 0 (flip direction of ship)
 		move.w	#$40-1,BGHZ_BossGenericTimer(a0) 	; set timer to 39 frames, slight wait before changing direction
 		subq.b	#2,ob2ndRout(a0) 			; go back to ShipMove
 		move.w	#0,obVelX(a0) 				; stand still
 
+; loc_17960:
 .return
 		bra.w	BGHZ_ShipUpdate
 ; ===========================================================================
@@ -259,6 +272,7 @@ BGHZ_Explode:
 		bra.w	BossDefeated
 ; ===========================================================================
 
+; loc_17984:
 .stopExplosions:
 		bset	#0,obStatus(a0) 			; set bit 0 to 1 (facing right)
 		bclr	#7,obStatus(a0) 			; clear destroyed/defeated flag (flag is set in sub ReactToItem.asm)
@@ -269,6 +283,7 @@ BGHZ_Explode:
 		bne.s	.exit 					; if yes, leave early
 		move.b	#1,(v_bossstatus).w 			; set the boss as defeated
 
+; locret_179AA:
 .exit:
 		rts
 ; ===========================================================================
@@ -282,11 +297,13 @@ BGHZ_Recover:
 		bra.s	.exit
 ; ===========================================================================
 
+; loc_179BC:
 .doneFalling:
 		clr.w	obVelY(a0) 				; set velocity to 0, we are done falling
 		bra.s	.exit
 ; ===========================================================================
 
+; loc_179C2:
 .timerPositive
 		cmpi.w	#$30,BGHZ_BossGenericTimer(a0) 		; is the timer below $30?
 		blo.s	.rise 					; if yes, start to rise
@@ -297,16 +314,19 @@ BGHZ_Recover:
 		bra.s	.exit
 ; ===========================================================================
 
+; loc_179DA:
 .rise:
 		subq.w	#8,obVelY(a0) 				; slow down, eventually causing him to rise upwards (gives a smooth motion)
 		bra.s	.exit
 ; ===========================================================================
 
+; loc_179E0:
 .playMusic:
 		clr.w	obVelY(a0) 				; stop moving
 		move.w	#bgm_GHZ,d0
 		jsr	(QueueSound1).l				; play GHZ music
 
+; loc_179EE:
 .exit:
 		bsr.w	BossMove
 		bra.w	BGHZ_ShipUpdate
@@ -322,10 +342,12 @@ BGHZ_Escape:
 		bra.s	.flee
 ; ===========================================================================
 
+; loc_17A10:
 .checkOffScreen:
 		tst.b	obRender(a0) 				; has Eggman left the screen (is bit 7 clear)?
 		bpl.s	BGHZ_ShipDel 				; yes, bit 7 is cleared, so we can delete the object (this is 2's complement related!)
 
+; loc_17A16:
 .flee:
 		bsr.w	BossMove 				; keep escaping
 		bra.w	BGHZ_ShipUpdate
@@ -352,13 +374,15 @@ BGHZ_FaceMain:	; Routine 4
 		bne.s	.checkHitState 				; if not, branch
 		moveq	#4,d1 					; set animation to facelaugh, we are at default area
 
+; loc_17A3E:
 .checkSpecial:
-		subq.b	#6,d0 					; are we in Recover or Escape state (if we looped around, we are negative, so much be in Recover or Escape)
+		subq.b	#6,d0 					; are we in Recover or Escape state (if we looped around, we are negative, so must be in Recover or Escape)
 		bmi.s	.checkHitState 				; no, check if we have collided with Sonic
 		moveq	#$A,d1 					; set defeated animation
 		bra.s	.writeAnim
 ; ===========================================================================
 
+; loc_17A46:
 .checkHitState:
 		tst.b	obColType(a1) 				; is the boss currently being hit?
 		bne.s	.checkSonicState 			; if not, check Sonic's state
@@ -366,11 +390,13 @@ BGHZ_FaceMain:	; Routine 4
 		bra.s	.writeAnim
 ; ===========================================================================
 
+; loc_17A50:
 .checkSonicState:
 		cmpi.b	#4,(v_player+obRoutine).w  		; is Sonic currently being hit?
 		blo.s	.writeAnim 				; if not, branch
 		moveq	#4,d1 					; set animation to facelaugh
 
+; loc_17A5A:
 .writeAnim:
 		move.b	d1,obAnim(a0) 				; move animation state into obAnim
 ; ----------------------------------------------------------------------------
@@ -378,12 +404,13 @@ BGHZ_FaceMain:	; Routine 4
 ; 12-4-6-2=0, so if we are in the escape state this is true, any other state would not result in a 0. If all this confuses you, review the _Index code throughout this file.
 ; ----------------------------------------------------------------------------		
 		subq.b	#2,d0 
-		bne.s	BGHZ_FaceDisp 				; we are not escaping, display normally
-		move.b	#6,obAnim(a0) 				; set animation state to 6
+		bne.s	.skip 					; we are not escaping, display normally
+		move.b	#6,obAnim(a0) 				; set animation state to facepanic
 		tst.b	obRender(a0) 				; has Eggman's face left the screen?
 		bpl.s	BGHZ_FaceDel 				; yes, delete his face
 
-BGHZ_FaceDisp:
+; BGHZ_FaceDisp
+.skip:
 		bra.s	BGHZ_Display
 ; ===========================================================================
 
@@ -394,7 +421,7 @@ BGHZ_FaceDel:
 BGHZ_FlameMain:	; Routine 6
 		move.b	#7,obAnim(a0) 				; set animation state to 7 (default invisible state for flame)
 		movea.l	BGHZ_BossReference(a0),a1 		; load main boss controller into a1
-		cmpi.b	#$C,ob2ndRout(a1) 			; are we in the escape state?
+		cmpi.b	#$C,ob2ndRout(a1) 			; are we in the Escape state?
 		bne.s	.checkMove 				; no, check movement
 		move.b	#$B,obAnim(a0) 				; set thruster animation for takeoff
 		tst.b	obRender(a0) 				; what is our screen status?
@@ -402,6 +429,7 @@ BGHZ_FlameMain:	; Routine 6
 		bra.s	BGHZ_FlameDisp 				; on screen, display
 ; ===========================================================================
 
+; loc_17A96:
 .checkMove:
 		move.w	obVelX(a1),d0 				; are we currently moving?
 		beq.s	BGHZ_FlameDisp 				; no, don't display flame
