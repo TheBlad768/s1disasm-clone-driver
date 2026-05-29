@@ -148,11 +148,11 @@ Got_NextLevel:	; Routine $A
 		andi.w	#3,d1
 		add.w	d1,d1
 		add.w	d1,d0
-		move.w	LevelOrder(pc,d0.w),d0 ; load level from level order array
-		move.w	d0,(v_zone).w	; set level number
-		tst.w	d0
-		bne.s	Got_ChkSS
-		move.b	#id_Sega,(v_gamemode).w
+		move.w	LevelOrder(pc,d0.w),d0	; load level from level order array
+		move.w	d0,(v_zone).w		; set new level number
+		tst.w	d0			; is new level number GHZ1? (000)
+		bne.s	Got_ChkSS		; if not, branch
+		move.b	#id_Sega,(v_gamemode).w	; otherwise, instantly return to the Sega screen
 		bra.s	Got_Display2
 ; ===========================================================================
 
