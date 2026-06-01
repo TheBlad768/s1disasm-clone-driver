@@ -182,8 +182,11 @@ Pri_Animals:	; Routine $C
 		subq.w	#1,obTimeFrame(a0)
 		bne.s	.wait
 		addq.b	#2,obRoutine(a0)
-	if ~~FixBugs
-		move.w	#180,obTimeFrame(a0)	; ??? This serves no purpose since obTimeFrame is never used again
+	if FixBugs=0
+		; This is a remnant from the prototype, which waited an additional second
+		; (3 seconds here) before the results appeared. The final game instead
+		; checks if all animals have despawned, making this line useless.
+		move.w	#180,obTimeFrame(a0)
 	endif
 
 .wait:
