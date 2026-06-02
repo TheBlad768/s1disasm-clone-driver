@@ -3204,7 +3204,7 @@ GM_Special:	; white fade-out from previous game mode
 		move.b	#id_SonicSpecial,(v_player).w	; load special stage Sonic object
 		bsr.w	PalCycle_SS			; initialize palette cycle and background for fade-in
 		clr.w	(v_ssangle).w			; set stage angle to "upright"
-		move.w	#$40,(v_ssrotate).w		; set stage rotation speed
+		move.w	#ss_rotatespeed,(v_ssrotate).w	; set initial stage rotation speed ($40, see object 09)
 		move.w	#bgm_SS,d0			; play special stage BG music
 		bsr.w	QueueSound1			; play it
 
@@ -4377,7 +4377,7 @@ Map_Pri:	include	"_maps/Prison Capsule.asm"
 								   ; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
 SS_MapIndex:	include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
 SS_MapIndex_End:
-Map_SS_R:	include	"_maps/SS R Block.asm"
+Map_SS_Shared:	include	"_maps/SS Shared Block.asm"
 Map_SS_Glass:	include	"_maps/SS Glass Block.asm"
 Map_SS_Up:	include	"_maps/SS UP Block.asm"
 Map_SS_Down:	include	"_maps/SS DOWN Block.asm"
