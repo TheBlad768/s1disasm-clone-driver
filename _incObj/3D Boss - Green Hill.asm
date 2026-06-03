@@ -278,7 +278,7 @@ BGHZ_Explode:
 		bclr	#7,obStatus(a0) 			; clear destroyed/defeated flag (flag is set in sub ReactToItem.asm)
 		clr.w	obVelX(a0) 				; stop moving vertically (horizontal velocity is not cleared)
 		addq.b	#2,ob2ndRout(a0) 			; advance routine to recover
-		move.w	#-$26,BGHZ_BossGenericTimer(a0) 	; set negative timer to count up from
+		move.w	#-38,BGHZ_BossGenericTimer(a0) 	; set negative timer to count up from
 		tst.b	(v_bossstatus).w 			; has the boss been marked as defeated?
 		bne.s	.exit 					; if yes, leave early
 		move.b	#1,(v_bossstatus).w 			; set the boss as defeated
