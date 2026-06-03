@@ -4288,7 +4288,7 @@ Map_Splash:	include	"_maps/Water Splash.asm"
 		include	"_incObj/sub FindNearestTile.asm"
 		include	"_incObj/sub FindFloor.asm"
 		include	"_incObj/sub FindWall.asm"
-		include "_incObj/sub ConvertCollisionArray (Unused).asm"
+		include "_inc/ConvertCollisionArray (Unused).asm"
 		include	"_incObj/Sonic Collision.asm"
 
 
