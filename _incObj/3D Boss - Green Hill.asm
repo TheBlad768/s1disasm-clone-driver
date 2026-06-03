@@ -236,7 +236,7 @@ BGHZ_ShipMove:
 		move.w	#$40,obVelX(a0) 			; change velocity
 
 BGHZ_Reverse:
-		btst	#0,obStatus(a0) 			; are we facing the right (bit 0 set)
+		btst	#0,obStatus(a0) 			; are we facing right (bit 0 set)?
 		bne.s	.facingRight 				; if yes, branch
 		neg.w	obVelX(a0)				; reverse direction of the ship
 
