@@ -15,7 +15,10 @@ Prison:
 ; ===========================================================================
 Pri_Index:	dc.w Pri_Main-Pri_Index
 		dc.w Pri_BodyMain-Pri_Index
-		dc.w Pri_Switched-Pri_Index
+		dc.w Pri_Switch-Pri_Index
+		; Only the third Pri_Explosion is used in-game. The first two are
+		; leftover pointers for deleted subtypes of the object, which the
+		; S2NA symbol tables call masincenter and masincenter2.
 		dc.w Pri_Explosion-Pri_Index
 		dc.w Pri_Explosion-Pri_Index
 		dc.w Pri_Explosion-Pri_Index
@@ -54,8 +57,8 @@ Pri_Main:	; Routine 0
 ; ===========================================================================
 
 Pri_BodyMain:	; Routine 2
-		cmpi.b	#2,(v_bossstatus).w
-		beq.s	.chkopened
+		cmpi.b	#2,(v_bossstatus).w	; has the prison been opened?
+		beq.s	.open			; if yes, branch
 		move.w	#$20+sonic_solid_width,d1
 		move.w	#$18,d2
 		move.w	#$18,d3
@@ -63,19 +66,19 @@ Pri_BodyMain:	; Routine 2
 		jmp	(SolidObject).l
 ; ===========================================================================
 
-.chkopened:
-		tst.b	ob2ndRout(a0)	; has the prison been opened?
-		beq.s	.open		; if yes, branch
+.open:
+		tst.b	ob2ndRout(a0)	; is Sonic standing on the prison?
+		beq.s	.notonprison	; if not, branch
 		clr.b	ob2ndRout(a0)
 		bclr	#3,(v_player+obStatus).w
 		bset	#1,(v_player+obStatus).w
 
-.open:
+.notonprison:
 		move.b	#2,obFrame(a0)	; use frame number 2 (destroyed prison)
 		rts
 ; ===========================================================================
-
-Pri_Switched:	; Routine 4
+; Pri_Switched:
+Pri_Switch:	; Routine 4
 		move.w	#$C+sonic_solid_width,d1
 		move.w	#8,d2
 		move.w	#8,d3
@@ -84,28 +87,29 @@ Pri_Switched:	; Routine 4
 		lea	(Ani_Pri).l,a1
 		jsr	(AnimateSprite).l
 		move.w	pri_origY(a0),obY(a0)
-		tst.b	ob2ndRout(a0)	; has prison already been opened?
-		beq.s	.open2		; if yes, branch
+		tst.b	ob2ndRout(a0)	; is Sonic standing on the switch?
+		beq.s	.notonprison2	; if not, branch
 
 		addq.w	#8,obY(a0)
 		move.b	#$A,obRoutine(a0)
-		move.w	#60,obTimeFrame(a0) ; set time between animal spawns
-		clr.b	(f_timecount).w	; stop time counter
-		clr.b	(f_lockscreen).w ; lock screen position
-		move.b	#1,(f_lockctrl).w ; lock controls
-		move.w	#(btnR<<8),(v_jpadhold2).w ; make Sonic run to the right
+		move.w	#60,obTimeFrame(a0)	; set time between animal spawns
+		clr.b	(f_timecount).w		; stop time counter
+		clr.b	(f_lockscreen).w	; lock screen position
+		move.b	#1,(f_lockctrl).w	; lock controls
+		move.w	#(btnR<<8),(v_jpadhold2).w	; make Sonic run to the right
 		clr.b	ob2ndRout(a0)
 		bclr	#3,(v_player+obStatus).w
 		bset	#1,(v_player+obStatus).w
 
-.open2:
+.notonprison2:
 		rts
 ; ===========================================================================
 
 Pri_Explosion:	; Routine 6, 8, $A
 		moveq	#7,d0
 		and.b	(v_vblank_byte).w,d0
-		bne.s	.noexplosion
+		bne.s	.noexplosion	; only run code every 8 frames
+
 		jsr	(FindFreeObj).l
 		bne.s	.noexplosion
 		_move.b	#id_Explosion,obID(a1) ; load explosion object
@@ -128,12 +132,12 @@ Pri_Explosion:	; Routine 6, 8, $A
 ; ===========================================================================
 
 .makeanimal:
-		move.b	#2,(v_bossstatus).w
+		move.b	#2,(v_bossstatus).w	; set prison as being opened
 		move.b	#$C,obRoutine(a0)	; replace explosions with animals
-		move.b	#6,obFrame(a0)
+		move.b	#6,obFrame(a0)		; 'delete' switch by turning it invisible
 		move.w	#150,obTimeFrame(a0)
 		addi.w	#$20,obY(a0)
-		moveq	#7,d6
+		moveq	#7,d6		; load 8 animals
 		move.w	#$9A,d5
 		moveq	#-$1C,d4
 
@@ -156,7 +160,8 @@ Pri_Explosion:	; Routine 6, 8, $A
 Pri_Animals:	; Routine $C
 		moveq	#7,d0
 		and.b	(v_vblank_byte).w,d0
-		bne.s	.noanimal
+		bne.s	.noanimal	; only run code every 8 frames
+
 		jsr	(FindFreeObj).l
 		bne.s	.noanimal
 		_move.b	#id_Animals,obID(a1) ; load animal object
@@ -177,7 +182,12 @@ Pri_Animals:	; Routine $C
 		subq.w	#1,obTimeFrame(a0)
 		bne.s	.wait
 		addq.b	#2,obRoutine(a0)
+	if FixBugs=0
+		; This is a remnant from the prototype, which waited an additional second
+		; (3 seconds here) before the results appeared. The final game instead
+		; checks if all animals have despawned, making this line useless.
 		move.w	#180,obTimeFrame(a0)
+	endif
 
 .wait:
 		rts
@@ -198,7 +208,7 @@ Pri_EndAct:	; Routine $E
 	endif
 
 .findanimal:
-		cmp.b	obID(a1),d1		; is object $28 (animal) loaded?
+		cmp.b	obID(a1),d1	; is object $28 (animal) loaded?
 		beq.s	.found		; if yes, branch
 		adda.w	d2,a1		; next object RAM
 		dbf	d0,.findanimal	; repeat $3E times

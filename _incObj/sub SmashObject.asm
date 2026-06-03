@@ -40,6 +40,10 @@ SmashObject:
 		move.b	obActWid(a0),obActWid(a1)
 		move.w	(a4)+,obVelX(a1)
 		move.w	(a4)+,obVelY(a1)
+	if FixBugs=0
+		; This check ensures that fragments that are loader earlier in RAM than
+		; the first fragment will still be rendered on the frame they are spawned in.
+		; However, the above fix makes this special case redundant.
 		cmpa.l	a0,a1
 		bhs.s	.loc_D268
 		move.l	a0,-(sp)
@@ -50,6 +54,7 @@ SmashObject:
 		bsr.w	DisplaySprite2
 
 .loc_D268:
+	endif
 		dbf	d1,.loop
 
 .playsnd:

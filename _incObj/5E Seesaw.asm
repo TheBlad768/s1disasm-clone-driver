@@ -88,7 +88,7 @@ See_Slope2:	; Routine 4
 		jsr	(ExitPlatform).l
 		move.w	#$30,d1
 		move.w	obX(a0),d2
-		jsr	(SlopeObject2).l
+		jsr	(SlopeObject_AssumeStoodOn).l
 		rts
 ; ===========================================================================
 
