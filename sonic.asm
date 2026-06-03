@@ -3219,7 +3219,7 @@ GM_Special:	; white fade-out from previous game mode
 		move.b	#id_SonicSpecial,(v_player).w	; load special stage Sonic object
 		bsr.w	PalCycle_SS			; initialize palette cycle and background for fade-in
 		clr.w	(v_ssangle).w			; set stage angle to "upright"
-		move.w	#$40,(v_ssrotate).w		; set stage rotation speed
+		move.w	#ss_rotatespeed,(v_ssrotate).w	; set initial stage rotation speed ($40, see object 09)
 		move.w	#bgm_SS,d0			; play special stage BG music
 		bsr.w	QueueSound1			; play it
 
@@ -4038,8 +4038,7 @@ Map_Plat_SYZ:	include	"_maps/Platforms (SYZ).asm"
 Map_Plat_SLZ:	include	"_maps/Platforms (SLZ).asm"
 		include	"_incObj/19.asm" ; this was the rolling GHZ ball in the prototype
 Map_GBall:	include	"_maps/GHZ Ball.asm"
-		include	"_incObj/1A Collapsing Ledge.asm"
-		include	"_incObj/53 Collapsing Floors.asm"	; includes "Ledge_Fragment" and "SlopeObject2" subroutines
+		include	"_incObj/1A & 53 Collapsing Ledges and Floors.asm"	; includes "SlopeObject_AssumeStoodOn" subroutine
 Map_Ledge:	include	"_maps/Collapsing Ledge.asm"
 Map_CFlo:	include	"_maps/Collapsing Floors.asm"
 		include	"_incObj/1C Scenery.asm"
@@ -4311,7 +4310,7 @@ Map_Splash:	include	"_maps/Water Splash.asm"
 		include	"_incObj/sub FindNearestTile.asm"
 		include	"_incObj/sub FindFloor.asm"
 		include	"_incObj/sub FindWall.asm"
-		include "_incObj/sub ConvertCollisionArray (Unused).asm"
+		include "_inc/ConvertCollisionArray (Unused).asm"
 		include	"_incObj/Sonic Collision.asm"
 
 
@@ -4399,7 +4398,7 @@ Map_Pri:	include	"_maps/Prison Capsule.asm"
 								   ; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
 SS_MapIndex:	include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
 SS_MapIndex_End:
-Map_SS_R:	include	"_maps/SS R Block.asm"
+Map_SS_Shared:	include	"_maps/SS Shared Block.asm"
 Map_SS_Glass:	include	"_maps/SS Glass Block.asm"
 Map_SS_Up:	include	"_maps/SS UP Block.asm"
 Map_SS_Down:	include	"_maps/SS DOWN Block.asm"

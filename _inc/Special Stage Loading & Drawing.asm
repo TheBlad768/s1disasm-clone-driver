@@ -64,7 +64,7 @@ loc_1B1C0:
 		moveq	#0,d0
 		move.w	(v_screenposy).w,d0
 		divu.w	#$18,d0
-		mulu.w	#$80,d0
+		mulu.w	#ss_layout_rowlength,d0
 		adda.l	d0,a0
 		moveq	#0,d0
 		move.w	(v_screenposx).w,d0
@@ -197,6 +197,8 @@ loc_1B350:
 		move.b	(v_ani0_frame).w,d0
 		add.w	d0,d0
 		lea	(a0,d0.w),a0
+	
+	rept 4
 		move.w	(a0),(a1)
 		move.w	2(a0),8(a1)
 		move.w	4(a0),$10(a1)
@@ -207,235 +209,255 @@ loc_1B350:
 		move.w	$E(a0),$38(a1)
 		adda.w	#$20,a0
 		adda.w	#$48,a1
-		move.w	(a0),(a1)
-		move.w	2(a0),8(a1)
-		move.w	4(a0),$10(a1)
-		move.w	6(a0),$18(a1)
-		move.w	8(a0),$20(a1)
-		move.w	$A(a0),$28(a1)
-		move.w	$C(a0),$30(a1)
-		move.w	$E(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
-		move.w	(a0),(a1)
-		move.w	2(a0),8(a1)
-		move.w	4(a0),$10(a1)
-		move.w	6(a0),$18(a1)
-		move.w	8(a0),$20(a1)
-		move.w	$A(a0),$28(a1)
-		move.w	$C(a0),$30(a1)
-		move.w	$E(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
-		move.w	(a0),(a1)
-		move.w	2(a0),8(a1)
-		move.w	4(a0),$10(a1)
-		move.w	6(a0),$18(a1)
-		move.w	8(a0),$20(a1)
-		move.w	$A(a0),$28(a1)
-		move.w	$C(a0),$30(a1)
-		move.w	$E(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
+	endr
 		rts
 ; End of function SS_AniWallsRings
 
 ; ===========================================================================
-SS_WaRiVramSet:	dc.w $142, $6142, $142,	$142, $142, $142, $142,	$6142
-		dc.w $142, $6142, $142,	$142, $142, $142, $142,	$6142
-		dc.w $2142, $142, $2142, $2142,	$2142, $2142, $2142, $142
-		dc.w $2142, $142, $2142, $2142,	$2142, $2142, $2142, $142
-		dc.w $4142, $2142, $4142, $4142, $4142,	$4142, $4142, $2142
-		dc.w $4142, $2142, $4142, $4142, $4142,	$4142, $4142, $2142
-		dc.w $6142, $4142, $6142, $6142, $6142,	$6142, $6142, $4142
-		dc.w $6142, $4142, $6142, $6142, $6142,	$6142, $6142, $4142
+
+SS_WaRiVramSet:	dc.w ArtTile_SS_Wall,           ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall,           ArtTile_SS_Wall
+		dc.w ArtTile_SS_Wall,           ArtTile_SS_Wall,           ArtTile_SS_Wall,           ArtTile_SS_Wall|Tile_Pal4
+		dc.w ArtTile_SS_Wall,           ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall,           ArtTile_SS_Wall
+		dc.w ArtTile_SS_Wall,           ArtTile_SS_Wall,           ArtTile_SS_Wall,           ArtTile_SS_Wall|Tile_Pal4
+		dc.w ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall,           ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall|Tile_Pal2
+		dc.w ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall
+		dc.w ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall,           ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall|Tile_Pal2
+		dc.w ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall
+		dc.w ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal3
+		dc.w ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal2
+		dc.w ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal2, ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal3
+		dc.w ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal2
+		dc.w ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal4
+		dc.w ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal3
+		dc.w ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal3, ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal4
+		dc.w ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal4, ArtTile_SS_Wall|Tile_Pal3
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to remove items when you collect them in the special stage
+; Subroutine to	find a free slot in the Special Stage sprite update list,
+; used to animate blocks collected/touched by Sonic.
 ; ---------------------------------------------------------------------------
 
-SS_RemoveCollectedItem:
-		lea	(v_ssitembuffer).l,a2
-		move.w	#(v_ssitembuffer_end-v_ssitembuffer)/8-1,d0
+; SS_RemoveCollectedItem: <-- old misnomer
+SS_FindFreeAnimationSlot:
+		lea	(v_ssitembuffer).l,a2			; address of sprite update list
+		move.w	#(v_ssitembuffer_end-v_ssitembuffer)/8-1,d0 ; up to $20 slots
 
-loc_1B4C4:
-		tst.b	(a2)
-		beq.s	locret_1B4CE
-		addq.w	#8,a2
-		dbf	d0,loc_1B4C4
+	; loc_1B4C4:
+	.loop:
+		tst.b	(a2)					; is slot free?
+		beq.s	.return					; if yes, exit with it
+		addq.w	#8,a2					; go to next slot
+		dbf	d0,.loop				; try again
 
-locret_1B4CE:
-		rts
-; End of function SS_RemoveCollectedItem
+	; locret_1B4CE:
+	.return:
+		rts						; return with slot in a2
+; End of function SS_FindFreeAnimationSlot
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to animate special stage items when you touch them
+; Subroutine to animate special stage items when you touch them.
+; This system uses a buffer of animation events that are added through the
+; above SS_FindFreeAnimationSlot subroutine.
+; 
+; Each slot is 8 bytes in size, broken down like so:
+;	0   - animation ID (1-based; zero implies empty slot)
+;	1   - (unused)
+;	2   - frame delay between animation advancements
+;	3   - current index ID in animation script
+;	4-7 - RAM location of target block in stage layout
+; ---------------------------------------------------------------------------
+ss_ani_id:	equ 0
+ss_ani_delay:	equ 2
+ss_ani_frame:	equ 3
+ss_ani_block:	equ 4
 ; ---------------------------------------------------------------------------
 
 SS_AniItems:
-		lea	(v_ssitembuffer).l,a0
-		move.w	#(v_ssitembuffer_end-v_ssitembuffer)/8-1,d7
+		lea	(v_ssitembuffer).l,a0			; load start address of animation event buffer
+		move.w	#(v_ssitembuffer_end-v_ssitembuffer)/8-1,d7 ; set to iterate through all slots
 
-loc_1B4DA:
-		moveq	#0,d0
-		move.b	(a0),d0
-		beq.s	loc_1B4E8
-		lsl.w	#2,d0
-		movea.l	SS_AniIndex-4(pc,d0.w),a1
-		jsr	(a1)
+	; loc_1B4DA:
+	.loop:
+		moveq	#0,d0					; clear d0
+		_move.b	ss_ani_id(a0),d0			; get potential animation event
+		beq.s	.nextslot				; if slot has none, branch
+		lsl.w	#2,d0					; multiply ID by 4 for long-based indexing
+		movea.l	SS_AniIndex-4(pc,d0.w),a1		; get animation entry in jump table (-4 because these IDs are 1-based)
+		jsr	(a1)					; execute animation and return
 
-loc_1B4E8:
-		addq.w	#8,a0
-
-loc_1B4EA:
-		dbf	d7,loc_1B4DA
-
-		rts
+	; loc_1B4E8:
+	.nextslot:
+		addq.w	#8,a0					; go to next animation event slot
+		dbf	d7,.loop				; loop until all event slots were checked
+		rts						; return
 ; End of function SS_AniItems
 
 ; ===========================================================================
-SS_AniIndex:	dc.l SS_AniRingSparks
-		dc.l SS_AniBumper
-		dc.l SS_Ani1Up
-		dc.l SS_AniReverse
-		dc.l SS_AniEmeraldSparks
-		dc.l SS_AniGlassBlock
+SS_AniIndex:	dc.l SS_AniRingSparks				; animation ID 1
+		dc.l SS_AniBumper				; animation ID 2
+		dc.l SS_Ani1Up					; animation ID 3
+		dc.l SS_AniReverse				; animation ID 4
+		dc.l SS_AniEmeraldSparks			; animation ID 5
+		dc.l SS_AniGlassBlock				; animation ID 6
 ; ===========================================================================
 
 SS_AniRingSparks:
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B530
-		move.b	#5,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniRingData(pc,d0.w),d0
-		move.b	d0,(a1)
-		bne.s	locret_1B530
-		clr.l	(a0)
-		clr.l	4(a0)
+		subq.b	#1,ss_ani_delay(a0)			; decrement delay until next animation advancement
+		bpl.s	.return					; if time remains, branch
+		move.b	#5,ss_ani_delay(a0)			; reset delay
 
-locret_1B530:
-		rts
+		moveq	#0,d0					; clear d0
+		move.b	ss_ani_frame(a0),d0			; get current frame index in animation script
+		addq.b	#1,ss_ani_frame(a0)			; advance to next frame index
+		movea.l	ss_ani_block(a0),a1			; get location of block in RAM
+		move.b	SS_AniRingData(pc,d0.w),d0		; retrieve new block ID from animation script
+		move.b	d0,(a1)					; update block in layout
+		bne.s	.return					; if animation isn't finished, branch
+
+		clr.l	(a0)					; clear animation event slot
+		clr.l	ss_ani_block(a0)			; ''
+
+	.return:
+		rts						; return
 ; ===========================================================================
-SS_AniRingData:	dc.b $42, $43, $44, $45, 0, 0
+SS_AniRingData:	dc.b id_SS_Ring_Ani1, id_SS_Ring_Ani2, id_SS_Ring_Ani3, id_SS_Ring_Ani4, 0
+		even
 ; ===========================================================================
 
 SS_AniBumper:
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B566
-		move.b	#7,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniBumpData(pc,d0.w),d0
-		bne.s	loc_1B564
-		clr.l	(a0)
-		clr.l	4(a0)
-		move.b	#$25,(a1)
-		rts
-; ===========================================================================
+		subq.b	#1,ss_ani_delay(a0)			; decrement delay until next animation advancement
+		bpl.s	.return					; if time remains, branch
+		move.b	#7,ss_ani_delay(a0)			; reset delay
 
-loc_1B564:
-		move.b	d0,(a1)
+		moveq	#0,d0					; clear d0
+		move.b	ss_ani_frame(a0),d0			; get current frame index in animation script
+		addq.b	#1,ss_ani_frame(a0)			; advance to next frame index
+		movea.l	ss_ani_block(a0),a1			; get location of block in RAM
+		move.b	SS_AniBumpData(pc,d0.w),d0		; retrieve new block ID from animation script
+		bne.s	.animating				; if animation isn't finished, branch
 
-locret_1B566:
-		rts
+		clr.l	(a0)					; clear animation event slot
+		clr.l	ss_ani_block(a0)			; ''
+
+		move.b	#id_SS_Bumper,(a1)			; reset bumper block to default idle one
+		rts						; return
+; ---------------------------------------------------------------------------
+
+	.animating:
+		move.b	d0,(a1)					; update block in layout
+
+	.return:
+		rts						; return
 ; ===========================================================================
-SS_AniBumpData:	dc.b $32, $33, $32, $33, 0, 0
+SS_AniBumpData:	dc.b id_SS_Bumper_Ani1, id_SS_Bumper_Ani2, id_SS_Bumper_Ani1, id_SS_Bumper_Ani2, 0
+		even
 ; ===========================================================================
 
 SS_Ani1Up:
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B596
-		move.b	#5,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_Ani1UpData(pc,d0.w),d0
-		move.b	d0,(a1)
-		bne.s	locret_1B596
-		clr.l	(a0)
-		clr.l	4(a0)
+		subq.b	#1,ss_ani_delay(a0)			; decrement delay until next animation advancement
+		bpl.s	.return					; if time remains, branch
+		move.b	#5,ss_ani_delay(a0)			; reset delay
 
-locret_1B596:
-		rts
+		moveq	#0,d0					; clear d0
+		move.b	ss_ani_frame(a0),d0			; get current frame index in animation script
+		addq.b	#1,ss_ani_frame(a0)			; advance to next frame index
+		movea.l	ss_ani_block(a0),a1			; get location of block in RAM
+		move.b	SS_Ani1UpData(pc,d0.w),d0		; retrieve new block ID from animation script
+		move.b	d0,(a1)					; update block in layout
+		bne.s	.return					; if animation isn't finished, branch
+
+		clr.l	(a0)					; clear animation event slot
+		clr.l	ss_ani_block(a0)			; ''
+
+	.return:
+		rts						; return
 ; ===========================================================================
-SS_Ani1UpData:	dc.b $46, $47, $48, $49, 0, 0
+SS_Ani1UpData:	dc.b id_SS_Emerald_Ani1, id_SS_Emerald_Ani2, id_SS_Emerald_Ani3, id_SS_Emerald_Ani4, 0
+		even
 ; ===========================================================================
 
 SS_AniReverse:
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B5CC
-		move.b	#7,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniRevData(pc,d0.w),d0
-		bne.s	loc_1B5CA
-		clr.l	(a0)
-		clr.l	4(a0)
-		move.b	#$2B,(a1)
-		rts
-; ===========================================================================
+		subq.b	#1,ss_ani_delay(a0)			; decrement delay until next animation advancement
+		bpl.s	.return					; if time remains, branch
+		move.b	#7,ss_ani_delay(a0)			; reset delay
 
-loc_1B5CA:
-		move.b	d0,(a1)
+		moveq	#0,d0					; clear d0
+		move.b	ss_ani_frame(a0),d0			; get current frame index in animation script
+		addq.b	#1,ss_ani_frame(a0)			; advance to next frame index
+		movea.l	ss_ani_block(a0),a1			; get location of block in RAM
+		move.b	SS_AniRevData(pc,d0.w),d0		; retrieve new block ID from animation script
+		bne.s	.animating				; if animation isn't finished, branch
 
-locret_1B5CC:
+		clr.l	(a0)					; clear animation event slot
+		clr.l	ss_ani_block(a0)			; ''
+
+		move.b	#id_SS_R,(a1)				; reset R block to default idle one
 		rts
+; ---------------------------------------------------------------------------
+
+	.animating:
+		move.b	d0,(a1)					; update block in layout
+
+	.return:
+		rts						; return
 ; ===========================================================================
-SS_AniRevData:	dc.b $2B, $31, $2B, $31, 0, 0
+SS_AniRevData:	dc.b id_SS_R, id_SS_R_Ani, id_SS_R, id_SS_R_Ani, 0
+		even
 ; ===========================================================================
 
 SS_AniEmeraldSparks:
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B60C
-		move.b	#5,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniEmerData(pc,d0.w),d0
-		move.b	d0,(a1)
-		bne.s	locret_1B60C
-		clr.l	(a0)
-		clr.l	4(a0)
-		move.b	#4,(v_player+obRoutine).w
-		move.w	#sfx_SSGoal,d0
-		jsr	(QueueSound2).l	; play special stage GOAL sound
+		subq.b	#1,ss_ani_delay(a0)			; decrement delay until next animation advancement
+		bpl.s	.return					; if time remains, branch
+		move.b	#5,ss_ani_delay(a0)			; reset delay
 
-locret_1B60C:
-		rts
+		moveq	#0,d0					; clear d0
+		move.b	ss_ani_frame(a0),d0			; get current frame index in animation script
+		addq.b	#1,ss_ani_frame(a0)			; advance to next frame index
+		movea.l	ss_ani_block(a0),a1			; get location of block in RAM
+		move.b	SS_AniEmerData(pc,d0.w),d0		; retrieve new block ID from animation script
+		move.b	d0,(a1)					; update block in layout
+		bne.s	.return					; if animation isn't finished, branch
+
+		clr.l	(a0)					; clear animation event slot
+		clr.l	ss_ani_block(a0)			; ''
+
+		move.b	#4,(v_player+obRoutine).w		; set object 09 to SonicSS_ExitStage (this triggers the actual exit)
+		move.w	#sfx_SSGoal,d0				; set special stage GOAL sound
+		jsr	(QueueSound2).l				; play it
+
+	.return:
+		rts						; return
 ; ===========================================================================
-SS_AniEmerData:	dc.b $46, $47, $48, $49, 0, 0
+SS_AniEmerData:	dc.b id_SS_Emerald_Ani1, id_SS_Emerald_Ani2, id_SS_Emerald_Ani3, id_SS_Emerald_Ani4, 0
+		even
 ; ===========================================================================
 
 SS_AniGlassBlock:
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B640
-		move.b	#1,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniGlassData(pc,d0.w),d0
-		move.b	d0,(a1)
-		bne.s	locret_1B640
-		move.b	4(a0),(a1)
-		clr.l	(a0)
-		clr.l	4(a0)
+		subq.b	#1,ss_ani_delay(a0)			; decrement delay until next animation advancement
+		bpl.s	.return					; if time remains, branch
+		move.b	#1,ss_ani_delay(a0)			; reset delay
 
-locret_1B640:
-		rts
+		moveq	#0,d0					; clear d0
+		move.b	ss_ani_frame(a0),d0			; get current frame index in animation script
+		addq.b	#1,ss_ani_frame(a0)			; advance to next frame index
+		movea.l	ss_ani_block(a0),a1			; get location of block in RAM
+		move.b	SS_AniGlassData(pc,d0.w),d0		; retrieve new block ID from animation script
+		move.b	d0,(a1)					; update block in layout
+		bne.s	.return					; if animation isn't finished, branch
+
+		move.b	ss_ani_block(a0),(a1)			; update glass with weaker version (see SonicSS_GlassUpdate)
+
+		clr.l	(a0)					; clear animation event slot
+		clr.l	ss_ani_block(a0)			; ''
+
+	.return:
+		rts						; return
 ; ===========================================================================
-SS_AniGlassData:dc.b $4B, $4C, $4D, $4E, $4B, $4C, $4D,	$4E, 0,	0
+SS_AniGlassData:dc.b id_SS_Glass_Ani1, id_SS_Glass_Ani2, id_SS_Glass_Ani3, id_SS_Glass_Ani4
+		dc.b id_SS_Glass_Ani1, id_SS_Glass_Ani2, id_SS_Glass_Ani3, id_SS_Glass_Ani4, 0
+		even
 ; ===========================================================================
 
 ; ---------------------------------------------------------------------------
@@ -520,16 +542,16 @@ SS_ClrRAM3:
 		; inserting $40 bytes of padding for every $40 bytes copied.
 		lea	(v_ssblockbuffer).l,a1
 		lea	(v_ssbuffer2).l,a0
-		moveq	#(v_ssblockbuffer_end-v_ssblockbuffer)/$80-1,d1
+		moveq	#(v_ssblockbuffer_end-v_ssblockbuffer)/ss_layout_rowlength-1,d1
 
 loc_1B6F6:
-		moveq	#$40-1,d2
+		moveq	#(ss_layout_rowlength/2)-1,d2
 
 loc_1B6F8:
 		move.b	(a0)+,(a1)+
 		dbf	d2,loc_1B6F8
 
-		lea	$40(a1),a1
+		lea	ss_layout_rowlength/2(a1),a1
 		dbf	d1,loc_1B6F6
 
 		lea	(v_ssblocktypes+8).l,a1

@@ -471,9 +471,11 @@ v_ram_end:
 	dephase
 
 ; Special stage
+ss_layout_rowlength:	equ $80
+
 v_ssbuffer1:		equ	v_ram_start
-v_ssblockbuffer:	equ	v_ssbuffer1+$1020 ; ($2000 bytes)
-v_ssblockbuffer_end:	equ	v_ssblockbuffer+$80*$40
+v_ssblockbuffer:	equ	v_ssbuffer1+(ss_layout_rowlength*$20)+$20 ; ($2000 bytes)
+v_ssblockbuffer_end:	equ	v_ssblockbuffer+ss_layout_rowlength*$40
 v_ssbuffer2:		equ	v_ram_start+$4000
 v_ssblocktypes:		equ	v_ssbuffer2
 v_ssitembuffer:		equ	v_ssbuffer2+$400 ; ($100 bytes)

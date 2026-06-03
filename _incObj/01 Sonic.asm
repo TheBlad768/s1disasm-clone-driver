@@ -615,10 +615,21 @@ Sonic_MoveLeft:
 ; loc_130BA:
 .stilldecel:
 		move.w	d0,obInertia(a0)			; set new ground speed
+	if FixBugs
+		move.b	obAngle(a0),d1				; get Sonic's current angle
+		addi.b	#$20,d1					; rotate by 45 degrees clockwise
+		andi.b	#$C0,d1					; snap to nearest multiple of 90 degrees
+	else
+		; d0 should not be used here, as it results in obInertia being
+		; partially overwritten! This causes Sonic's skidding animation
+		; to activate at differing speeds when he's moving left or right.
 
-		move.b	obAngle(a0),d0				; get Sonic's current angle
+		; This oversight was only corrected in Knuckles in Sonic 2. Not
+		; even Sonic 3 & Knuckles itself had this fixed.
+		move.b	obAngle(a0),d0				; get Sonic's current angle (and partially overwrite d0...)
 		addi.b	#$20,d0					; rotate by 45 degrees clockwise
 		andi.b	#$C0,d0					; snap to nearest multiple of 90 degrees
+	endif
 		bne.s	.nostopping				; if Sonic is on a wall or ceiling, prevent stopping animation
 		cmpi.w	#$400,d0				; has Sonic changed direction while being really fast?
 		blt.s	.nostopping				; if not, don't play skidding animation/sound
@@ -668,10 +679,16 @@ Sonic_MoveRight:
 ; loc_13120:
 .stilldecel:
 		move.w	d0,obInertia(a0)			; set new ground speed
-
-		move.b	obAngle(a0),d0				; get Sonic's current angle
+	if FixBugs
+		move.b	obAngle(a0),d1				; get Sonic's current angle
+		addi.b	#$20,d1					; rotate by 45 degrees clockwise
+		andi.b	#$C0,d1					; snap to nearest multiple of 90 degrees
+	else
+		; See explanation in Sonic_MoveLeft.
+		move.b	obAngle(a0),d0				; get Sonic's current angle (and partially overwrite d0...)
 		addi.b	#$20,d0					; rotate by 45 degrees clockwise
 		andi.b	#$C0,d0					; snap to nearest multiple of 90 degrees
+	endif
 		bne.s	.nostopping				; if Sonic is on a wall or ceiling, prevent stopping animation
 		cmpi.w	#-$400,d0				; has Sonic changed direction while being really fast?
 		bgt.s	.nostopping				; if not, don't play skidding animation/sound

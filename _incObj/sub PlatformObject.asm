@@ -41,7 +41,8 @@ Platform3:
 		move.w	d2,obY(a1)
 		addq.b	#2,obRoutine(a0)
 
-loc_74AE:
+; loc_74AE:
+Plat_NoCheck:
 		btst	#3,obStatus(a1)
 		beq.s	loc_74DC
 		moveq	#0,d0
