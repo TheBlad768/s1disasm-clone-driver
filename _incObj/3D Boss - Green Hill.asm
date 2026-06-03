@@ -256,7 +256,7 @@ BGHZ_ChgDir:
 ; loc_17960:
 .flipDirection:
 		bchg	#0,obStatus(a0) 			; flip bit 0 (flip direction of ship)
-		move.w	#$40-1,BGHZ_BossGenericTimer(a0) 	; set timer to 39 frames, slight wait before changing direction
+		move.w	#64-1,BGHZ_BossGenericTimer(a0) 	; set timer to 64 frames, slight wait before changing direction
 		subq.b	#2,ob2ndRout(a0) 			; go back to ShipMove
 		move.w	#0,obVelX(a0) 				; stand still
 
