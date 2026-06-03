@@ -125,7 +125,7 @@ BGHZ_ShipUpdate:
 ; loc_1783C:
 .writeColor:
 		move.w	d0,(a1)					; load color stored in d0
-		subq.b	#1,obBossFlash(a0) 			; subtrack 1 from flash timer
+		subq.b	#1,obBossFlash(a0) 			; subtract 1 from flash timer
 		bne.s	.exit 					; keep flashing if obBossFlash is not 0
 		move.b	#$F,obColType(a0) 			; restore collision, the timer has hit 0
 
