@@ -4018,8 +4018,7 @@ Map_Plat_SYZ:	include	"_maps/Platforms (SYZ).asm"
 Map_Plat_SLZ:	include	"_maps/Platforms (SLZ).asm"
 		include	"_incObj/19.asm" ; this was the rolling GHZ ball in the prototype
 Map_GBall:	include	"_maps/GHZ Ball.asm"
-		include	"_incObj/1A Collapsing Ledge.asm"
-		include	"_incObj/53 Collapsing Floors.asm"	; includes "Ledge_Fragment" and "SlopeObject2" subroutines
+		include	"_incObj/1A & 53 Collapsing Ledges and Floors.asm"	; includes "SlopeObject_AssumeStoodOn" subroutine
 Map_Ledge:	include	"_maps/Collapsing Ledge.asm"
 Map_CFlo:	include	"_maps/Collapsing Floors.asm"
 		include	"_incObj/1C Scenery.asm"

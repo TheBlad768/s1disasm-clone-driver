@@ -64,7 +64,7 @@ LGrass_Slope:
 		addi.w	#sonic_solid_width,d1
 		movea.l	objoff_30(a0),a2
 		move.w	obX(a0),d2
-		bsr.w	SlopeObject2
+		bsr.w	SlopeObject_AssumeStoodOn
 		bra.s	LGrass_Display
 ; ===========================================================================
 
