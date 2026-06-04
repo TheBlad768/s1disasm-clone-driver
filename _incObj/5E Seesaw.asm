@@ -264,10 +264,24 @@ loc_1192C:
 
 locret_11938:
 		rts
+
 ; ===========================================================================
 See_Speeds:	dc.w -8, -$1C, -$2F, -$1C, -8
+; ===========================================================================
 
-See_DataSlope:	binclude	"misc/slzssaw1.bin"
-		even
-See_DataFlat:	binclude	"misc/slzssaw2.bin"
-		even
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Collision data for seesaws (SLZ)
+; ---------------------------------------------------------------------------
+
+See_DataSlope:
+	dcb.b	  2,$24		; flat
+	range	$26,$2C,+2	; ascending
+	range	$2A,$24,-2	; descending
+	range	$23,$03,-1	; descending
+	dcb.b	  5,$02		; flat
+	even
+
+See_DataFlat:
+	dcb.b	 48,$15		; flat
+	even

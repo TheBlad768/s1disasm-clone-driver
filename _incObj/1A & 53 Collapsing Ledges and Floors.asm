@@ -421,33 +421,7 @@ SlopeObject_AssumeStoodOn:
 ; ---------------------------------------------------------------------------
 
 Ledge_SlopeData:
-		.h: = $20 ; base height
-
-		dc.b .h+$00,.h+$00
-		dc.b .h+$00,.h+$00
-		dc.b .h+$00,.h+$00
-		dc.b .h+$00,.h+$00
-
-		dc.b .h+$01,.h+$01
-		dc.b .h+$02,.h+$02
-		dc.b .h+$03,.h+$03
-		dc.b .h+$04,.h+$04
-		dc.b .h+$05,.h+$05
-		dc.b .h+$06,.h+$06
-		dc.b .h+$07,.h+$07
-		dc.b .h+$08,.h+$08
-		dc.b .h+$09,.h+$09
-		dc.b .h+$0A,.h+$0A
-		dc.b .h+$0B,.h+$0B
-		dc.b .h+$0C,.h+$0C
-		dc.b .h+$0D,.h+$0D
-		dc.b .h+$0E,.h+$0E
-		dc.b .h+$0F,.h+$0F
-
-		dc.b .h+$10,.h+$10
-		dc.b .h+$10,.h+$10
-		dc.b .h+$10,.h+$10
-		dc.b .h+$10,.h+$10
-		dc.b .h+$10,.h+$10
-
-		even
+	dcb.b	4*2,$20		; flat
+	range	$21,$2F,+1,2	; ascending
+	dcb.b	5*2,$30		; flat
+	even
