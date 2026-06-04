@@ -487,11 +487,18 @@ ArtTile_Animal_2:		equ $592
 ArtTile_Explosion:		equ $5A0
 ArtTile_Monitor:		equ $680
 ArtTile_HUD:			equ $6CA
+ArtTile_HUDScore:		equ ArtTile_HUD+$1A
+ArtTile_HUDScore_E:		equ ArtTile_HUDScore-2
+ArtTile_HUDTimeMins:		equ ArtTile_HUD+$28
+ArtTile_HUDTimeSecs:		equ ArtTile_HUD+$2C
+ArtTile_HUDRings:		equ ArtTile_HUD+$30
+
 ArtTile_Sonic:			equ $780
 ArtTile_Points:			equ $797
 ArtTile_Lamppost:		equ $7A0
 ArtTile_Ring:			equ $7B2
 ArtTile_Lives_Counter:		equ $7D4
+ArtTile_Lives_Counter_Num:	equ ArtTile_Lives_Counter+9
 
 ; Eggman
 ArtTile_Eggman:			equ $400
