@@ -14,11 +14,11 @@ LGrass_Index:	dc.w LGrass_Main-LGrass_Index
 lgrass_origX = objoff_2A
 lgrass_origY = objoff_2C
 
-LGrass_Data:	dc.w LGrass_Data1-LGrass_Data 	; collision angle data
-		dc.b 0,	$40			; frame number, platform width
-		dc.w LGrass_Data3-LGrass_Data
+LGrass_Data:	dc.w LGrass_Data_Symmetrical-LGrass_Data 	; collision angle data
+		dc.b 0,	$40					; frame number, platform width
+		dc.w LGrass_Data_Asymmetrical-LGrass_Data
 		dc.b 1,	$40
-		dc.w LGrass_Data2-LGrass_Data
+		dc.w LGrass_Data_Column-LGrass_Data
 		dc.b 2,	$20
 ; ===========================================================================
 
@@ -269,13 +269,28 @@ locret_B116:
 	else
 		rts
 	endif
+
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Collision data for large moving platforms (MZ)
 ; ---------------------------------------------------------------------------
-LGrass_Data1:	binclude	"misc/mz_pfm1.bin"
-		even
-LGrass_Data2:	binclude	"misc/mz_pfm2.bin"
-		even
-LGrass_Data3:	binclude	"misc/mz_pfm3.bin"
-		even
+
+LGrass_Data_Symmetrical:
+	dcb.b	 14,$20		; flat
+	range	$21,$2F,+1	; ascending
+	dcb.b	 18,$30		; flat
+	range	$2F,$21,-1	; descending
+	dcb.b	 14,$20		; flat
+	even
+
+LGrass_Data_Column:
+	dcb.b	 44,$30		; flat
+	even
+
+LGrass_Data_Asymmetrical:
+	dcb.b	  6,$20		; flat
+	range	$21,$3F,+1	; ascending
+	dcb.b	 18,$40		; flat
+	range	$3F,$31,-1	; descending
+	dcb.b	  6,$30		; flat
+	even

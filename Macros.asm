@@ -340,6 +340,38 @@ demoinput:	macro buttons,duration
 	dc.b	btns_mask,\duration-1
     endm
 
+abs: macro val
+	endm
+; ---------------------------------------------------------------------------
+; macro to emit a linear range of bytes [first..last] inclusive
+; input: start, end, increment, (optional) repeat each single step
+; ---------------------------------------------------------------------------
+
+range: macro first,last,step,repeat
+	.rep: = 1
+	if (narg=4)
+		.rep: = repeat
+	endif
+
+	.r: = first-last
+	if (.r<0) ; abs
+		.r: = .r*-1
+	endif
+
+	.s: = step
+	if (.s<0) ; abs
+		.s: = .s*-1
+	endif
+	
+	.val: = first
+	rept 1+(.r/.s)
+		rept .rep
+			dc.b .val
+		endr
+		.val: = .val+(step)
+	endr
+	endm
+
 ; ---------------------------------------------------------------------------
 ; compare the size of an index with ZoneCount constant
 ; (should be used immediately after the index)
