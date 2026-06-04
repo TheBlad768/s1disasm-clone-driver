@@ -318,6 +318,26 @@ btns_mask := btns_mask|btnStart
  endm
 
 ; ---------------------------------------------------------------------------
+; macro to emit a linear range of bytes [first..last] inclusive
+; input: start, end, increment, (optional) repeat each single step
+; ---------------------------------------------------------------------------
+
+range: macro first,last,step,repeat
+	set .rep, 1
+	if "repeat"<>""
+		set .rep, repeat
+	endif
+
+	set .val, first
+	rept 1+(abs(first-last)/abs(step))
+		rept .rep
+			dc.b .val
+		endr
+		set .val, .val+(step)
+	endr
+	endm
+
+; ---------------------------------------------------------------------------
 ; compare the size of an index with ZoneCount constant
 ; (should be used immediately after the index)
 ; input: index address, element size
