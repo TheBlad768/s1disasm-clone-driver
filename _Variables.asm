@@ -22,7 +22,9 @@ v_lvllayout_end:
 v_bgscroll_buffer:	ds.b	$200		; background scroll buffer
 v_ngfx_buffer:		ds.b	$200		; Nemesis graphics decompression buffer
 v_ngfx_buffer_end:
-v_spritequeue:		ds.b	$400		; sprite display queue, in order of priority
+
+v_spritequeue:		ds.b	spritequeue_layers*spritequeue_layersize ; sprite display queue, in order of priority (8*$80=$400 bytes)
+
 v_16x16:		ds.b	$1800		; 16x16 tile mappings
 
 v_sgfx_buffer:		ds.b	tile_size*23	; buffered Sonic graphics ($17 cells)
@@ -294,7 +296,7 @@ v_scroll_block_4_size:	ds.w	1		; unused
 			ds.b	8		; unused
 v_levelvariables_end:
 
-v_spritetablebuffer:	ds.b	$280		; sprite table (last $80 bytes are overwritten by v_palette_water_fading)
+v_spritetablebuffer:	ds.b	spritetable_entrysize*sprites_max ; sprite table (8*80=$280 bytes) (last $80 bytes are overwritten by v_palette_water_fading)
 v_spritetablebuffer_end:
 
 v_palette_water_fading = v_spritetablebuffer_end-$80	; duplicate underwater palette, used for transitions ($80 bytes)
