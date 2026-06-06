@@ -24,7 +24,7 @@ BuildSprites:
 		lea	(v_spritetablebuffer).w,a2
 		moveq	#0,d5
 		lea	(v_spritequeue).w,a4
-		moveq	#spritequeue_layernum-1,d7
+		moveq	#spritelayer_num-1,d7
 
 .priorityLoop:
 		tst.w	(a4)				; are there objects left to draw in current priority layer?
@@ -121,7 +121,7 @@ BuildSprites:
 		bne.w	.objectLoop			; if entries remain, loop
 
 .nextPriority:
-		lea	spritequeue_layersize(a4),a4	; advance to next layer (each layer is $80 bytes)
+		lea	spritelayer_size(a4),a4		; advance to next layer (each layer is $80 bytes)
 		dbf	d7,.priorityLoop
 		
 		move.b	d5,(v_spritecount).w		; write number of rendered sprites to debug var
