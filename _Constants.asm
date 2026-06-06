@@ -57,11 +57,8 @@ vram_hscroll:	equ $FC00	; horizontal scroll table
 
 ; Sprite data
 sprites_max:		equ 80		; maximum number of sprites the Mega Drive can handle
-sprites_basepos:	equ 128		; 128px donut around the visible Mega Drive screen space
-spritequeue_layers:	equ 8		; 8 sprite priority layers
-spritequeue_counter:	equ 2		; 2 bytes entry counter at start of each layer (value is x2)
-spritequeue_entries:	equ $7E		; $7E bytes to store entires in a layer (2 bytes per entry)
-spritequeue_layersize:	equ spritequeue_counter+spritequeue_entries ; $80 bytes per sprite priority layer
+spritequeue_layernum:	equ 8		; 8 sprite priority layers
+spritequeue_layersize:	equ 2+$7E	; =$80 (2 bytes entry counter + $7E bytes to store entries)
 spritetable_entrysize:	equ 8		; 8 bytes per linked sprite table entry (2 y-pos + 1 size + 1 link + 2 VRAM + 2 x-pos)
 
 ; Various sizes

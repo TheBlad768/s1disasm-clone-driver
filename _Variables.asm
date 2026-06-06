@@ -23,7 +23,7 @@ v_bgscroll_buffer:	ds.b	$200		; background scroll buffer
 v_ngfx_buffer:		ds.b	$200		; Nemesis graphics decompression buffer
 v_ngfx_buffer_end:
 
-v_spritequeue:		ds.b	spritequeue_layers*spritequeue_layersize ; sprite display queue, in order of priority (8*$80=$400 bytes)
+v_spritequeue:		ds.b	spritequeue_layernum*spritequeue_layersize ; sprite display queue, in order of priority (8*$80=$400 bytes)
 
 v_16x16:		ds.b	$1800		; 16x16 tile mappings
 

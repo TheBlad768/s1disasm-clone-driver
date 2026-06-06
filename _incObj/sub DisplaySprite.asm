@@ -8,7 +8,7 @@ DisplaySprite:
 		lsr.w	#1,d0				; divide by 2 because each layer is $80 bytes
 		andi.w	#spritequeue_layersize*7,d0	; mask to possible offset starts per layer ($380)
 		adda.w	d0,a1				; jump to position in queue
-		cmpi.w	#spritequeue_entries,(a1)	; is this sprite priority layer full? ($7E bytes)
+		cmpi.w	#spritequeue_layersize-2,(a1)	; is this sprite priority layer full? ($7E bytes)
 		bhs.s	DSpr_Full			; if yes, branch
 		addq.w	#2,(a1)				; increment sprite counter
 		adda.w	(a1),a1				; jump to empty position
@@ -30,7 +30,7 @@ DisplaySprite2:
 		lsr.w	#1,d0				; divide by 2 because each layer is $80 bytes
 		andi.w	#spritequeue_layersize*7,d0	; mask to possible offset starts per layer ($380)
 		adda.w	d0,a2				; jump to position in queue
-		cmpi.w	#spritequeue_entries,(a2)	; is this sprite priority layer full? ($7E bytes)
+		cmpi.w	#spritequeue_layersize-2,(a2)	; is this sprite priority layer full? ($7E bytes)
 		bhs.s	DSpr2_Full			; if yes, branch
 		addq.w	#2,(a2)				; increment sprite counter
 		adda.w	(a2),a2				; jump to empty position
