@@ -173,7 +173,13 @@ Geyser_Main:	; Routine 0
 		move.l	#Map_Geyser,obMap(a1)
 		move.w	#ArtTile_MZ_Lava|Tile_Pal4,obGfx(a1)
 		move.b	#4,obRender(a1)
+	if FixBugs=0
+		; This is inconsistent with GeyserMaker, causing it to vanish
+		; while still partially on-screen.
 		move.b	#$20,obActWid(a1)
+	else
+		move.b	#$38,obActWid(a1)
+	endif
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	obSubtype(a0),obSubtype(a1)
