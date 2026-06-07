@@ -22,7 +22,12 @@ Jaws_Main:	; Routine 0
 		ori.b	#4,obRender(a0)
 		move.b	#$A,obColType(a0)
 		move.b	#4,obPriority(a0)
+	if FixBugs
+		move.b	#$18,obActWid(a0)
+	else
+		; 16 pixels is too small, it should be 24 pixels.
 		move.b	#$10,obActWid(a0)
+	endif
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; load object subtype number
 		lsl.w	#6,d0		; multiply d0 by 64
