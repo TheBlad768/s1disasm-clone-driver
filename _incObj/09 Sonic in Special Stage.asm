@@ -515,7 +515,7 @@ SonicSS_Fall:
 
 ; sub_1BCE8:
 SonicSS_FindWall:
-		lea	(v_ssbuffer1).l,a1			; get special stage layout in RAM
+		lea	(v_sslayout_base).l,a1			; get special stage layout in RAM
 
 		moveq	#0,d4					; clear d4
 		swap	d2					; move main pixel Y position into lower word
@@ -589,7 +589,7 @@ SonicSS_FindWall_CheckType:
 
 ; Obj09_ChkItems: SonicSS_ChkItems:
 SonicSS_ChkItems_NonSolidActionBlock:
-		lea	(v_ssbuffer1).l,a1			; get special stage layout in RAM
+		lea	(v_sslayout_base).l,a1			; get special stage layout in RAM
 
 		moveq	#0,d4					; clear d4
 		move.w	obY(a0),d4				; get Sonic's Y position
@@ -727,8 +727,8 @@ SonicSS_MakeGhostSolid:
 		cmpi.b	#2,sonss_ghoststate(a0)			; have ghost block and then an invisible switch been passed?
 		bne.s	SonicSS_GhostNotSolid			; if not, branch
 
-		lea	(v_ssblockbuffer).l,a1			; get start location of actual stage layout
-		moveq	#(v_ssblockbuffer_end-v_ssblockbuffer)/ss_layout_rowlength-1,d1 ; iterate through all rows
+		lea	(v_sslayout_actual).l,a1		; get start location of actual stage layout
+		moveq	#(v_sslayout_end-v_sslayout_actual)/ss_layout_rowlength-1,d1 ; iterate through all rows
 .nextrow:	moveq	#(ss_layout_rowlength/2)-1,d2		; iterate through all blocks in row
 .checkblock:	cmpi.b	#id_SS_Ghost,(a1)			; is the item a ghost block?
 		bne.s	.nextblock				; if not, branch
@@ -778,7 +778,7 @@ SonicSS_ChkBumper:
 		bne.s	SonicSS_ChkGOAL				; if not, branch
 
 		move.l	sonss_touchedblock_ram(a0),d1		; get RAM location of touched bumper
-		subi.l	#v_ssbuffer1+1,d1			; subtract by base RAM offset to get logical address
+		subi.l	#v_sslayout_base+1,d1			; subtract by base RAM offset to get logical address
 		move.w	d1,d2					; copy for second check
 
 		andi.w	#ss_layout_rowlength-1,d1		; limit to a single row ($7F)

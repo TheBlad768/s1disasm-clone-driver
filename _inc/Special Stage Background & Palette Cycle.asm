@@ -3,12 +3,12 @@
 ; ---------------------------------------------------------------------------
 
 SS_BGLoad:
-		lea	(v_ssbuffer1).l,a1
+		lea	(v_ram_start).l,a1
 		lea	(Eni_SSBg1).l,a0 ; load mappings for the birds and fish
 		move.w	#ArtTile_SS_Background_Fish|Tile_Pal3,d0
 		bsr.w	EniDec
 		locVRAM	ArtTile_SS_Plane_1*tile_size+plane_size_64x32,d3
-		lea	(v_ssbuffer1+$80).l,a2
+		lea	(v_ram_start+$80).l,a2
 		moveq	#7-1,d7 ; $5000, $6000, $7000, $8000, $9000, $A000, $B000.
 
 loc_48BE:
@@ -29,7 +29,7 @@ loc_48CE:
 		cmpi.w	#6,d7
 		bne.s	loc_48F2
 
-		lea	(v_ssbuffer1).l,a1
+		lea	(v_ram_start).l,a1
 
 loc_48E2:
 		movem.l	d0-d4,-(sp)
@@ -56,12 +56,12 @@ loc_491C:
 		adda.w	#$80,a2
 		dbf	d7,loc_48BE
 
-		lea	(v_ssbuffer1).l,a1
+		lea	(v_ram_start).l,a1
 		lea	(Eni_SSBg2).l,a0 ; load mappings for the clouds
 		move.w	#ArtTile_SS_Background_Clouds|Tile_Pal3,d0
 		bsr.w	EniDec
-		copyTilemap	v_ssbuffer1,ArtTile_SS_Plane_5*tile_size,64,32
-		copyTilemap	v_ssbuffer1,ArtTile_SS_Plane_5*tile_size+plane_size_64x32,64,64
+		copyTilemap	v_ram_start,ArtTile_SS_Plane_5*tile_size,64,32
+		copyTilemap	v_ram_start,ArtTile_SS_Plane_5*tile_size+plane_size_64x32,64,64
 		rts
 ; End of function SS_BGLoad
 
