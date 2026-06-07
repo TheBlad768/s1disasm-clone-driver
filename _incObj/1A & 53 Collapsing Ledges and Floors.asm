@@ -34,17 +34,17 @@ Ledge_Main:	; Routine 0
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#7,collapsible_timedelay(a0)	; set time delay for collapse
-	if FixBugs=0
-		; While not strictly a bugfix, there isn't any need to give this
-		; object a 100 pixel radius for its culling radius. 48 pixels is
-		; perfectly fine and matches its collision.
-
-		; Sonic 2 later changed this to $34, which is *still* to big and
-		; causes more problems there due to the ledge's collision code
-		; being rewritten to use obActWid.
-		move.b	#$64,obActWid(a0)
-	else
+	if FixBugs
 		move.b	#$30,obActWid(a0)
+	else
+		; There isn't any need to give this object a 100 pixel radius for
+		; its culling radius, as it could cause wrapping issues. 48 pixels
+		; is perfectly fine and matches its collision.
+
+		; Sonic 2 later changed this to $34, which is *still* too big and
+		; causes more problems there due to the ledge's collision code
+		; being rewritten to use obActWid (such as teleporting under it).
+		move.b	#$64,obActWid(a0)
 	endif
 		move.b	obSubtype(a0),obFrame(a0)	; use subtype as frame ID (0 or 1)
 		move.b	#$38,obHeight(a0)
