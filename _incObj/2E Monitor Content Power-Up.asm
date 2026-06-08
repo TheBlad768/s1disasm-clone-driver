@@ -53,8 +53,8 @@ Pow_ChkEggman:
 	if FixBugs
 		; Fix the Eggman monitor
 		; https://info.sonicretro.org/SCHG_How-to:Have_a_functional_Eggman_monitor_in_Sonic_1
-		move.w	obX(a0),spik_origX(a0)		; needed to display the icon properly
-		jmp	(Spik_Hurt).l			; use spikes to hurt Sonic
+		move.w	obX(a0),spikes_origX(a0)	; needed to display the icon properly
+		jmp	(Spikes_Hurt).l			; use imaginary spikes to hurt Sonic
 	else
 		rts					; Eggman monitor does nothing by default
 	endif
