@@ -198,3 +198,7 @@ Spring_ResetDwn:
 		move.b	#1,obPrevAni(a0) ; reset animation
 		subq.b	#4,obRoutine(a0) ; goto "Spring_Dwn" routine
 		rts
+; ===========================================================================
+
+		include	"_anim/Springs.asm"
+Map_Spring:	include	"_maps/Springs.asm"

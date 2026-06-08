@@ -168,3 +168,6 @@ loc_BE9E:
 		moveq	#1,d0
 		rts
 ; End of function But_MZBlock
+; ===========================================================================
+
+Map_But:	include	"_maps/Button.asm"

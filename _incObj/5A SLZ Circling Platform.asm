@@ -108,3 +108,6 @@ Circ_Types:
 		add.w	circ_origY(a0),d2
 		move.w	d2,obY(a0)
 		rts
+; ===========================================================================
+
+Map_Circ:	include	"_maps/SLZ Circling Platform.asm"

@@ -970,7 +970,7 @@ Sonic_SquashUnused:
 
 		move.w	#0,obInertia(a0)			; clear Sonic's ground speed
 		move.w	#0,obVelX(a0)				; clear Sonic's horizontal speed
-		move.w	#0,obVelY(a0)				; clear Sonic#s vertical speed
+		move.w	#0,obVelY(a0)				; clear Sonic's vertical speed
 		move.b	#id_Warp3,obAnim(a0)			; use "warping" animation
 
 ; locret_13302:

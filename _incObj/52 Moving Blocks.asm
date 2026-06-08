@@ -272,3 +272,7 @@ MBlock_0A_Reset:
 		clr.w	objoff_36(a0)
 		subq.b	#1,obSubtype(a0)
 		rts
+; ===========================================================================
+
+Map_MBlock:	include	"_maps/Moving Blocks (MZ and SBZ).asm"
+Map_MBlockLZ:	include	"_maps/Moving Blocks (LZ).asm"

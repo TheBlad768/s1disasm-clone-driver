@@ -77,329 +77,345 @@ StartOfRom:
 	endif
 
 Vectors:
-		dc.l v_systemstack&$FFFFFF	; Initial stack pointer value
-		dc.l EntryPoint			; Start of program
-		dc.l BusError			; Bus error
-		dc.l AddressError		; Address error (4)
-		dc.l IllegalInstr		; Illegal instruction
-		dc.l ZeroDivide			; Division by zero
-		dc.l ChkInstr			; CHK exception
-		dc.l TrapvInstr			; TRAPV exception (8)
-		dc.l PrivilegeViol		; Privilege violation
-		dc.l Trace			; TRACE exception
-		dc.l Line1010Emu		; Line-A emulator
-		dc.l Line1111Emu		; Line-F emulator (12)
-		dc.l ErrorExcept		; Unused (reserved)
-		dc.l ErrorExcept		; Unused (reserved)
-		dc.l ErrorExcept		; Unused (reserved)
-		dc.l ErrorExcept		; Unused (reserved) (16)
-		dc.l ErrorExcept		; Unused (reserved)
-		dc.l ErrorExcept		; Unused (reserved)
-		dc.l ErrorExcept		; Unused (reserved)
-		dc.l ErrorExcept		; Unused (reserved) (20)
-		dc.l ErrorExcept		; Unused (reserved)
-		dc.l ErrorExcept		; Unused (reserved)
-		dc.l ErrorExcept		; Unused (reserved)
-		dc.l ErrorExcept		; Unused (reserved) (24)
-		dc.l ErrorExcept		; Spurious exception
-		dc.l ErrorTrap			; IRQ level 1
-		dc.l ErrorTrap			; IRQ level 2
-		dc.l ErrorTrap			; IRQ level 3 (28)
-		dc.l HBlank			; IRQ level 4 (horizontal retrace interrupt)
-		dc.l ErrorTrap			; IRQ level 5
-		dc.l VBlank			; IRQ level 6 (vertical retrace interrupt)
-		dc.l ErrorTrap			; IRQ level 7 (32)
-		dc.l ErrorTrap			; TRAP #00 exception
-		dc.l ErrorTrap			; TRAP #01 exception
-		dc.l ErrorTrap			; TRAP #02 exception
-		dc.l ErrorTrap			; TRAP #03 exception (36)
-		dc.l ErrorTrap			; TRAP #04 exception
-		dc.l ErrorTrap			; TRAP #05 exception
-		dc.l ErrorTrap			; TRAP #06 exception
-		dc.l ErrorTrap			; TRAP #07 exception (40)
-		dc.l ErrorTrap			; TRAP #08 exception
-		dc.l ErrorTrap			; TRAP #09 exception
-		dc.l ErrorTrap			; TRAP #10 exception
-		dc.l ErrorTrap			; TRAP #11 exception (44)
-		dc.l ErrorTrap			; TRAP #12 exception
-		dc.l ErrorTrap			; TRAP #13 exception
-		dc.l ErrorTrap			; TRAP #14 exception
-		dc.l ErrorTrap			; TRAP #15 exception (48)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
+		dc.l v_systemstack&$FFFFFF		; Initial stack pointer value
+		dc.l EntryPoint				; Start of program
+		dc.l BusError				; Bus error
+		dc.l AddressError			; Address error (4)
+		dc.l IllegalInstr			; Illegal instruction
+		dc.l ZeroDivide				; Division by zero
+		dc.l ChkInstr				; CHK exception
+		dc.l TrapvInstr				; TRAPV exception (8)
+		dc.l PrivilegeViol			; Privilege violation
+		dc.l Trace				; TRACE exception
+		dc.l Line1010Emu			; Line-A emulator
+		dc.l Line1111Emu			; Line-F emulator (12)
+		dc.l ErrorExcept			; Unused (reserved)
+		dc.l ErrorExcept			; Unused (reserved)
+		dc.l ErrorExcept			; Unused (reserved)
+		dc.l ErrorExcept			; Unused (reserved) (16)
+		dc.l ErrorExcept			; Unused (reserved)
+		dc.l ErrorExcept			; Unused (reserved)
+		dc.l ErrorExcept			; Unused (reserved)
+		dc.l ErrorExcept			; Unused (reserved) (20)
+		dc.l ErrorExcept			; Unused (reserved)
+		dc.l ErrorExcept			; Unused (reserved)
+		dc.l ErrorExcept			; Unused (reserved)
+		dc.l ErrorExcept			; Unused (reserved) (24)
+		dc.l ErrorExcept			; Spurious exception
+		dc.l ErrorTrap				; IRQ level 1
+		dc.l ErrorTrap				; IRQ level 2
+		dc.l ErrorTrap				; IRQ level 3 (28)
+		dc.l HBlank				; IRQ level 4 (horizontal retrace interrupt)
+		dc.l ErrorTrap				; IRQ level 5
+		dc.l VBlank				; IRQ level 6 (vertical retrace interrupt)
+		dc.l ErrorTrap				; IRQ level 7 (32)
+		dc.l ErrorTrap				; TRAP #00 exception
+		dc.l ErrorTrap				; TRAP #01 exception
+		dc.l ErrorTrap				; TRAP #02 exception
+		dc.l ErrorTrap				; TRAP #03 exception (36)
+		dc.l ErrorTrap				; TRAP #04 exception
+		dc.l ErrorTrap				; TRAP #05 exception
+		dc.l ErrorTrap				; TRAP #06 exception
+		dc.l ErrorTrap				; TRAP #07 exception (40)
+		dc.l ErrorTrap				; TRAP #08 exception
+		dc.l ErrorTrap				; TRAP #09 exception
+		dc.l ErrorTrap				; TRAP #10 exception
+		dc.l ErrorTrap				; TRAP #11 exception (44)
+		dc.l ErrorTrap				; TRAP #12 exception
+		dc.l ErrorTrap				; TRAP #13 exception
+		dc.l ErrorTrap				; TRAP #14 exception
+		dc.l ErrorTrap				; TRAP #15 exception (48)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
 	if Revision<>2|FixBugs
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
-		dc.l ErrorTrap			; Unused (reserved)
+		if (Revision=2)&(FixBugs=1)&(MOMPASS=1)
+			warning "'Revision = 2' is unnecessary with 'FixBugs' enabled (use 'Revision = 1' instead)."
+		endif
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
 	else
-loc_E0:		; Relocated code from Spik_Hurt. REVXB was a nasty hex-edit.
+	; loc_E0:
+	Rev02_SpikeBugFix:
+		; Relocated code from Spik_Hurt. REVXB was a nasty hex-edit.
 		; See _incObj/36 Spikes.asm for more info.
-		move.l	obY(a0),d3
-		move.w	obVelY(a0),d0
-		ext.l	d0
-		asl.l	#8,d0
-		jmp	(loc_D5A2).l
-
-		dc.w ErrorTrap
-		dc.l ErrorTrap
-		dc.l ErrorTrap
-		dc.l ErrorTrap
+		move.l	obY(a0),d3			; get Sonic's Y-position (with subpixels)
+		move.w	obVelY(a0),d0			; get Sonic's Y-velocity
+		ext.l	d0				; extend velocity to longword
+		asl.l	#8,d0				; shift velocity to upper word (16.16 fixed point)
+		jmp	(Rev02_SpikeBugFix_Return).l	; return to main spikes logic
+		dc.w ErrorTrap				; Unused (reserved)
 	endif
-		dc.b "SEGA MEGA DRIVE " ; Hardware system ID (Console name)
-		dc.b "(C)SEGA 1991.APR" ; Copyright holder and release date (generally year)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+		dc.l ErrorTrap				; Unused (reserved)
+
+		dc.b "SEGA MEGA DRIVE "			; Hardware system ID (Console name)
+		dc.b "(C)SEGA 1991.APR"			; Copyright holder and release date (generally year)
 		dc.b "SONIC THE               HEDGEHOG                " ; Domestic name
 		dc.b "SONIC THE               HEDGEHOG                " ; International name
 	if Revision=0
-		dc.b "GM 00001009-00"   ; Serial/version number (Rev 0)
+		dc.b "GM 00001009-00"			; Serial/version number (Rev 0)
 	else
-		dc.b "GM 00004049-01" ; Serial/version number (Rev non-0)
+		dc.b "GM 00004049-01"			; Serial/version number (Rev non-0)
 	endif
-Checksum:
+
+Checksum:	; Checksum is hardcoded to make it easier to check for ROM correctness
 	if Revision=0
-		dc.w $264A	; Hardcoded to make it easier to check for ROM correctness
+		dc.w $264A
 	else
 		dc.w $AFC7
 	endif
-		dc.b "J               " ; I/O support
-		dc.l StartOfRom		; Start address of ROM
-RomEndLoc:	dc.l EndOfRom-1		; End address of ROM
-		dc.l $FF0000		; Start address of RAM
-		dc.l $FFFFFF		; End address of RAM
+
+		dc.b "J               "			; I/O support
+		dc.l StartOfRom				; Start address of ROM
+RomEndLoc:	dc.l EndOfRom-1				; End address of ROM
+		dc.l $FF0000				; Start address of RAM
+		dc.l $FFFFFF				; End address of RAM
 	if EnableSRAM=1
 		dc.b "RA", $A0+(BackupSRAM<<6)+(AddressSRAM<<3), $20 ; SRAM support
 	else
 		dc.l $20202020
 	endif
-		dc.l $20202020		; SRAM start ($200001)
-		dc.l $20202020		; SRAM end ($20xxxx)
-		dc.b "                                                    " ; Notes (unused, anything can be put in this space, but it has to be 52 bytes.)
-		dc.b "JUE             " ; Region (Country code)
+		dc.l $20202020				; SRAM start ($200001)
+		dc.l $20202020				; SRAM end ($20xxxx)
+		dc.b "                                                    " ; Notes (unused, anything can be put in this space, but it has to be 52 bytes)
+		dc.b "JUE             "			; Region (Country code)
 EndOfHeader:
 
 ; ===========================================================================
 ; Crash/Freeze the 68000. Unlike Sonic 2, Sonic 1 uses the 68000 for playing music, so it stops too
-
 ErrorTrap:
-		nop	
-		nop	
-		bra.s	ErrorTrap
+		nop					; no operation
+		nop					; ''
+		bra.s	ErrorTrap			; loop forever
 ; ===========================================================================
+
+; ---------------------------------------------------------------------------
+; Entry point for the game on boot or soft-reset
+; (This section from a standard Mega Drive devkit library)
+; ---------------------------------------------------------------------------
 
 EntryPoint:
-		tst.l	(port_1_control_hi).l	; test port A & B control registers
-		bne.s	PortA_Ok
-		tst.w	(expansion_control_hi).l ; test port C control register
-PortA_Ok:	bne.s	SkipSetup		; skip the VDP and Z80 setup code if this is a soft-reset
+		tst.l	(port_1_control_hi).l		; test port A & B control registers
+		bne.s	PortA_Ok			; if either of them are already initialized, branch
+		tst.w	(expansion_control_hi).l	; test port C control register
+PortA_Ok:	bne.s	SkipSetup			; if any port was already initialized, skip the VDP and Z80 setup code (this is a soft-reset)
 
-		lea	SetupValues(pc),a5	; load setup values array address
-		movem.w	(a5)+,d5-d7
-		movem.l	(a5)+,a0-a4
-		move.b	-$10FF(a1),d0	; get hardware version (from $A10001)
-		andi.b	#$F,d0
-		beq.s	SkipSecurity	; If the console has no TMSS, skip the security stuff.
-		move.l	#'SEGA',$2F00(a1) ; move "SEGA" to TMSS register ($A14000)
+		lea	SetupValues(pc),a5		; load setup values array address
+		movem.w	(a5)+,d5-d7			; d5 = VDP register start number; d6 = size of RAM/4; d7 = VDP register diff
+		movem.l	(a5)+,a0-a4			; a0 = start of Z80 RAM; a1 = Z80 bus request; a2 = Z80 reset; a3 = VDP data; a4 = VDP control
+
+		move.b	-$10FF(a1),d0			; get hardware version (from $A10001)
+		andi.b	#$F,d0				; only look at Mega Drive version
+		beq.s	SkipSecurity			; if the console has no TMSS, skip the security stuff
+		move.l	#'SEGA',$2F00(a1)		; write "SEGA" to TMSS security register ($A14000)
 
 SkipSecurity:
-		move.w	(a4),d0	; clear write-pending flag in VDP (prevents issues if 68k was reset while writing a command to VDP)
-		moveq	#0,d0	; clear d0
-		movea.l	d0,a6	; clear a6
-		move.l	a6,usp	; set usp to $0
+		move.w	(a4),d0				; clear write-pending flag in VDP (prevents issues if 68k was reset while writing a command to VDP)
+		moveq	#0,d0				; clear d0
+		movea.l	d0,a6				; clear a6
+		move.l	a6,usp				; set usp to $0
 
-		moveq	#$18-1,d1
-VDPInitLoop:
-		move.b	(a5)+,d5	; add $8000 to value
-		move.w	d5,(a4)		; move value to VDP register
-		add.w	d7,d5		; next register
-		dbf	d1,VDPInitLoop
+		moveq	#SetupValues_VDP_End-SetupValues_VDP-1,d1 ; write to all VDP registers
+VDPInitLoop:	move.b	(a5)+,d5			; add $8000 to value
+		move.w	d5,(a4)				; write value to VDP register
+		add.w	d7,d5				; next register
+		dbf	d1,VDPInitLoop			; loop until all registers are set up
 		
-		move.l	(a5)+,(a4)
-		move.w	d0,(a3)		; clear the VRAM
-		move.w	d7,(a1)		; stop the Z80
-		move.w	d7,(a2)		; reset the Z80
+		move.l	(a5)+,(a4)			; write DMA destination to VDP (VRAM 0000)
+		move.w	d0,(a3)				; set DMA fill value to 00 (DMA starts here, clears entire VRAM)
 
-WaitForZ80:
-		btst	d0,(a1)		; has the Z80 stopped?
-		bne.s	WaitForZ80	; if not, branch
+		move.w	d7,(a1)				; stop the Z80
+		move.w	d7,(a2)				; reset the Z80
+WaitForZ80:	btst	d0,(a1)				; has the Z80 stopped?
+		bne.s	WaitForZ80			; if not, loop until it has
 
-		moveq	#$25,d2
-Z80InitLoop:
-		move.b	(a5)+,(a0)+
-		dbf	d2,Z80InitLoop
+		moveq	#SetupValues_Z80_End-SetupValues_Z80-1,d2 ; write all Z80 boot code
+Z80InitLoop:	move.b	(a5)+,(a0)+			; write boot code to Z80 RAM
+		dbf	d2,Z80InitLoop			; loop until all boot code has been written
 		
-		move.w	d0,(a2)
-		move.w	d0,(a1)		; start the Z80
-		move.w	d7,(a2)		; reset the Z80
+		move.w	d0,(a2)				; set Z80 reset on
+		move.w	d0,(a1)				; set Z80 stop off
+		move.w	d7,(a2)				; set Z80 reset off
 
-ClrRAMLoop:
-		move.l	d0,-(a6)	; clear 4 bytes of RAM
-		dbf	d6,ClrRAMLoop	; repeat until the entire RAM is clear
-		move.l	(a5)+,(a4)	; set VDP display mode and increment mode
-		move.l	(a5)+,(a4)	; set VDP to CRAM write
+ClrRAMLoop:	move.l	d0,-(a6)			; clear 4 bytes of RAM
+		dbf	d6,ClrRAMLoop			; repeat until the entire RAM is cleared
 
-		moveq	#$1F,d3	; set repeat times
-ClrCRAMLoop:
-		move.l	d0,(a3)	; clear 2 palettes
-		dbf	d3,ClrCRAMLoop	; repeat until the entire CRAM is clear
-		move.l	(a5)+,(a4)	; set VDP to VSRAM write
+		move.l	(a5)+,(a4)			; set VDP display mode and increment mode
 
-		moveq	#$13,d4
-ClrVSRAMLoop:
-		move.l	d0,(a3)	; clear 4 bytes of VSRAM.
-		dbf	d4,ClrVSRAMLoop	; repeat until the entire VSRAM is clear
-		moveq	#3,d5
+		move.l	(a5)+,(a4)			; set VDP to CRAM write
+		moveq	#(v_palette_end-v_palette)/4-1,d3 ; set repeat times to cover full CRAM
+ClrCRAMLoop:	move.l	d0,(a3)				; clear 2 colors
+		dbf	d3,ClrCRAMLoop			; repeat until the entire CRAM is clear
 
-PSGInitLoop:
-		move.b	(a5)+,$11(a3)	; reset the PSG
-		dbf	d5,PSGInitLoop	; repeat for other channels
-		move.w	d0,(a2)
-		movem.l	(a6),d0-a6	; clear all registers
-		disable_ints
+		move.l	(a5)+,(a4)			; set VDP to VSRAM write
+		moveq	#$14-1,d4
+ClrVSRAMLoop:	move.l	d0,(a3)				; clear 4 bytes of VSRAM
+		dbf	d4,ClrVSRAMLoop			; repeat until the entire VSRAM is clear
+
+		moveq	#SetupValues_PSG_End-SetupValues_PSG-1,d5 ; write to all PSG registers
+PSGInitLoop:	move.b	(a5)+,$11(a3)			; write PSG volume values to PSG port ($C00011)
+		dbf	d5,PSGInitLoop			; repeat for all channels
+
+		move.w	d0,(a2)				; set Z80 reset on
+		movem.l	(a6),d0-a6			; clear all registers
+		disable_ints				; disable interrupts
 
 SkipSetup:
-		bra.s	GameProgram	; begin game
-
+		bra.s	GameProgram			; begin actual game
 ; ===========================================================================
-SetupValues:	dc.w $8000		; VDP register start number
-		dc.w $3FFF		; size of RAM/4
-		dc.w $100		; VDP register diff
 
-		dc.l z80_ram		; start of Z80 RAM
-		dc.l z80_bus_request	; Z80 bus request
-		dc.l z80_reset		; Z80 reset
-		dc.l vdp_data_port	; VDP data
-		dc.l vdp_control_port	; VDP control
+SetupValues:	dc.w $8000				; VDP register start number
+		dc.w (v_ram_end-v_ram_start_def/4)-1	; size of RAM/4 ($3FFF)
+		dc.w $100				; VDP register diff
 
-		dc.b 4			; VDP $80 - 8-colour mode
-		dc.b $14		; VDP $81 - Megadrive mode, DMA enable
-		dc.b ($C000>>10)	; VDP $82 - foreground nametable address
-		dc.b ($F000>>10)	; VDP $83 - window nametable address
-		dc.b ($E000>>13)	; VDP $84 - background nametable address
-		dc.b ($D800>>9)		; VDP $85 - sprite table address
-		dc.b 0			; VDP $86 - unused
-		dc.b 0			; VDP $87 - background colour
-		dc.b 0			; VDP $88 - unused
-		dc.b 0			; VDP $89 - unused
-		dc.b 255		; VDP $8A - HBlank register
-		dc.b 0			; VDP $8B - full screen scroll
-		dc.b $81		; VDP $8C - 40 cell display
-		dc.b ($DC00>>10)	; VDP $8D - hscroll table address
-		dc.b 0			; VDP $8E - unused
-		dc.b 1			; VDP $8F - VDP increment
-		dc.b 1			; VDP $90 - 64 cell hscroll size
-		dc.b 0			; VDP $91 - window h position
-		dc.b 0			; VDP $92 - window v position
-		dc.w $FFFF		; VDP $93/94 - DMA length
-		dc.w 0			; VDP $95/96 - DMA source
-		dc.b $80		; VDP $97 - DMA fill VRAM
-		dc.l $40000080		; VRAM address 0
+		dc.l z80_ram				; start of Z80 RAM
+		dc.l z80_bus_request			; Z80 bus request
+		dc.l z80_reset				; Z80 reset
+		dc.l vdp_data_port			; VDP data
+		dc.l vdp_control_port			; VDP control
 
+	SetupValues_VDP:
+		; Note that most of these are immediately overwritten again in VDPSetupArray
+		dc.b 4					; VDP $80 - 8-colour mode
+		dc.b $14				; VDP $81 - Megadrive mode, DMA enable
+		dc.b ($C000>>10)			; VDP $82 - foreground nametable address
+		dc.b ($F000>>10)			; VDP $83 - window nametable address
+		dc.b ($E000>>13)			; VDP $84 - background nametable address
+		dc.b ($D800>>9)				; VDP $85 - sprite table address
+		dc.b 0					; VDP $86 - unused
+		dc.b 0					; VDP $87 - background colour
+		dc.b 0					; VDP $88 - unused
+		dc.b 0					; VDP $89 - unused
+		dc.b 255				; VDP $8A - HBlank register
+		dc.b 0					; VDP $8B - full screen scroll
+		dc.b $81				; VDP $8C - 40 cell display
+		dc.b ($DC00>>10)			; VDP $8D - hscroll table address
+		dc.b 0					; VDP $8E - unused
+		dc.b 1					; VDP $8F - VDP increment
+		dc.b 1					; VDP $90 - 64 cell hscroll size
+		dc.b 0					; VDP $91 - window h position
+		dc.b 0					; VDP $92 - window v position
+		dc.w $FFFF				; VDP $93/94 - DMA length
+		dc.w $0000				; VDP $95/96 - DMA source
+		dc.b $80				; VDP $97 - DMA fill VRAM
+	SetupValues_VDP_End:
+		dc.l $40000080				; DMA fill destination (VRAM 0000)
+
+	SetupValues_Z80:
 		; Z80 instructions (not the sound driver; that gets loaded later)
 		save
-		CPU Z80 ; start assembling Z80 code
-		phase 0 ; pretend we're at address 0
-		xor	a	; clear a to 0
+		CPU Z80	; start assembling Z80 code
+		phase 0	; pretend we're at address 0
+		xor	a				; clear a to 0
 		ld	bc,((z80_ram_end-z80_ram)-zStartupCodeEndLoc)-1 ; prepare to loop this many times
-		ld	de,zStartupCodeEndLoc+1	; initial destination address
-		ld	hl,zStartupCodeEndLoc	; initial source address
-		ld	sp,hl	; set the address the stack starts at
-		ld	(hl),a	; set first byte of the stack to 0
-		ldir		; loop to fill the stack (entire remaining available Z80 RAM) with 0
-		pop	ix	; clear ix
-		pop	iy	; clear iy
-		ld	i,a	; clear i
-		ld	r,a	; clear r
-		pop	de	; clear de
-		pop	hl	; clear hl
-		pop	af	; clear af
-		ex	af,af'	; swap af with af'
-		exx		; swap bc/de/hl with their shadow registers too
-		pop	bc	; clear bc
-		pop	de	; clear de
-		pop	hl	; clear hl
-		pop	af	; clear af
-		ld	sp,hl	; clear sp
-		di		; clear iff1 (for interrupt handler)
-		im	1	; interrupt handling mode = 1
-		ld	(hl),0E9h ; replace the first instruction with a jump to itself
-		jp	(hl)	  ; jump to the first instruction (to stay there forever)
-zStartupCodeEndLoc:
-		dephase ; stop pretending
+		ld	de,zStartupCodeEndLoc+1		; initial destination address
+		ld	hl,zStartupCodeEndLoc		; initial source address
+		ld	sp,hl				; set the address the stack starts at
+		ld	(hl),a				; set first byte of the stack to 0
+		ldir					; loop to fill the stack (entire remaining available Z80 RAM) with 0
+		pop	ix				; clear ix
+		pop	iy				; clear iy
+		ld	i,a				; clear i
+		ld	r,a				; clear r
+		pop	de				; clear de
+		pop	hl				; clear hl
+		pop	af				; clear af
+		ex	af,af'				; swap af with af'
+		exx					; swap bc/de/hl with their shadow registers too
+		pop	bc				; clear bc
+		pop	de				; clear de
+		pop	hl				; clear hl
+		pop	af				; clear af
+		ld	sp,hl				; clear sp
+		di					; clear iff1 (for interrupt handler)
+		im	1				; interrupt handling mode = 1
+		ld	(hl),0E9h			; replace the first instruction with a jump to itself
+		jp	(hl)	 			; jump to the first instruction (to stay there forever)
+	zStartupCodeEndLoc:
+		dephase	; stop pretending
 		restore
 		padding off ; unfortunately our flags got reset so we have to set them again...
+	SetupValues_Z80_End:
 
-		dc.w $8104		; VDP display mode
-		dc.w $8F02		; VDP increment
-		dc.l $C0000000		; CRAM write mode
-		dc.l $40000010		; VSRAM address 0
+		dc.w $8104				; VDP display mode
+		dc.w $8F02				; VDP increment
+		dc.l $C0000000				; CRAM write mode
+		dc.l $40000010				; VSRAM address 0
 
-		dc.b $9F, $BF, $DF, $FF	; values for PSG channel volumes
+	SetupValues_PSG:
+		dc.b $9F, $BF, $DF, $FF			; values for PSG channel volumes
+	SetupValues_PSG_End:
+; End of SetupValues
+
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; Proper game entry point for Sonic the Hedgehog after initialization
+; ---------------------------------------------------------------------------
 
 GameProgram:
-		tst.w	(vdp_control_port).l
-		btst	#6,(expansion_control).l
-		beq.s	CheckSumCheck
-		cmpi.l	#'init',(v_init).w ; has checksum routine already run?
-		beq.w	GameInit	; if yes, branch
+		tst.w	(vdp_control_port).l		; clear write-pending flag in VDP (prevents issues if 68k was reset while writing a command to VDP)
+		btst	#6,(expansion_control).l	; has port C been initialized?
+		beq.s	CheckSumCheck			; if not, branch
+		cmpi.l	#'init',(v_init).w		; has checksum routine already run?
+		beq.w	GameInit			; if yes, branch
 
 CheckSumCheck:
 	if SkipChecksumCheck=0
-		movea.l	#EndOfHeader,a0	; start checking bytes after the header ($200)
-		movea.l	#RomEndLoc,a1	; stop at end of ROM
-		move.l	(a1),d0
-		moveq	#0,d1
-.loop:
-		add.w	(a0)+,d1
-		cmp.l	a0,d0
-		bhs.s	.loop
-		movea.l	#Checksum,a1	; read the checksum
-		cmp.w	(a1),d1		; compare checksum in header to ROM
-		bne.w	CheckSumError	; if they don't match, branch
+		movea.l	#EndOfHeader,a0			; start checking bytes after the header ($200)
+		movea.l	#RomEndLoc,a1			; stop at end of ROM
+		move.l	(a1),d0				; retrieve long of ROM end
+		moveq	#0,d1				; clear d1
+	.loop:	add.w	(a0)+,d1			; add next byte value of ROM word
+		cmp.l	a0,d0				; has iterator reached end of ROM?
+		bhs.s	.loop				; if not, loop until so
+
+		movea.l	#Checksum,a1			; read the checksum
+		cmp.w	(a1),d1				; compare calculated value with checksum in ROM header
+		bne.w	CheckSumError			; if they don't match, a checksum error has occured
 	endif
 
 CheckSumOk:
-		lea	(v_crossresetram).w,a6
-		moveq	#0,d7
-		move.w	#(v_ram_end-v_crossresetram)/4-1,d6
-.clearRAM:
-		move.l	d7,(a6)+
-		dbf	d6,.clearRAM	; clear RAM ($FE00-$FFFF)
+		lea	(v_crossresetram).w,a6		; load cross-reset RAM location
+		moveq	#0,d7				; overwrite with 0
+		move.w	#(v_ram_end-v_crossresetram)/4-1,d6 ; write to all of cross-reset RAM ($FE00-$FFFF)
+.clearRAM:	move.l	d7,(a6)+			; clear RAM
+		dbf	d6,.clearRAM			; loop until done
 
-		move.b	(console_version).l,d0
-		andi.b	#$C0,d0
-		move.b	d0,(v_megadrive).w ; get region setting
-		move.l	#'init',(v_init).w ; set flag so checksum won't run again
+		move.b	(console_version).l,d0		; get hardware information from console
+		andi.b	#%11000000,d0			; filter to only overseas flag and PAL flag
+		move.b	d0,(v_megadrive).w		; store region settings
+
+		move.l	#'init',(v_init).w		; set flag so checksum won't run again
 
 GameInit:
-		lea	(v_ram_start).l,a6
-		moveq	#0,d7
-		move.w	#(v_crossresetram-v_ram_start_def)/4-1,d6
-.clearRAM:
-		move.l	d7,(a6)+
-		dbf	d6,.clearRAM	; clear RAM ($0000-$FDFF)
+		lea	(v_ram_start).l,a6		; load start location of RAM
+		moveq	#0,d7				; overwrite with 0
+		move.w	#(v_crossresetram-v_ram_start_def)/4-1,d6 ; write to all of RAM except cross-reset RAM ($0000-$FDFF)
+.clearRAM:	move.l	d7,(a6)+			; clear RAM
+		dbf	d6,.clearRAM			; loop until done
 
-		bsr.w	VDPSetupGame
-		bsr.w	DACDriverLoad
-		bsr.w	JoypadInit
-		move.b	#id_Sega,(v_gamemode).w ; set Game Mode to Sega Screen
+		bsr.w	VDPSetupGame			; initialize (proper) VDP registers
+		bsr.w	DACDriverLoad			; initialize Z80 DAC driver
+		bsr.w	JoypadInit			; initialize controller ports
+		move.b	#id_Sega,(v_gamemode).w		; set first Game Mode to Sega Screen
 
 MainGameLoop:
-		move.b	(v_gamemode).w,d0 ; load Game Mode
-		andi.w	#$1C,d0	; limit Game Mode value to $1C max (change to a maximum of 7C to add more game modes)
-		jsr	GameModeArray(pc,d0.w) ; jump to apt location in ROM
-		bra.s	MainGameLoop	; loop indefinitely
-; ===========================================================================
+		move.b	(v_gamemode).w,d0		; load Game Mode
+		andi.w	#$1C,d0				; limit Game Mode value to $1C max (change to a maximum of 7C to add more game modes)
+		jsr	GameModeArray(pc,d0.w)		; jump to apt location in ROM
+		bra.s	MainGameLoop			; loop indefinitely
+
 ; ---------------------------------------------------------------------------
 ; Main game mode array
 ; ---------------------------------------------------------------------------
@@ -411,154 +427,145 @@ __LABEL__:	label	*-GameModeArray
 		bra.w	gamemode
 		endm
 
-id_Sega:	gmptr	GM_Sega		; Sega Screen ($00)
-id_Title:	gmptr	GM_Title	; Title Screen ($04)
-id_Demo:	gmptr	GM_Level	; Demo Mode ($08)
-id_Level:	gmptr	GM_Level	; Normal Level ($0C)
-id_Special:	gmptr	GM_Special	; Special Stage ($10)
-id_Continue:	gmptr	GM_Continue	; Continue Screen ($14)
-id_Ending:	gmptr	GM_Ending	; End of game sequence ($18)
-id_Credits:	gmptr	GM_Credits	; Credits ($1C)
+id_Sega:	gmptr	GM_Sega				; Sega Screen ($00)
+id_Title:	gmptr	GM_Title			; Title Screen ($04)
+id_Demo:	gmptr	GM_Level			; Demo Mode ($08)
+id_Level:	gmptr	GM_Level			; Normal Level ($0C)
+id_Special:	gmptr	GM_Special			; Special Stage ($10)
+id_Continue:	gmptr	GM_Continue			; Continue Screen ($14)
+id_Ending:	gmptr	GM_Ending			; End of game sequence ($18)
+id_Credits:	gmptr	GM_Credits			; Credits ($1C)
 
 		rts	; redundant rts
 
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; Error handler
+; ---------------------------------------------------------------------------
+
 	if SkipChecksumCheck=0
 CheckSumError:
-		bsr.w	VDPSetupGame
-		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
-		moveq	#($80)/2-1,d7
-
-.fillred:
-		move.w	#cRed,(vdp_data_port).l ; fill palette with red
-		dbf	d7,.fillred	; repeat until CRAM is filled
-
-.endlessloop:
-		bra.s	.endlessloop
+		bsr.w	VDPSetupGame			; restore all VDP registers
+		move.l	#$C0000000,(vdp_control_port).l	; set VDP to CRAM write
+		moveq	#(v_palette_end-v_palette)/2-1,d7 ; write to entire palette
+.fillred:	move.w	#cRed,(vdp_data_port).l		; fill palette with red
+		dbf	d7,.fillred			; repeat until CRAM is filled
+		bra.s	*				; endless loop to itself
 	endif
 ; ===========================================================================
 
-BusError:
-		move.b	#2,(v_errortype).w
-		bra.s	ErrorHandler_WithAddress
-
-AddressError:
-		move.b	#4,(v_errortype).w
-		bra.s	ErrorHandler_WithAddress
-
-IllegalInstr:
-		move.b	#6,(v_errortype).w
-		addq.l	#2,2(sp)
-		bra.s	ErrorHandler_WithoutAddress
-
-ZeroDivide:
-		move.b	#8,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-ChkInstr:
-		move.b	#10,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-TrapvInstr:
-		move.b	#12,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-PrivilegeViol:
-		move.b	#14,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-Trace:
-		move.b	#16,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
-
-Line1010Emu:
-		move.b	#18,(v_errortype).w
-		addq.l	#2,2(sp)
-		bra.s	ErrorHandler_WithoutAddress
-
-Line1111Emu:
-		move.b	#20,(v_errortype).w
-		addq.l	#2,2(sp)
-		bra.s	ErrorHandler_WithoutAddress
-
-ErrorExcept:
-		move.b	#0,(v_errortype).w
-		bra.s	ErrorHandler_WithoutAddress
+BusError:	move.b	#2,(v_errortype).w		; set error code
+		bra.s	ErrorHandler_WithAddress	; continue to handler (with pc value)
+; ---------------------------------------------------------------------------
+AddressError:	move.b	#4,(v_errortype).w		; set error code
+		bra.s	ErrorHandler_WithAddress	; continue to handler (with pc value)
+; ---------------------------------------------------------------------------
+IllegalInstr:	move.b	#6,(v_errortype).w		; set error code
+		addq.l	#2,2(sp)			; skip over illegal instruction on recovery
+		bra.s	ErrorHandler_WithoutAddress	; continue to handler
+; ---------------------------------------------------------------------------
+ZeroDivide:	move.b	#8,(v_errortype).w		; set error code
+		bra.s	ErrorHandler_WithoutAddress	; continue to handler
+; ---------------------------------------------------------------------------
+ChkInstr:	move.b	#$A,(v_errortype).w		; set error code
+		bra.s	ErrorHandler_WithoutAddress	; continue to handler
+; ---------------------------------------------------------------------------
+TrapvInstr:	move.b	#$C,(v_errortype).w		; set error code
+		bra.s	ErrorHandler_WithoutAddress	; continue to handler
+; ---------------------------------------------------------------------------
+PrivilegeViol:	move.b	#$E,(v_errortype).w		; set error code
+		bra.s	ErrorHandler_WithoutAddress	; continue to handler
+; ---------------------------------------------------------------------------
+Trace:		move.b	#$10,(v_errortype).w		; set error code
+		bra.s	ErrorHandler_WithoutAddress	; continue to handler
+; ---------------------------------------------------------------------------
+Line1010Emu:	move.b	#$12,(v_errortype).w		; set error code
+		addq.l	#2,2(sp)			; skip over illegal instruction on recovery
+		bra.s	ErrorHandler_WithoutAddress	; continue to handler
+; ---------------------------------------------------------------------------
+Line1111Emu:	move.b	#$14,(v_errortype).w		; set error code
+		addq.l	#2,2(sp)			; skip over illegal instruction on recovery
+		bra.s	ErrorHandler_WithoutAddress	; continue to handler
+; ---------------------------------------------------------------------------
+ErrorExcept:	move.b	#0,(v_errortype).w		; set error code (generic fallback error)
+		bra.s	ErrorHandler_WithoutAddress	; continue to handler
 ; ===========================================================================
 
 ; loc_43A:
 ErrorHandler_WithAddress:
-		disable_ints
-		addq.w	#2,sp
-		move.l	(sp)+,(v_spbuffer).w
-		addq.w	#2,sp
-		movem.l	d0-a7,(v_regbuffer).w
-		bsr.w	ShowErrorMessage
-		move.l	2(sp),d0
-		bsr.w	ShowErrorValue
-		move.l	(v_spbuffer).w,d0
-		bsr.w	ShowErrorValue
-		bra.s	loc_478
+		disable_ints				; disable interrupts so we stay here
+		addq.w	#2,sp				; skip sr value
+		move.l	(sp)+,(v_spbuffer).w		; retrieve pc value from before the crash
+		addq.w	#2,sp				; skip second sr value
+		movem.l	d0-a7,(v_regbuffer).w		; backup all registers values from before the crash
+
+		bsr.w	ShowErrorMessage		; write error text to screen
+		move.l	2(sp),d0			; get error address
+		bsr.w	ShowErrorValue			; write value to screen
+		move.l	(v_spbuffer).w,d0		; get origin pc value
+		bsr.w	ShowErrorValue			; write value to screen
+		bra.s	ErrorHandler_TryRecovery	; skip over
 ; ===========================================================================
 
 ; loc_462:
 ErrorHandler_WithoutAddress:
-		disable_ints
-		movem.l	d0-a7,(v_regbuffer).w
-		bsr.w	ShowErrorMessage
-		move.l	2(sp),d0
-		bsr.w	ShowErrorValue
+		disable_ints				; disable interrupts so we stay here
+		movem.l	d0-a7,(v_regbuffer).w		; backup all registers values from before the crash
 
-loc_478:
-		bsr.w	ErrorWaitForC
-		movem.l	(v_regbuffer).w,d0-a7
-		enable_ints
-		rte	
+		bsr.w	ShowErrorMessage		; write error text to screen
+		move.l	2(sp),d0			; load error address
+		bsr.w	ShowErrorValue			; write value to screen
+; ---------------------------------------------------------------------------
+
+; loc_478:
+ErrorHandler_TryRecovery:
+		bsr.w	ErrorWaitForC			; loop until C has been pressed
+		movem.l	(v_regbuffer).w,d0-a7		; restore registers before exception
+		enable_ints				; enable ints
+		rte					; try resuming normal operation (may or may not work, depending on type of crash)
 ; ===========================================================================
 
 ShowErrorMessage:
-		lea	(vdp_data_port).l,a6
-		locVRAM	ArtTile_Error_Handler_Font*tile_size
-		lea	(Art_Text).l,a0
-		move.w	#(Art_Text_end-Art_Text-tile_size)/2-1,d1 ; strangely, this does not load the final tile
-.loadgfx:
-		move.w	(a0)+,(a6)
-		dbf	d1,.loadgfx
+		lea	(vdp_data_port).l,a6		; set VDP data port
+		locVRAM	ArtTile_Error_Handler_Font*tile_size ; set target VRAM location for error text font
+		lea	(Art_Text).l,a0			; load error text font
+		move.w	#(Art_Text_end-Art_Text-tile_size)/2-1,d1 ; load font (strangely, this does not load the final tile)
+.loadgfx:	move.w	(a0)+,(a6)			; dump graphics to VRAM
+		dbf	d1,.loadgfx			; loop until font has been loaded
 
-		moveq	#0,d0		; clear d0
-		move.b	(v_errortype).w,d0 ; load error code
-		move.w	ErrorText(pc,d0.w),d0
-		lea	ErrorText(pc,d0.w),a0
-		locVRAM	vram_fg+$604
-		moveq	#19-1,d1		; number of characters (minus 1)
-
-.showchars:
-		moveq	#0,d0
-		move.b	(a0)+,d0
+		moveq	#0,d0				; clear d0
+		move.b	(v_errortype).w,d0		; load error code
+		move.w	ErrorText(pc,d0.w),d0		; find offset in error texts array
+		lea	ErrorText(pc,d0.w),a0		; load error text for error code
+		locVRAM	vram_fg+(12*$80)+(2*2)		; write error message directly to plane A nametable (row 12 + column 2 = $C04)
+		moveq	#19-1,d1			; number of characters in error text message (minus 1)
+.showchars:	moveq	#0,d0				; clear d0
+		move.b	(a0)+,d0			; get next character from error text
 		addi.w	#-'0'+ArtTile_Error_Handler_Font,d0 ; rebase from ASCII to a VRAM index
-		move.w	d0,(a6)
-		dbf	d1,.showchars	; repeat for number of characters
-		rts
+		move.w	d0,(a6)				; write to VRAM
+		dbf	d1,.showchars			; repeat for number of characters
+		rts					; return
 ; End of function ShowErrorMessage
 ; ===========================================================================
 
-ErrorText:	dc.w .exception-ErrorText
-		dc.w .bus-ErrorText
-		dc.w .address-ErrorText
-		dc.w .illinstruct-ErrorText
-		dc.w .zerodivide-ErrorText
-		dc.w .chkinstruct-ErrorText
-		dc.w .trapv-ErrorText
-		dc.w .privilege-ErrorText
-		dc.w .trace-ErrorText
-		dc.w .line1010-ErrorText
-		dc.w .line1111-ErrorText
+ErrorText:	dc.w .exception-ErrorText		; 0
+		dc.w .bus-ErrorText			; 2
+		dc.w .address-ErrorText			; 4
+		dc.w .illinstruct-ErrorText		; 6
+		dc.w .zerodivide-ErrorText		; 8
+		dc.w .chkinstruct-ErrorText		; $A
+		dc.w .trapv-ErrorText			; $C
+		dc.w .privilege-ErrorText		; $E
+		dc.w .trace-ErrorText			; $10
+		dc.w .line1010-ErrorText		; $12
+		dc.w .line1111-ErrorText		; $14
 
 .exception:	dc.b "ERROR EXCEPTION    "
 .bus:		dc.b "BUS ERROR          "
 .address:	dc.b "ADDRESS ERROR      "
 .illinstruct:	dc.b "ILLEGAL INSTRUCTION"
-.zerodivide:	dc.b "@ERO DIVIDE        " ; @ is Z due to the font arrangement
+.zerodivide:	dc.b "@ERO DIVIDE        "		; Note: @ is Z due to the font arrangement
 .chkinstruct:	dc.b "CHK INSTRUCTION    "
 .trapv:		dc.b "TRAPV INSTRUCTION  "
 .privilege:	dc.b "PRIVILEGE VIOLATION"
@@ -569,38 +576,35 @@ ErrorText:	dc.w .exception-ErrorText
 
 ; ===========================================================================
 
+; Input: d0 = number to write (8 digits)
 ShowErrorValue:
-		move.w	#ArtTile_Error_Handler_Font+10,(a6)	; display "$" symbol
-		moveq	#8-1,d2
+		move.w	#ArtTile_Error_Handler_Font+$A,(a6) ; display "$" symbol
+		moveq	#8-1,d2				; write 8 digits
+	.loop:	rol.l	#4,d0				; shift to next digit
+		bsr.s	.writeDigit			; write number to VRAM
+		dbf	d2,.loop			; loop until done
+		rts					; return
+; ---------------------------------------------------------------------------
 
-.loop:
-		rol.l	#4,d0
-		bsr.s	.shownumber	; display 8 numbers
-		dbf	d2,.loop
-		rts
+.writeDigit:
+		move.w	d0,d1				; make a copy (need to preserve d0 for the loop)
+		andi.w	#$F,d1				; limit digit to one nybble
+		cmpi.w	#$A,d1				; is digit $A-$F?
+		blo.s	.write				; if not, branch
+		addq.w	#7,d1				; adjust tile offset for hex letters
+	.write:	addi.w	#ArtTile_Error_Handler_Font,d1	; add art tile offset
+		move.w	d1,(a6)				; write to VRAM nametable
+		rts					; return
 ; End of function ShowErrorValue
 ; ===========================================================================
 
-.shownumber:
-		move.w	d0,d1
-		andi.w	#$F,d1
-		cmpi.w	#$A,d1
-		blo.s	.chars0to9
-		addq.w	#7,d1		; add 7 for characters A-F
-
-.chars0to9:
-		addi.w	#ArtTile_Error_Handler_Font,d1
-		move.w	d1,(a6)
-		rts
-; End of function sub_5CA
-; ===========================================================================
-
 ErrorWaitForC:
-		bsr.w	ReadJoypads
-		cmpi.b	#btnC,(v_jpadpress1).w ; is button C pressed?
-		bne.w	ErrorWaitForC	; if not, branch
-		rts
+		bsr.w	ReadJoypads			; keep reading joypads
+		cmpi.b	#btnC,(v_jpadpress1).w		; has button C been pressed?
+		bne.w	ErrorWaitForC			; if not, keep looping
+		rts					; return to try recovering execution
 ; End of function ErrorWaitForC
+; End of error handler (as a whole)
 
 
 ; ===========================================================================
@@ -616,19 +620,19 @@ Art_Text:	bincludeEndMarker	"artunc/Level Select & Debug Text.unc"
 ; ---------------------------------------------------------------------------
 ; Vertical interrupt
 ; ---------------------------------------------------------------------------
-id_VBlank_Lag:		equ $00	; (lag frame)
-id_VBlank_Sega:		equ $02	; Sega Screen
-id_VBlank_Title:	equ $04	; Title Screen, Credits
-id_VBlank_Unused06:	equ $06	; (unused)
-id_VBlank_Levels:	equ $08	; Levels, Demos
-id_VBlank_SpecialStage:	equ $0A	; Special Stages
-id_VBlank_TitleCards:	equ $0C	; Title Cards
-id_VBlank_Unused0E:	equ $0E	; (unused)
-id_VBlank_Paused:	equ $10	; Paused
-id_VBlank_PaletteFade:	equ $12	; Palette Fade
-id_VBlank_SegaPCM:	equ $14	; Sega Screen PCM
-id_VBlank_Continue:	equ $16	; Continue Screen
-id_VBlank_Ending:	equ $18	; Ending Sequence
+id_VBlank_Lag:		equ $00				; (lag frame)
+id_VBlank_Sega:		equ $02				; Sega Screen
+id_VBlank_Title:	equ $04				; Title Screen, Credits
+id_VBlank_Unused06:	equ $06				; (unused)
+id_VBlank_Levels:	equ $08				; Levels, Demos
+id_VBlank_SpecialStage:	equ $0A				; Special Stages
+id_VBlank_TitleCards:	equ $0C				; Title Cards
+id_VBlank_Unused0E:	equ $0E				; (unused)
+id_VBlank_Paused:	equ $10				; Paused
+id_VBlank_PaletteFade:	equ $12				; Palette Fade
+id_VBlank_SegaPCM:	equ $14				; Sega Screen PCM
+id_VBlank_Continue:	equ $16				; Continue Screen
+id_VBlank_Ending:	equ $18				; Ending Sequence
 ; ---------------------------------------------------------------------------
 
 ; loc_B10: VBla:
@@ -692,41 +696,40 @@ VBlank_Index:	dc.w VBlank_Lag-VBlank_Index		; $00 - (lag frame)
 ; loc_B88: VBla_00:
 VBlank_Lag:
 		cmpi.b	#$80+id_Level,(v_gamemode).w	; is pre level sequence active?
-		beq.s	.islevel			; if not, just update sound driver and resume operation
+		beq.s	.isLevel			; if not, just update sound driver and resume operation
 		cmpi.b	#id_Level,(v_gamemode).w	; is game on a level?
 		bne.w	VBlank_Music			; if not, just update sound driver and resume operation
 
-.islevel:
+.isLevel:
 		cmpi.b	#id_LZ,(v_zone).w		; is level LZ?
 		bne.w	VBlank_Music			; if not, just update sound driver and resume operation
 
-	; A lag frame has occured while in Labyrinth Zone...
+	; --- A lag frame has occured while in Labyrinth Zone ---
 
 		move.w	(vdp_control_port).l,d0		; clear write-pending flag in VDP (prevents issues if 68k was reset while writing a command to VDP)
 
 		; Same as in the opening block of the VBlank routine, this time during a lag frame.
 		; This only happens if the level is LZ (note, Sonic 2/3/&K would change this so it runs in any level).
 		btst	#6,(v_megadrive).w		; is Megadrive PAL?
-		beq.s	.notPAL				; if not, branch
+		beq.s	.paletteTransfer		; if not, branch
 		move.w	#$700,d0			; set to waste a bunch of cycles
 	.waitPAL:
 		dbf	d0,.waitPAL			; loop until cycles have been wasted
 
-.notPAL:
+.paletteTransfer:
 		move.w	#1,(f_hblank_pal).w		; set HBlank flag
-		stopZ80
-		waitZ80
-
+		stopZ80					; stop Z80 for CRAM transfers
+		waitZ80					; wait until Z80 has stopped
 		tst.b	(f_wtr_state).w			; is the screen completely underewater?
-		bne.s	.waterabove 			; if not, branch
+		bne.s	.waterAbove 			; if not, branch
 		writeCRAM	v_palette,0		; write regular palette buffer to CRAM
-		bra.s	.waterbelow			; skip over
-.waterabove:
+		bra.s	.waterBelow			; skip over
+	.waterAbove:
 		writeCRAM	v_palette_water,0	; write water palette buffer to CRAM
-
-.waterbelow:
+	.waterBelow:
 		move.w	(v_hblank_hreg).w,(a5)		; write HBlank trigger scan line for water palette swap to VDP
-		startZ80
+		startZ80				; restart Z80
+
 		bra.w	VBlank_Music			; branch back to update sound driver and resume operation
 
 ; ===========================================================================
@@ -736,8 +739,8 @@ VBlank_Lag:
 
 ; loc_C32: VBla_02:
 VBlank_Sega:
-		bsr.w	VBlank_StandardTransfers
-		; fall-through
+		bsr.w	VBlank_StandardTransfers	; do standard screen transfers
+		; fall-through...
 
 ; ---------------------------------------------------------------------------
 ; VBlank 14 - Sega Screen while the PCM sample is playing
@@ -745,11 +748,11 @@ VBlank_Sega:
 
 ; loc_C36: VBla_14:
 VBlank_SegaPCM:
-		tst.w	(v_generictimer).w
-		beq.w	.end
-		subq.w	#1,(v_generictimer).w
-.end:
-		rts
+		tst.w	(v_generictimer).w		; is generic timer set?
+		beq.w	.end				; if not, branch
+		subq.w	#1,(v_generictimer).w		; decrement generic timer
+	.end:
+		rts					; return
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -758,24 +761,25 @@ VBlank_SegaPCM:
 
 ; loc_C44: VBla_04:
 VBlank_Title:
-		bsr.w	VBlank_StandardTransfers
-		bsr.w	LoadTilesAsYouMove_BGOnly
-		bsr.w	ProcessPLC_9Tiles
-		tst.w	(v_generictimer).w
-		beq.w	.end
-		subq.w	#1,(v_generictimer).w
-.end:
-		rts
+		bsr.w	VBlank_StandardTransfers	; do standard screen transfers
+		bsr.w	LoadTilesAsYouMove_BGOnly	; update background tiles as title screen scrolls
+		bsr.w	ProcessPLC_9Tiles		; decompress up to 9 Nemesis-compressed tiles
+
+		tst.w	(v_generictimer).w		; is generic timer set?
+		beq.w	.end				; if not, branch
+		subq.w	#1,(v_generictimer).w		; decrement generic timer
+	.end:
+		rts					; return
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; VBlank 06 - Unused
+; VBlank 06 - Unused and unknown purpose
 ; ---------------------------------------------------------------------------
 
 ; loc_C5E: VBla_06:
 VBlank_Unused06:
-		bsr.w	VBlank_StandardTransfers
-		rts
+		bsr.w	VBlank_StandardTransfers	; do standard screen transfers...
+		rts					; ...and nothing else
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -794,35 +798,34 @@ VBlank_Paused:
 
 ; loc_C6E: VBla_08:
 VBlank_Levels:
-		stopZ80
-		waitZ80
-		bsr.w	ReadJoypads
+		stopZ80					; request Z80 stop
+		waitZ80					; wait until Z80 has stopped
+		bsr.w	ReadJoypads			; read joypads and update buffered inputs in RAM
 
-		tst.b	(f_wtr_state).w
-		bne.s	.waterabove
-		writeCRAM	v_palette,0
-		bra.s	.waterbelow
+		tst.b	(f_wtr_state).w			; is the screen completely underewater?
+		bne.s	.waterAbove 			; if not, branch
+		writeCRAM	v_palette,0		; write regular palette buffer to CRAM
+		bra.s	.waterBelow			; skip over
+	.waterAbove:
+		writeCRAM	v_palette_water,0	; write water palette buffer to CRAM
+	.waterBelow:
+		move.w	(v_hblank_hreg).w,(a5)		; write HBlank trigger scan line for water palette swap to VDP
 
-.waterabove:
-		writeCRAM	v_palette_water,0
-
-.waterbelow:
-		move.w	(v_hblank_hreg).w,(a5)
-
-		writeVRAM	v_hscrolltablebuffer,vram_hscroll
-		writeVRAM	v_spritetablebuffer,vram_sprites
+		writeVRAM	v_hscrolltablebuffer,vram_hscroll ; transfer H-scroll buffer table to actual H-scroll VRAM
+		writeVRAM	v_spritetablebuffer,vram_sprites  ; transfer sprite buffer table to actual sprites VRAM
 
 		tst.b	(f_sonframechg).w		; has Sonic's sprite changed?
 		beq.s	.nochg				; if not, branch
 		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size ; load new Sonic gfx
-		move.b	#0,(f_sonframechg).w
+		move.b	#0,(f_sonframechg).w		; clear Sonic gfx update flag
+	.nochg:
 
-.nochg:
-		startZ80
-		movem.l	(v_screenposx).w,d0-d7
-		movem.l	d0-d7,(v_screenposx_dup).w
-		movem.l	(v_fg_scroll_flags).w,d0-d1
-		movem.l	d0-d1,(v_fg_scroll_flags_dup).w
+		startZ80				; restart Z80
+
+		movem.l	(v_screenposx).w,d0-d7		; copy everything from v_screenposx to v_bg3screenposy...
+		movem.l	d0-d7,(v_screenposx_dup).w	; ...to backup RAM (used in LoadTilesAsYouMove)
+		movem.l	(v_fg_scroll_flags).w,d0-d1	; copy FG and BG scroll flags...
+		movem.l	d0-d1,(v_fg_scroll_flags_dup).w	; ...to backup RAM
 
 		; The following code handles an awkward visual glitch for the LZ water surface.
 		; If the surface is near the top of the screen (within 96 pixels), the VDP would not have
@@ -846,13 +849,13 @@ VBlank_UpdateScreen:
 		bsr.w	LoadTilesAsYouMove		; update level tiles while screen is moving
 		jsr	(AnimateLevelGfx).l		; updated animated tiles
 		jsr	(HUD_Update).l			; update HUD data
-		bsr.w	ProcessPLC_3Tiles		; run a bit of PLC decompression
+		bsr.w	ProcessPLC_3Tiles		; decompress up to 3 Nemesis-compressed tiles (instead of the usual 9)
 
-		tst.w	(v_generictimer).w		; is there time left in the generic timer left?
+		tst.w	(v_generictimer).w		; is generic timer set?
 		beq.w	.end				; if not, branch
-		subq.w	#1,(v_generictimer).w		; subtract 1 from time left
-.end:
-		rts
+		subq.w	#1,(v_generictimer).w		; decrement generic timer
+	.end:
+		rts					; return
 ; End of function VBlank_UpdateScreen
 
 ; ===========================================================================
@@ -862,26 +865,27 @@ VBlank_UpdateScreen:
 
 ; loc_DA6: VBla_0A:
 VBlank_SpecialStage:
-		stopZ80
-		waitZ80
-		bsr.w	ReadJoypads
-		writeCRAM	v_palette,0
-		writeVRAM	v_spritetablebuffer,vram_sprites
-		writeVRAM	v_hscrolltablebuffer,vram_hscroll
-		startZ80
-		bsr.w	PalCycle_SS
+		stopZ80					; request Z80 stop
+		waitZ80					; wait until Z80 has stopped
+		bsr.w	ReadJoypads			; read joypads and update buffered inputs in RAM
+		writeCRAM	v_palette,0		; write regular palette buffer to CRAM
+		writeVRAM	v_spritetablebuffer,vram_sprites  ; transfer sprite buffer table to actual sprites VRAM
+		writeVRAM	v_hscrolltablebuffer,vram_hscroll ; transfer H-scroll buffer table to actual H-scroll VRAM
+		startZ80				; restart Z80
+
+		bsr.w	PalCycle_SS			; advance special stage palette cycle and animate bird/fish graphics
 
 		tst.b	(f_sonframechg).w		; has Sonic's sprite changed?
 		beq.s	.nochg				; if not, branch
 		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size ; load new Sonic gfx
-		move.b	#0,(f_sonframechg).w
+		move.b	#0,(f_sonframechg).w		; clear Sonic gfx update flag
+	.nochg:
 
-.nochg:
-		tst.w	(v_generictimer).w		; is there time left on the demo?
-		beq.w	.end				; if not, return
-		subq.w	#1,(v_generictimer).w		; subtract 1 from time left in demo
-.end:
-		rts
+		tst.w	(v_generictimer).w		; is generic timer set?
+		beq.w	.end				; if not, branch
+		subq.w	#1,(v_generictimer).w		; decrement generic timer
+	.end:
+		rts					; return
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -892,51 +896,52 @@ VBlank_SpecialStage:
 ; loc_E72: VBla_0C: VBla_18:
 VBlank_TitleCards:
 VBlank_Ending:
-		stopZ80
-		waitZ80
-		bsr.w	ReadJoypads
-		tst.b	(f_wtr_state).w
-		bne.s	.waterabove
+		stopZ80					; request Z80 stop
+		waitZ80					; wait until Z80 has stopped
+		bsr.w	ReadJoypads			; read joypads and update buffered inputs in RAM
 
-		writeCRAM	v_palette,0
-		bra.s	.waterbelow
+		tst.b	(f_wtr_state).w			; is the screen completely underewater?
+		bne.s	.waterAbove 			; if not, branch
+		writeCRAM	v_palette,0		; write regular palette buffer to CRAM
+		bra.s	.waterBelow			; skip over
+	.waterAbove:
+		writeCRAM	v_palette_water,0	; write water palette buffer to CRAM
+	.waterBelow:
+		move.w	(v_hblank_hreg).w,(a5)		; write HBlank trigger scan line for water palette swap to VDP
 
-.waterabove:
-		writeCRAM	v_palette_water,0
+		writeVRAM	v_hscrolltablebuffer,vram_hscroll ; transfer H-scroll buffer table to actual H-scroll VRAM
+		writeVRAM	v_spritetablebuffer,vram_sprites  ; transfer sprite buffer table to actual sprites VRAM
 
-.waterbelow:
-		move.w	(v_hblank_hreg).w,(a5)
-		writeVRAM	v_hscrolltablebuffer,vram_hscroll
-		writeVRAM	v_spritetablebuffer,vram_sprites
+		tst.b	(f_sonframechg).w		; has Sonic's sprite changed?
+		beq.s	.nochg				; if not, branch
+		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size ; load new Sonic gfx
+		move.b	#0,(f_sonframechg).w		; clear Sonic gfx update flag
+	.nochg:
 
-		tst.b	(f_sonframechg).w
-		beq.s	.nochg
-		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size
-		move.b	#0,(f_sonframechg).w
+		startZ80				; restart Z80
 
-.nochg:
-		startZ80
-		movem.l	(v_screenposx).w,d0-d7
-		movem.l	d0-d7,(v_screenposx_dup).w
-		movem.l	(v_fg_scroll_flags).w,d0-d1
-		movem.l	d0-d1,(v_fg_scroll_flags_dup).w
-		bsr.w	LoadTilesAsYouMove
-		jsr	(AnimateLevelGfx).l
-		jsr	(HUD_Update).l
-		bsr.w	ProcessPLC_9Tiles
-		rts
+		movem.l	(v_screenposx).w,d0-d7		; copy everything from v_screenposx to v_bg3screenposy...
+		movem.l	d0-d7,(v_screenposx_dup).w	; ...to backup RAM (used in LoadTilesAsYouMove)
+		movem.l	(v_fg_scroll_flags).w,d0-d1	; copy FG and BG scroll flags...
+		movem.l	d0-d1,(v_fg_scroll_flags_dup).w	; ...to backup RAM
+
+		bsr.w	LoadTilesAsYouMove		; update rendered
+		jsr	(AnimateLevelGfx).l		; animate uncompressed level graphics (e.g. MZ lava)
+		jsr	(HUD_Update).l			; update HUD numbers
+		bsr.w	ProcessPLC_9Tiles		; decompress up to 9 Nemesis-compressed tiles
+		rts					; return
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; VBlank 0E - Unused (possibly once uses as a lag frame counter?)
+; VBlank 0E - Unused (possibly once used as a lag frame counter?)
 ; ---------------------------------------------------------------------------
 
 ; loc_F8A: VBla_0E:
 VBlank_Unused0E:
-		bsr.w	VBlank_StandardTransfers
-		addq.b	#1,(v_vblank_0e_counter).w	; unused besides this one write...
+		bsr.w	VBlank_StandardTransfers	; do standard screen transfers
+		addq.b	#1,(v_vblank_0e_counter).w	; increment some counter (unused besides this one write...)
 		move.b	#id_VBlank_Unused0E,(v_vblank_routine).w ; set itself to land back here again if not further altered
-		rts
+		rts					; return
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -945,10 +950,9 @@ VBlank_Unused0E:
 
 ; loc_F9A: VBla_12:
 VBlank_PaletteFade:
-		bsr.w	VBlank_StandardTransfers
-		move.w	(v_hblank_hreg).w,(a5)
-		bra.w	ProcessPLC_9Tiles
-		
+		bsr.w	VBlank_StandardTransfers	; do standard screen transfers
+		move.w	(v_hblank_hreg).w,(a5)		; write HBlank trigger scan line for water palette swap to VDP
+		bra.w	ProcessPLC_9Tiles		; decompress up to 9 Nemesis-compressed tiles
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -957,26 +961,26 @@ VBlank_PaletteFade:
 
 ; loc_FA6: VBla_16:
 VBlank_Continue:
-		stopZ80
-		waitZ80
-		bsr.w	ReadJoypads
-		writeCRAM	v_palette,0
-		writeVRAM	v_spritetablebuffer,vram_sprites
-		writeVRAM	v_hscrolltablebuffer,vram_hscroll
-		startZ80
+		stopZ80					; request Z80 stop
+		waitZ80					; wait until Z80 has stopped
+		bsr.w	ReadJoypads			; read joypads and update buffered inputs in RAM
 
-		tst.b	(f_sonframechg).w
-		beq.s	.nochg
-		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size
-		move.b	#0,(f_sonframechg).w
+		writeCRAM	v_palette,0		; write regular palette buffer to CRAM
+		writeVRAM	v_spritetablebuffer,vram_sprites  ; transfer sprite buffer table to actual sprites VRAM
+		writeVRAM	v_hscrolltablebuffer,vram_hscroll ; transfer H-scroll buffer table to actual H-scroll VRAM
+		startZ80				; restart Z80
 
-.nochg:
-		tst.w	(v_generictimer).w
-		beq.w	.end
-		subq.w	#1,(v_generictimer).w
+		tst.b	(f_sonframechg).w		; has Sonic's sprite changed?
+		beq.s	.nochg				; if not, branch
+		writeVRAM	v_sgfx_buffer,ArtTile_Sonic*tile_size ; load new Sonic gfx
+		move.b	#0,(f_sonframechg).w		; clear Sonic gfx update flag
+	.nochg:
 
-.end:
-		rts
+		tst.w	(v_generictimer).w		; is generic timer set?
+		beq.w	.end				; if not, branch
+		subq.w	#1,(v_generictimer).w		; decrement generic timer
+	.end:
+		rts					; return
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -985,24 +989,26 @@ VBlank_Continue:
 
 ; sub_106E:
 VBlank_StandardTransfers:
-		stopZ80
-		waitZ80
-		bsr.w	ReadJoypads
+		stopZ80					; request Z80 stop
+		waitZ80					; wait until Z80 has stopped
+		bsr.w	ReadJoypads			; read joypads and update buffered inputs in RAM
 
-		tst.b	(f_wtr_state).w			; is the screen completely underwater?
-		bne.s	.underwater			; if yes, branch
-		writeCRAM	v_palette,0		; write full regular palette buffer to CRAM
-		bra.s	.rest
+		tst.b	(f_wtr_state).w			; is the screen completely underewater?
+		bne.s	.waterAbove 			; if not, branch
+		writeCRAM	v_palette,0		; write regular palette buffer to CRAM
+		bra.s	.waterBelow			; skip over
+	.waterAbove:
+		writeCRAM	v_palette_water,0	; write water palette buffer to CRAM
+	.waterBelow:
 
-.underwater:
-		writeCRAM	v_palette_water,0	; write full water palette buffer to CRAM
+		writeVRAM	v_spritetablebuffer,vram_sprites  ; transfer sprite buffer table to actual sprites VRAM
+		writeVRAM	v_hscrolltablebuffer,vram_hscroll ; transfer H-scroll buffer table to actual H-scroll VRAM
 
-.rest:
-		writeVRAM	v_spritetablebuffer,vram_sprites
-		writeVRAM	v_hscrolltablebuffer,vram_hscroll
-		startZ80
-		rts
+		startZ80				; restart Z80
+		rts					; return
 ; End of function VBlank_StandardTransfers
+; End of VBlank (as a whole)
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -3498,7 +3504,7 @@ Cont_GotoLevel:
 ; ===========================================================================
 
 ; >>> Objects for the continue screen
-	include	"_incObj/80 & 81 Continue Screen Elements and Sonic.asm"
+	include	"_incObj/80, 81 Continue Screen Elements and Sonic.asm"
 
 
 ; ===========================================================================
@@ -3702,6 +3708,8 @@ End_SlowFade:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine controlling Sonic on the ending sequence
+; Many aspects of the game use the concept of a state machine. If you are interested and want to learn more, these are Mealy and Moore machines which have plenty of resources to teach you!
+; This subroutine is a Moore machine. Once you understand these concepts, Sonic 1's game logic will make a lot more sense to you!
 ; ---------------------------------------------------------------------------
 
 End_MoveSonic:
@@ -3753,7 +3761,7 @@ End_MoveSonExit:
 ; ===========================================================================
 
 ; >>> Objects on the ending sequence
-	include	"_incObj/87, 88 & 89 Ending Sequence Sonic, Emeralds, Logo.asm"
+	include	"_incObj/87, 88, 89 Ending Sequence Sonic, Emeralds, Logo.asm"
 
 
 ; ===========================================================================
@@ -3983,7 +3991,7 @@ TryAg_Exit:	; exit end screen and restart the gam
 ; ===========================================================================
 
 ; >>> Objects on final screen
-	include	"_incObj/8B & 8C Try Again, End Eggman, End Emeralds.asm"
+	include	"_incObj/8B, 8C Try Again, End Eggman, End Emeralds.asm"
 
 
 ; ===========================================================================
@@ -4007,6 +4015,13 @@ Demo_EndGHZ2:	include	"demodata/Ending - GHZ2.asm"
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
+
+; Where possible, includes to _maps and _anim were appended to the _incObj
+; file includes themselves. However, in some cases this wasn't possible,
+; as the developers weren't very consistent with the placement, especially
+; during the early stages of production. Those includes are still here.
+
+
 ; ===========================================================================
 ; >>> Level rendering, loading, and updating
 		include	"_inc/LevelSizeLoad & BgScrollSpeed.asm" ; merged with "LevelSizeLoad & BgScrollSpeed (JP1).asm"
@@ -4024,64 +4039,37 @@ Demo_EndGHZ2:	include	"demodata/Ending - GHZ2.asm"
 
 ; ===========================================================================
 ; >>> Various level objects
-		include	"_incObj/11 Bridge.asm"
-Map_Bri:	include	"_maps/Bridge.asm"
+		include	"_incObj/11 GHZ Bridge.asm"
 		include	"_incObj/15 Swinging Platforms.asm"
-Map_Swing_GHZ:	include	"_maps/Swinging Platforms (GHZ).asm"
-Map_Swing_SLZ:	include	"_maps/Swinging Platforms (SLZ).asm"
-		include	"_incObj/17 Spiked Pole Helix.asm"
-Map_Hel:	include	"_maps/Spiked Pole Helix.asm"
+		include	"_incObj/17 GHZ Spiked Pole Helix.asm"
 		include	"_incObj/18 Platforms.asm"
-Map_Plat_Unused:include	"_maps/Platforms (unused).asm"
-Map_Plat_GHZ:	include	"_maps/Platforms (GHZ).asm"
-Map_Plat_SYZ:	include	"_maps/Platforms (SYZ).asm"
-Map_Plat_SLZ:	include	"_maps/Platforms (SLZ).asm"
-		include	"_incObj/19.asm" ; this was the rolling GHZ ball in the prototype
+		include	"_incObj/19 Unused - Blank.asm" ; this was the rolling GHZ ball in the prototype
 Map_GBall:	include	"_maps/GHZ Ball.asm"
-		include	"_incObj/1A & 53 Collapsing Ledges and Floors.asm"	; includes "SlopeObject_AssumeStoodOn" subroutine
-Map_Ledge:	include	"_maps/Collapsing Ledge.asm"
-Map_CFlo:	include	"_maps/Collapsing Floors.asm"
-		include	"_incObj/1C Scenery.asm"
-Map_Scen:	include	"_maps/Scenery.asm"
-		include	"_incObj/1D Unused Switch.asm"
-Map_Swi:	include	"_maps/Unused Switch.asm"
+		include	"_incObj/1A, 53 Collapsing Ledges and Floors.asm"	; includes "SlopeObject_AssumeStoodOn" subroutine
+		include	"_incObj/1C GHZ, SYZ Scenery.asm"
+		include	"_incObj/1D Unused - Switch.asm"
 		include	"_incObj/2A SBZ Small Door.asm"
-		include	"_anim/SBZ Small Door.asm"
-Map_ADoor:	include	"_maps/SBZ Small Door.asm"
-		include	"_incObj/44 GHZ Edge Walls (part 2).asm"
+		include	"_incObj/sub SolidWall.asm"
 
 
 ; ===========================================================================
 ; >>> Badniks, explosions, and Badnik-related objects
-		include	"_incObj/1E Ball Hog.asm"
-		include	"_incObj/20 Cannonball.asm"
-		include	"_incObj/24, 27 & 3F Explosions.asm"
+		include	"_incObj/1E, 20 Badnik - Ball Hog and Cannonball.asm"
+		include	"_incObj/24 Unused - Small Explosion.asm"
+		include	"_incObj/27, 3F Explosions.asm"
 		include	"_anim/Ball Hog.asm"
 Map_Hog:	include	"_maps/Ball Hog.asm"
 Map_UnkExplode:	include	"_maps/Unused Explosion.asm"
 		include	"_maps/Explosions.asm"
-		include	"_incObj/28 Animals.asm"
-		include	"_incObj/29 Points.asm"
-Map_Animal1:	include	"_maps/Animals 1.asm"
-Map_Animal2:	include	"_maps/Animals 2.asm"
-Map_Animal3:	include	"_maps/Animals 3.asm"
-Map_Poi:	include	"_maps/Points.asm"
-		include	"_incObj/1F Crabmeat.asm"
-		include	"_anim/Crabmeat.asm"
-Map_Crab:	include	"_maps/Crabmeat.asm"
-		include	"_incObj/22 Buzz Bomber.asm"
-		include	"_incObj/23 Buzz Bomber Missile.asm"
-		include	"_anim/Buzz Bomber.asm"
-		include	"_anim/Buzz Bomber Missile.asm"
-Map_Buzz:	include	"_maps/Buzz Bomber.asm"
-Map_Missile:	include	"_maps/Buzz Bomber Missile.asm"
+		include	"_incObj/28, 29 Animals and Points.asm"
+		include	"_incObj/1F Badnik - Crabmeat.asm"
+		include	"_incObj/22, 23 Badnik - Buzz Bomber and Missile.asm"
 
 
 ; ===========================================================================
-; >>> Rings and monitors
-		include	"_incObj/25 & 37 Rings.asm"
-		include	"_incObj/4B Giant Ring.asm"
-		include	"_incObj/7C Ring Flash.asm"
+; >>> Rings
+		include	"_incObj/25, 37 Rings.asm"
+		include	"_incObj/4B, 7C Giant Ring and Flash.asm"
 		include	"_anim/Rings.asm"
 Map_Ring:   if Revision=0
 		include	"_maps/Rings (REV00).asm"
@@ -4092,50 +4080,32 @@ Map_Ring:   if Revision=0
 	    endif
 Map_GRing:	include	"_maps/Giant Ring.asm"
 Map_Flash:	include	"_maps/Ring Flash.asm"
-		include	"_incObj/26 Monitor.asm"
-		include	"_incObj/2E Monitor Content Power-Up.asm"
-		include	"_incObj/26 Monitor (SolidSides subroutine).asm"
-		include	"_anim/Monitor.asm"
-Map_Monitor:	include	"_maps/Monitor.asm"
 
 
 ; ===========================================================================
-; >>> Title screen objects
-		include	"_incObj/0E Title Screen Sonic.asm"
-		include	"_incObj/0F Press Start and TM.asm"
-		include	"_anim/Title Screen Sonic.asm"
-		include	"_anim/Press Start and TM.asm"
-		include	"_incObj/sub AnimateSprite.asm"
-Map_PSB:	include	"_maps/Press Start and TM.asm"
-Map_TSon:	include	"_maps/Title Screen Sonic.asm"
+; >>> Monitors
+		include	"_incObj/26, 2E Monitors and Power-Ups.asm"
+
+
+; ===========================================================================
+; >>> Title screen objects (includes AnimateSprite)
+		include	"_incObj/0E, 0F Title Screen - Sonic, Press Start, TM.asm"
 
 
 ; ===========================================================================
 ; >>> More Badniks and level objects
-		include	"_incObj/2B Chopper.asm"
-		include	"_anim/Chopper.asm"
-Map_Chop:	include	"_maps/Chopper.asm"
-		include	"_incObj/2C Jaws.asm"
-		include	"_anim/Jaws.asm"
-Map_Jaws:	include	"_maps/Jaws.asm"
-		include	"_incObj/2D Burrobot.asm"
-		include	"_anim/Burrobot.asm"
-Map_Burro:	include	"_maps/Burrobot.asm"
-		include	"_incObj/2F MZ Large Grassy Platforms.asm"
-		include	"_incObj/35 Burning Grass.asm"
-		include	"_anim/Burning Grass.asm"
-Map_LGrass:	include	"_maps/MZ Large Grassy Platforms.asm"
+		include	"_incObj/2B Badnik - Chopper.asm"
+		include	"_incObj/2C Badnik - Jaws.asm"
+		include	"_incObj/2D Badnik - Burrobot.asm"
+		include	"_incObj/2F, 35 MZ Large Grassy Platforms and Burning Grass.asm"
 Map_Fire:	include	"_maps/Fireballs.asm"
 		include	"_incObj/30 MZ Large Green Glass Blocks.asm"
-Map_Glass:	include	"_maps/MZ Large Green Glass Blocks.asm"
-		include	"_incObj/31 Chained Stompers.asm"
-		include	"_incObj/45 Sideways Stomper.asm"
+		include	"_incObj/31 MZ Chained Stompers.asm"
+		include	"_incObj/45 Unused - MZ Sideways Stomper.asm"
 Map_CStom:	include	"_maps/Chained Stompers.asm"
 Map_SStom:	include	"_maps/Sideways Stomper.asm"
 		include	"_incObj/32 Button.asm"
-Map_But:	include	"_maps/Button.asm"
-		include	"_incObj/33 Pushable Blocks.asm"
-Map_Push:	include	"_maps/Pushable Blocks.asm"
+		include	"_incObj/33 MZ, LZ Pushable Blocks.asm"
 
 
 ; ===========================================================================
@@ -4143,8 +4113,7 @@ Map_Push:	include	"_maps/Pushable Blocks.asm"
 		include	"_incObj/34 Title Cards.asm"
 		include	"_incObj/39 Game Over.asm"
 		include	"_incObj/3A Got Through Card.asm"
-		include	"_incObj/7E Special Stage Results.asm"
-		include	"_incObj/7F SS Result Chaos Emeralds.asm"
+		include	"_incObj/7E, 7F Special Stage Results and Chaos Emeralds.asm"
 		include	"_maps/Title Cards.asm"	; includes "Map_Card", "Map_Over", "Map_Got", and "Map_SSR"
 Map_SSRC:	include	"_maps/SS Result Chaos Emeralds.asm"
 
@@ -4152,21 +4121,17 @@ Map_SSRC:	include	"_maps/SS Result Chaos Emeralds.asm"
 ; ===========================================================================
 ; >>> More level objects
 		include	"_incObj/36 Spikes.asm"
-Map_Spike:	include	"_maps/Spikes.asm"
-		include	"_incObj/3B Purple Rock.asm"
-		include	"_incObj/49 Waterfall Sound.asm"
+		include	"_incObj/3B GHZ Purple Rock.asm"
+		include	"_incObj/49 GHZ Waterfall Sound.asm"
 Map_PRock:	include	"_maps/Purple Rock.asm"
-		include	"_incObj/3C Smashable Wall.asm"
-		include	"_incObj/sub SmashObject.asm"
-Map_Smash:	include	"_maps/Smashable Walls.asm"
+		include	"_incObj/3C GHZ, SLZ Smashable Wall.asm"	; includes SmashObject
 
 
 ; ===========================================================================
 ; Subroutines to run, render, and update objects
 		include	"_inc/ExecuteObjects.asm"
 		include	"_inc/Object Pointers.asm" ; includes Obj_Index
-		include	"_incObj/sub ObjectFall.asm"
-		include	"_incObj/sub SpeedToPos.asm"
+		include	"_incObj/sub ObjectFall & SpeedToPos.asm"
 		include	"_incObj/sub DisplaySprite.asm"
 		include	"_incObj/sub DeleteObject.asm"
 		include	"_inc/BuildSprites.asm"
@@ -4178,106 +4143,50 @@ Map_Smash:	include	"_maps/Smashable Walls.asm"
 ; ===========================================================================
 ; >>> More level obejcts
 		include	"_incObj/41 Springs.asm"
-		include	"_anim/Springs.asm"
-Map_Spring:	include	"_maps/Springs.asm"
-		include	"_incObj/42 Newtron.asm"
-		include	"_anim/Newtron.asm"
-Map_Newt:	include	"_maps/Newtron.asm"
-		include	"_incObj/43 Roller.asm"
-		include	"_anim/Roller.asm"
-Map_Roll:	include	"_maps/Roller.asm"
-		include	"_incObj/44 GHZ Edge Walls (part 1).asm"
-Map_Edge:	include	"_maps/GHZ Edge Walls.asm"
-		include	"_incObj/13 Lava Ball Maker.asm"
-		include	"_incObj/14 Lava Ball.asm"
-		include	"_anim/Fireballs.asm"
-		include	"_incObj/6D Flamethrower.asm"
-		include	"_anim/Flamethrower.asm"
-Map_Flame:	include	"_maps/Flamethrower.asm"
+		include	"_incObj/42 Badnik - Newtron.asm"
+		include	"_incObj/43 Badnik - Roller.asm"
+		include	"_incObj/44 GHZ Edge Walls.asm"
+		include	"_incObj/13, 14 MZ, SLZ Fire Balls and Maker.asm"
+		include	"_incObj/6D SBZ Flamethrower.asm"
 		include	"_incObj/46 MZ Bricks.asm"
-Map_Brick:	include	"_maps/MZ Bricks.asm"
-		include	"_incObj/12 Light.asm"
-Map_Light	include	"_maps/Light.asm"
-		include	"_incObj/47 Bumper.asm"
-		include	"_anim/Bumper.asm"
-Map_Bump:	include	"_maps/Bumper.asm"
+		include	"_incObj/12 SYZ Search Light.asm"
+		include	"_incObj/47 SYZ Bumper.asm"
 		include	"_incObj/0D Signpost.asm" ; includes "GotThroughAct" subroutine
-		include	"_anim/Signpost.asm"
-Map_Sign:	include	"_maps/Signpost.asm"
-		include	"_incObj/4C & 4D Lava Geyser Maker.asm"
-		include	"_incObj/4E Wall of Lava.asm"
-		include	"_incObj/54 Lava Tag.asm"
-Map_LTag:	include	"_maps/Lava Tag.asm"
+		include	"_incObj/4C, 4D MZ Lava Geyser and Maker.asm"
+		include	"_incObj/4E MZ Wall of Lava.asm"
+		include	"_incObj/54 MZ Invisible Lava Tag.asm"
 		include	"_anim/Lava Geyser.asm"
 		include	"_anim/Wall of Lava.asm"
 Map_Geyser:	include	"_maps/Lava Geyser.asm"
 Map_LWall:	include	"_maps/Wall of Lava.asm"
-		include	"_incObj/40 Moto Bug.asm" ; includes "_incObj/sub RememberState.asm" subroutine
-		include	"_anim/Moto Bug.asm"
-Map_Moto:	include	"_maps/Moto Bug.asm"
-		include	"_incObj/4F.asm" ; this was Splats in the prototype
-		include	"_incObj/50 Yadrin.asm"
-		include	"_anim/Yadrin.asm"
-Map_Yad:	include	"_maps/Yadrin.asm"
+		include	"_incObj/40 Badnik - Moto Bug.asm" ; includes "_incObj/sub RememberState.asm" subroutine
+		include	"_incObj/4F Unused - Blank.asm" ; this was Splats in the prototype
+		include	"_incObj/50 Badnik - Yadrin.asm"
 		include	"_incObj/sub SolidObject.asm"
-		include	"_incObj/51 Smashable Green Block.asm"
-Map_Smab:	include	"_maps/Smashable Green Block.asm"
+		include	"_incObj/51 MZ Smashable Green Block.asm"
 		include	"_incObj/52 Moving Blocks.asm"
-Map_MBlock:	include	"_maps/Moving Blocks (MZ and SBZ).asm"
-Map_MBlockLZ:	include	"_maps/Moving Blocks (LZ).asm"
-		include	"_incObj/55 Basaran.asm"
-		include	"_anim/Basaran.asm"
-Map_Bas:	include	"_maps/Basaran.asm"
-		include	"_incObj/56 Floating Blocks and Doors.asm"
-Map_FBlock:	include	"_maps/Floating Blocks and Doors.asm"
-		include	"_incObj/57 Spiked Ball and Chain.asm"
-Map_SBall:	include	"_maps/Spiked Ball and Chain (SYZ).asm"
-Map_SBall2:	include	"_maps/Spiked Ball and Chain (LZ).asm"
-		include	"_incObj/58 Big Spiked Ball.asm"
-Map_BBall:	include	"_maps/Big Spiked Ball.asm"
+		include	"_incObj/55 Badnik - Basaran.asm"
+		include	"_incObj/56 SYZ, SLZ Floating Blocks and LZ Doors.asm"
+		include	"_incObj/57 SYZ, LZ Spiked Ball and Chain.asm"
+		include	"_incObj/58 SYZ Big Spiked Ball.asm"
 		include	"_incObj/59 SLZ Elevators.asm"
-Map_Elev:	include	"_maps/SLZ Elevators.asm"
 		include	"_incObj/5A SLZ Circling Platform.asm"
-Map_Circ:	include	"_maps/SLZ Circling Platform.asm"
-		include	"_incObj/5B Staircase.asm"
-Map_Stair:	include	"_maps/Staircase.asm"
-		include	"_incObj/5C Pylon.asm"
-Map_Pylon:	include	"_maps/Pylon.asm"
-		include	"_incObj/1B Water Surface.asm"
-Map_Surf:	include	"_maps/Water Surface.asm"
-		include	"_incObj/0B Pole that Breaks.asm"
-Map_Pole:	include	"_maps/Pole that Breaks.asm"
-		include	"_incObj/0C Flapping Door.asm"
-		include	"_anim/Flapping Door.asm"
-Map_Flap:	include	"_maps/Flapping Door.asm"
-		include	"_incObj/71 Invisible Barriers.asm"
-Map_Invis:	include	"_maps/Invisible Barriers.asm"
-		include	"_incObj/5D Fan.asm"
-Map_Fan:	include	"_maps/Fan.asm"
-		include	"_incObj/5E Seesaw.asm"
-Map_Seesaw:	include	"_maps/Seesaw.asm"
-Map_SSawBall:	include	"_maps/Seesaw Ball.asm"
-		include	"_incObj/5F Bomb Enemy.asm"
-		include	"_anim/Bomb Enemy.asm"
-Map_Bomb:	include	"_maps/Bomb Enemy.asm"
-		include	"_incObj/60 Orbinaut.asm"
-		include	"_anim/Orbinaut.asm"
-Map_Orb:	include	"_maps/Orbinaut.asm"
-		include	"_incObj/16 Harpoon.asm"
-		include	"_anim/Harpoon.asm"
-Map_Harp:	include	"_maps/Harpoon.asm"
+		include	"_incObj/5B SLZ Staircase.asm"
+		include	"_incObj/5C SLZ Foreground Pylon.asm"
+		include	"_incObj/1B LZ Water Surface.asm"
+		include	"_incObj/0B LZ Pole that Breaks.asm"
+		include	"_incObj/0C LZ Flapping Door.asm"
+		include	"_incObj/71 Invisible Solid Barriers.asm"
+		include	"_incObj/5D SLZ Fan.asm"
+		include	"_incObj/5E SLZ Seesaw.asm"
+		include	"_incObj/5F Badnik - Walking Bomb.asm"
+		include	"_incObj/60 Badnik - Orbinaut.asm"
+		include	"_incObj/16 LZ Harpoon.asm"
 		include	"_incObj/61 LZ Blocks.asm"
-Map_LBlock:	include	"_maps/LZ Blocks.asm"
-		include	"_incObj/62 Gargoyle.asm"
-Map_Gar:	include	"_maps/Gargoyle.asm"
+		include	"_incObj/62 LZ Gargoyle.asm"
 		include	"_incObj/63 LZ Conveyor.asm"
-Map_LConv:	include	"_maps/LZ Conveyor.asm"
-		include	"_incObj/64 Bubbles.asm"
-		include	"_anim/Bubbles.asm"
-Map_Bub:	include	"_maps/Bubbles.asm"
-		include	"_incObj/65 Waterfalls.asm"
-		include	"_anim/Waterfalls.asm"
-Map_WFall:	include	"_maps/Waterfalls.asm"
+		include	"_incObj/64 LZ Air Bubbles.asm"
+		include	"_incObj/65 LZ Waterfalls.asm"
 
 
 ; ===========================================================================
@@ -4287,14 +4196,11 @@ Map_WFall:	include	"_maps/Waterfalls.asm"
 
 ; ===========================================================================
 ; >>> Various unique objects
-		include	"_incObj/0A Drowning Countdown.asm"
-		include	"_incObj/sub ResumeMusic.asm"
-		include	"_anim/Drowning Countdown.asm"
-Map_Drown:	include	"_maps/Drowning Countdown.asm"
+		include	"_incObj/0A LZ Drowning Countdown.asm"	; includes ResumeMusic
 		include	"_incObj/38 Shield and Invincibility.asm"
-		include	"_incObj/4A Special Stage Entry (Unused).asm"
+		include	"_incObj/4A Unused - Special Stage Entry.asm"
 		include	"_incObj/03 Collision Switcher.asm"
-		include	"_incObj/08 Water Splash.asm"
+		include	"_incObj/08 LZ Water Splash.asm"
 		include	"_anim/Shield and Invincibility.asm"
 Map_Shield:	include	"_maps/Shield and Invincibility.asm"
 		include	"_anim/Special Stage Entry (Unused).asm"
@@ -4307,107 +4213,69 @@ Map_Splash:	include	"_maps/Water Splash.asm"
 ; ===========================================================================
 ; >>> Collision subroutines for Sonic and other objects
 		include	"_incObj/Sonic AnglePos.asm"
-		include	"_incObj/sub FindNearestTile.asm"
-		include	"_incObj/sub FindFloor.asm"
-		include	"_incObj/sub FindWall.asm"
+		include	"_incObj/sub FindNearestTile & FindFloor & FindWall.asm"
 		include "_inc/ConvertCollisionArray (Unused).asm"
 		include	"_incObj/Sonic Collision.asm"
 
 
 ; ===========================================================================
-; >>> More level objects
-		include	"_incObj/66 Rotating Junction.asm"
-Map_Jun:	include	"_maps/Rotating Junction.asm"
-		include	"_incObj/67 Running Disc.asm"
-Map_Disc:	include	"_maps/Running Disc.asm"
-		include	"_incObj/68 Conveyor Belt.asm"
-		include	"_incObj/69 SBZ Spinning Platforms.asm"
-		include	"_anim/SBZ Spinning Platforms.asm"
-Map_Trap:	include	"_maps/Trapdoor.asm"
-Map_Spin:	include	"_maps/SBZ Spinning Platforms.asm"
-		include	"_incObj/6A Saws and Pizza Cutters.asm"
-Map_Saw:	include	"_maps/Saws and Pizza Cutters.asm"
-		include	"_incObj/6B SBZ Stomper and Door.asm"
-Map_Stomp:	include	"_maps/SBZ Stomper and Door.asm"
+; >>> SBZ level objects
+		include	"_incObj/66 SBZ Rotating Junction.asm"
+		include	"_incObj/67 SBZ Running Disc.asm"
+		include	"_incObj/68 SBZ Conveyor Belt.asm"
+		include	"_incObj/69 SBZ Spinning Platforms and Trapdoors.asm"
+		include	"_incObj/6A SBZ Saws and Pizza Cutters.asm"
+		include	"_incObj/6B SBZ Stomper and Sliding Door.asm"
 		include	"_incObj/6C SBZ Vanishing Platforms.asm"
-		include	"_anim/SBZ Vanishing Platforms.asm"
-Map_VanP:	include	"_maps/SBZ Vanishing Platforms.asm"
-		include	"_incObj/6E Electrocuter.asm"
-		include	"_anim/Electrocuter.asm"
-Map_Elec:	include	"_maps/Electrocuter.asm"
+		include	"_incObj/6E SBZ Electrocuter.asm"
 		include	"_incObj/6F SBZ Spin Platform Conveyor.asm"
-		include	"_incObj/70 Girder Block.asm"
-Map_Gird:	include	"_maps/Girder Block.asm"
-		include	"_incObj/72 Teleporter.asm"
-		include	"_incObj/78 Caterkiller.asm"
-		include	"_anim/Caterkiller.asm"
-Map_Cat:	include	"_maps/Caterkiller.asm"
+		include	"_incObj/70 SBZ Girder Block.asm"
+		include	"_incObj/72 SBZ Teleporter.asm"
+
+; ===========================================================================
+; >>> Misc objects
+		include	"_incObj/78 Badnik - Caterkiller.asm"
 		include	"_incObj/79 Lamppost.asm"
-Map_Lamp:	include	"_maps/Lamppost.asm"
 		include	"_incObj/7D Hidden Bonuses.asm"
-Map_Bonus:	include	"_maps/Hidden Bonuses.asm"
-		include	"_incObj/8A Credits.asm"
-Map_Cred:	include	"_maps/Credits.asm"
+		include	"_incObj/8A Credits and Sonic Team Presents.asm"
 
 
 ; ===========================================================================
 ; >>> Bosses and related objects
-		include	"_incObj/3D Boss - Green Hill.asm"	; includes "BossDeafeated" and "BossMove" subroutines
-		include	"_incObj/48 Eggman's Swinging Ball.asm"
+		include	"_incObj/3D, 48 Boss - GHZ Main and Wrecking Ball.asm"	; includes "BossDeafeated" and "BossMove" subroutines
 		include	"_anim/Eggman.asm"
 Map_Eggman:	include	"_maps/Eggman.asm"
 Map_BossItems:	include	"_maps/Boss Items.asm"
-		include	"_incObj/77 Boss - Labyrinth.asm"
-		include	"_incObj/73 Boss - Marble.asm"
-		include	"_incObj/74 MZ Boss Fire.asm"
-		include	"_incObj/7A Boss - Star Light.asm"
-		include	"_incObj/7B SLZ Boss Spikeball.asm"
-Map_BSBall:	include	"_maps/SLZ Boss Spikeball.asm"
-		include	"_incObj/75 Boss - Spring Yard.asm"
-		include	"_incObj/76 SYZ Boss Blocks.asm"
-Map_BossBlock:	include	"_maps/SYZ Boss Blocks.asm"
-		include	"_incObj/82 Eggman - Scrap Brain 2.asm"
-		include	"_anim/Eggman - Scrap Brain 2 & Final.asm"
-Map_SEgg:	include	"_maps/Eggman - Scrap Brain 2.asm"
-		include	"_incObj/83 SBZ Eggman's Crumbling Floor.asm"
-Map_FFloor:	include	"_maps/SBZ Eggman's Crumbling Floor.asm"
-		include	"_incObj/85 Boss - Final.asm"
-		include	"_anim/FZ Eggman in Ship.asm"
-Map_FZDamaged:	include	"_maps/FZ Damaged Eggmobile.asm"
-Map_FZLegs:	include	"_maps/FZ Eggmobile Legs.asm"
-		include	"_incObj/84 FZ Eggman's Cylinders.asm"
-Map_EggCyl:	include	"_maps/FZ Eggman's Cylinders.asm"
-		include	"_incObj/86 FZ Plasma Ball Launcher.asm"
-		include	"_anim/Plasma Ball Launcher.asm"
-Map_PLaunch:	include	"_maps/Plasma Ball Launcher.asm"
-		include	"_anim/Plasma Balls.asm"
-Map_Plasma:	include	"_maps/Plasma Balls.asm"
+		include	"_incObj/77 Boss - LZ Main.asm"
+		include	"_incObj/73, 74 Boss - MZ Main and Fire.asm"
+		include	"_incObj/7A, 7B Boss - SLZ Main and Spike Balls.asm"
+		include	"_incObj/75, 76 Boss - SYZ Main and Blocks.asm"
+		include	"_incObj/82, 83 SBZ Eggman Cutscene and Crumbling Floor.asm"
+		include	"_incObj/85,84,86 Boss - FZ Main, Cylinders, and Plasma Balls.asm"
 		include	"_incObj/3E Prison Capsule.asm"
-		include	"_anim/Prison Capsule.asm"
-Map_Pri:	include	"_maps/Prison Capsule.asm"
 
 
 ; ===========================================================================
 ; >>> Object-to-object touch response handler for Sonic
-		include	"_incObj/sub ReactToItem.asm"
+		include	"_incObj/Sonic ReactToItem.asm"
 
 
 ; ===========================================================================
 ; >>> Special Stage rendering and objects
 		include	"_inc/Special Stage Loading & Drawing.asm" ; includes the subroutines "SS_ShowLayout", "SS_AniWallsRings", 
-								   ; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
-SS_MapIndex:	include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
-SS_MapIndex_End:
+								   ; "SS_FindFreeAnimationSlot", "SS_AniItems", and "SS_Load"
+		include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
 Map_SS_Shared:	include	"_maps/SS Shared Block.asm"
 Map_SS_Glass:	include	"_maps/SS Glass Block.asm"
 Map_SS_Up:	include	"_maps/SS UP Block.asm"
 Map_SS_Down:	include	"_maps/SS DOWN Block.asm"
-		include	"_maps/SS Chaos Emeralds.asm"
+Map_SS_Chaos:	include	"_maps/SS Chaos Emeralds.asm"
 		include	"_incObj/09 Sonic in Special Stage.asm"
+
 
 ; ===========================================================================
 ; >>> Deleted, blank object that is randomly mixed in here
-		include	"_incObj/10.asm" ; this was an animation test object for Sonic in the prototype
+		include	"_incObj/10 Unused - Blank.asm" ; this was an animation test object for Sonic in the prototype
 
 
 ; ===========================================================================
@@ -4418,7 +4286,6 @@ Map_SS_Down:	include	"_maps/SS DOWN Block.asm"
 ; ===========================================================================
 ; >>> HUD objects
 		include	"_incObj/21 HUD.asm"
-Map_HUD:	include	"_maps/HUD.asm"
 		include	"_incObj/sub AddPoints.asm"
 		include	"_inc/HUD Update.asm"	; includes "ContScrCounter" subroutine
 
@@ -4431,7 +4298,6 @@ Art_LivesNums:	binclude "artunc/Lives Counter Numbers.unc" ; 8x8 pixel numbers o
 ; ===========================================================================
 ; >>> Debug Mode
 		include	"_incObj/DebugMode.asm"
-		include	"_inc/DebugList.asm"
 
 
 ; ===========================================================================

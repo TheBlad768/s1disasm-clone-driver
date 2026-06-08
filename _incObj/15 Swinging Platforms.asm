@@ -315,3 +315,7 @@ Swing_Delete:	; Routine 6, 8
 
 Swing_Display:	; Routine $A
 		bra.w	DisplaySprite
+; ===========================================================================
+
+Map_Swing_GHZ:	include	"_maps/Swinging Platforms (GHZ).asm"
+Map_Swing_SLZ:	include	"_maps/Swinging Platforms (SLZ).asm"

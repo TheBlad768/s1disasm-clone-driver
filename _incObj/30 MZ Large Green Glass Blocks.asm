@@ -238,3 +238,6 @@ loc_B5EE:
 		sub.w	d0,d1
 		move.w	d1,obY(a0)
 		rts
+; ===========================================================================
+
+Map_Glass:	include	"_maps/MZ Large Green Glass Blocks.asm"

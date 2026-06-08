@@ -52,3 +52,6 @@ HUD_Flash:	; Routine 2
 .display:
 		move.b	d0,obFrame(a0)
 		jmp	(DisplaySprite).l
+; ===========================================================================
+
+Map_HUD:	include	"_maps/HUD.asm"
