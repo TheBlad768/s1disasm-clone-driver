@@ -2,7 +2,7 @@
 
 ; Variables (v) and Flags (f)
 
-    obj $FFFF0000 ;"obj" is the ASM68K equivalent of "phase"
+	obj $FFFF0000 ;"obj" is the ASM68K equivalent of "phase"
 v_ram_start_def:
 v_ram_start:		equ	v_ram_start_def&$FFFFFF	; 24-bit addressing
 
@@ -18,7 +18,9 @@ v_lvllayout_end:
 v_bgscroll_buffer:	ds.b	$200		; background scroll buffer
 v_ngfx_buffer:		ds.b	$200		; Nemesis graphics decompression buffer
 v_ngfx_buffer_end:
-v_spritequeue:		ds.b	$400		; sprite display queue, in order of priority
+
+v_spritequeue:		ds.b	spritelayer_num*spritelayer_size ; sprite display queue, in order of priority (8*$80=$400 bytes)
+
 v_16x16:		ds.b	$1800		; 16x16 tile mappings
 
 v_sgfx_buffer:		ds.b	tile_size*23	; buffered Sonic graphics ($17 cells)
@@ -102,7 +104,7 @@ v_tryagain:	equ	v_objspace+object_size*3	; object variable space for the "TRY AG
 v_eggmanchaos:	equ	v_objspace+object_size*32	; object variable space for the emeralds juggled by Eggman ($180 bytes)
 
 v_snddriver_ram:	makeStruct__SMPS_RAM	; sound driver state
-        		ds.b	$40    		; unused
+			ds.b	$40		; unused
 
 v_gamemode:		ds.b	1		; game mode (00=Sega; 04=Title; 08=Demo; 0C=Level; 10=SS; 14=Cont; 18=End; 1C=Credit; +8C=PreLevel)
 			ds.b	1		; unused
@@ -290,7 +292,7 @@ v_scroll_block_4_size:	ds.w	1		; unused
 			ds.b	8		; unused
 v_levelvariables_end:
 
-v_spritetablebuffer:	ds.b	$280		; sprite table (last $80 bytes are overwritten by v_palette_water_fading)
+v_spritetablebuffer:	ds.b	spritetable_entrysize*sprites_max ; sprite table (8*80=$280 bytes) (last $80 bytes are overwritten by v_palette_water_fading)
 v_spritetablebuffer_end:
 
 v_palette_water_fading = v_spritetablebuffer_end-$80	; duplicate underwater palette, used for transitions ($80 bytes)
@@ -470,18 +472,31 @@ v_ram_end:
     endif
 	objend
 
-; Special stage
-ss_layout_rowlength:	equ $80
 
-v_ssbuffer1:		equ	v_ram_start
-v_ssblockbuffer:	equ	v_ssbuffer1+(ss_layout_rowlength*$20)+$20 ; ($2000 bytes)
-v_ssblockbuffer_end:	equ	v_ssblockbuffer+ss_layout_rowlength*$40
-v_ssbuffer2:		equ	v_ram_start+$4000
-v_ssblocktypes:		equ	v_ssbuffer2
-v_ssitembuffer:		equ	v_ssbuffer2+$400 ; ($100 bytes)
-v_ssitembuffer_end:	equ	v_ssitembuffer+$100
-v_ssbuffer3:		equ	v_ram_start_def+$8000
-v_ssscroll_buffer:	equ	v_ngfx_buffer+$100
+; Special stage
+ss_layout_padding:	equ $20
+ss_layout_rowlength:	equ $80
+ss_layout_rows:		equ $40
+ss_matrixsize:		equ 16
+
+	obj	$FF0000
+v_sslayout_base:	ds.b	(ss_layout_rowlength*ss_layout_padding)+ss_layout_padding ; SS layout start, with top and left padding ($20 cells each)
+v_sslayout_actual:	ds.b	ss_layout_rowlength*ss_layout_rows ; actual SS layout, after padding
+v_sslayout_end:							; end of SS layout buffer
+			ds.b	$FE0				; unused in SS
+v_ss_spritesettings:	ds.b	8*$4F				; sprite mappings/VRAM settings loaded from SS_MapIndex (total $278 bytes)
+v_sslayout_decompress:	equ	v_ss_spritesettings		; temporary buffer when decompressing the Enigma-compressed SS layout ($1000 bytes)
+			ds.b	$188				; unused in SS
+v_ss_animations:	ds.b	8*$20				; animation update queue (8 bytes per entry, $20 entries total)
+v_ss_animations_end:						; end of animation update queue
+	obj	$FFFF8000					; (need 32-bit addressing starting at FFFF8000)
+v_ss_rotationmatrix:	ds.b	2*2*ss_matrixsize*ss_matrixsize	; rotated X/Y sprite coordinates (words) per visible cell (2*2*$10*$10 = $400 bytes)
+			ds.b	$2600				; unused in SS
+v_ss_scroll_bubbles:	ds.b	$28				; buffer to store scroll positions for SS background bubbles
+			ds.b	$D8				; unused in SS
+v_ss_scroll_clouds:	ds.b	$1C				; buffer to store scroll positions for SS background clouds
+	objend
+
 
 ; Error handler
 	obj v_objstate

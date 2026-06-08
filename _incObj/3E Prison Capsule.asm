@@ -224,3 +224,7 @@ Pri_EndAct:	; Routine $E
 
 .found:
 		rts
+; ===========================================================================
+
+		include	"_anim/Prison Capsule.asm"
+Map_Pri:	include	"_maps/Prison Capsule.asm"

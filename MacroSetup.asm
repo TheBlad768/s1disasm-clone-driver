@@ -1,3 +1,6 @@
+; boolean constants for asm68k
+TRUE:	equ 1
+FALSE:	equ 0
 
 ; instructions that were used with 0(a#) syntax
 ; defined to assemble as they originally did

@@ -4,8 +4,8 @@
 
 makePalEntry:	macro *,paletteLabel,paletteRAMaddress
 \*:	equ	(*-Pal_Index)/8
-		dc.l \paletteLabel
-		dc.w \paletteRAMaddress,(\paletteLabel\_end-\paletteLabel)/4-1
+		dc.l paletteLabel
+		dc.w paletteRAMaddress,(\paletteLabel\_end-paletteLabel)/4-1
 		endm
 ; ---------------------------------------------------------------------------
 

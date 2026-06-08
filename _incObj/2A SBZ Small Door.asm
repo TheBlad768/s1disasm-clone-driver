@@ -60,3 +60,7 @@ ADoor_Animate:
 
 .remember:
 		bra.w	RememberState
+; ===========================================================================
+
+		include	"_anim/SBZ Small Door.asm"
+Map_ADoor:	include	"_maps/SBZ Small Door.asm"

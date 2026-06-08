@@ -105,3 +105,7 @@ VanP_StoodOn:	; Routine 4
 
 .display:
 		bra.w	RememberState
+; ===========================================================================
+
+		include	"_anim/SBZ Vanishing Platforms.asm"
+Map_VanP:	include	"_maps/SBZ Vanishing Platforms.asm"

@@ -126,3 +126,6 @@ Brick_Type04:
 		sub.w	d0,d1
 		move.w	d1,obY(a0)	; make the block wobble
 		rts
+; ===========================================================================
+
+Map_Brick:	include	"_maps/MZ Bricks.asm"

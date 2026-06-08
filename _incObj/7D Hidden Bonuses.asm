@@ -77,3 +77,6 @@ Bonus_Display:	; Routine 2
 
 Bonus_Display_Delete:	
 		jmp	(DeleteObject).l
+; ===========================================================================
+
+Map_Bonus:	include	"_maps/Hidden Bonuses.asm"
