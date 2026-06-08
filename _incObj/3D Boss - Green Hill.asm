@@ -4,7 +4,7 @@
 
 BossGreenHill:
 		moveq	#0,d0
-		move.b	obRoutine(a0),d0 			; copy object routine index to d0
+		move.b	obRoutine(a0),d0 			; copy object routine
 		move.w	BGHZ_Index(pc,d0.w),d1 			; use the object routine index and BGHZ_Index to calculate our offset
 		jmp	BGHZ_Index(pc,d1.w) 			; jump into the table and use our offset to pick a routine in the index to go to
 ; ===========================================================================
@@ -13,7 +13,7 @@ BGHZ_Index:	dc.w BGHZ_Main-BGHZ_Index
 		dc.w BGHZ_FaceMain-BGHZ_Index
 		dc.w BGHZ_FlameMain-BGHZ_Index
 
-BGHZ_BossReference = objoff_34 					; Pointer to main boss controller
+BGHZ_ParentObj = objoff_34 					; Pointer to main boss controller
 BGHZ_SineCounter = objoff_3F 					; sine counter for bobbing motion
 BGHZ_BossGenericTimer = objoff_3C 				; timer for how many frames to do an action, whether its wait for explosions, or to move in a direction
 
@@ -45,12 +45,12 @@ BGHZ_LoadBoss:
 		move.b	#$20,obActWid(a1) 			; set width to 20 pixel radius (to know when sprite is off screen and should be hidden)
 		move.b	#3,obPriority(a1) 			; set sprite priority to 3 (0 is front of screen)
 		move.b	(a2)+,obAnim(a1) 			; load appropriate animation index, then increment a2 (now we are one full entry lower in our ObjData table)
-; ---------------------------------------------------------------------------
+
 ; objoff_34 is used here as a reference back to the main boss controller. 
 ; This is because when we are in ExecuteObjects, a0 is set to each object and sub objects own slot, so we need a way to find the original boss object.
 ; On the first loop, this copies the address to itself, but the other loops are what it was intended for.
-		move.l	a0,BGHZ_BossReference(a1) 
-; ---------------------------------------------------------------------------
+		move.l	a0,BGHZ_ParentObj(a1) 
+
 		dbf	d1,BGHZ_Loop				; repeat sequence 2 more times
 
 ; loc_17772
@@ -67,10 +67,10 @@ BGHZ_ShipMain:	; Routine 2
 		jsr	BGHZ_ShipIndex(pc,d1.w) 		; jump into the table and use our offset to pick a routine in the index to go to
 		lea	(Ani_Eggman).l,a1
 		jsr	(AnimateSprite).l 			; set up animation
-; ---------------------------------------------------------------------------
+
 ; obStatus stores the logical bits, but obRender is visual bits, so this simply moves them from one to the other
-; ---------------------------------------------------------------------------
-		move.b	obStatus(a0),d0 			; move current object status into d0
+
+		move.b	obStatus(a0),d0 			; move current object status
 		andi.b	#3,d0 					; AND with obstatus so now d0 contains X and Y logical flip bits only
 		andi.b	#$FC,obRender(a0) 			; clear the x and y flip
 		or.b	d0,obRender(a0) 			; OR the two together, so now DisplaySprite has X and Y orientation and above render bits
@@ -117,10 +117,10 @@ BGHZ_ShipUpdate:
 ; BGHZ_ShipFlash:
 .flash:
 		lea	(v_palette+$22).w,a1 			; load 2nd palette, 2nd entry
-		moveq	#0,d0					; move 0 (black) to d0
+		moveq	#0,d0					; move 0 (black)
 		tst.w	(a1)        				; is the color here black? This is a cool trick, since tst will set its flags based on if the value is 0. What color is black? All 0s!
 		bne.s	.writeColor   				; if not black, already white, so branch
-		move.w	#cWhite,d0				; move 0EEE (white) to d0
+		move.w	#cWhite,d0				; move 0EEE (white)
 
 ; loc_1783C:
 .writeColor:
@@ -213,7 +213,7 @@ BGHZ_MakeBall:
 		_move.b	#id_BossBall,obID(a1) 			; load swinging ball object
 		move.w	obBossX(a0),obX(a1) 			; copy boss position scratch RAM to actual object position
 		move.w	obBossY(a0),obY(a1)
-		move.l	a0,BGHZ_BossReference(a1) 		; same thing as way up in LoadBoss, store a pointer of the main boss object for future reference
+		move.l	a0,BGHZ_ParentObj(a1) 			; same thing as way up in LoadBoss, store a pointer of the main boss object for future reference
 
 ; loc_17910:
 .skip:
@@ -225,7 +225,7 @@ BGHZ_MakeBall:
 ; ===========================================================================
 
 BGHZ_ShipMove:
-		subq.w	#1,BGHZ_BossGenericTimer(a0) 		; subtrack 1 from timer
+		subq.w	#1,BGHZ_BossGenericTimer(a0) 		; subtract 1 from timer
 		bpl.s	BGHZ_Reverse 				; are we positive? if so branch
 		addq.b	#2,ob2ndRout(a0)			; advance routine so now we are in ChgDir
 		move.w	#$40-1,BGHZ_BossGenericTimer(a0)        ; set a new timer
@@ -345,11 +345,11 @@ BGHZ_Escape:
 ; loc_17A10:
 .checkOffScreen:
 		tst.b	obRender(a0) 				; has Eggman left the screen (is bit 7 clear)?
-		bpl.s	BGHZ_ShipDel 				; yes, bit 7 is cleared, so we can delete the object (this is 2's complement related!)
+		bpl.s	BGHZ_ShipDel 				; yes, bit 7 is cleared, so we can delete the object (this leverages signed numbers!)
 
 ; loc_17A16:
 .flee:
-		bsr.w	BossMove 				; keep escaping
+		bsr.w	BossMove 				
 		bra.w	BGHZ_ShipUpdate
 ; ===========================================================================
 
@@ -366,7 +366,7 @@ BGHZ_ShipDel:
 BGHZ_FaceMain:	; Routine 4
 		moveq	#0,d0
 		moveq	#1,d1 					; set facenormal1 animation
-		movea.l	BGHZ_BossReference(a0),a1 		; load the main boss controller into a1
+		movea.l	BGHZ_ParentObj(a0),a1 			; load the main boss controller
 		move.b	ob2ndRout(a1),d0 			; load boss phase into d0
 		subq.b	#4,d0 					; go back 2 routines
 		bne.s	.checkSpecial 				; were we at ShipMove? if not, branch
@@ -392,17 +392,17 @@ BGHZ_FaceMain:	; Routine 4
 
 ; loc_17A50:
 .checkSonicState:
-		cmpi.b	#4,(v_player+obRoutine).w  		; is Sonic currently being hit?
+		cmpi.b	#4,(v_player+obRoutine).w  		; is Sonic in his hurt state?
 		blo.s	.writeAnim 				; if not, branch
 		moveq	#4,d1 					; set animation to facelaugh
 
 ; loc_17A5A:
 .writeAnim:
 		move.b	d1,obAnim(a0) 				; move animation state into obAnim
-; ----------------------------------------------------------------------------
+
 ; The below line checks: are we in the escape state? 
 ; 12-4-6-2=0, so if we are in the escape state this is true, any other state would not result in a 0. If all this confuses you, review the _Index code throughout this file.
-; ----------------------------------------------------------------------------		
+	
 		subq.b	#2,d0 
 		bne.s	.skip 					; we are not escaping, display normally
 		move.b	#6,obAnim(a0) 				; set animation state to facepanic
@@ -420,7 +420,7 @@ BGHZ_FaceDel:
 
 BGHZ_FlameMain:	; Routine 6
 		move.b	#7,obAnim(a0) 				; set animation state to 7 (default invisible state for flame)
-		movea.l	BGHZ_BossReference(a0),a1 		; load main boss controller into a1
+		movea.l	BGHZ_ParentObj(a0),a1 			; load main boss controller
 		cmpi.b	#$C,ob2ndRout(a1) 			; are we in the Escape state?
 		bne.s	.checkMove 				; no, check movement
 		move.b	#$B,obAnim(a0) 				; set thruster animation for takeoff
@@ -444,13 +444,13 @@ BGHZ_FlameDel:
 ; ===========================================================================
 
 BGHZ_Display:
-		movea.l	BGHZ_BossReference(a0),a1 		; load main boss controller into a1
+		movea.l	BGHZ_ParentObj(a0),a1 			; load main boss controller
 		move.w	obX(a1),obX(a0) 			; move positions to rendered positions of boss
 		move.w	obY(a1),obY(a0)
 		move.b	obStatus(a1),obStatus(a0) 		; move object status to boss object status
 		lea	(Ani_Eggman).l,a1
 		jsr	(AnimateSprite).l
-		move.b	obStatus(a0),d0 			; move current object status into d0
+		move.b	obStatus(a0),d0 			; move current object status
 		andi.b	#3,d0 					; AND with obstatus so now d0 contains X and Y logical flip bits only
 		andi.b	#$FC,obRender(a0) 			; clear the x and y flip
 		or.b	d0,obRender(a0) 			; OR the two together, so now DisplaySprite has X and Y orientation and above render bits

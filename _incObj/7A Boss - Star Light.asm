@@ -8,7 +8,7 @@ BossStarLight_Delete:
 
 BossStarLight:
 		moveq	#0,d0
-		move.b	obRoutine(a0),d0 			; copy object routine to d0
+		move.b	obRoutine(a0),d0 			; copy object routine
 		move.w	BossStarLight_Index(pc,d0.w),d1 	; use the object routine index and BossStarLight_Index to calculate our offset
 		jmp	BossStarLight_Index(pc,d1.w) 		; jump into the table and use our offset to pick a routine in the index to go to
 ; ===========================================================================
@@ -19,7 +19,7 @@ BossStarLight_Index:
 		dc.w BossStarLight_FlameMain-BossStarLight_Index
 		dc.w BossStarLight_PipeMain-BossStarLight_Index
 
-BossStarLight_Reference = objoff_34 				; Pointer to main boss controller
+BossStarLight_ParentObj = objoff_34 				; Pointer to main boss controller
 BossStarLight_SineCounter = objoff_3F 				; sine counter for bobbing motion
 BossStarLight_GenericTimer = objoff_3C 				; timer for how many frames to do an action, whether its wait for explosions, or to move in a direction
 BossStarLight_SeesawList = objoff_2A 				; location within boss object to store a list of all seesaw objects
@@ -38,8 +38,8 @@ BossStarLight_Main:
 		move.w	obY(a0),obBossY(a0)
 		move.b	#$F,obColType(a0) 			; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
 		move.b	#8,obBossHits(a0) 			; set number of hits to 8
-		lea	BossStarLight_ObjData(pc),a2 		; load routine data address into a2
-		movea.l	a0,a1 					; copy boss object address into a1 so that LoadBoss on pass 1 uses the main boss object.
+		lea	BossStarLight_ObjData(pc),a2 		; load routine data address 
+		movea.l	a0,a1 					; copy boss object address into a1 so that LoadBoss on pass 1 uses the main boss object
 		moveq	#3,d1 					; 4 slots of ObjData, so to load properly we must loop 4 times
 		bra.s	BossStarLight_LoadBoss
 ; ===========================================================================
@@ -61,18 +61,18 @@ BossStarLight_LoadBoss:
 		move.w	#ArtTile_Eggman,obGfx(a1)
 		move.b	#4,obRender(a1) 			; set the object to position based on where it is in the level and not a static position on screen
 		move.b	#$20,obActWid(a1) 			; define horizontal width radius (used to hide objects when they leave the screen space)
-; ---------------------------------------------------------------------------
+
 ; objoff_34 is used here as a reference back to the main boss controller. 
 ; This is because when we are in ExecuteObjects, a0 is set to each object and sub objects own slot, so we need a way to find the original boss object.
 ; On the first loop, this copies the address to itself, but the other loops are what it was intended for.
-		move.l	a0,BossStarLight_Reference(a1) 
-; ---------------------------------------------------------------------------
+		move.l	a0,BossStarLight_ParentObj(a1) 
+
 		dbf	d1,BossStarLight_Loop			; repeat sequence 3 more times
 
 ; loc_1895C:
 BossStarLight_Done:
 	if FixBugs
-		lea	(v_lvlobjspace).w,a1 			; load level object space address into a1
+		lea	(v_lvlobjspace).w,a1 			; load level object space address
 	else
 		lea	(v_objspace+object_size*1).w,a1 	; Nonsensical starting point, since dynamic object allocations begin at v_lvlobjspace.
 	endif
@@ -99,14 +99,14 @@ BossStarLight_CheckSaws:
 
 BossStarLight_ShipMain:	; Routine 2
 		moveq	#0,d0
-		move.b	ob2ndRout(a0),d0 			; load secondary routine index of current object slot into d0
+		move.b	ob2ndRout(a0),d0 			; load secondary routine index of current object slot
 		move.w	BossStarLight_ShipIndex(pc,d0.w),d0 	; use the secondary object routine index and ShipIndex to calculate our offset
 		jsr	BossStarLight_ShipIndex(pc,d0.w) 	; jump into the table and use our offset to pick a routine in the index to go to
 		lea	(Ani_Eggman).l,a1
 		jsr	(AnimateSprite).l
-; ---------------------------------------------------------------------------
+
 ; obStatus stores the logical bits, but obRender is visual bits, so this simply moves them from one to the other
-; ---------------------------------------------------------------------------
+
 		moveq	#3,d0 					; move first 2 bits into d0
 		and.b	obStatus(a0),d0 			; AND with obstatus so now d0 contains X and Y logical flip bits only
 		andi.b	#$FC,obRender(a0) 			; clear the x and y flip
@@ -173,7 +173,7 @@ BSLZ_StatusUpdate:
 ; loc_18A36:
 .writeColor:
 		move.w	d0,(a1)					; load color stored in d0
-		subq.b	#1,obBossFlash(a0) 			; subtrack 1 from flash timer
+		subq.b	#1,obBossFlash(a0) 			; subtract 1 from flash timer
 		bne.s	.exit 					; keep flashing if obBossFlash is not 0
 		move.b	#$F,obColType(a0) 			; restore collision, the timer has hit 0
 
@@ -187,7 +187,7 @@ BSLZ_Defeated:
 		moveq	#100,d0
 		bsr.w	AddPoints
 		move.b	#6,ob2ndRout(a0)			; set object routine to BSLZ_Recover
-		move.b	#$78,BossStarLight_GenericTimer(a0)     ; set the boss timer
+		move.b	#120,BossStarLight_GenericTimer(a0)     ; set the boss timer
 		clr.w	obVelX(a0)				; stop moving horizontally
 		rts
 ; ===========================================================================
@@ -216,11 +216,11 @@ BSLZ_ShipMove:
 ; loc_18A88:
 .dropSetup:
 		move.w	obX(a0),d0				; get current X position
-;-----------------------------------------------------------------------------
-; This line sets d1 to $FFFFFFFF (2s complement). The reason they do this is because when we looked through the object RAM for the level
+
+; This line sets d1 to $FFFFFFFF (2s complement for -1). The reason they do this is because when we looked through the object RAM for the level
 ; and found seesaws, we only stored their addresses as words, meaning the top 2 bytes were not stored.
 ; Now, the full address can be rebuilt by adding $FFFF with the lower two bytes that were stored in a2, since that is where it lives in RAM. 
-; ----------------------------------------------------------------------------
+
 		moveq	#-1,d1					
 		moveq	#2,d2					; set number of seesaws to 3
 		lea	BossStarLight_SeesawList(a0),a2		; load seesaw list
@@ -251,16 +251,16 @@ BSLZ_ShipMove:
 .prepDrop:
 		move.b	d2,obSubtype(a0)			; store whichever seesaw we are over and is valid in a0
 		addq.b	#2,ob2ndRout(a0)			; increment routine to MakeBall
-		move.b	#$28,BossStarLight_GenericTimer(a0)	; wait $28 frames
+		move.b	#40,BossStarLight_GenericTimer(a0)	; wait 40 frames
 		bra.w	BSLZ_ShipUpdate
 ; ===========================================================================
 
 ; BossStarLight_MakeBall:
 BSLZ_MakeBall:
-		cmpi.b	#$28,BossStarLight_GenericTimer(a0)	; have we waited $28 frames?
+		cmpi.b	#40,BossStarLight_GenericTimer(a0)	; have we waited 40 frames?
 		bne.s	.subtractTime				; no, come back later
 		moveq	#-1,d0					; set d0 to $FFFFFFFF
-		move.b	obSubtype(a0),d0			; move seesaw subtype into d0
+		move.b	obSubtype(a0),d0			; move seesaw subtype
 		ext.w	d0					; sign extend lower byte of d0 into upper byte (the word)
 		bmi.s	.abortDrop				; check bit 15. is there a seesaw here? if so, it would be a non negative value. (potential failsafe?)
 		subq.w	#2,d0					; subtract 2 from d0
@@ -270,7 +270,7 @@ BSLZ_MakeBall:
 		move.w	(a1,d0.w),d0				; get the address of the seesaw number we are over by using the index we just made in d0, and put it back in d0
 		movea.l	d0,a2					; move the address of the seesaw into a2
 	if FixBugs
-		lea	(v_lvlobjspace).w,a1			; load level object space address into a1
+		lea	(v_lvlobjspace).w,a1			; load level object space address 
 		moveq	#(v_lvlobjend-v_lvlobjspace)/object_size-1,d1 ; number of objects to scan
 	else
 		lea	(v_objspace+object_size*1).w,a1 ; Nonsensical starting point, since dynamic object allocations begin at v_lvlobjspace.
@@ -323,7 +323,7 @@ BSLZ_Explode:
 		bset	#0,obStatus(a0)				; set the X flip bit so we are facing right
 		bclr	#7,obStatus(a0)				; clear the defeated flag 
 		clr.w	obVelX(a0)				; stop horizontal movement
-		move.b	#-$18,BossStarLight_GenericTimer(a0)	; set a timer for $18
+		move.b	#-24,BossStarLight_GenericTimer(a0)	; set a timer for 24 frames
 		tst.b	(v_bossstatus).w			; has boss been marked as defeated?
 		bne.s	.skip					; yes, skip
 		move.b	#1,(v_bossstatus).w			; no, mark it as defeated but not capsule opened
@@ -350,10 +350,10 @@ BSLZ_Recover:
 
 ; loc_18B96:
 .timerPositive:
-		cmpi.b	#$20,BossStarLight_GenericTimer(a0)	; is the timer below $20?
+		cmpi.b	#32,BossStarLight_GenericTimer(a0)	; is the timer below 32?
 		blo.s	.rise					; if yes, start to rise
 		beq.s	.playMusic				; stop and play music
-		cmpi.b	#$2A,BossStarLight_GenericTimer(a0)	; is the timer below $2A
+		cmpi.b	#42,BossStarLight_GenericTimer(a0)	; is the timer below 42?
 		blo.s	.exit					; if yes, come back later (we are still going to recover)
 		addq.b	#2,ob2ndRout(a0)			; increment routine to Escape
 		bra.s	.exit					
@@ -390,9 +390,9 @@ BSLZ_Escape:
 .checkOffScreen:
 		tst.b	obRender(a0)				; has Eggman left the screen (is bit 7 clear)?
 	if FixBugs
-		bpl.s	BossStarLight_PopAndDelete		; yes, bit 7 is cleared, so we can delete the object (this is 2's complement related!)
+		bpl.s	BossStarLight_PopAndDelete		; yes, bit 7 is cleared, so we can delete the object (this leverages signed numbers!)
 	else
-		bpl.w	BossStarLight_Delete			; yes, bit 7 is cleared, so we can delete the object (this is 2's complement related!)
+		bpl.w	BossStarLight_Delete			; yes, bit 7 is cleared, so we can delete the object (this leverages signed numbers!)
 	endif
 
 ; loc_18BE8:
@@ -412,7 +412,7 @@ BossStarLight_PopAndDelete:
 BossStarLight_FaceMain:	; Routine 4
 		moveq	#0,d0
 		moveq	#1,d1					; set facenormal1 animation
-		movea.l	BossStarLight_Reference(a0),a1		; load the main boss controller into a1
+		movea.l	BossStarLight_ParentObj(a0),a1		; load the main boss controller
 		move.b	ob2ndRout(a1),d0			; load boss phase into d0
 		cmpi.b	#6,d0					; are we in routine Explode or beyond?
 		bmi.s	.checkHitState				; if not, boss is active, so branch
@@ -430,7 +430,7 @@ BossStarLight_FaceMain:	; Routine 4
 
 ; loc_18C10:
 .checkSonicState:
-		cmpi.b	#4,(v_player+obRoutine).w		; is Sonic currently being hit?
+		cmpi.b	#4,(v_player+obRoutine).w		; is Sonic in his hurt state?
 		blo.s	.writeAnim				; if not, branch
 		moveq	#4,d1					; set animation to facelaugh
 
@@ -450,7 +450,7 @@ BossStarLight_FaceMain:	; Routine 4
 
 BossStarLight_FlameMain:; Routine 6
 		move.b	#8,obAnim(a0)				; set animation state to 8
-		movea.l	BossStarLight_Reference(a0),a1		; load main boss controller into a1
+		movea.l	BossStarLight_ParentObj(a0),a1		; load main boss controller 
 		cmpi.b	#$A,ob2ndRout(a1)			; are we currently in Escape state?
 		bne.s	.checkMove				; if not, branch
 		tst.b	obRender(a0)				; has the flame left the screen?
@@ -474,7 +474,7 @@ BossStarLight_Animate:
 
 ; loc_18C78:
 BossStarLight_Display:
-		movea.l	BossStarLight_Reference(a0),a1 		; load main boss controller into a1
+		movea.l	BossStarLight_ParentObj(a0),a1 		; load main boss controller 
 		move.w	obX(a1),obX(a0)				; move positions to rendered positions of boss
 		move.w	obY(a1),obY(a0)
 		move.b	obStatus(a1),obStatus(a0)		; move object status to boss object status
@@ -486,7 +486,7 @@ BossStarLight_Display:
 ; ===========================================================================
 
 BossStarLight_PipeMain:	; Routine 8
-		movea.l	BossStarLight_Reference(a0),a1		; load main boss controller into a1
+		movea.l	BossStarLight_ParentObj(a0),a1		; load main boss controller
 		cmpi.b	#$A,ob2ndRout(a1)			; are we currently in Escape state?
 		bne.s	.skip					; if not, branch
 		tst.b	obRender(a0)				; has the widepipe left the screen?

@@ -4,7 +4,7 @@
 
 BossMarble:
 		moveq	#0,d0
-		move.b	obRoutine(a0),d0			; copy object routine to d0
+		move.b	obRoutine(a0),d0			; copy object routine
 		move.w	BossMarble_Index(pc,d0.w),d1		; use the object routine index and BossMarble_Index to calculate our offset
 		jmp	BossMarble_Index(pc,d1.w)		; jump into the table and use our offset to pick a routine in the index to go to
 ; ===========================================================================
@@ -15,7 +15,7 @@ BossMarble_Index:
 		dc.w BossMarble_FlameMain-BossMarble_Index
 		dc.w BossMarble_TubeMain-BossMarble_Index
 
-BossMarble_Reference = objoff_34 				; Pointer to main boss controller
+BossMarble_ParentObj = objoff_34 				; Pointer to main boss controller
 BossMarble_SineCounter = objoff_3F				; sine counter for bobbing motion
 BossMarble_GenericTimer	= objoff_3C				; ; timer for how many frames to do an action, whether its wait for explosions, or to move in a direction
 
@@ -54,12 +54,12 @@ BossMarble_LoadBoss:
 		move.w	#ArtTile_Eggman,obGfx(a1)
 		move.b	#4,obRender(a1)				; set the object to position based on where it is in the level and not a static position on screen
 		move.b	#$20,obActWid(a1)			; set collision to 20 pixel radius box
-; ---------------------------------------------------------------------------
+
 ; objoff_34 is used here as a reference back to the main boss controller. 
 ; This is because when we are in ExecuteObjects, a0 is set to each object and sub objects own slot, so we need a way to find the original boss object.
 ; On the first loop, this copies the address to itself, but the other loops are what it was intended for.		
-		move.l	a0,BossMarble_Reference(a1)			
-; ---------------------------------------------------------------------------
+		move.l	a0,BossMarble_ParentObj(a1)			
+
 		dbf	d1,BossMarble_Loop			; repeat sequence 3 more times
 
 BossMarble_ShipMain:	; Routine 2
@@ -104,7 +104,7 @@ BMZ_ShipStart:
 ; loc_18334
 .continue:
 		jsr	(RandomNumber).l			; roll a random number
-		move.b	d0,BossMarble_Reference(a0)		; use same object offset as pointer reference (except for a0) to store number
+		move.b	d0,BossMarble_ParentObj(a0)		; use same object offset as pointer reference (except for a0) to store number
 
 ; loc_1833E
 BMZ_ShipUpdate:
@@ -117,7 +117,7 @@ BMZ_ShipUpdate:
 		tst.b	obColType(a0)				; is the boss hittable?
 		bne.s	.exit					; if not, leave
 		tst.b	obBossFlash(a0)				; is this a non-zero value (collision disabled if so, must mean boss is already flashing)
-		bne.s	.flash				; we are flashing already, skip ahead
+		bne.s	.flash					; we are flashing already, skip ahead
 		move.b	#$28,obBossFlash(a0)			; set number of times to flash (for some reason 8 more than most bosses)
 		move.w	#sfx_HitBoss,d0
 		jsr	(QueueSound2).l				; play boss damage sound
@@ -133,7 +133,7 @@ BMZ_ShipUpdate:
 ; loc_18382
 .writeColor:
 		move.w	d0,(a1)					; load color stored in d0
-		subq.b	#1,obBossFlash(a0)			; subtrack 1 from flash timer
+		subq.b	#1,obBossFlash(a0)			; subtract 1 from flash timer
 		bne.s	.exit					; keep flashing if obBossFlash is not 0
 		move.b	#$F,obColType(a0)			; restore collision, the timer has hit 0
 
@@ -147,7 +147,7 @@ BMZ_Defeated:
 		moveq	#100,d0
 		bsr.w	AddPoints
 		move.b	#4,ob2ndRout(a0)			; set object routine to BMZ_Recover
-		move.w	#$B4,BossMarble_GenericTimer(a0)	; set the boss timer
+		move.w	#180,BossMarble_GenericTimer(a0)	; set the boss timer
 		clr.w	obVelX(a0)				; stop moving horizontally
 		rts
 ; ===========================================================================
@@ -155,7 +155,7 @@ BMZ_Defeated:
 ; loc_183AA:
 BMZ_ShipMove:
 		moveq	#0,d0
-		move.b	obSubtype(a0),d0			; move obSubtype into d0
+		move.b	obSubtype(a0),d0			; move obSubtype
 		move.w	BMZ_ShipMove_Index(pc,d0.w),d0		; use obSubtype and ShipMove_Index to calculate our offset
 		jsr	BMZ_ShipMove_Index(pc,d0.w)		; jump into the table and use our offset to pick a routine in the index to go to
 		andi.b	#6,obSubtype(a0)			; AND obSubtype with 6 to mask bits 2 and 3, the only bits needed to represent our 0 through 6 index (it seems they may have used this offset for other temp storage as well)
@@ -199,7 +199,7 @@ BMZ_ChgDir:
 		subq.w	#4,obVelY(a0)				; subtract y velocity to make his swoop do a U shape
 
 BossMarble_MakeLava:
-		subq.b	#1,BossMarble_Reference(a0)		; subtract 1 from the random number storage
+		subq.b	#1,BossMarble_ParentObj(a0)		; subtract 1 from the random number storage
 		bcc.s	.checkRight				; has the frame countdown spawn timer expired? if not, branch
 		jsr	(FindFreeObj).l				; timer has expired, find a free object slot
 		bne.s	.generateTimer				; no free objects, leave early
@@ -212,21 +212,21 @@ BossMarble_MakeLava:
 		addi.w	#boss_mz_x+$78,d0			; add the X offset to far left boundary to "clamp" to the lava pool range
 		move.w	d0,obX(a1)				; set x position to calculated position
 		lsr.b	#7,d1					; shift whatever is in d1's first byte over by 7, to contain only 0 or 1
-; -------------------------------------------------------------------------
+
 ; This line may trick you at first sight, but it actually serves two purposes. It is important to note that
 ; this instruction is a move.w with an immediate size of a byte. This means that the immediate actually gets zero-extended
 ; to $00FF. Object offsets in Sonic 1 are a single byte in size. The 68000 is also big endian, meaning the high byte gets written first. 
 ; 00 gets written to objoff_28 (obSubtype) and FF gets written to objoff_29 which is used for a single check to adjust render priority in 14 Lava Ball.asm
 ; So, this is NOT setting the subtype to FF, rather it is writing two bytes used for the lava flame in one instruction to save some time.
 		move.w	#$FF,obSubtype(a1)
-; -------------------------------------------------------------------------
+
 
 ; loc_1844A
 .generateTimer:
 		jsr	(RandomNumber).l			; use d1 as a pseudo-random seeder for d0
 		andi.b	#$1F,d0					; mask to $1F			
 		addi.b	#$40,d0					; add $40, forcing range to be $40-$5F
-		move.b	d0,BossMarble_Reference(a0)		; store new countdown timer
+		move.b	d0,BossMarble_ParentObj(a0)		; store new countdown timer
 
 ; loc_1845C
 .checkRight:
@@ -271,7 +271,7 @@ BMZ_DropFire:
 		tst.w	obVelY(a0)				; are we moving vertically at all?
 		beq.s	.skip					; if not, branch
 		clr.w	obVelY(a0)				; stop vertical movement
-		move.w	#$50,BossMarble_GenericTimer(a0)	; set a timer for $50
+		move.w	#80,BossMarble_GenericTimer(a0)		; set a timer for 80 frames
 		bchg	#0,obStatus(a0)				; flip direction so that his back is to the screen bound
 		jsr	(FindFreeObj).l				; are there any free objects?
 		bne.s	.skip					; no, leave early
@@ -305,7 +305,7 @@ BMZ_Explode:
 		bclr	#7,obStatus(a0)				; clear the defeated flag
 		clr.w	obVelX(a0)				; stop horizontal movement
 		addq.b	#2,ob2ndRout(a0)			; increment the routine counter
-		move.w	#-$26,BossMarble_GenericTimer(a0)	; set a timer for $26
+		move.w	#-38,BossMarble_GenericTimer(a0)	; set a timer for 38 frames
 		tst.b	(v_bossstatus).w			; has boss been marked as defeated?
 		bne.s	.skip					; yes, skip
 		move.b	#1,(v_bossstatus).w			; no, mark it as defeated but not capsule open
@@ -335,10 +335,10 @@ BMZ_Recover:
 ; ===========================================================================
 
 .timerPositive:
-		cmpi.w	#$30,BossMarble_GenericTimer(a0)	; has the timer reached $30?
+		cmpi.w	#48,BossMarble_GenericTimer(a0)		; has the timer reached 48 frames?
 		blo.s	.rise					; if not, branch
 		beq.s	.playMusic				; stop and play music
-		cmpi.w	#$38,BossMarble_GenericTimer(a0)	; has the timer reached $38?
+		cmpi.w	#56,BossMarble_GenericTimer(a0)		; has the timer reached 56 frames?
 		blo.s	.exit					; if not, branch
 		addq.b	#2,ob2ndRout(a0)			; increment routine counter
 		bra.s	.exit
@@ -374,7 +374,7 @@ BMZ_Escape:
 ; loc_1859C
 .checkOffScreen:
 		tst.b	obRender(a0)				; has Eggman left the screen (is bit 7 clear)?
-		bpl.s	BossMarble_ShipDel			; yes, bit 7 is cleared, so we can delete the object (this is 2's complement related!)
+		bpl.s	BossMarble_ShipDel			; yes, bit 7 is cleared, so we can delete the object (this leverages signed numbers!)
 
 ; loc_185A2
 .flee:
@@ -394,8 +394,8 @@ BossMarble_ShipDel:
 BossMarble_FaceMain:	; Routine 4
 		moveq	#0,d0
 		moveq	#1,d1					; set facenormal1 animation
-		movea.l	BossMarble_Reference(a0),a1		; load the main boss controller into a1
-		move.b	ob2ndRout(a1),d0			; load boss phase into d0
+		movea.l	BossMarble_ParentObj(a0),a1		; load the main boss controller
+		move.b	ob2ndRout(a1),d0			; load boss phase
 		subq.w	#2,d0					; go back one routine
 		bne.s	.checkSpecial				; were we at DropFire? if not, branch
 		btst	#1,obSubtype(a1)			; are we on index 2 or 6?
@@ -423,7 +423,7 @@ BossMarble_FaceMain:	; Routine 4
 ; ===========================================================================
 
 .checkSonicState:
-		cmpi.b	#4,(v_player+obRoutine).w		; is Sonic currently being hit?
+		cmpi.b	#4,(v_player+obRoutine).w		; is Sonic in his hurt state?
 		blo.s	.writeAnim				; if not, branch
 		moveq	#4,d1					; set animation to facelaugh
 
@@ -451,7 +451,7 @@ BossMarble_FaceDel:
 
 BossMarble_FlameMain:; Routine 6
 		move.b	#7,obAnim(a0)				; set animation state to 7 (default invisible state for flame)
-		movea.l	BossMarble_Reference(a0),a1		; load main boss controller into a1
+		movea.l	BossMarble_ParentObj(a0),a1		; load main boss controller
 		cmpi.b	#8,ob2ndRout(a1)			; are we in the Escape state?
 		blt.s	.checkMove				; no, check movement
 		move.b	#$B,obAnim(a0)				; set thruster animation for takeoff
@@ -481,7 +481,7 @@ BossMarble_Display:
 
 ; loc_1864A
 BossMarble_SetBits:
-		movea.l	BossMarble_Reference(a0),a1		; load main boss controller into a1
+		movea.l	BossMarble_ParentObj(a0),a1		; load main boss controller
 		move.w	obX(a1),obX(a0)				; copy positions
 		move.w	obY(a1),obY(a0)
 		move.b	obStatus(a1),obStatus(a0)		; move object status to boss object status
@@ -493,9 +493,9 @@ BossMarble_SetBits:
 ; ===========================================================================
 
 BossMarble_TubeMain:	; Routine 8
-		movea.l	BossMarble_Reference(a0),a1		; load main boss controller into a1
+		movea.l	BossMarble_ParentObj(a0),a1		; load main boss controller
 		cmpi.b	#8,ob2ndRout(a1)			; are we currently in Escape state?
-		bne.s	.skip				; if not, branch
+		bne.s	.skip					; if not, branch
 		tst.b	obRender(a0)				; has the tube left the screen?
 		bpl.s	BossMarble_TubeDel			; if so, branch
 
