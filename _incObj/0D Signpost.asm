@@ -183,3 +183,7 @@ TimeBonuses:	dc.w 5000, 5000, 1000, 500, 400, 400, 300, 300,	200, 200
 
 Sign_Exit:	; Routine 8
 		rts
+; ===========================================================================
+
+		include	"_anim/Signpost.asm"
+Map_Sign:	include	"_maps/Signpost.asm"

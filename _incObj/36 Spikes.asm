@@ -249,3 +249,6 @@ Spikes_WaitAndMove:
 	.return:
 		rts					; return
 ; End of function Spikes_WaitAndMove
+; ===========================================================================
+
+Map_Spike:	include	"_maps/Spikes.asm"

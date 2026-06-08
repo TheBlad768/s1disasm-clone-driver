@@ -253,3 +253,6 @@ Elev_MakeMulti:	; Routine 6
 		addq.l	#4,sp
 		out_of_range.w	DeleteObject
 		rts
+; ===========================================================================
+
+Map_Elev:	include	"_maps/SLZ Elevators.asm"

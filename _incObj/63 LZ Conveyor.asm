@@ -366,3 +366,6 @@ LCon_Data:	dc.w .group0-LCon_Data
 		dc.w .baseX_5-$AE, .baseY_5+$5A
 
 		even
+; ===========================================================================
+
+Map_LConv:	include	"_maps/LZ Conveyor.asm"

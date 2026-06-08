@@ -310,3 +310,9 @@ Plat_ChkDel:
 
 Plat_Delete:	; Routine 6
 		bra.w	DeleteObject
+; ===========================================================================
+
+Map_Plat_Unused:include	"_maps/Platforms (unused).asm"
+Map_Plat_GHZ:	include	"_maps/Platforms (GHZ).asm"
+Map_Plat_SYZ:	include	"_maps/Platforms (SYZ).asm"
+Map_Plat_SLZ:	include	"_maps/Platforms (SLZ).asm"
