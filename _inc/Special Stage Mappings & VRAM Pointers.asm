@@ -1,6 +1,8 @@
 ; ---------------------------------------------------------------------------
-; Special stage mappings and VRAM pointers
+; Special stage mappings and VRAM pointers (loaded into v_ss_spritesettings)
 ; ---------------------------------------------------------------------------
+
+SS_MapIndex:
 
 specialStageData: macro frame,mappings,palette,vram,{INTLABEL}
 __LABEL__:	label	(*-SS_MapIndex)/(4+2)+1
@@ -8,7 +10,10 @@ __LABEL__:	label	(*-SS_MapIndex)/(4+2)+1
 		dc.w	palette|vram
 		endm
 
-; Generic wall blocks (0th blocks per color are static and don't animate)
+; Blank block is implicitly added to v_ss_spritesettings by skipping over the first 8 bytes
+; id_SS_Blank:		specialStageData	0, 0		  0,	     0				; $00 - blank block
+
+; Square wall blocks (0th blocks per color are static and don't animate)
 id_SS_WallBlue_0:	specialStageData	0, Map_SSWalls,   Tile_Pal1, ArtTile_SS_Wall		; $01 - wall block (blue)
 id_SS_WallBlue_1:	specialStageData	0, Map_SSWalls,   Tile_Pal1, ArtTile_SS_Wall		; $02 - ''
 id_SS_WallBlue_2:	specialStageData	0, Map_SSWalls,   Tile_Pal1, ArtTile_SS_Wall		; $03 - ''
@@ -66,11 +71,11 @@ id_SS_R_Ani:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_R_Block		
 id_SS_Bumper_Ani1:	specialStageData	1, Map_Bump,      Tile_Pal1, ArtTile_SS_Bumper		; $32 - bumper (touched 1)
 id_SS_Bumper_Ani2:	specialStageData	2, Map_Bump,      Tile_Pal1, ArtTile_SS_Bumper		; $33 - ''     (touched 2)
 id_SS_ZONE1:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_1		; $34 - ZONE 1 block (unused)
-id_SS_ZONE2:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_2		; $35 - ZONE 2 block (unused)
-id_SS_ZONE3:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_3		; $36 - ZONE 3 block (unused)
-id_SS_ZONE4:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_4		; $37 - ZONE 4 block (unused)
-id_SS_ZONE5:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_5		; $38 - ZONE 5 block (unused)
-id_SS_ZONE6:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_6		; $39 - ZONE 6 block (unused)
+id_SS_ZONE2:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_2		; $35 - ''   2 block (unused)
+id_SS_ZONE3:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_3		; $36 - ''   3 block (unused)
+id_SS_ZONE4:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_4		; $37 - ''   4 block (unused)
+id_SS_ZONE5:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_5		; $38 - ''   5 block (unused)
+id_SS_ZONE6:		specialStageData	0, Map_SS_Shared, Tile_Pal1, ArtTile_SS_Zone_6		; $39 - ''   6 block (unused)
 
 ; Non-solid action blocks
 id_SS_Ring:		specialStageData	0, Map_Ring,      Tile_Pal2, ArtTile_Ring		; $3A - ring
@@ -96,3 +101,5 @@ id_SS_Glass_Ani1:	specialStageData	0, Map_SS_Glass,  Tile_Pal1, ArtTile_SS_Glass
 id_SS_Glass_Ani2:	specialStageData	0, Map_SS_Glass,  Tile_Pal4, ArtTile_SS_Glass		; $4C - ''
 id_SS_Glass_Ani3:	specialStageData	0, Map_SS_Glass,  Tile_Pal2, ArtTile_SS_Glass		; $4D - ''
 id_SS_Glass_Ani4:	specialStageData	0, Map_SS_Glass,  Tile_Pal3, ArtTile_SS_Glass		; $4E - ''
+
+SS_MapIndex_End:

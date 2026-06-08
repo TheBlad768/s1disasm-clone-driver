@@ -4379,9 +4379,8 @@ Map_Pri:	include	"_maps/Prison Capsule.asm"
 ; ===========================================================================
 ; >>> Special Stage rendering and objects
 		include	"_inc/Special Stage Loading & Drawing.asm" ; includes the subroutines "SS_ShowLayout", "SS_AniWallsRings", 
-								   ; "SS_RemoveCollectedItem", "SS_AniItems", and "SS_Load"
-SS_MapIndex:	include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
-SS_MapIndex_End:
+								   ; "SS_FindFreeAnimationSlot", "SS_AniItems", and "SS_Load"
+		include	"_inc/Special Stage Mappings & VRAM Pointers.asm"
 Map_SS_Shared:	include	"_maps/SS Shared Block.asm"
 Map_SS_Glass:	include	"_maps/SS Glass Block.asm"
 Map_SS_Up:	include	"_maps/SS UP Block.asm"
