@@ -142,6 +142,16 @@ Ring_Delete:	; Routine 8
 
 CollectRing:
 		addq.w	#1,(v_rings).w	; add 1 to rings
+	if FixBugs
+		; There isn't any limit to how many rings the player can
+		; collect, which bugs out the ring counter at 999+ rings.
+		; Sonic 2 and 3K would add a cap to stop this.
+		cmpi.w	#999,(v_rings).w		; does the player have 999 rings?
+		blo.s	.belowmax			; if not, branch
+		move.w	#999,(v_rings).w		; cap at 999 rings
+
+.belowmax:
+	endif
 		ori.b	#1,(f_ringcount).w ; update the rings counter
 		move.w	#sfx_Ring,d0	; play ring sound
 		cmpi.w	#100,(v_rings).w ; do you have < 100 rings?

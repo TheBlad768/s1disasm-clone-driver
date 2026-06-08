@@ -128,8 +128,18 @@ Pow_ChkRings:
 		bne.s	Pow_ChkS			; if not, branch
 
 		addi.w	#10,(v_rings).w			; add 10 rings to the number of rings you have
-		ori.b	#1,(f_ringcount).w		; update the ring counter
+	if FixBugs
+		; There isn't any limit to how many rings the player can
+		; collect, which bugs out the ring counter at 999+ rings.
+		; Sonic 2 REV00 only fixed this for regular rings, while
+		; monitors were not fixed until REV01.
+		cmpi.w	#999,(v_rings).w		; does the player have 999 rings?
+		blo.s	.belowmax			; if not, branch
+		move.w	#999,(v_rings).w		; cap at 999 rings
 
+.belowmax:
+	endif
+		ori.b	#1,(f_ringcount).w		; update the ring counter
 		cmpi.w	#100,(v_rings).w		; check if you have at least 100 rings now
 		blo.s	Pow_RingSound			; if not, branch
 		bset	#1,(v_lifecount).w		; set 100 rings extra life flag
