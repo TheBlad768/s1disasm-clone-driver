@@ -16,7 +16,7 @@ sonss_maxspeed:		equ	$800		; Sonic's max speed when moving left/right
 sonss_acceleration:	equ	$C		; Sonic's acceleration
 sonss_deceleration:	equ	$40		; Sonic's deceleration
 sonss_jumpspeed:	equ	$680		; Sonic's jump force
-sonss_gravity:		equ	$2A		; Sonic's gravity (notably, $E lower than main level gravity)
+sonss_gravity:		equ	gravity-$E	; Sonic's gravity (=$2A, $E lower than main level gravity)
 ; ---------------------------------------------------------------------------
 
 ; Obj09:

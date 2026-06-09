@@ -1,117 +1,130 @@
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Solid	object subroutine
+;
+; input:
+;	d1 = width
+;	d2 = height / 2
+;
+; output:
+;	d4 = collision type: 0 = none; 1 = side collision; -1 = top/bottom collision
+; ---------------------------------------------------------------------------
+
 EdgeWall_SolidWall:
-		bsr.w	EdgeWall_SolidWall2
-		beq.s	loc_8AA8
-		bmi.w	loc_8AC4
-		tst.w	d0
-		beq.w	loc_8A92
-		bmi.s	loc_8A7C
-		tst.w	obVelX(a1)
-		bmi.s	loc_8A92
-		bra.s	loc_8A82
+		bsr.w	EdgeWall_ChkCollision
+		beq.s	.no_collision				; branch if no collision
+		bmi.w	.topbottom				; branch if top/bottom collision
+		tst.w	d0					; where is Sonic?
+		beq.w	.centre					; if inside the object, branch
+		bmi.s	.right					; if right of the object, branch
+		tst.w	obVelX(a1)				; is Sonic moving left?
+		bmi.s	.centre					; if yes, branch
+		bra.s	.left
 ; ===========================================================================
 
-loc_8A7C:
-		tst.w	obVelX(a1)
-		bpl.s	loc_8A92
+.right:
+		tst.w	obVelX(a1)				; is Sonic moving right?
+		bpl.s	.centre					; if yes, branch
 
-loc_8A82:
+.left:
 		sub.w	d0,obX(a1)
 		move.w	#0,obInertia(a1)
-		move.w	#0,obVelX(a1)
+		move.w	#0,obVelX(a1)				; stop Sonic moving
 
-loc_8A92:
-		btst	#1,obStatus(a1)
-		bne.s	loc_8AB6
-		bset	#5,obStatus(a1)
-		bset	#5,obStatus(a0)
-		rts
+.centre:
+		btst	#1,obStatus(a1)				; is Sonic in the air?
+		bne.s	.air					; if yes, branch
+		bset	#5,obStatus(a1)				; make Sonic push object
+		bset	#5,obStatus(a0)				; make object be pushed
+		rts	
 ; ===========================================================================
 
-loc_8AA8:
+.no_collision:
 		btst	#5,obStatus(a0)	; is Sonic pushing?
-		beq.s	locret_8AC2	; if not, branch
+		beq.s	.exit					; if not, branch
 	if FixBugs=0
 		; This causes the infamous "walk-jump bug"
-		move.w	#id_Run,obAnim(a1) ; use running animation
+		move.w	#id_Run,obAnim(a1)			; use running animation
 	endif
 
-loc_8AB6:
-		bclr	#5,obStatus(a0)
-		bclr	#5,obStatus(a1)
+.air:
+		bclr	#5,obStatus(a0)				; clear pushing flag
+		bclr	#5,obStatus(a1)				; clear Sonic's pushing flag
 
-locret_8AC2:
+	.exit:
+		rts	
+; ===========================================================================
+
+.topbottom:
+		tst.w	obVelY(a1)				; is Sonic moving downwards?
+		bpl.s	.exit2					; if yes, branch
+		tst.w	d3					; is Sonic above the object?
+		bpl.s	.exit2					; if yes, branch
+		sub.w	d3,obY(a1)				; correct Sonic's position
+		move.w	#0,obVelY(a1)				; stop Sonic moving
+
+	.exit2:
 		rts
 ; ===========================================================================
 
-loc_8AC4:
-		tst.w	obVelY(a1)
-		bpl.s	locret_8AD8
-		tst.w	d3
-		bpl.s	locret_8AD8
-		sub.w	d3,obY(a1)
-		move.w	#0,obVelY(a1)
-
-locret_8AD8:
-		rts
-; End of function EdgeWall_SolidWall
-; ===========================================================================
-
-EdgeWall_SolidWall2:
+EdgeWall_ChkCollision:
 		lea	(v_player).w,a1
 		move.w	obX(a1),d0
-		sub.w	obX(a0),d0
-		add.w	d1,d0
-		bmi.s	loc_8B48
+		sub.w	obX(a0),d0				; d0: +ve if Sonic is right; -ve if Sonic is left
+		add.w	d1,d0					; add width of object
+		bmi.s	Edge_Ignore				; branch if Sonic is outside left boundary
 		move.w	d1,d3
 		add.w	d3,d3
 		cmp.w	d3,d0
-		bhi.s	loc_8B48
+		bhi.s	Edge_Ignore				; branch if Sonic is outside right boundary
+
 		move.b	obHeight(a1),d3
 		ext.w	d3
-		add.w	d3,d2
+		add.w	d3,d2					; add obHeight to stated height
 		move.w	obY(a1),d3
-		sub.w	obY(a0),d3
-		add.w	d2,d3
-		bmi.s	loc_8B48
+		sub.w	obY(a0),d3				; d3: +ve if Sonic is below; -ve if Sonic is above
+		add.w	d2,d3					; add total height of object
+		bmi.s	Edge_Ignore				; branch if Sonic is outside upper boundary
 		move.w	d2,d4
 		add.w	d4,d4
 		cmp.w	d4,d3
-		bhs.s	loc_8B48
-		tst.b	(f_playerctrl).w
-		bmi.s	loc_8B48
-		cmpi.b	#6,(v_player+obRoutine).w
-		bhs.s	loc_8B48
-		tst.w	(v_debuguse).w
-		bne.s	loc_8B48
+		bhs.s	Edge_Ignore				; branch if Sonic is outside lower boundary
+
+		tst.b	(f_playerctrl).w			; are controls locked?
+		bmi.s	Edge_Ignore				; if yes, branch
+		cmpi.b	#6,(v_player+obRoutine).w		; is Sonic dying?
+		bhs.s	Edge_Ignore				; if yes, branch
+		tst.w	(v_debuguse).w				; is debug mode being used?
+		bne.s	Edge_Ignore				; if yes, branch
 		move.w	d0,d5
-		cmp.w	d0,d1
-		bhs.s	loc_8B30
+		cmp.w	d0,d1					; is Sonic right of centre of object?
+		bhs.s	.isright				; if yes, branch
 		add.w	d1,d1
 		sub.w	d1,d0
 		move.w	d0,d5
 		neg.w	d5
 
-loc_8B30:
+	.isright:
 		move.w	d3,d1
-		cmp.w	d3,d2
-		bhs.s	loc_8B3C
+		cmp.w	d3,d2					; is Sonic below centre of object?
+		bhs.s	.isbelow				; if yes, branch
 		sub.w	d4,d3
 		move.w	d3,d1
 		neg.w	d1
 
-loc_8B3C:
+	.isbelow:
 		cmp.w	d1,d5
-		bhi.s	loc_8B44
-		moveq	#1,d4
-		rts
+		bhi.s	Edge_TopBottom
+		moveq	#1,d4					; return side collision
+		rts	
 ; ===========================================================================
 
-loc_8B44:
-		moveq	#-1,d4
-		rts
+Edge_TopBottom:
+		moveq	#-1,d4					; return top/bottom collision
+		rts	
 ; ===========================================================================
 
-loc_8B48:
-		moveq	#0,d4
+Edge_Ignore:
+		moveq	#0,d4					; return no collision
 		rts
-; End of function EdgeWall_SolidWall2
+; End of function EdgeWall_SolidWall

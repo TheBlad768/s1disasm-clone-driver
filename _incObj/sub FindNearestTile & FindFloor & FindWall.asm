@@ -1,10 +1,11 @@
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to find which tile the object is standing on
-
+; 
 ; input:
 ;	d2 = y-position of object's bottom edge
 ;	d3 = x-position of object
-
+; 
 ; output:
 ;	a1 = address within 256x256 mappings where object is standing
 ;	     (refers to a 16x16 tile number)
@@ -90,12 +91,13 @@ FindNearestTile:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to find the floor
-
+; 
 ; input:
 ;	d2 = y-position of object's bottom edge
 ;	d3 = x-position of object
 ;	d5 = bit to test for solidness
-
+;	d6 = x/y-flip xor mask
+; 
 ; output:
 ;	d1 = distance to the floor
 ;	a1 = address within 256x256 mappings where object is standing
@@ -266,7 +268,6 @@ FindFloor2:
 
 
 ; ===========================================================================
-
 ; ---------------------------------------------------------------------------
 ; Subroutine to	find a wall
 

@@ -59,7 +59,7 @@ sonicAniFrame = objoff_32		; Sonic's current animation number
 		move.b	#1,obFrame(a0)
 		lea	(Smab_Speeds).l,a4 ; load broken fragment speed data
 		moveq	#3,d1		; set number of fragments to 4
-		move.w	#$38,d2
+		move.w	#gravity,d2
 		bsr.w	SmashObject
 		bsr.w	FindFreeObj
 		bne.s	Smab_Points
@@ -93,7 +93,7 @@ Smab_Points:	; Routine 4
 	endif
 
 		bsr.w	SpeedToPos
-		addi.w	#$38,obVelY(a0)
+		addi.w	#gravity,obVelY(a0)	; make fragment fall
 	if FixBugs=0
 		; Objects should not call DisplaySprite and DeleteObject on
 		; the same frame or else cause a null-pointer dereference.

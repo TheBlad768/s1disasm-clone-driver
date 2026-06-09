@@ -2,42 +2,49 @@
 ; ---------------------------------------------------------------------------
 ; Subroutine to make an object fall downwards, increasingly fast
 ; ---------------------------------------------------------------------------
+gravity:	equ	$38				; gravity constant used by many objects
+; ---------------------------------------------------------------------------
 
 ObjectFall:
-		move.l	obX(a0),d2
-		move.l	obY(a0),d3
-		move.w	obVelX(a0),d0
-		ext.l	d0
-		asl.l	#8,d0
-		add.l	d0,d2
-		move.w	obVelY(a0),d0
-		addi.w	#$38,obVelY(a0)	; increase vertical speed
-		ext.l	d0
-		asl.l	#8,d0
-		add.l	d0,d3
-		move.l	d2,obX(a0)
-		move.l	d3,obY(a0)
-		rts
+		move.l	obX(a0),d2			; get object's X-axis position
+		move.l	obY(a0),d3			; get object's Y-axis position
+		move.w	obVelX(a0),d0			; load horizontal speed
+		ext.l	d0				; extend speed to longword
+		asl.l	#8,d0				; shift speed up a byte (16.16 fixed point)
+		add.l	d0,d2				; add speed to X-axis position
+
+		move.w	obVelY(a0),d0			; load vertical speed
+		addi.w	#gravity,obVelY(a0)		; increase vertical speed (apply gravity)
+		ext.l	d0				; extend speed to longword
+		asl.l	#8,d0				; shift speed up a byte (16.16 fixed point)
+		add.l	d0,d3				; add speed to Y-axis position
+
+		move.l	d2,obX(a0)			; update X-axis position
+		move.l	d3,obY(a0)			; update Y-axis position
+		rts					; return
 ; End of function ObjectFall
+
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine translating object speed to update object position.
-; Same as ObjectFall, but without applying gravity.
+; Identical to ObjectFall, but without applying gravity.
 ; ---------------------------------------------------------------------------
 
 SpeedToPos:
-		move.l	obX(a0),d2
-		move.l	obY(a0),d3
-		move.w	obVelX(a0),d0	; load horizontal speed
-		ext.l	d0
-		asl.l	#8,d0		; multiply speed by $100
-		add.l	d0,d2		; add to x-axis position
-		move.w	obVelY(a0),d0	; load vertical speed
-		ext.l	d0
-		asl.l	#8,d0		; multiply by $100
-		add.l	d0,d3		; add to y-axis position
-		move.l	d2,obX(a0)	; update x-axis position
-		move.l	d3,obY(a0)	; update y-axis position
-		rts
+		move.l	obX(a0),d2			; get object's X-axis position
+		move.l	obY(a0),d3			; get object's Y-axis position
+		move.w	obVelX(a0),d0			; load horizontal speed
+		ext.l	d0				; extend speed to longword
+		asl.l	#8,d0				; shift speed up a byte (16.16 fixed point)
+		add.l	d0,d2				; add speed to X-axis position
+
+		move.w	obVelY(a0),d0			; load vertical speed
+		ext.l	d0				; extend speed to longword
+		asl.l	#8,d0				; shift speed up a byte (16.16 fixed point)
+		add.l	d0,d3				; add speed to Y-axis position
+
+		move.l	d2,obX(a0)			; update X-axis position
+		move.l	d3,obY(a0)			; update Y-axis position
+		rts					; return
 ; End of function SpeedToPos

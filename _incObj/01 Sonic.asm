@@ -300,7 +300,7 @@ Sonic_MdJump:	; While Sonic is in the air but not rolling
 		jsr	(ObjectFall).l				; apply gravity and update Sonic's position based on his current velocities
 		btst	#6,obStatus(a0)				; is Sonic underwater?
 		beq.s	.notunderwater				; if not, branch
-		subi.w	#$28,obVelY(a0)				; reduce falling speed (ObjectFall applies $38, so this subtraction makes it $10)
+		subi.w	#gravity-$10,obVelY(a0)			; reduce falling speed (ObjectFall applies $38, so this subtraction makes it $10)
 
 ; loc_12E5C:
 .notunderwater:
@@ -329,7 +329,7 @@ Sonic_MdJump2:	; While Sonic is in the air and rolling (usually, but not limited
 		jsr	(ObjectFall).l				; apply gravity and update Sonic's position based on his current velocities
 		btst	#6,obStatus(a0)				; is Sonic underwater?
 		beq.s	.notunderwater				; if not, branch
-		subi.w	#$28,obVelY(a0)				; reduce falling speed (ObjectFall applies $38, so this subtraction makes it $10)
+		subi.w	#gravity-$10,obVelY(a0)			; reduce falling speed (ObjectFall applies $38, so this subtraction makes it $10)
 
 ; loc_12EA6:
 .notunderwater:
@@ -1906,7 +1906,7 @@ Sonic_HandleDeath:
 	endif
 
 		; Bottom reached, remove a life and check if game over was triggered
-		move.w	#-$38,obVelY(a0)			; set to -$38 to cancel ObjectFall gravity (freeze Sonic in place)
+		move.w	#-gravity,obVelY(a0)			; set to -$38 to cancel ObjectFall gravity (freeze Sonic in place)
 		addq.b	#2,obRoutine(a0)			; go to Sonic_ResetLevel
 		clr.b	(f_timecount).w				; stop time counter
 		addq.b	#1,(f_lifecount).w			; update lives counter
