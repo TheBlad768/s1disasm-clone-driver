@@ -299,7 +299,7 @@ FFloor_BlockBreak:
 		lea	FFloor_FragPos(pc),a5
 		moveq	#1,d4
 		moveq	#3,d1
-		moveq	#$38,d2
+		moveq	#gravity,d2	; unused leftover from SmashObject
 		addq.b	#2,obRoutine(a0)
 		move.b	#8,obActWid(a0)
 		move.b	#8,obHeight(a0)

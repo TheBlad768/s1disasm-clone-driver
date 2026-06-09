@@ -19,7 +19,11 @@ Revision = 1
 
 FixBugs = 0
 ;	| If 1, enables various bugfixes across the game and sound driver
-;	| See also FixMusicAndSFXDataBugs
+;	|       (see also FixMusicAndSFXDataBugs)
+
+CheatsEnabled = 0
+;	| If 1, all in-game cheats (Level Select, Debug Mode, Slow-Motion, Japanese Credits)
+;	|       will be enabled by default, without requiring any title screen button inputs
 
 AllOptimizations = 0
 ;	| If 1, enables all optimizations
@@ -36,10 +40,10 @@ BackupSRAM = 1
 ;	| 0 = no saving (read-only SRAM); 1 = allow saving
 AddressSRAM = 3
 ;	| 0 = odd+even; 2 = even only; 3 = odd only
-;	| (odd only is the most common)
+;	| (odd only is the most common setting)
 
 ZoneCount = 6
-;	| Used for the zonewarning macro. Do not change, unless more zones get added.
+;	| Used for the "zonewarning" macro. Do not change, unless more zones get added.
 ;	| Discrete zones are: GHZ, LZ, MZ, SLZ, SYZ, and SBZ
 
 ; ===========================================================================
@@ -398,6 +402,14 @@ GameInit:
 		bsr.w	DACDriverLoad			; initialize Z80 DAC driver
 		bsr.w	JoypadInit			; initialize controller ports
 		move.b	#id_Sega,(v_gamemode).w		; set first Game Mode to Sega Screen
+
+	if CheatsEnabled=1
+		moveq	#1,d0				; enable all cheats by default
+		move.b	d0,(f_levselcheat).w		; enable level select cheat
+		move.b	d0,(f_slomocheat).w		; enable slow-motion cheat
+		move.b	d0,(f_debugcheat).w		; enable debug mode cheat
+		move.b	d0,(f_creditscheat).w		; enable hidden Japanese credits cheat
+	endif
 
 MainGameLoop:
 		move.b	(v_gamemode).w,d0		; load Game Mode
@@ -1896,8 +1908,14 @@ GM_Title:	; fading out from previous game mode
 		bsr.w	NemDec				; decompress Nemesis-compressed patterns directly to VRAM
 
 		lea	(v_ram_start).l,a1		; set start of RAM to be used as decompression buffer
-		lea	(Eni_JapNames).l,a0		; load mappings for Japanese credits
-		move.w	#ArtTile_Title_Japanese_Text,d0	; set art tile for hidden credits
+		lea	(Eni_JapNames).l,a0		; load mappings for hidden Japanese credits
+	if FixBugs
+		move.w	#ArtTile_Title_Japanese_Text|Tile_Pal3,d0 ; set art tile for hidden Japanese credits (cyan)
+	else
+		; The hidden Japanese credits cheat in Object 8A sets the text color to cyan on palette line 3,
+		; but this part makes the text continue using palette line 1, rendering them black instead.
+		move.w	#ArtTile_Title_Japanese_Text|Tile_Pal1,d0 ; set art tile for hidden Japanese credits (black)
+	endif
 		bsr.w	EniDec				; decompress Enigma-compressed mappings to RAM buffer
 		copyTilemap	v_ram_start,vram_fg,40,28 ; transfer decompressed patterns from RAM buffer to VRAM
 
@@ -2075,8 +2093,9 @@ Tit_EnterCheat:
 		
 Tit_ActivateCheat:
 		; (On JAPANESE consoles only) Activated cheat depends on the amount of times C was pressed:
-		; 0-1 level select -- 2-3 slow motion -- 4-5 debug mode -- 6-7: hidden Japanese credits / sound test skips
-		; For any other regions, pressing C twice or more will ALWAYS result in slow motion and debug mode.
+		; 0-1 level select -- 2-3 slow motion -- 4-5 debug mode -- 6-7: hidden Japanese credits & sound test 9E/9F
+		; For any other regions, pressing C twice or more will ALWAYS result in slow motion and debug mode,
+		; and the hidden Japanese credits cheat is unavailable under any circumstances on such consoles.
 		lea	(f_levselcheat).w,a0		; get base cheat index
 		move.w	(v_title_ccount).w,d1		; get number of tiles C was pressed
 		lsr.w	#1,d1				; half pressed amount
@@ -2163,12 +2182,14 @@ LevSel_SelectionMade:
 		bne.s	LevSel_Level_SS			; if not, go to Level/SS subroutine
 		move.w	(v_levselsound).w,d0		; get currently selected sound test entry
 		addi.w	#$80,d0				; make it $80-based
-		tst.b	(f_creditscheat).w		; is Japanese Credits cheat on?
+
+		; 9E/9F shortcuts with hidden Japanese Credits cheat
+		tst.b	(f_creditscheat).w		; is hidden Japanese Credits cheat on?
 		beq.s	LevSel_NoCheat			; if not, branch
 		cmpi.w	#$9F,d0				; is sound $9F being played?
-		beq.s	LevSel_Ending			; if yes, branch
+		beq.s	LevSel_Ending			; if yes, go to Ending Sequence
 		cmpi.w	#$9E,d0				; is sound $9E being played?
-		beq.s	LevSel_Credits			; if yes, branch
+		beq.s	LevSel_Credits			; if yes, go to Credits
 LevSel_NoCheat:
 	if FixBugs=0
 		; This is a workaround for a bug (see PlaySoundID in the sound driver for more info)

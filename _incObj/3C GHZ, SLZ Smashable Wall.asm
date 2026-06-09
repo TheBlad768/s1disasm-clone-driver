@@ -64,7 +64,7 @@ Smash_Solid:	; Routine 2
 		bclr	#5,obStatus(a0)
 		bclr	#5,obStatus(a1)
 		moveq	#7,d1		; load 8 fragments
-		move.w	#$70,d2
+		move.w	#gravity*2,d2
 		bsr.s	SmashObject
 
 Smash_FragMove:	; Routine 4
@@ -75,7 +75,7 @@ Smash_FragMove:	; Routine 4
 	endif
 
 		bsr.w	SpeedToPos
-		addi.w	#$70,obVelY(a0)	; make fragment fall faster
+		addi.w	#gravity*2,obVelY(a0)	; make fragment fall faster
 	if FixBugs=0
 		; Objects should not call DisplaySprite and DeleteObject on
 		; the same frame or else cause a null-pointer dereference.

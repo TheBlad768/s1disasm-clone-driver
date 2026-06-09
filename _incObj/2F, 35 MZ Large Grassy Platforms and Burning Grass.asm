@@ -79,7 +79,7 @@ LGrass_Solid:
 
 loc_AF8E:
 		movea.l	objoff_30(a0),a2
-		bsr.w	SolidObject2F
+		bsr.w	SolidObject_Heightmap
 
 LGrass_Display:
 	if FixBugs=0

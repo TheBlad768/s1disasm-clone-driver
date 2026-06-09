@@ -32,7 +32,25 @@ Debug_Init:	; Routine 0
 
 		move.b	#fr_Null,obFrame(a0)			; set Sonic's frame to null (blank)
 		move.b	#id_Walk,obAnim(a0)			; set Sonic's animation to null (walk)
+	if FixBugs
+		; Debug Mode makes no attempt to check if Sonic was standing on any
+		; object before entering it, causing behavior such as being stuck to
+		; platforms or warped back down to an object that Sonic was previously
+		; standing on.
+		btst	#3,obStatus(a0)				; is Sonic standing on an object?
+		beq.s	.notOnObject				; if not, branch
+		bclr	#3,obStatus(a0)				; clear Sonic's standing flag
+		moveq	#0,d0
+		move.b	standonobject(a0),d0			; get object ID
+		clr.b	standonobject(a0)			; clear object ID
+		lsl.w	#object_size_bits,d0
+		addi.l	#v_objspace&$FFFFFF,d0
+		movea.l	d0,a2
+		bclr	#3,obStatus(a2)				; clear object's standing flag
+		clr.b	obSolid(a2)
 
+.notOnObject:
+	endif
 		cmpi.b	#id_Special,(v_gamemode).w		; is game mode $10 (special stage)?
 		bne.s	.isLevel				; if not, branch
 		move.w	#0,(v_ssrotate).w			; stop special stage rotating
@@ -293,7 +311,6 @@ Debug_ExitDebugMode:
 	.return:
 		rts						; return
 ; End of function Debug_Control
-
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
