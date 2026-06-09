@@ -1916,8 +1916,14 @@ GM_Title:	; fading out from previous game mode
 		bsr.w	NemDec				; decompress Nemesis-compressed patterns directly to VRAM
 
 		lea	(v_ram_start).l,a1		; set start of RAM to be used as decompression buffer
-		lea	(Eni_JapNames).l,a0		; load mappings for Japanese credits
-		move.w	#ArtTile_Title_Japanese_Text,d0	; set art tile for hidden credits
+		lea	(Eni_JapNames).l,a0		; load mappings for hidden Japanese credits
+	if FixBugs
+		move.w	#ArtTile_Title_Japanese_Text|Tile_Pal3,d0 ; set art tile for hidden Japanese credits (cyan)
+	else
+		; The hidden Japanese credits cheat in Object 8A sets the text color to cyan on palette line 3,
+		; but this part makes the text continue using palette line 1, rendering them black instead.
+		move.w	#ArtTile_Title_Japanese_Text|Tile_Pal1,d0 ; set art tile for hidden Japanese credits (black)
+	endif
 		bsr.w	EniDec				; decompress Enigma-compressed mappings to RAM buffer
 		copyTilemap	v_ram_start,vram_fg,40,28 ; transfer decompressed patterns from RAM buffer to VRAM
 
@@ -2095,8 +2101,9 @@ Tit_EnterCheat:
 		
 Tit_ActivateCheat:
 		; (On JAPANESE consoles only) Activated cheat depends on the amount of times C was pressed:
-		; 0-1 level select -- 2-3 slow motion -- 4-5 debug mode -- 6-7: hidden Japanese credits / sound test skips
-		; For any other regions, pressing C twice or more will ALWAYS result in slow motion and debug mode.
+		; 0-1 level select -- 2-3 slow motion -- 4-5 debug mode -- 6-7: hidden Japanese credits & sound test 9E/9F
+		; For any other regions, pressing C twice or more will ALWAYS result in slow motion and debug mode,
+		; and the hidden Japanese credits cheat is unavailable under any circumstances on such consoles.
 		lea	(f_levselcheat).w,a0		; get base cheat index
 		move.w	(v_title_ccount).w,d1		; get number of tiles C was pressed
 		lsr.w	#1,d1				; half pressed amount
@@ -2183,12 +2190,14 @@ LevSel_SelectionMade:
 		bne.s	LevSel_Level_SS			; if not, go to Level/SS subroutine
 		move.w	(v_levselsound).w,d0		; get currently selected sound test entry
 		addi.w	#$80,d0				; make it $80-based
-		tst.b	(f_creditscheat).w		; is Japanese Credits cheat on?
+
+		; 9E/9F shortcuts with hidden Japanese Credits cheat
+		tst.b	(f_creditscheat).w		; is hidden Japanese Credits cheat on?
 		beq.s	LevSel_NoCheat			; if not, branch
 		cmpi.w	#$9F,d0				; is sound $9F being played?
-		beq.s	LevSel_Ending			; if yes, branch
+		beq.s	LevSel_Ending			; if yes, go to Ending Sequence
 		cmpi.w	#$9E,d0				; is sound $9E being played?
-		beq.s	LevSel_Credits			; if yes, branch
+		beq.s	LevSel_Credits			; if yes, go to Credits
 LevSel_NoCheat:
 	if FixBugs=0
 		; This is a workaround for a bug (see PlaySoundID in the sound driver for more info)

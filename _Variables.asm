@@ -451,7 +451,7 @@ v_scorelife:		ds.l	1		; points required for an extra life (REV01 only)
 f_levselcheat:		ds.b	1		; level select cheat flag
 f_slomocheat:		ds.b	1		; slow motion & frame advance cheat flag
 f_debugcheat:		ds.b	1		; debug mode cheat flag
-f_creditscheat:		ds.b	1		; hidden credits & press start cheat flag
+f_creditscheat:		ds.b	1		; hidden Japanese credits & 9E/9F sound test shortcuts cheat flag
 v_title_dcount:		ds.w	1		; number of times the d-pad is pressed on title screen
 v_title_ccount:		ds.w	1		; number of times C is pressed on title screen
 			ds.b	2		; unused
