@@ -19,7 +19,11 @@ Revision = 1
 
 FixBugs = 0
 ;	| If 1, enables various bugfixes across the game and sound driver
-;	| See also FixMusicAndSFXDataBugs
+;	|       (see also FixMusicAndSFXDataBugs)
+
+CheatsEnabled = 0
+;	| If 1, all in-game cheats (Level Select, Debug Mode, Slow-Motion, Japanese Credits)
+;	|       will be enabled by default, without requiring any title screen button inputs
 
 AllOptimizations = 0
 ;	| If 1, enables all optimizations
@@ -36,10 +40,10 @@ BackupSRAM = 1
 ;	| 0 = no saving (read-only SRAM); 1 = allow saving
 AddressSRAM = 3
 ;	| 0 = odd+even; 2 = even only; 3 = odd only
-;	| (odd only is the most common)
+;	| (odd only is the most common setting)
 
 ZoneCount = 6
-;	| Used for the zonewarning macro. Do not change, unless more zones get added.
+;	| Used for the "zonewarning" macro. Do not change, unless more zones get added.
 ;	| Discrete zones are: GHZ, LZ, MZ, SLZ, SYZ, and SBZ
 
 ; ===========================================================================
@@ -406,6 +410,14 @@ GameInit:
 		bsr.w	DACDriverLoad			; initialize Z80 DAC driver
 		bsr.w	JoypadInit			; initialize controller ports
 		move.b	#id_Sega,(v_gamemode).w		; set first Game Mode to Sega Screen
+
+	if CheatsEnabled=1
+		moveq	#1,d0				; enable all cheats by default
+		move.b	d0,(f_levselcheat).w		; enable level select cheat
+		move.b	d0,(f_slomocheat).w		; enable slow-motion cheat
+		move.b	d0,(f_debugcheat).w		; enable debug mode cheat
+		move.b	d0,(f_creditscheat).w		; enable hidden Japanese credits cheat
+	endif
 
 MainGameLoop:
 		move.b	(v_gamemode).w,d0		; load Game Mode
