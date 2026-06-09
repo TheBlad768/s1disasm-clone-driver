@@ -240,7 +240,7 @@ Plat_Move:
 		asl.l	#8,d0
 		add.l	d0,d3
 		move.l	d3,objoff_2C(a0)
-		addi.w	#$38,obVelY(a0)
+		addi.w	#gravity,obVelY(a0)	; make platform fall
 		move.w	(v_limitbtm2).w,d0
 		addi.w	#$E0,d0
 		cmp.w	objoff_2C(a0),d0

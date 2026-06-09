@@ -135,7 +135,7 @@ Sonic_BelowFloor:
 		asl.l	#8,d0
 		sub.l	d0,d2
 		move.l	d2,obX(a0)
-		move.w	#$38,d0
+		move.w	#gravity,d0
 		ext.l	d0
 		asl.l	#8,d0
 		sub.l	d0,d3
@@ -151,7 +151,7 @@ Sonic_InsideWall:
 		; dead code
 		move.l	obY(a0),d3
 		move.w	obVelY(a0),d0
-		subi.w	#$38,d0
+		subi.w	#gravity,d0
 		move.w	d0,obVelY(a0)
 		ext.l	d0
 		asl.l	#8,d0

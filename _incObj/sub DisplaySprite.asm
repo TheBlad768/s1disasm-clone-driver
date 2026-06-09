@@ -9,13 +9,13 @@ DisplaySprite:
 		andi.w	#spritelayer_size*(spritelayer_num-1),d0 ; mask to possible offset starts per layer ($80*7=$380)
 		adda.w	d0,a1				; jump to start of appropriate priority layer
 		cmpi.w	#spritelayer_size-2,(a1)	; is this sprite priority layer full? ($7E bytes)
-		bhs.s	DSpr_Full			; if yes, branch
+		bhs.s	.return				; if yes, drop queuing this sprite
 		addq.w	#2,(a1)				; increment sprite counter
 		adda.w	(a1),a1				; jump to empty position
 		move.w	a0,(a1)				; insert RAM address for object
 
-DSpr_Full:
-		rts
+	.return:
+		rts					; return
 ; End of function DisplaySprite
 
 ; ===========================================================================
@@ -31,11 +31,11 @@ DisplaySprite2:
 		andi.w	#spritelayer_size*(spritelayer_num-1),d0 ; mask to possible offset starts per layer ($80*7=$380)
 		adda.w	d0,a2				; jump to start of appropriate priority layer
 		cmpi.w	#spritelayer_size-2,(a2)	; is this sprite priority layer full? ($7E bytes)
-		bhs.s	DSpr2_Full			; if yes, branch
+		bhs.s	.return				; if yes, drop queuing this sprite
 		addq.w	#2,(a2)				; increment sprite counter
 		adda.w	(a2),a2				; jump to empty position
 		move.w	a1,(a2)				; insert RAM address for object
 
-DSpr2_Full:
-		rts
+	.return:
+		rts					; return
 ; End of function DisplaySprite2
