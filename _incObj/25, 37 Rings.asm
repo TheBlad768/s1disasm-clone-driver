@@ -86,7 +86,7 @@ loc_9BBA:
 		move.b	#4,obRender(a1)
 		move.b	#2,obPriority(a1)
 		move.b	#$47,obColType(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 		move.b	obRespawnNo(a0),obRespawnNo(a1)
 		move.b	d1,objoff_34(a1)
 
@@ -212,8 +212,8 @@ RLoss_Count:	; Routine 0
 .makerings:
 		_move.b	#id_RingLoss,obID(a1) ; load bouncing ring object
 		addq.b	#2,obRoutine(a1)
-		move.b	#8,obHeight(a1)
-		move.b	#8,obWidth(a1)
+		move.b	#16/2,obHeight(a1)
+		move.b	#16/2,obWidth(a1)
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.l	#Map_Ring,obMap(a1)
@@ -221,7 +221,7 @@ RLoss_Count:	; Routine 0
 		move.b	#4,obRender(a1)
 		move.b	#3,obPriority(a1)
 		move.b	#$47,obColType(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 	if FixBugs=0
 		; This resets the timer for all spilled rings,
 		; even if they were already close to getting deleted

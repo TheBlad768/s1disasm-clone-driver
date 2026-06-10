@@ -30,13 +30,13 @@ Mon_Main:	; Routine 0
 	endif
 
 		addq.b	#2,obRoutine(a0)		; go to "Mon_Solid" next
-		move.b	#$E,obHeight(a0)		; set height
-		move.b	#$E,obWidth(a0)			; set width
+		move.b	#28/2,obHeight(a0)		; set height
+		move.b	#28/2,obWidth(a0)		; set width
 		move.l	#Map_Monitor,obMap(a0)		; set mappings
 		move.w	#ArtTile_Monitor,obGfx(a0)	; set art tile
 		move.b	#4,obRender(a0)			; set render mode to playfield-positioned
 		move.b	#3,obPriority(a0)		; set sprite priority to 3
-		move.b	#$F,obActWid(a0)		; set render width
+		move.b	#30/2,obActWid(a0)		; set render width
 
 		lea	(v_objstate).w,a2		; get object respawn table
 		moveq	#0,d0				; clear d0
@@ -72,7 +72,7 @@ Mon_Solid:	; Routine 2
 ; ===========================================================================
 
 .ontop:
-		move.w	#$10,d3				; set solid width
+		move.w	#32/2,d3			; set solid width
 		move.w	obX(a0),d2			; get monitor's X position
 		bsr.w	MvSonicOnPtfm			; make Sonic run along the monitor like a platform
 		bra.w	Mon_Animate			; process monitor normally
@@ -90,8 +90,8 @@ Mon_Solid:	; Routine 2
 ; ===========================================================================
 
 .normal:	; 2nd Routine 0
-		move.w	#$F+sonic_solid_width,d1	; width/2
-		move.w	#$F,d2				; height/2
+		move.w	#30/2+sonic_solid_width,d1	; width/2
+		move.w	#30/2,d2			; height/2
 		bsr.w	Mon_SolidSides			; check collision (0 = none; 1 = side; -1 = top/bottom)
 		beq.w	.checkpush			; if not, branch
 
@@ -225,7 +225,7 @@ Pow_Main:	; Routine 0
 		move.w	#ArtTile_Monitor,obGfx(a0)	; set art tile
 		move.b	#$24,obRender(a0)		; set "raw-mappings" flag and playfield positioning mode
 		move.b	#3,obPriority(a0)		; set sprite priority to 3
-		move.b	#8,obActWid(a0)			; set display width
+		move.b	#16/2,obActWid(a0)			; set display width
 		move.w	#-$300,obVelY(a0)		; set initial upwards momentum of the icon
 
 		; Raw Mappings: Set mappings pointer to point directly to the icon sprite piece

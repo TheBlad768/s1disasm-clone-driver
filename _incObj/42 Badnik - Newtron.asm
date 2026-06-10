@@ -19,9 +19,9 @@ Newt_Main:	; Routine 0
 		move.w	#ArtTile_Newtron,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$14,obActWid(a0)
-		move.b	#$10,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#40/2,obActWid(a0)
+		move.b	#32/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 
 Newt_Action:	; Routine 2
 		moveq	#0,d0

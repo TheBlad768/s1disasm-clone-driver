@@ -26,7 +26,7 @@ UnkExpl_Main:	; Routine 0
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#0,obColType(a0)
-		move.b	#$C,obActWid(a0)
+		move.b	#24/2,obActWid(a0)
 		move.b	#9,obTimeFrame(a0)
 		move.b	#0,obFrame(a0)
 		move.w	#sfx_A5,d0		; (this sfx is also unused)

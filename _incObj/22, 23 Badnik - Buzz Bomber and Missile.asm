@@ -25,7 +25,7 @@ Buzz_Main:	; Routine 0
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#8,obColType(a0)
-		move.b	#$18,obActWid(a0)
+		move.b	#48/2,obActWid(a0)
 
 Buzz_Action:	; Routine 2
 		moveq	#0,d0
@@ -157,7 +157,7 @@ Msl_Main:	; Routine 0
 		move.w	#ArtTile_Buzz_Bomber|Tile_Pal2,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		andi.b	#3,obStatus(a0)
 		tst.b	obSubtype(a0)	; was object created by a Newtron?
 		beq.s	Msl_Animate	; if not, branch

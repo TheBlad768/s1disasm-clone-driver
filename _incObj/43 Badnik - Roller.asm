@@ -13,8 +13,8 @@ Roll_Index:	dc.w Roll_Main-Roll_Index
 ; ===========================================================================
 
 Roll_Main:	; Routine 0
-		move.b	#$E,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#28/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		bsr.w	ObjectFall
 		bsr.w	ObjFloorDist
 		tst.w	d1
@@ -26,7 +26,7 @@ Roll_Main:	; Routine 0
 		move.w	#ArtTile_Roller,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 
 locret_E052:
 		rts
