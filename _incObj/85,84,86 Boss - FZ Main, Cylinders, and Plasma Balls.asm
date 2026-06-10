@@ -672,10 +672,11 @@ EggmanCylinder_Main:	; Routine
 		move.w	(a1),obY(a0)
 		move.w	(a1)+,obBossY(a0)
 	if FixBugs=0
-		; This immediately gets overwritten just a few lines down.
-		move.b	#64/2,obHeight(a0)	; ???
-	endif
+		; These are likely the result of the developers fumbling obWidth and
+		; obActWidth, which wasn't completely fixed until REV01.
+		move.b	#64/2,obHeight(a0)
 		move.b	#192/2,obWidth(a0)
+	endif
 		move.b	#64/2,obActWid(a0)
 		move.b	#192/2,obHeight(a0)
 		move.b	#3,obPriority(a0)
