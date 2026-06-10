@@ -33,7 +33,7 @@ Sonic_Main:	; Routine 0
 		move.l	#Map_Sonic,obMap(a0)			; set mappings
 		move.w	#ArtTile_Sonic,obGfx(a0)		; set VRAM location
 		move.b	#2,obPriority(a0)			; set sprite priority
-		move.b	#$18,obActWid(a0)			; set render width
+		move.b	#48/2,obActWid(a0)			; set render width
 		move.b	#4,obRender(a0)				; set to playfield-positioned mode
 		move.w	#$600,(v_sonspeedmax).w			; set Sonic's top speed
 		move.w	#$C,(v_sonspeedacc).w			; set Sonic's acceleration

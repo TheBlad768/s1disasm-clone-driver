@@ -37,7 +37,7 @@ Sign_Main:	; Routine 0
 		move.l	#Map_Sign,obMap(a0)			; set mappings
 		move.w	#ArtTile_Signpost,obGfx(a0)		; set art tile
 		move.b	#4,obRender(a0)				; set to playfield positioning mode
-		move.b	#24,obActWid(a0)			; set display width
+		move.b	#48/2,obActWid(a0)			; set display width
 		move.b	#4,obPriority(a0)			; set sprite priority
 
 Sign_Touch:	; Routine 2

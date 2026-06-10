@@ -33,7 +33,7 @@ GMake_Main:	; Routine 0
 		move.w	#ArtTile_MZ_Lava|Tile_Pal4|Tile_Prio,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
-		move.b	#$38,obActWid(a0)
+		move.b	#112/2,obActWid(a0)
 		move.w	#120,gmake_time(a0) ; set time delay to 2 seconds
 
 GMake_Wait:	; Routine 2
@@ -177,9 +177,9 @@ Geyser_Main:	; Routine 0
 	if FixBugs=0
 		; This is inconsistent with GeyserMaker, causing it to vanish
 		; while still partially on-screen.
-		move.b	#$20,obActWid(a1)
+		move.b	#64/2,obActWid(a1)
 	else
-		move.b	#$38,obActWid(a1)
+		move.b	#112/2,obActWid(a1)
 	endif
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
@@ -200,7 +200,7 @@ Geyser_Main:	; Routine 0
 		move.w	objoff_30(a0),objoff_30(a1)
 		addi.w	#$60,objoff_30(a1)
 		move.b	#$93,obColType(a1)
-		move.b	#$80,obHeight(a1)
+		move.b	#256/2,obHeight(a1)
 		bset	#4,obRender(a1)
 		addq.b	#4,obRoutine(a1)
 		move.l	a0,objoff_3C(a1)

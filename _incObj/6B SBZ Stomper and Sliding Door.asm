@@ -15,11 +15,11 @@ sto_origX = objoff_34		; original x-axis position
 sto_origY = objoff_30		; original y-axis position
 sto_active = objoff_38		; flag set when a switch is pressed
 
-Sto_Var:	dc.b  $40,  $C,	$80,   1 ; width, height, ????, type number
-		dc.b  $1C, $20,	$38,   3
-		dc.b  $1C, $20,	$40,   4
-		dc.b  $1C, $20,	$60,   4
-		dc.b  $80, $40,	  0,   5
+Sto_Var:	dc.b  128/2,  $C,   $80,   1 ; width, height, ????, type number
+		dc.b  56/2, 64/2,   $38,   3
+		dc.b  56/2, 64/2,   $40,   4
+		dc.b  56/2, 64/2,   $60,   4
+		dc.b  256/2, 128/2, 0,   5
 ; ===========================================================================
 
 Sto_Main:	; Routine 0

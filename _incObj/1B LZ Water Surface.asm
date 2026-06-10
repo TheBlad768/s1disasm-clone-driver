@@ -20,7 +20,7 @@ Surf_Main:	; Routine 0
 		move.l	#Map_Surf,obMap(a0)
 		move.w	#ArtTile_LZ_Water_Surface|Tile_Pal3|Tile_Prio,obGfx(a0)
 		move.b	#4,obRender(a0)
-		move.b	#$80,obActWid(a0)
+		move.b	#256/2,obActWid(a0)
 		move.w	obX(a0),surf_origX(a0)
 
 Surf_Action:	; Routine 2

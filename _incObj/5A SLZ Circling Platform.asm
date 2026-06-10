@@ -24,7 +24,7 @@ Circ_Main:	; Routine 0
 		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$18,obActWid(a0)
+		move.b	#48/2,obActWid(a0)
 		move.w	obX(a0),circ_origX(a0)
 		move.w	obY(a0),circ_origY(a0)
 

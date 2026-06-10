@@ -60,7 +60,7 @@ BossStarLight_LoadBoss:
 		move.l	#Map_Eggman,obMap(a1) 			; load mappings and graphics for the object
 		move.w	#ArtTile_Eggman,obGfx(a1)
 		move.b	#4,obRender(a1) 			; set the object to position based on where it is in the level and not a static position on screen
-		move.b	#$20,obActWid(a1) 			; define horizontal width radius (used to hide objects when they leave the screen space)
+		move.b	#64/2,obActWid(a1) 			; define horizontal width radius (used to hide objects when they leave the screen space)
 
 ; objoff_34 is used here as a reference back to the main boss controller. 
 ; This is because when we are in ExecuteObjects, a0 is set to each object and sub objects own slot, so we need a way to find the original boss object.
@@ -537,7 +537,7 @@ BossSpikeball_Main:	; Routine 0
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$8B,obColType(a0)
-		move.b	#$C,obActWid(a0)
+		move.b	#24/2,obActWid(a0)
 		movea.l	objoff_3C(a0),a1
 		move.w	obX(a1),obBossX(a0)
 		move.w	obY(a1),objoff_34(a0)
@@ -866,7 +866,7 @@ BossSpikeball_Loop:
 		move.b	#$98,obColType(a1)
 		ori.b	#4,obRender(a1)
 		bset	#7,obRender(a1)
-		move.b	#$C,obActWid(a1)
+		move.b	#24/2,obActWid(a1)
 
 loc_1909A:
 		dbf	d1,BossSpikeball_Loop	; repeat sequence 3 more times

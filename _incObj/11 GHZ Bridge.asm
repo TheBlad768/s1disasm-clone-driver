@@ -22,7 +22,7 @@ Bri_Main:	; Routine 0
 		move.w	#ArtTile_GHZ_Bridge|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
-		move.b	#$80,obActWid(a0)
+		move.b	#256/2,obActWid(a0)
 		move.w	obY(a0),d2
 		move.w	obX(a0),d3
 		_move.b	obID(a0),d4	; copy object number ($11) to d4
@@ -76,7 +76,7 @@ Bri_Main:	; Routine 0
 		move.w	#ArtTile_GHZ_Bridge|Tile_Pal3,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#3,obPriority(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 		addi.w	#$10,d3
 		dbf	d1,.buildloop ; repeat d1 times (length of bridge)
 

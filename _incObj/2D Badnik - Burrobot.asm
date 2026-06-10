@@ -16,14 +16,14 @@ burro_timedelay = objoff_30		; time between direction changes
 
 Burro_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.b	#$13,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#38/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		move.l	#Map_Burro,obMap(a0)
 		move.w	#ArtTile_Burrobot,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#5,obColType(a0)
-		move.b	#$C,obActWid(a0)
+		move.b	#24/2,obActWid(a0)
 		addq.b	#6,ob2ndRout(a0) ; run "Burro_ChkSonic" routine
 		move.b	#2,obAnim(a0)
 

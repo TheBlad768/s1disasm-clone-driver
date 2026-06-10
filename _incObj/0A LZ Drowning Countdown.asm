@@ -28,7 +28,7 @@ Drown_Main:	; Routine 0
 		move.l	#Map_Bub,obMap(a0)
 		move.w	#ArtTile_LZ_Bubbles|Tile_Prio,obGfx(a0)
 		move.b	#$84,obRender(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#1,obPriority(a0)
 		move.b	obSubtype(a0),d0 ; get bubble type
 		bpl.s	.smallbubble	; branch if $00-$7F

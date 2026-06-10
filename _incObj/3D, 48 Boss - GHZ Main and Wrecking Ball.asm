@@ -42,7 +42,7 @@ BGHZ_LoadBoss:
 		move.l	#Map_Eggman,obMap(a1) 			; point to Eggman's mappings
 		move.w	#ArtTile_Eggman,obGfx(a1) 		; point to Eggman's art (VRAM tile index and palette line)
 		move.b	#4,obRender(a1) 			; set the object to position based on where it is in the level and not a static position on screen
-		move.b	#$20,obActWid(a1) 			; set width to 20 pixel radius (to know when sprite is off screen and should be hidden)
+		move.b	#64/2,obActWid(a1) 			; set width to 64 pixel radius (to know when sprite is off screen and should be hidden)
 		move.b	#3,obPriority(a1) 			; set sprite priority to 3 (0 is front of screen)
 		move.b	(a2)+,obAnim(a1) 			; load appropriate animation index, then increment a2 (now we are one full entry lower in our ObjData table)
 
@@ -459,7 +459,7 @@ loc_17B60:
 		andi.w	#$7F,d5
 		move.b	d5,(a2)+
 		move.b	#4,obRender(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 		move.b	#6,obPriority(a1)
 		move.l	objoff_34(a0),objoff_34(a1)
 		dbf	d1,GBall_MakeLinks ; repeat sequence 5 more times

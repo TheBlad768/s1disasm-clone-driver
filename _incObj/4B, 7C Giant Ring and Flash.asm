@@ -18,7 +18,7 @@ GRing_Main:	; Routine 0
 		move.l	#Map_GRing,obMap(a0)
 		move.w	#ArtTile_Giant_Ring|Tile_Pal2,obGfx(a0)
 		ori.b	#4,obRender(a0)
-		move.b	#$40,obActWid(a0)
+		move.b	#128/2,obActWid(a0)
 		tst.b	obRender(a0)
 		bpl.s	GRing_Animate
 		cmpi.b	#6,(v_emeralds).w ; do you have 6 emeralds?
@@ -86,7 +86,7 @@ Flash_Main:	; Routine 0
 		move.w	#ArtTile_Giant_Ring_Flash|Tile_Pal2,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#0,obPriority(a0)
-		move.b	#$20,obActWid(a0)
+		move.b	#64/2,obActWid(a0)
 		move.b	#$FF,obFrame(a0)
 
 Flash_ChkDel:	; Routine 2

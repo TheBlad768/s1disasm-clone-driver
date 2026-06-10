@@ -15,11 +15,11 @@ lgrass_origX = objoff_2A
 lgrass_origY = objoff_2C
 
 LGrass_Data:	dc.w LGrass_Data_Symmetrical-LGrass_Data 	; collision angle data
-		dc.b 0,	$40					; frame number, platform width
+		dc.b 0,	128/2					; frame number, platform width
 		dc.w LGrass_Data_Asymmetrical-LGrass_Data
-		dc.b 1,	$40
+		dc.b 1,	128/2
 		dc.w LGrass_Data_Column-LGrass_Data
-		dc.b 2,	$20
+		dc.b 2,	64/2
 ; ===========================================================================
 
 LGrass_Main:	; Routine 0
@@ -41,7 +41,7 @@ LGrass_Main:	; Routine 0
 		move.b	(a1)+,obFrame(a0)
 		move.b	(a1),obActWid(a0)
 		andi.b	#$F,obSubtype(a0)
-		move.b	#$40,obHeight(a0)
+		move.b	#128/2,obHeight(a0)
 		bset	#4,obRender(a0)
 
 LGrass_Action:	; Routine 2
@@ -72,10 +72,10 @@ LGrass_Solid:
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		addi.w	#sonic_solid_width,d1
-		move.w	#$20,d2
+		move.w	#64/2,d2
 		cmpi.b	#2,obFrame(a0)
 		bne.s	loc_AF8E
-		move.w	#$30,d2
+		move.w	#96/2,d2
 
 loc_AF8E:
 		movea.l	objoff_30(a0),a2
@@ -323,7 +323,7 @@ GFire_Main:	; Routine 0
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#$8B,obColType(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.w	#sfx_Burning,d0
 		jsr	(QueueSound2).l	 ; play burning sound
 		tst.b	obSubtype(a0)

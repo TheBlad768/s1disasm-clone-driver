@@ -35,19 +35,19 @@ Ledge_Main:	; Routine 0
 		move.b	#4,obPriority(a0)
 		move.b	#7,collapsible_timedelay(a0)	; set time delay for collapse
 	if FixBugs
-		move.b	#$30,obActWid(a0)
+		move.b	#96/2,obActWid(a0)
 	else
-		; There isn't any need to give this object a 100 pixel radius for
-		; its culling radius, as it could cause wrapping issues. 48 pixels
+		; There isn't any need to give this object a 200 pixel radius for
+		; its culling radius, as it could cause wrapping issues. 96 pixels
 		; is perfectly fine and matches its collision.
 
-		; Sonic 2 later changed this to $34, which is *still* too big and
-		; causes more problems there due to the ledge's collision code
+		; Sonic 2 later changed this to 104 pixels, which is *still* too big
+		; and causes more problems there due to the ledge's collision code
 		; being rewritten to use obActWid (such as teleporting under it).
-		move.b	#$64,obActWid(a0)
+		move.b	#200/2,obActWid(a0)
 	endif
 		move.b	obSubtype(a0),obFrame(a0)	; use subtype as frame ID (0 or 1)
-		move.b	#$38,obHeight(a0)
+		move.b	#112/2,obHeight(a0)
 		bset	#4,obRender(a0)			; set custom height flag
 
 Ledge_ChkTouch:	; Routine 2
@@ -58,7 +58,7 @@ Ledge_ChkTouch:	; Routine 2
 		subq.b	#1,collapsible_timedelay(a0)	; subtract 1 from time (Sonic not on platform)
 
 	.chkTouch:
-		move.w	#$30,d1
+		move.w	#96/2,d1
 		lea	(Ledge_SlopeData).l,a2
 		bsr.w	SlopeObject			; sets obRoutine to 4 on touch (Ledge_OnPlatform)
 		bra.w	RememberState
@@ -72,10 +72,10 @@ Ledge_OnPlatform:	; Routine 4
 ; ---------------------------------------------------------------------------
 
 Ledge_WalkOff:	; Routine $A
-		move.w	#$30,d1
+		move.w	#96/2,d1
 		bsr.w	ExitPlatform			; sets obRoutine back to 2 on exit (Ledge_ChkTouch)
 
-		move.w	#$30,d1
+		move.w	#96/2,d1
 		lea	(Ledge_SlopeData).l,a2
 		move.w	obX(a0),d2
 		bsr.w	SlopeObject_AssumeStoodOn
@@ -170,7 +170,7 @@ CFlo_Main:	; Routine 0
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#7,collapsible_timedelay(a0)	; set time delay for collapse
-		move.b	#$44,obActWid(a0)
+		move.b	#136/2,obActWid(a0)
 ; ---------------------------------------------------------------------------
 
 CFlo_ChkTouch:	; Routine 2
@@ -181,7 +181,7 @@ CFlo_ChkTouch:	; Routine 2
 		subq.b	#1,collapsible_timedelay(a0)	; subtract 1 from time
 
 	.solid:
-		move.w	#$20,d1
+		move.w	#64/2,d1
 		bsr.w	PlatformObject			; sets obRoutine to 4 on touch (CFlo_OnPlatform)
 
 		; This appears to add a small visual effect specifically to SLZ platforms
@@ -208,7 +208,7 @@ CFlo_OnPlatform:	; Routine 4
 ; ---------------------------------------------------------------------------
 
 CFlo_WalkOff:	; Routine $A
-		move.w	#$20,d1
+		move.w	#64/2,d1
 		bsr.w	ExitPlatform
 
 		move.w	obX(a0),d2

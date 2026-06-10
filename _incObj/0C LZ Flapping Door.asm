@@ -20,7 +20,7 @@ Flap_Main:	; Routine 0
 		move.l	#Map_Flap,obMap(a0)
 		move.w	#ArtTile_LZ_Flapping_Door|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
-		move.b	#$28,obActWid(a0)
+		move.b	#80/2,obActWid(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object type
 		mulu.w	#60,d0		; multiply by 60 (1 second)
@@ -47,8 +47,8 @@ Flap_OpenClose:	; Routine 2
 		cmp.w	obX(a0),d0	; has Sonic passed through the door?
 		bhs.s	.display	; if yes, branch
 		move.b	#1,(f_wtunnelallow).w ; disable wind tunnel
-		move.w	#8+sonic_solid_width,d1
-		move.w	#$20,d2
+		move.w	#16/2+sonic_solid_width,d1
+		move.w	#64/2,d2
 		move.w	d2,d3
 		addq.w	#1,d3
 		move.w	obX(a0),d4

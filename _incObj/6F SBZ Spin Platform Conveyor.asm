@@ -40,7 +40,7 @@ SpinC_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Spin,obMap(a0)
 		move.w	#ArtTile_SBZ_Spinning_Platform,obGfx(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		moveq	#0,d0
@@ -160,8 +160,8 @@ SpinC_Solid:	; Routine 2
 		bne.s	loc_16404
 		move.w	obX(a0),-(sp)
 		bsr.w	loc_16424
-		move.w	#$10+sonic_solid_width,d1
-		move.w	#7,d2
+		move.w	#32/2+sonic_solid_width,d1
+		move.w	#14/2,d2
 		move.w	d2,d3
 		addq.w	#1,d3
 		move.w	(sp)+,d4

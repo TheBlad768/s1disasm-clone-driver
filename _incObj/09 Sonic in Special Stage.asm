@@ -63,6 +63,13 @@ SonicSS_Control: ; Routine 2
 		btst	#bitB,(v_jpadpress1).w			; is button B pressed?
 		beq.s	SonicSS_NoDebug				; if not, branch
 		move.w	#1,(v_debuguse).w			; change Sonic into a ring
+	if FixBugs
+		; A return command is missing here, causing Sonic to jump when
+		; entering debug mode. This is likely due to this being forked
+		; from an earlier version of the main Sonic object, because the
+		; prototype has the same problem in stages.
+		rts
+	endif
 
 ; Obj09_NoDebug:
 SonicSS_NoDebug:
