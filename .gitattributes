@@ -5,4 +5,5 @@
 *.cpp		text
 *.ini		text
 *.bin		binary
-
+*.pcm		binary
+*.dpcm		binary

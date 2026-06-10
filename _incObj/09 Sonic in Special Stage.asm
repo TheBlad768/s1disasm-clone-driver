@@ -637,7 +637,7 @@ SonicSS_GetContinue:
 		bne.s	SonicSS_NoContinue			; if flag was already set, branch
 		addq.b	#1,(v_continues).w			; add 1 to number of continues
 		move.w	#sfx_Continue,d0			; set extra continue sound
-		jsr	(QueueSound1).l				; play it
+		jsr	(QueueSound2).l				; play it
 
 ; Obj09_NoCont:
 SonicSS_NoContinue:
@@ -694,7 +694,7 @@ SonicSS_GetEmerald:
 ; Obj09_NoEmer:
 SonicSS_NoEmerald:
 		move.w	#bgm_Emerald,d0				; set to emerald music
-		jsr	(QueueSound2).l				; play it
+		jsr	(QueueSound1).l				; play it
 
 		moveq	#0,d4					; regular item
 		rts						; return
