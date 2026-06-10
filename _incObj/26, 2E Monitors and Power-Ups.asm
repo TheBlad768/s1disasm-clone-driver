@@ -318,7 +318,7 @@ Pow_ChkShield:
 		move.b	#1,(v_shield).w			; give Sonic a shield
 		move.b	#id_ShieldItem,(v_shieldobj).w	; load shield object ($38)
 		move.w	#sfx_Shield,d0			; set shield sound effect
-		jmp	(QueueSound1).l			; play it
+		jmp	(QueueSound2).l			; play it
 ; ===========================================================================
 
 Pow_ChkInvinc:
@@ -378,7 +378,7 @@ Pow_ChkRings:
 
 Pow_RingSound:
 		move.w	#sfx_Ring,d0			; set ring sound collection effect
-		jmp	(QueueSound1).l			; play it
+		jmp	(QueueSound2).l			; play it
 ; ===========================================================================
 
 Pow_ChkS:
@@ -393,7 +393,7 @@ Pow_ChkGoggles:
 	;	bne.s	Pow_ChkEnd			; if not, branch
 	;	nop					; goggles do nothing by default
 ; ===========================================================================
-	
+
 Pow_ChkEnd:
 		rts					; subtype isn't any valid monitor ID
 ; ===========================================================================
@@ -417,11 +417,11 @@ Pow_Delete:	; Routine 4
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine to	make the sides of a monitor solid
-; 
+;
 ; input:
 ;	d1 = width/2
 ;	d2 = height/2
-; 
+;
 ; output:
 ;	d0 = distance from side of monitor
 ;	d1 = collision type: 0 = none; 1 = side collision; -1 = top/bottom collision
@@ -435,7 +435,7 @@ Mon_SolidSides:
 		add.w	d1,d0				; add collision width
 		bmi.s	.no_collision			; if Sonic is to the left of the monitor, branch
 		move.w	d1,d3				; copy collision width
-		add.w	d3,d3				; double it 
+		add.w	d3,d3				; double it
 		cmp.w	d3,d0				; is Sonic to the right of the monitor?
 		bhi.s	.no_collision			; if yes, branch
 
@@ -449,17 +449,17 @@ Mon_SolidSides:
 		add.w	d2,d2				; double collision height
 		cmp.w	d2,d3				; is Sonic below the monitor?
 		bcc.s	.no_collision			; if yes, branch
-		
+
 		tst.b	(f_playerctrl).w		; is Sonic's object interaction disabled?
 		bmi.s	.no_collision			; if yes, branch
 		cmpi.b	#6,(v_player+obRoutine).w	; is Sonic dying?
 		bhs.s	.no_collision			; if yes, branch
 		tst.w	(v_debuguse).w			; is debug mode active?
 		bne.s	.no_collision			; if yes, branch
-		
+
 		cmp.w	d0,d1				; is Sonic between left side and middle of the monitor?
 		bcc.s	.left_hit			; if yes, branch
-	
+
 	.right_hit:
 		add.w	d1,d1				; double collision width
 		sub.w	d1,d0				; update d0 for to right side of monitor
@@ -478,7 +478,7 @@ Mon_SolidSides:
 ; loc_A4E6:
 .no_collision:
 		moveq	#0,d1				; set no collision flag
-		rts					; return with result in CCR	
+		rts					; return with result in CCR
 ; ===========================================================================
 
 ; loc_A4EA:
@@ -489,7 +489,7 @@ Mon_SolidSides:
 		move.w	d1,d2				; copy it for right side check
 		add.w	d2,d2				; double the copy for right side check
 		add.w	obX(a1),d1			; add Sonic's X position to main collision width
-		sub.w	obX(a0),d1			; subtract Monitor's X position 
+		sub.w	obX(a0),d1			; subtract Monitor's X position
 		bmi.s	.side_hit			; if Sonic is to the left of the monitor, branch
 		cmp.w	d2,d1				; is Sonic to the right of the monitor?
 		bhs.s	.side_hit			; if yes, branch

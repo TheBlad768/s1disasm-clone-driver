@@ -115,7 +115,7 @@ Ring_SpawnRing:
 		move.b	#col_12x12|col_item,obColType(a1)	; set to power-up collision type and hitbox 12x12 (=$47)
 		move.b	#16/2,obActWid(a1)			; set sprite display width
 		move.b	obRespawnNo(a0),obRespawnNo(a1)		; remember respawn index of ring group
-		move.b	d1,ring_respawnbit(a1)			; remember "ring collected" index bit in respawn data 
+		move.b	d1,ring_respawnbit(a1)			; remember "ring collected" index bit in respawn data
 
 ; loc_9C02:
 Ring_NextRing:
@@ -150,7 +150,7 @@ Ring_Collect:	; Routine 4 (set from ReactToItem)
 		addq.b	#2,obRoutine(a0)			; advance to Ring_Sparkle
 		move.b	#col_none,obColType(a0)			; prevent ring from being collected again
 		move.b	#1,obPriority(a0)			; make ring sparkles appear in front of Sonic's sprites
-		bsr.w	CollectRing				; add 1 ring 
+		bsr.w	CollectRing				; add 1 ring
 
 		lea	(v_objstate).w,a2			; load object respawn table
 		moveq	#0,d0					; clear d0 (obRespawnNo is a byte, we need word addressing)
@@ -190,8 +190,6 @@ CollectRing:
 	endif
 		ori.b	#1,(f_ringcount).w			; update the rings counter
 
-		move.w	#sfx_Ring,d0				; play ring sound
-
 		cmpi.w	#100,(v_rings).w			; do you have 100 or more rings?
 		blo.s	.playSound				; if not, branch
 		bset	#1,(v_lifecount).w			; set "extra life for 100 rings" flag
@@ -206,8 +204,11 @@ CollectRing:
 		addq.b	#1,(f_lifecount).w			; update the lives counter
 
 		move.w	#bgm_ExtraLife,d0			; play extra life music
+		jmp	(QueueSound1).l				; play selected music
+; ===========================================================================
 
 	.playSound:
+		move.w	#sfx_Ring,d0				; play ring sound
 		jmp	(QueueSound2).l				; play selected sound
 ; End of function CollectRing
 
@@ -361,7 +362,7 @@ RLoss_Collect:	; Routine 4
 		addq.b	#2,obRoutine(a0)			; advance to RLoss_Sparkle
 		move.b	#col_none,obColType(a0)			; prevent ring from being collected again
 		move.b	#1,obPriority(a0)			; make ring sparkles appear in front of Sonic's sprites
-		bsr.w	CollectRing				; add 1 ring 
+		bsr.w	CollectRing				; add 1 ring
 ; ---------------------------------------------------------------------------
 
 RLoss_Sparkle:	; Routine 6
