@@ -58,7 +58,7 @@ BossSpringYard_LoadBoss:
 		move.l	#Map_Eggman,obMap(a1)			; load mappings and graphics for the object
 		move.w	#ArtTile_Eggman,obGfx(a1)
 		move.b	#4,obRender(a1)				; set the object to position based on where it is in the level and not a static position on screen
-		move.b	#$20,obActWid(a1)			; define horizontal width radius (used to hide objects when they leave the screen space)
+		move.b	#64/2,obActWid(a1)			; define horizontal width radius (used to hide objects when they leave the screen space)
 
 ; objoff_34 is used here as a reference back to the main boss controller. 
 ; This is because when we are in ExecuteObjects, a0 is set to each object and sub objects own slot, so we need a way to find the original boss object.
@@ -687,8 +687,8 @@ loc_19658:
 		move.w	d0,BossSpringYard_GenericTimer(a0)
 		asr.w	#2,d0
 		add.w	d0,obY(a0)
-		move.b	#8,obActWid(a0)
-		move.b	#$C,obHeight(a0)
+		move.b	#16/2,obActWid(a0)
+		move.b	#24/2,obHeight(a0)
 		clr.b	obColType(a0)
 		movea.l	BossSpringYard_ParentObj(a0),a1
 		tst.b	obColType(a1)
@@ -739,8 +739,8 @@ BossBlock_MakeBlock:
 		move.l	#Map_BossBlock,obMap(a1)
 		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a1)
 		move.b	#4,obRender(a1)
-		move.b	#$10,obActWid(a1)
-		move.b	#$10,obHeight(a1)
+		move.b	#32/2,obActWid(a1)
+		move.b	#32/2,obHeight(a1)
 		move.b	#3,obPriority(a1)
 		move.w	d5,obX(a1)	; set x-position
 		move.w	#$582,obY(a1)
@@ -812,8 +812,8 @@ BossBlock_Break:
 		moveq	#3,d1
 		moveq	#gravity,d2	; unused leftover from SmashObject
 		addq.b	#2,obRoutine(a0)
-		move.b	#8,obActWid(a0)
-		move.b	#8,obHeight(a0)
+		move.b	#16/2,obActWid(a0)
+		move.b	#16/2,obHeight(a0)
 		lea	(a0),a1
 		bra.s	BossBlock_MakeFrag
 ; ===========================================================================

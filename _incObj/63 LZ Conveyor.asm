@@ -40,7 +40,7 @@ LCon_Main:	; Routine 0
 		move.l	#Map_LConv,obMap(a0)
 		move.w	#ArtTile_LZ_Conveyor_Belt|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
 		cmpi.b	#$7F,obSubtype(a0)
 		bne.s	loc_123E2

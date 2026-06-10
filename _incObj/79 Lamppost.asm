@@ -25,7 +25,7 @@ Lamp_Main:	; Routine 0
 		move.l	#Map_Lamp,obMap(a0)
 		move.w	#ArtTile_Lamppost,obGfx(a0)
 		move.b	#4,obRender(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.b	#5,obPriority(a0)
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
@@ -92,7 +92,7 @@ Lamp_Blue:	; Routine 2
 		move.l	#Map_Lamp,obMap(a1)
 		move.w	#ArtTile_Lamppost,obGfx(a1)
 		move.b	#4,obRender(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 		move.b	#4,obPriority(a1)
 		move.b	#2,obFrame(a1)	; use "ball only" frame
 		move.w	#$20,lamp_time(a1)

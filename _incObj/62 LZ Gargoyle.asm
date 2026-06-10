@@ -23,7 +23,7 @@ Gar_Main:	; Routine 0
 		move.w	#ArtTile_LZ_Gargoyle|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	obSubtype(a0),d0 ; get object type
 		andi.w	#$F,d0		; read only the 2nd digit
 		move.b	Gar_SpitRate(pc,d0.w),obDelayAni(a0) ; set fireball spit rate
@@ -52,14 +52,14 @@ Gar_MakeFire:	; Routine 2
 
 Gar_FireBall:	; Routine 4
 		addq.b	#2,obRoutine(a0)
-		move.b	#8,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#16/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		move.l	#Map_Gar,obMap(a0)
 		move.w	#ArtTile_LZ_Gargoyle,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$98,obColType(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.b	#2,obFrame(a0)
 		addq.w	#8,obY(a0)
 		move.w	#$200,obVelX(a0)

@@ -39,12 +39,12 @@ Jun_Main:	; Routine 0
 		move.l	#Map_Jun,obMap(a1)
 		move.w	#ArtTile_SBZ_Junction|Tile_Pal3,obGfx(a1)
 		ori.b	#4,obRender(a1)
-		move.b	#$38,obActWid(a1)
+		move.b	#112/2,obActWid(a1)
 
 .fail:
 		dbf	d1,.repeat
 
-		move.b	#$30,obActWid(a0)
+		move.b	#96/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
 		move.w	#$3C,objoff_30(a0)
 		move.b	#1,jun_frame(a0)
@@ -54,7 +54,7 @@ Jun_Action:	; Routine 2
 		bsr.w	Jun_ChkSwitch
 		tst.b	obRender(a0)
 		bpl.w	Jun_Display
-		move.w	#$25+sonic_solid_width,d1
+		move.w	#74/2+sonic_solid_width,d1
 		move.w	d1,d2
 		move.w	d2,d3
 		addq.w	#1,d3

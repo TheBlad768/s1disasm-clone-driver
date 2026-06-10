@@ -38,7 +38,7 @@ SEgg_Main:	; Routine 0
 		move.w	#ArtTile_Eggman,obGfx(a0)
 		move.b	#4,obRender(a0)
 		bset	#7,obRender(a0)
-		move.b	#$20,obActWid(a0)
+		move.b	#64/2,obActWid(a0)
 		jsr	(FindNextFreeObj).l
 		bne.s	SEgg_Eggman
 		move.l	a0,objoff_34(a1)
@@ -53,7 +53,7 @@ SEgg_Main:	; Routine 0
 		move.w	#ArtTile_Eggman_Button,obGfx(a1)
 		move.b	#4,obRender(a1)
 		bset	#7,obRender(a1)
-		move.b	#$10,obActWid(a1)
+		move.b	#32/2,obActWid(a1)
 		move.b	#0,obFrame(a1)
 
 SEgg_Eggman:	; Routine 2
@@ -198,8 +198,8 @@ FFloor_Index:	dc.w FFloor_Main-FFloor_Index
 FFloor_Main:	; Routine 0
 		move.w	#boss_sbz2_x+$30,obX(a0)
 		move.w	#boss_sbz2_y+$C0,obY(a0)
-		move.b	#$80,obActWid(a0)
-		move.b	#$10,obHeight(a0)
+		move.b	#256/2,obActWid(a0)
+		move.b	#32/2,obHeight(a0)
 		move.b	#4,obRender(a0)
 		bset	#7,obRender(a0)
 		moveq	#0,d4
@@ -215,8 +215,8 @@ FFloor_MakeBlock:
 		move.l	#Map_FFloor,obMap(a1)
 		move.w	#ArtTile_Eggman_Trap_Floor|Tile_Pal3,obGfx(a1)
 		move.b	#4,obRender(a1)
-		move.b	#$10,obActWid(a1)
-		move.b	#$10,obHeight(a1)
+		move.b	#32/2,obActWid(a1)
+		move.b	#32/2,obHeight(a1)
 		move.b	#3,obPriority(a1)
 		move.w	d5,obX(a1)	; set X position
 		move.w	#boss_sbz2_y+$C0,obY(a1)
@@ -301,8 +301,8 @@ FFloor_BlockBreak:
 		moveq	#3,d1
 		moveq	#gravity,d2	; unused leftover from SmashObject
 		addq.b	#2,obRoutine(a0)
-		move.b	#8,obActWid(a0)
-		move.b	#8,obHeight(a0)
+		move.b	#16/2,obActWid(a0)
+		move.b	#16/2,obHeight(a0)
 		lea	(a0),a1
 		bra.s	FFloor_MakeFrag
 ; ===========================================================================

@@ -24,8 +24,8 @@ Gird_Main:	; Routine 0
 		move.w	#ArtTile_SBZ_Girder|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$60,obActWid(a0)
-		move.b	#$18,obHeight(a0)
+		move.b	#192/2,obActWid(a0)
+		move.b	#48/2,obHeight(a0)
 		move.w	obX(a0),gird_origX(a0)
 		move.w	obY(a0),gird_origY(a0)
 		bsr.w	Gird_ChgMove

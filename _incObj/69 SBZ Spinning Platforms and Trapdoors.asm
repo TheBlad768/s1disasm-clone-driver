@@ -22,10 +22,10 @@ Spin_Main:	; Routine 0
 		move.w	#ArtTile_SBZ_Trap_Door|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
 	if FixBugs
-		move.b	#$40,obActWid(a0)
+		move.b	#128/2,obActWid(a0)
 	else
 		; This width is way too big, resulting in screen wrapping issues
-		move.b	#$80,obActWid(a0)
+		move.b	#256/2,obActWid(a0)
 	endif
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0
@@ -38,7 +38,7 @@ Spin_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0) ; goto Spin_Spinner next
 		move.l	#Map_Spin,obMap(a0)
 		move.w	#ArtTile_SBZ_Spinning_Platform,obGfx(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#2,obAnim(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object type
@@ -71,8 +71,8 @@ Spin_Trapdoor:	; Routine 2
 		jsr	(AnimateSprite).l
 		tst.b	obFrame(a0)	; is frame number 0 displayed?
 		bne.s	.notsolid	; if not, branch
-		move.w	#$40+sonic_solid_width,d1
-		move.w	#$C,d2
+		move.w	#128/2+sonic_solid_width,d1
+		move.w	#24/2,d2
 		move.w	d2,d3
 		addq.w	#1,d3
 		move.w	obX(a0),d4
@@ -112,8 +112,8 @@ Spin_Spinner:	; Routine 4
 		jsr	(AnimateSprite).l
 		tst.b	obFrame(a0)	; check if frame number 0 is displayed
 		bne.s	.notsolid2	; if not, branch
-		move.w	#$10+sonic_solid_width,d1
-		move.w	#7,d2
+		move.w	#32/2+sonic_solid_width,d1
+		move.w	#14/2,d2
 		move.w	d2,d3
 		addq.w	#1,d3
 		move.w	obX(a0),d4

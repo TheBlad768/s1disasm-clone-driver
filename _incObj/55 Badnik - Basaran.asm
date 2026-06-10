@@ -17,10 +17,10 @@ Bas_Main:	; Routine 0
 		move.l	#Map_Bas,obMap(a0)
 		move.w	#ArtTile_Basaran|Tile_Prio,obGfx(a0)
 		move.b	#4,obRender(a0)
-		move.b	#$C,obHeight(a0)
+		move.b	#24/2,obHeight(a0)
 		move.b	#2,obPriority(a0)
 		move.b	#$B,obColType(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 
 Bas_Action:	; Routine 2
 		moveq	#0,d0

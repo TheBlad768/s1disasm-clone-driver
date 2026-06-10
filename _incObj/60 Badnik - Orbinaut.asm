@@ -33,7 +33,7 @@ Orb_Main:	; Routine 0
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$B,obColType(a0)
-		move.b	#$C,obActWid(a0)
+		move.b	#24/2,obActWid(a0)
 		moveq	#0,d2
 		lea	objoff_37(a0),a2
 		movea.l	a2,a3
@@ -55,7 +55,7 @@ Orb_Main:	; Routine 0
 		move.w	obGfx(a0),obGfx(a1)
 		ori.b	#4,obRender(a1)
 		move.b	#4,obPriority(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 		move.b	#3,obFrame(a1)
 		move.b	#$98,obColType(a1)
 		move.b	d2,obAngle(a1)

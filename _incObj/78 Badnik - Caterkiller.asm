@@ -24,8 +24,8 @@ locret_16950:
 ; ===========================================================================
 
 Cat_Main:	; Routine 0
-		move.b	#7,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#14/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		jsr	(ObjectFall).l
 		jsr	(ObjFloorDist).l
 		tst.w	d1
@@ -44,7 +44,7 @@ Cat_Main:	; Routine 0
 		ori.b	#4,obRender(a0)
 		move.b	obRender(a0),obStatus(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.b	#$B,obColType(a0)
 		move.w	obX(a0),d2
 		moveq	#$C,d5
@@ -72,7 +72,7 @@ Cat_Loop:
 		move.l	obMap(a0),obMap(a1)
 		move.w	obGfx(a0),obGfx(a1)
 		move.b	#5,obPriority(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 		move.b	#$CB,obColType(a1)
 		add.w	d5,d2
 		move.w	d2,obX(a1)

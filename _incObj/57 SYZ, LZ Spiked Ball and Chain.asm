@@ -26,7 +26,7 @@ SBall_Main:	; Routine 0
 		move.w	#ArtTile_SYZ_Spikeball_Chain,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.w	obX(a0),sball_origX(a0)
 		move.w	obY(a0),sball_origY(a0)
 		move.b	#$98,obColType(a0) ; SYZ specific code (chain hurts Sonic)
