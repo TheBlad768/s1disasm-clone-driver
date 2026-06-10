@@ -207,7 +207,7 @@ MBlock_Type07:
 
 MBlock_07_ChkDel:
 		; This line, combined with the coordinate being pushed to
-		; the stack in MBlock_StandOn, can be disasterous.
+		; the stack in MBlock_StandOn, can be disastrous.
 		addq.l	#4,sp
 
 		out_of_range.w	DeleteObject,mblock_origX(a0)

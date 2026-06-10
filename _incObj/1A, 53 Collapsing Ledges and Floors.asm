@@ -342,7 +342,7 @@ FragmentatePlatform:
 		move.b	(a4)+,collapsible_timedelay(a1)	; write next time delay from "CollapseData_..." array
 
 	if FixBugs=0
-		; This check ensures that fragments that are loader earlier in RAM than
+		; This check ensures that fragments that are loaded earlier in RAM than
 		; the first fragment will still be rendered on the frame they are spawned in.
 		; However, the above fix makes this special case redundant.
 		cmpa.l	a0,a1				; was new fragment loaded after first fragment in RAM (or is the first)?

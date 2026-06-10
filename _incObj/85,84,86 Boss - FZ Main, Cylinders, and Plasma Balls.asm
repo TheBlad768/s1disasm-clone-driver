@@ -397,7 +397,7 @@ loc_1A142:
 		bne.s	loc_1A15C
 		addq.b	#2,objoff_34(a0)
 		move.w	#-$180,obVelY(a0)
-		move.b	#1,obBossHits(a0) ; set number oescaping Eggman hits to 1
+		move.b	#1,obBossHits(a0) ; set number of escaping Eggman hits to 1
 
 loc_1A15C:
 		lea	Ani_SEgg(pc),a1

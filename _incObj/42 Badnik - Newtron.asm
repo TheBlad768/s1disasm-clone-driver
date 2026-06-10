@@ -48,7 +48,7 @@ Newt_Action:	; Routine 2
 		bclr	#0,obStatus(a0)
 
 .sonicisright:
-		cmpi.w	#$80,d0		; is Sonic within $80 pixels of the newtron?
+		cmpi.w	#$80,d0		; is Sonic within $80 pixels of the Newtron?
 		bhs.s	.outofrange	; if not, branch
 		addq.b	#2,ob2ndRout(a0) ; goto .type00 next
 		move.b	#1,obAnim(a0)
@@ -85,11 +85,11 @@ Newt_Action:	; Routine 2
 .loc_DE42:
 		bsr.w	ObjectFall
 		bsr.w	ObjFloorDist
-		tst.w	d1		; has newtron hit the floor?
+		tst.w	d1		; has Newtron hit the floor?
 		bpl.s	.keepfalling	; if not, branch
 
 		add.w	d1,obY(a0)
-		move.w	#0,obVelY(a0)	; stop newtron falling
+		move.w	#0,obVelY(a0)	; stop Newtron falling
 		addq.b	#2,ob2ndRout(a0)
 		move.b	#2,obAnim(a0)
 		btst	#5,obGfx(a0)
@@ -98,7 +98,7 @@ Newt_Action:	; Routine 2
 
 .notgreen:
 		move.b	#$D,obColType(a0)
-		move.w	#$200,obVelX(a0) ; move newtron horizontally
+		move.w	#$200,obVelX(a0) ; move Newtron horizontally
 		btst	#0,obStatus(a0)
 		bne.s	.keepfalling
 		neg.w	obVelX(a0)
@@ -114,7 +114,7 @@ Newt_Action:	; Routine 2
 		blt.s	.nextroutine
 		cmpi.w	#$C,d1
 		bge.s	.nextroutine
-		add.w	d1,obY(a0)	; match newtron's position with floor
+		add.w	d1,obY(a0)	; match Newtron's position with floor
 		rts
 ; ===========================================================================
 

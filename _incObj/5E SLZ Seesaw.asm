@@ -19,7 +19,7 @@ Seesaw:
 		subi.w	#$80,d1
 		andi.w	#$FF80,d1
 		sub.w	d1,d0
-		bmi.w	DeleteObject
+		bmi.w	DeleteObject ; this bmi isn't in the common out_of_range macro (and redundant)
 		cmpi.w	#$280,d0
 		bhi.w	DeleteObject
 		bra.w	DisplaySprite

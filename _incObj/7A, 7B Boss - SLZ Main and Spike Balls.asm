@@ -108,7 +108,7 @@ BossStarLight_ShipMain:	; Routine 2
 ; obStatus stores the logical bits, but obRender is visual bits, so this simply moves them from one to the other
 
 		moveq	#3,d0 					; move first 2 bits into d0
-		and.b	obStatus(a0),d0 			; AND with obstatus so now d0 contains X and Y logical flip bits only
+		and.b	obStatus(a0),d0 			; AND with obStatus so now d0 contains X and Y logical flip bits only
 		andi.b	#$FC,obRender(a0) 			; clear the x and y flip
 		or.b	d0,obRender(a0) 			; OR the two together, so now DisplaySprite has X and Y orientation and above render bits
 		jmp	(DisplaySprite).l
@@ -502,7 +502,7 @@ BossStarLight_PipeMain:	; Routine 8
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 7B - exploding spikeys that Eggman drops (SLZ)
+; Object 7B - exploding spike balls that Eggman drops (SLZ)
 ; ---------------------------------------------------------------------------
 
 BossSpikeball:
@@ -516,7 +516,7 @@ BossSpikeball:
 		subi.w	#$80,d1
 		andi.w	#$FF80,d1
 		sub.w	d1,d0
-		bmi.w	BossStarLight_Delete
+		bmi.w	BossStarLight_Delete ; this bmi isn't in the common out_of_range macro (and redundant)
 		cmpi.w	#$280,d0
 		bhi.w	BossStarLight_Delete
 		jmp	(DisplaySprite).l

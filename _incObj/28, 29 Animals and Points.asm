@@ -456,7 +456,7 @@ sub_9404:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 29 - points that appear from destroyed badniks and other placs
+; Object 29 - points that appear from destroyed badniks and other places
 ; ---------------------------------------------------------------------------
 
 Points:

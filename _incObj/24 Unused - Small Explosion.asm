@@ -5,7 +5,7 @@
 ; Buzz Bomber badnik to dissolve its missile after destroying it, but does
 ; not work because the relevant flag is never set, and the required graphics
 ; aren't even loaded into VRAM (it would be "Nem_UnkExplode", but loading
-; it overwrites part of the Crabmeat graphics at "ArtTile_Missile_Disolve").
+; it overwrites part of the Crabmeat graphics at "ArtTile_UnusedExplosion").
 ; ---------------------------------------------------------------------------
 
 ; MissileDissolve: <--- old misnomer

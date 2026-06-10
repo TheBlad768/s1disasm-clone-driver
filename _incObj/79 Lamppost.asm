@@ -156,7 +156,7 @@ Lamp_StoreInfo:
 		move.w	(v_bg3screenposx).w,(v_lamp_bg3scrx).w 	; bg position
 		move.w	(v_bg3screenposy).w,(v_lamp_bg3scry).w 	; bg position
 		move.w	(v_waterpos2).w,(v_lamp_wtrpos).w 	; water height
-		move.b	(v_wtr_routine).w,(v_lamp_wtrrout).w	; rountine counter for water
+		move.b	(v_wtr_routine).w,(v_lamp_wtrrout).w	; routine counter for water
 		move.b	(f_wtr_state).w,(v_lamp_wtrstat).w 	; water direction
 		rts
 ; End of function Lamp_StoreInfo

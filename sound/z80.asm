@@ -12,7 +12,7 @@
 
 z80_stack:	equ 1FFCh
 zDAC_Status:	equ 1FFDh	; Bit 7 set if the driver is not accepting new samples, it is clear otherwise
-zDAC_Sample:	equ 1FFFh	; Sample to play, the 68k will move into this locatiton whatever sample that's supposed to be played.
+zDAC_Sample:	equ 1FFFh	; Sample to play, the 68k will move into this location whatever sample that's supposed to be played.
 
 zYM2612_A0:	equ 4000h
 zBankRegister:	equ 6000h
@@ -40,7 +40,7 @@ endpad := $
     endm
 
 ;Z80Driver_Start:
-	di					; Disable interrupts. Interrupts will never be reenabled
+	di					; Disable interrupts. Interrupts will never be re-enabled
 	di					; for the z80, so that no code will be executed on V-Int.
 	di					; This means that the sample loop is all the z80 does.
 	ld	sp,z80_stack			; Initialize the stack pointer (unused throughout the driver)
@@ -174,7 +174,7 @@ zPlayPCMLoop:
 
 	inc	de			; 6	; Point to next byte of DAC sample
 	dec	bc			; 6	; Decrement remaining bytes on DAC sample
-	ld	a,c			; 4	; a = low byte of remainig bytes
+	ld	a,c			; 4	; a = low byte of remaining bytes
 	or	b			; 4	; Are there any bytes left?
 	jp	nz,zPlayPCMLoop		; 10	; If yes, keep playing sample
 					; 301 in total

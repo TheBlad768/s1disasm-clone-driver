@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 45 - unused sidways spiked metal stomper from beta version (MZ)
+; Object 45 - unused sideways spiked metal stomper from beta version (MZ)
 ; ---------------------------------------------------------------------------
 
 SideStomp:

@@ -41,7 +41,7 @@ Mon_Main:	; Routine 0
 		lea	(v_objstate).w,a2		; get object respawn table
 		moveq	#0,d0				; clear d0
 		move.b	obRespawnNo(a0),d0		; get monitor's respawn table index number
-		bclr	#7,2(a2,d0.w)			; immediately clear the respawn flag (...why?)
+		bclr	#7,2(a2,d0.w)			; immediately clear the respawn block flag (...why?)
 		btst	#0,2(a2,d0.w)			; has monitor already been broken?
 		beq.s	.notbroken			; if not, branch
 
@@ -464,8 +464,8 @@ Mon_SolidSides:
 		moveq	#0,d1				; clear d1
 		move.b	obActWid(a0),d1			; get display width of monitor
 		addq.w	#4,d1				; add 4px to top collision width
-		move.w	d1,d2				; copy it for rightside check
-		add.w	d2,d2				; double the copy for rightside check
+		move.w	d1,d2				; copy it for right side check
+		add.w	d2,d2				; double the copy for right side check
 		add.w	obX(a1),d1			; add Sonic's X position to main collision width
 		sub.w	obX(a0),d1			; subtract Monitor's X position 
 		bmi.s	.side_hit			; if Sonic is to the left of the monitor, branch

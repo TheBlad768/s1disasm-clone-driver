@@ -232,7 +232,7 @@ Spikes_WaitAndMove:
 
 		subi.w	#8*$100,spikes_move_pos(a0)	; move in by 8px
 		bhs.s	.return				; if still moving in, branch
-		move.w	#0,spikes_move_pos(a0)		; fix postion delta to 0px
+		move.w	#0,spikes_move_pos(a0)		; fix position delta to 0px
 		move.w	#0,spikes_move_direction(a0)	; set to retract spikes on next run
 		move.w	#60,spikes_move_delay(a0)	; set time delay to 1 second
 		bra.s	.return				; return (could've been an rts)

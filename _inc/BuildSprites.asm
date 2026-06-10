@@ -139,7 +139,7 @@ BuildSprites:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Macro for BuildSpr_Draw, to visualize the differences between the flips.
+; Macro for all BuildSpr_Draw functions, to visualize the differences between them.
 ; All four variants work on the same basic principle, only coming with
 ; modifications for the flipping.
 ; 

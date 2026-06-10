@@ -19,7 +19,7 @@ ConvertCollisionArray:
 		; The raw format stores the collision data column by column for the normal collision array.
 		; This makes a copy of the data, but stored row by row, for the rotated collision array.
 		lea	(RawColBlocks).l,a1	; Source location of raw collision block data
-		lea	(ConvRowColBlocks).l,a2	; Destinatation location for row-converted collision block data
+		lea	(ConvRowColBlocks).l,a2	; Destination location for row-converted collision block data
 		move.w	#$100-1,d3		; Number of blocks in collision data
 .blockLoop:
 		moveq	#16,d5			; Start on the 16th bit (the leftmost pixel)

@@ -215,7 +215,7 @@ Msl_FromBuzz:	; Routine 4
 		; This check most likely used to work at some point, but was abandoned
 		; in favor of simply deleting the missile after destroying the Buzz Bomber.
 		; There is nothing that sets the required flag, so the branch to the below
-		; missile desolve object spawner is never run (and would be broken anyway).
+		; missile dissolve object spawner is never run (and would be broken anyway).
 		btst	#7,obStatus(a0)		; has bit 7 of status flags been set? (impossible condition)
 		bne.s	.explode		; if yes, dissolve missile
 

@@ -119,7 +119,7 @@ Sign_SonicRun:	; Routine 6
 		bne.w	Sign_Return				; if yes, don't load end cards until debug mode was exited
 
 	if FixBugs
-		; This function's checks are a mess, creating an edgecase where it's
+		; This function's checks are a mess, creating an edge case where it's
 		; possible for the player to avoid having their controls locked by
 		; jumping at the right side of the screen just as the score tally
 		; appears.

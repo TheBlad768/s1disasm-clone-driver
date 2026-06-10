@@ -126,7 +126,7 @@ SolidObject_Heightmap:
 		btst	#0,obRender(a0)				; is object horizontally flipped?
 		beq.s	.no_xflip				; if not, branch
 		not.w	d5
-		add.w	d3,d5					; d5 = x pos of Sonic on object, xflipped if needed
+		add.w	d3,d5					; d5 = x pos of Sonic on object, x-flipped if needed
 
 	.no_xflip:
 		lsr.w	#1,d5
@@ -189,7 +189,7 @@ Solid_Collision:
 		bhs.w	Solid_NoCollision			; if yes, branch
 	else
 		bhs.w	Solid_Debug
-	endc
+	endif
 		tst.w	(v_debuguse).w				; is debug mode being used?
 		bne.w	Solid_Debug				; if yes, branch
 		move.w	d0,d5					; d0/d5 = x pos of Sonic on object

@@ -139,7 +139,7 @@ LBall_TypeIndex:dc.w LBall_Type00-LBall_TypeIndex
 		dc.w LBall_Type07-LBall_TypeIndex
 		dc.w LBall_Type08-LBall_TypeIndex
 ; ===========================================================================
-; lavaball types 00-03 fly up and fall back down
+; lava ball types 00-03 fly up and fall back down
 
 LBall_Type00:
 		addi.w	#$18,obVelY(a0)	; increase object's downward speed

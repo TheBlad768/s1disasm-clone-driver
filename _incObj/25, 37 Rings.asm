@@ -106,7 +106,7 @@ Ring_SpawnRing:
 		_move.b	#id_Rings,obID(a1)			; load new ring object
 		addq.b	#2,obRoutine(a1)			; set to Ring_Animate
 		move.w	d2,obX(a1)				; set x-axis position based on d2
-		move.w	obX(a0),ring_origX(a1)			; remember original X-position for despawner
+		move.w	obX(a0),ring_origX(a1)			; remember original X-position for despawn logic
 		move.w	d3,obY(a1)				; set y-axis position based on d3
 		move.l	#Map_Ring,obMap(a1)			; set mappings
 		move.w	#ArtTile_Ring|Tile_Pal2,obGfx(a1)	; set art tile and palette line
@@ -199,7 +199,7 @@ CollectRing:
 		cmpi.w	#200,(v_rings).w			; do you have 200 or more rings?
 		blo.s	.playSound				; if not, branch
 		bset	#2,(v_lifecount).w			; set "extra life for 200 rings" flag
-		bne.s	.playSound				; if it was alerady set, do not award another extra life
+		bne.s	.playSound				; if it was already set, do not award another extra life
 
 	.extraLife:
 		addq.b	#1,(v_lives).w				; add 1 to the number of lives you have

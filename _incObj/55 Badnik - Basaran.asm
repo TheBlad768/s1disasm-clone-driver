@@ -39,13 +39,13 @@ Bas_Action:	; Routine 2
 
 .dropcheck:
 		move.w	#$80,d2
-		bsr.w	.chkdistance	; is Sonic < $80 pixels from basaran?
+		bsr.w	.chkdistance	; is Sonic < $80 pixels from Basaran?
 		bcc.s	.nodrop		; if not, branch
 		move.w	(v_player+obY).w,d0
 		move.w	d0,objoff_36(a0)
 		sub.w	obY(a0),d0
 		bcs.s	.nodrop
-		cmpi.w	#$80,d0		; is Sonic < $80 pixels from basaran?
+		cmpi.w	#$80,d0		; is Sonic < $80 pixels from Basaran?
 		bhs.s	.nodrop		; if not, branch
 		tst.w	(v_debuguse).w	; is debug mode on?
 		bne.s	.nodrop		; if yes, branch
@@ -63,16 +63,16 @@ Bas_Action:	; Routine 2
 
 .dropfly:
 		bsr.w	SpeedToPos
-		addi.w	#$18,obVelY(a0)	; make basaran fall
+		addi.w	#$18,obVelY(a0)	; make Basaran fall
 		move.w	#$80,d2
 		bsr.w	.chkdistance
 		move.w	objoff_36(a0),d0
 		sub.w	obY(a0),d0
 		bcs.s	.chkdel
-		cmpi.w	#$10,d0		; is basaran close to Sonic vertically?
+		cmpi.w	#$10,d0		; is Basaran close to Sonic vertically?
 		bhs.s	.dropmore	; if not, branch
-		move.w	d1,obVelX(a0)	; make basaran fly horizontally
-		move.w	#0,obVelY(a0)	; stop basaran falling
+		move.w	d1,obVelX(a0)	; make Basaran fly horizontally
+		move.w	#0,obVelY(a0)	; stop Basaran falling
 		move.b	#2,obAnim(a0)
 		addq.b	#2,ob2ndRout(a0)
 
@@ -105,11 +105,11 @@ Bas_Action:	; Routine 2
 		bsr.w	SpeedToPos
 		move.w	(v_player+obX).w,d0
 		sub.w	obX(a0),d0
-		bcc.s	.isright	; if Sonic is right of basaran, branch
+		bcc.s	.isright	; if Sonic is right of Basaran, branch
 		neg.w	d0
 
 .isright:
-		cmpi.w	#$80,d0		; is Sonic within $80 pixels of basaran?
+		cmpi.w	#$80,d0		; is Sonic within $80 pixels of Basaran?
 		blo.s	.dontflyup	; if yes, branch
 		move.b	(v_vblank_byte).w,d0
 		add.b	d7,d0
@@ -123,13 +123,13 @@ Bas_Action:	; Routine 2
 
 .flyup:
 		bsr.w	SpeedToPos
-		subi.w	#$18,obVelY(a0)	; make basaran fly upwards
+		subi.w	#$18,obVelY(a0)	; make Basaran fly upwards
 		bsr.w	ObjHitCeiling
-		tst.w	d1		; has basaran hit the ceiling?
+		tst.w	d1		; has Basaran hit the ceiling?
 		bpl.s	.noceiling	; if not, branch
 		sub.w	d1,obY(a0)
 		andi.w	#$FFF8,obX(a0)
-		clr.w	obVelX(a0)	; stop basaran moving
+		clr.w	obVelX(a0)	; stop Basaran moving
 		clr.w	obVelY(a0)
 		clr.b	obAnim(a0)
 		clr.b	ob2ndRout(a0)
@@ -138,21 +138,21 @@ Bas_Action:	; Routine 2
 		rts
 ; ===========================================================================
 
-; Subroutine to check Sonic's distance from the basaran
+; Subroutine to check Sonic's distance from the Basaran
 
 ; input:
 ; d2 = distance to compare
 
 ; output:
-; d0 = distance between Sonic and basaran
-; d1 = speed/direction for basaran to fly
+; d0 = distance between Sonic and Basaran
+; d1 = speed/direction for Basaran to fly
 
 .chkdistance:
 		move.w	#$100,d1
 		bset	#0,obStatus(a0)
 		move.w	(v_player+obX).w,d0
 		sub.w	obX(a0),d0
-		bcc.s	.right		; if Sonic is right of basaran, branch
+		bcc.s	.right		; if Sonic is right of Basaran, branch
 		neg.w	d0
 		neg.w	d1
 		bclr	#0,obStatus(a0)

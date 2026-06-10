@@ -164,7 +164,7 @@ SSR_Display2:
 		bra.w	DisplaySprite
 ; ===========================================================================
 SSR_Config:	dc.w $20, $120,	$C4	; start x-pos, main x-pos, y-pos
-		dc.b 2,	0		; rountine number, frame number
+		dc.b 2,	0		; routine number, frame number
 		dc.w $320, $120, $118
 		dc.b 2,	1
 		dc.w $360, $120, $128

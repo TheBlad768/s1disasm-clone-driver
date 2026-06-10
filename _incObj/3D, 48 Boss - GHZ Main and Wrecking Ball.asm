@@ -71,7 +71,7 @@ BGHZ_ShipMain:	; Routine 2
 ; obStatus stores the logical bits, but obRender is visual bits, so this simply moves them from one to the other
 
 		move.b	obStatus(a0),d0 			; move current object status
-		andi.b	#3,d0 					; AND with obstatus so now d0 contains X and Y logical flip bits only
+		andi.b	#3,d0 					; AND with obStatus so now d0 contains X and Y logical flip bits only
 		andi.b	#$FC,obRender(a0) 			; clear the x and y flip
 		or.b	d0,obRender(a0) 			; OR the two together, so now DisplaySprite has X and Y orientation and above render bits
 		jmp	(DisplaySprite).l

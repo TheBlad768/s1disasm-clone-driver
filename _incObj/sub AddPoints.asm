@@ -12,7 +12,7 @@
 ; - In REV01, this value has been repurposed so that it awards an extra life
 ;   for every multiple of 50000 points acquired, but ONLY if the region is
 ;   set to Japanese. Overseas regions will update the requirement, but they
-;   won't award the extra life under any circumstanes.
+;   won't award the extra life under any circumstances.
 ; ---------------------------------------------------------------------------
 
 AddPoints:
