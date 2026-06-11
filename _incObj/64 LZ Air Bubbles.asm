@@ -224,29 +224,37 @@ Bub_BblTypes:	dc.b 0,	1, 0, 0, 0, 0, 1, 0, 0,	0, 0, 1, 0, 1, 0, 0, 1,	0
 ; ===========================================================================
 
 Bub_ChkSonic:
+	if FixBugs
+		; Fix bubbles being collectable in debug mode
+		tst.w	(v_debuguse).w		; is debug mode active?
+		bne.s	.dontCollectBubble	; if yes, branch
+	endif
+
 		tst.b	(f_playerctrl).w
-		bmi.s	.loc_12998
+		bmi.s	.dontCollectBubble
 		lea	(v_player).w,a1
 		move.w	obX(a1),d0
 		move.w	obX(a0),d1
 		subi.w	#$10,d1
 		cmp.w	d0,d1
-		bhs.s	.loc_12998
+		bhs.s	.dontCollectBubble
 		addi.w	#$20,d1
 		cmp.w	d0,d1
-		blo.s	.loc_12998
+		blo.s	.dontCollectBubble
 		move.w	obY(a1),d0
 		move.w	obY(a0),d1
 		cmp.w	d0,d1
-		bhs.s	.loc_12998
+		bhs.s	.dontCollectBubble
 		addi.w	#$10,d1
 		cmp.w	d0,d1
-		blo.s	.loc_12998
+		blo.s	.dontCollectBubble
+	.collectBubble:
 		moveq	#1,d0
 		rts
-; ===========================================================================
+; ---------------------------------------------------------------------------
 
-.loc_12998:
+	; .loc_12998:
+	.dontCollectBubble:
 		moveq	#0,d0
 		rts
 ; ===========================================================================

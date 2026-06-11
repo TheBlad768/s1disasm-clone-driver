@@ -1803,6 +1803,19 @@ Sonic_ResetOnFloor:
 
 ; Obj01_Hurt:
 Sonic_Hurt:	; Routine 4
+	if FixBugs
+		; Fix not being able to enter debug mode from a hurt state.
+		; This was added for Sonic 2.
+		tst.w	(f_debugmode).w				; is debug cheat enabled?
+		beq.s	.nodebug				; if not, branch
+		btst	#bitB,(v_jpadpress1).w			; is button B pressed?
+		beq.s	.nodebug				; if not, branch
+		move.w	#1,(v_debuguse).w			; enter debug mode on the next frame (change Sonic into a ring/item)
+		clr.b	(f_lockctrl).w				; unlock controls
+		rts						; return
+.nodebug:
+	endif
+
 		jsr	(SpeedToPos).l				; update Sonic's current position based on his velocities
 		addi.w	#$30,obVelY(a0)				; apply gravity (this is 8 less than the normal gravity of $38)
 		btst	#6,obStatus(a0)				; is Sonic underwater?
@@ -1875,6 +1888,19 @@ Sonic_HurtStop:
 
 ; Obj01_Death:
 Sonic_Death:	; Routine 6
+	if FixBugs
+		; Fix not being able to enter debug mode from a dying state.
+		; This was added for Sonic 2.
+		tst.w	(f_debugmode).w				; is debug cheat enabled?
+		beq.s	.nodebug				; if not, branch
+		btst	#bitB,(v_jpadpress1).w			; is button B pressed?
+		beq.s	.nodebug				; if not, branch
+		move.w	#1,(v_debuguse).w			; enter debug mode on the next frame (change Sonic into a ring/item)
+		clr.b	(f_lockctrl).w				; unlock controls
+		rts						; return
+.nodebug:
+	endif
+
 		bsr.w	Sonic_HandleDeath			; handle Sonic falling, deducting a life, and maybe triggering game over
 		jsr	(ObjectFall).l				; apply gravity
 		bsr.w	Sonic_RecordPosition			; record Sonic's previous position for the invincibility stars trail (kinda pointless here...)
