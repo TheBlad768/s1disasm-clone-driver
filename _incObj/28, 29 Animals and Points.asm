@@ -117,11 +117,11 @@ Anml_Main:	; Routine 0
 		move.w	(a1,d0.w),obVelX(a0)
 		move.w	2(a1,d0.w),objoff_34(a0) ; load vertical speed
 		move.w	2(a1,d0.w),obVelY(a0)
-		move.b	#$C,obHeight(a0)
+		move.b	#24/2,obHeight(a0)
 		move.b	#4,obRender(a0)
 		bset	#0,obRender(a0)
 		move.b	#6,obPriority(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.b	#7,obTimeFrame(a0)
 		bra.w	DisplaySprite
 ; ===========================================================================
@@ -149,11 +149,11 @@ Anml_FromEnemy:
 		move.w	#ArtTile_Animal_2,obGfx(a0)	; VRAM setting for 2nd animal
 
 loc_90C0:
-		move.b	#$C,obHeight(a0)
+		move.b	#24/2,obHeight(a0)
 		move.b	#4,obRender(a0)
 		bset	#0,obRender(a0)
 		move.b	#6,obPriority(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.b	#7,obTimeFrame(a0)
 		move.b	#2,obFrame(a0)
 		move.w	#-$400,obVelY(a0)
@@ -456,7 +456,7 @@ sub_9404:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 29 - points that appear from destroyed badniks and other placs
+; Object 29 - points that appear from destroyed badniks and other places
 ; ---------------------------------------------------------------------------
 
 Points:
@@ -482,7 +482,7 @@ Poi_Main:	; Routine 0
 		move.w	#ArtTile_Points|Tile_Pal2,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.w	#-$300,obVelY(a0) ; move object upwards
 
 Poi_Slower:	; Routine 2

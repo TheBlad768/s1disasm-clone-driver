@@ -97,7 +97,7 @@ HUD_Update:
 ; End of function HUD_Update
 
 ; ---------------------------------------------------------------------------
-; Kill Sonic when a time over has occured (9:59:59)
+; Kill Sonic when a time over has occurred (9:59:59)
 ; ---------------------------------------------------------------------------
 
 TimeOver:
@@ -221,7 +221,7 @@ Hud_Init_8x16Digits:
 ; End of function Hud_Base
 
 ; ===========================================================================
-; Initialization tiles for the HUD. Each byte represents either an instruction:
+; Initialization tiles for the HUD. Each byte represents an instruction:
 ;    -1 = write blank tiles
 ;     0 = write a literal "0" digit
 ;   $16 = write letter "E" (for score text)
@@ -259,7 +259,7 @@ HudDb_XY_Write:
 .loopdigits:
 		rol.w	#4,d1				; move uppest nybble in word to lowest nybble
 		move.w	d1,d2				; make a copy (need to preserve d1 for the loop)
-		andi.w	#$F,d2				; limit digit to one nyblle
+		andi.w	#$F,d2				; limit digit to one nybble
 		cmpi.w	#$A,d2				; is digit $A-$F?
 		blo.s	.writedigit			; if not, branch
 		addq.w	#7,d2				; adjust tile offset for hex letters
@@ -359,7 +359,7 @@ ContScrCounter:
 		; fall-through to Hud_Write_8x16Digits_WithLeading_Continuous...
 
 ; ---------------------------------------------------------------------------
-; Edited copy-paste of Hud_Write_8x16Digits_WithLeading, but continously
+; Edited copy-paste of Hud_Write_8x16Digits_WithLeading, but continuously
 ; writing to VRAM instead of changing the pointer VRAM between digits.
 ; ---------------------------------------------------------------------------
 

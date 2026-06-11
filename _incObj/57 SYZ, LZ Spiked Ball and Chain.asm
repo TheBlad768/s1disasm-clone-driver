@@ -13,7 +13,7 @@ SBall_Index:	dc.w SBall_Main-SBall_Index
 		dc.w SBall_Display-SBall_Index
 
 sball_childs = objoff_29	; number of child objects (1 byte)
-		; $30-$37	; object RAM numbers of childs (1 byte each)
+		; $30-$37	; object RAM numbers of children (1 byte each)
 sball_origX = objoff_3A		; centre x-axis position (2 bytes)
 sball_origY = objoff_38		; centre y-axis position (2 bytes)
 sball_radius = objoff_3C	; radius (1 byte)
@@ -26,7 +26,7 @@ SBall_Main:	; Routine 0
 		move.w	#ArtTile_SYZ_Spikeball_Chain,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.w	obX(a0),sball_origX(a0)
 		move.w	obY(a0),sball_origY(a0)
 		move.b	#$98,obColType(a0) ; SYZ specific code (chain hurts Sonic)

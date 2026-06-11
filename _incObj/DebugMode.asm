@@ -78,9 +78,9 @@ Debug_Init:	; Routine 0
 		; If the D-Pad is held while entering debug mode, the initial move speed
 		; is incredibly slow. The cause is this value getting set to just a 1,
 		; instead of the normal 15 when no D-Pad button is pressed in Debug_Control.
-		move.b	#debug_startspeed,(v_debugspeed).w	; set inital move speed (normal 15)
+		move.b	#debug_startspeed,(v_debugspeed).w	; set initial move speed (normal 15)
 	else
-		move.b	#1,(v_debugspeed).w			; set inital move speed (just 1)
+		move.b	#1,(v_debugspeed).w			; set initial move speed (just 1)
 	endif
 ; ---------------------------------------------------------------------------
 
@@ -144,7 +144,7 @@ Debug_Move:
 		moveq	#0,d1					; clear d1
 		move.b	(v_debugspeed).w,d1			; get current debug move speed
 		addq.w	#1,d1					; add one unit to base speed (at max speed, $FF+1=$100)
-		swap	d1					; move delta to upper word (calcuations use longwords for subpixels)
+		swap	d1					; move delta to upper word (calculations use longwords for subpixels)
 		asr.l	#4,d1					; divide speed by 16 to reasonably slow it down (upper nybble is pixels per seconds)
 
 		move.l	obY(a0),d2				; d2 = current debug object Y-position

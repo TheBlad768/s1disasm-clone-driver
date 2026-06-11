@@ -19,18 +19,18 @@ Plat_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a0)
 		move.l	#Map_Plat_GHZ,obMap(a0)
-		move.b	#$20,obActWid(a0)
+		move.b	#64/2,obActWid(a0)
 		cmpi.b	#id_SYZ,(v_zone).w ; check if level is SYZ
 		bne.s	.notSYZ
 
 		move.l	#Map_Plat_SYZ,obMap(a0) ; SYZ specific code
-		move.b	#$20,obActWid(a0)
+		move.b	#64/2,obActWid(a0)
 
 .notSYZ:
 		cmpi.b	#id_SLZ,(v_zone).w ; check if level is SLZ
 		bne.s	.notSLZ
 		move.l	#Map_Plat_SLZ,obMap(a0) ; SLZ specific code
-		move.b	#$20,obActWid(a0)
+		move.b	#64/2,obActWid(a0)
 		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a0)
 		move.b	#3,obSubtype(a0)
 
@@ -46,7 +46,7 @@ Plat_Main:	; Routine 0
 		cmpi.b	#$A,d0		; is object type $A (large platform)?
 		bne.s	.setframe	; if not, branch
 		addq.b	#1,d1		; use frame #1
-		move.b	#$20,obActWid(a0) ; set width
+		move.b	#64/2,obActWid(a0) ; set width
 
 .setframe:
 		move.b	d1,obFrame(a0)	; set frame to d1

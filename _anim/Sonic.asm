@@ -89,7 +89,7 @@ fr_Float5:	equ $53
 fr_Float6:	equ $54
 fr_Injury:	equ $55
 fr_GetAir:	equ $56
-fr_Slide:	equ $57 ; formerly mamed fr_WaterSlide (was too long...)
+fr_Slide:	equ $57 ; formerly named fr_WaterSlide (was too long...)
 
 
 ; ---------------------------------------------------------------------------

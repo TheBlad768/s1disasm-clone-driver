@@ -36,11 +36,11 @@ BossFinal_ObjData:
 		dc.l Map_Eggman
 
 BossFinal_ObjData2:
-		dc.b 2,	0, 4, $20, $19	; routine num, animation, sprite priority, width, height
-		dc.b 4,	0, 1, $12, 8
+		dc.b 2,	0, 4, 64/2, 50/2	; routine num, animation, sprite priority, width, height
+		dc.b 4,	0, 1, 36/2, 16/2
 		dc.b 6,	0, 3, 0, 0
 		dc.b 8,	0, 3, 0, 0
-		dc.b $A, 0, 3, $20, $20
+		dc.b $A, 0, 3, 64/2, 64/2
 		dc.b $C, 0, 3, 0, 0
 ; ===========================================================================
 
@@ -175,9 +175,9 @@ loc_19F10:
 		bset	#0,obStatus(a0)
 
 loc_19F2E:
-		move.w	#$20+sonic_solid_width,d1
-		move.w	#$14,d2
-		move.w	#$14,d3
+		move.w	#64/2+sonic_solid_width,d1
+		move.w	#40/2,d2
+		move.w	#40/2,d3
 		move.w	obX(a0),d4
 		jsr	(SolidObject).l
 		tst.w	d4
@@ -248,7 +248,7 @@ loc_19FBC:
 		move.b	#6,objoff_34(a0)
 		move.w	#boss_fz_x+$170,obX(a0)
 		move.w	#boss_fz_y+$2C,obY(a0)
-		move.b	#$14,obHeight(a0)
+		move.b	#40/2,obHeight(a0)
 		rts
 
 ; ===========================================================================
@@ -299,9 +299,9 @@ loc_1A020:
 ; loc_1A02A:
 BossFinal_Eggman_Fall:
 	if Revision=0
-		move.b	#$30,obWidth(a0)
+		move.b	#96/2,obWidth(a0)
 	else
-		move.b	#$30,obActWid(a0)
+		move.b	#96/2,obActWid(a0)
 	endif
 		bset	#0,obStatus(a0)
 		jsr	(SpeedToPos).l
@@ -312,9 +312,9 @@ BossFinal_Eggman_Fall:
 		move.w	#boss_fz_y+$8C,obY(a0)
 		addq.b	#2,objoff_34(a0)
 	if Revision=0
-		move.b	#$20,obWidth(a0)
+		move.b	#64/2,obWidth(a0)
 	else
-		move.b	#$20,obActWid(a0)
+		move.b	#64/2,obActWid(a0)
 	endif
 		move.w	#$100,obVelX(a0)
 		move.w	#-$100,obVelY(a0)
@@ -397,7 +397,7 @@ loc_1A142:
 		bne.s	loc_1A15C
 		addq.b	#2,objoff_34(a0)
 		move.w	#-$180,obVelY(a0)
-		move.b	#1,obBossHits(a0) ; set number oescaping Eggman hits to 1
+		move.b	#1,obBossHits(a0) ; set number of escaping Eggman hits to 1
 
 loc_1A15C:
 		lea	Ani_SEgg(pc),a1
@@ -411,9 +411,9 @@ loc_1A166:
 loc_1A172:
 		cmpi.b	#$C,objoff_34(a0)
 		bge.s	locret_1A190
-		move.w	#$10+sonic_solid_width,d1
-		move.w	#$70,d2
-		move.w	#$71,d3
+		move.w	#32/2+sonic_solid_width,d1
+		move.w	#224/2,d2
+		move.w	#226/2,d3
 		move.w	obX(a0),d4
 		jmp	(SolidObject).l
 ; ===========================================================================
@@ -671,10 +671,14 @@ EggmanCylinder_Main:	; Routine
 		move.w	(a1)+,obX(a0)
 		move.w	(a1),obY(a0)
 		move.w	(a1)+,obBossY(a0)
-		move.b	#$20,obHeight(a0)
-		move.b	#$60,obWidth(a0)
-		move.b	#$20,obActWid(a0)
-		move.b	#$60,obHeight(a0)
+	if FixBugs=0
+		; These are likely the result of the developers fumbling obWidth and
+		; obActWidth, which wasn't completely fixed until REV01.
+		move.b	#64/2,obHeight(a0)
+		move.b	#192/2,obWidth(a0)
+	endif
+		move.b	#64/2,obActWid(a0)
+		move.b	#192/2,obHeight(a0)
 		move.b	#3,obPriority(a0)
 		addq.b	#2,obRoutine(a0)
 
@@ -712,9 +716,9 @@ loc_1A514:
 		move.w	obX(a0),obX(a1)
 
 loc_1A524:
-		move.w	#$20+sonic_solid_width,d1
-		move.w	#$60,d2
-		move.w	#$61,d3
+		move.w	#64/2+sonic_solid_width,d1
+		move.w	#192/2,d2
+		move.w	#194/2,d3
 		move.w	obX(a0),d4
 		jsr	(SolidObject).l
 		moveq	#0,d0
@@ -872,8 +876,8 @@ BossPlasma_Main:	; Routine 0
 		move.l	#Map_PLaunch,obMap(a0)
 		move.b	#0,obAnim(a0)
 		move.b	#3,obPriority(a0)
-		move.b	#8,obWidth(a0)
-		move.b	#8,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
+		move.b	#16/2,obHeight(a0)
 		move.b	#4,obRender(a0)
 		bset	#7,obRender(a0)
 		addq.b	#2,obRoutine(a0)
@@ -896,9 +900,9 @@ loc_1A850:
 		move.b	#$3E,obSubtype(a0)
 
 loc_1A86C:
-		move.w	#8+sonic_solid_width,d1
-		move.w	#8,d2
-		move.w	#$11,d3
+		move.w	#16/2+sonic_solid_width,d1
+		move.w	#16/2,d2
+		move.w	#34/2,d3
 		move.w	obX(a0),d4
 		jsr	(SolidObject).l
 		move.w	(v_player+obX).w,d0
@@ -935,8 +939,8 @@ BossPlasma_Loop:
 		move.b	#8,obRoutine(a1)
 		move.w	#ArtTile_FZ_Boss|Tile_Pal2,obGfx(a1)
 		move.l	#Map_Plasma,obMap(a1)
-		move.b	#$C,obHeight(a1)
-		move.b	#$C,obWidth(a1)
+		move.b	#24/2,obHeight(a1)
+		move.b	#24/2,obWidth(a1)
 		move.b	#0,obColType(a1)
 		move.b	#3,obPriority(a1)
 		move.w	#$3E,obSubtype(a1)

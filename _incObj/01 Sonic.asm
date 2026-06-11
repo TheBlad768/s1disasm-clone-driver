@@ -35,7 +35,7 @@ Sonic_Main:	; Routine 0
 		move.l	#Map_Sonic,obMap(a0)			; set mappings
 		move.w	#ArtTile_Sonic,obGfx(a0)		; set VRAM location
 		move.b	#2,obPriority(a0)			; set sprite priority
-		move.b	#$18,obActWid(a0)			; set render width
+		move.b	#48/2,obActWid(a0)			; set render width
 		move.b	#4,obRender(a0)				; set to playfield-positioned mode
 		move.w	#$600,(v_sonspeedmax).w			; set Sonic's top speed
 		move.w	#$C,(v_sonspeedacc).w			; set Sonic's acceleration
@@ -149,7 +149,7 @@ Sonic_Display:
 .chkinvincible:
 		tst.b	(v_invinc).w				; does Sonic have invincibility?
 		beq.s	.chkshoes				; if not, branch
-		tst.w	invtime(a0)				; check time remaining for invinciblity
+		tst.w	invtime(a0)				; check time remaining for invincibility
 		beq.s	.chkshoes				; if no time remains, branch
 		subq.w	#1,invtime(a0)				; subtract 1 from time
 		bne.s	.chkshoes				; if time remains, branch
@@ -357,13 +357,13 @@ Sonic_Move:
 		bne.w	Sonic_ResetScr				; if yes, ignore D-Pad input
 		btst	#bitL,(v_jpadhold2).w			; is left being held?
 		beq.s	.notleft				; if not, branch
-		bsr.w	Sonic_MoveLeft				; apply leftside movement updates
+		bsr.w	Sonic_MoveLeft				; apply left side movement updates
 
 ; Obj01_NotLeft:
 .notleft:
 		btst	#bitR,(v_jpadhold2).w			; is right being held?
 		beq.s	.notright				; if not, branch
-		bsr.w	Sonic_MoveRight				; apply rightside movement updates
+		bsr.w	Sonic_MoveRight				; apply right side movement updates
 
 ; Obj01_NotRight:
 .notright:
@@ -610,7 +610,7 @@ Sonic_MoveLeft:
 .changeddirection:
 		sub.w	d4,d0					; apply deceleration to current speed
 		bcc.s	.stilldecel       			; if still decelerating, branch
-		move.w	#-$80,d0        			; set minumum speed on sign change
+		move.w	#-$80,d0        			; set minimum speed on sign change
 
 ; loc_130BA:
 .stilldecel:
@@ -783,7 +783,7 @@ Sonic_AngledRollSpeed:
 		cmpi.w	#$1000,d0				; is new Y-velocity bigger than maximum screen shift speed? (downward)
 		ble.s	.noPosIntCapY				; if not, branch
 		move.w	#$1000,d0				; cap roll speed to screen shift speed (downward)
-.noPosIntCapY:	cmpi.w	#-$1000,d0				; is new Y-velocity bigger than maximum screen shfit speed? (upward)
+.noPosIntCapY:	cmpi.w	#-$1000,d0				; is new Y-velocity bigger than maximum screen shift speed? (upward)
 		bge.s	.noNegIntCapY				; if not, branch
 		move.w	#-$1000,d0				; cap roll speed to screen shift speed (upward)
 .noNegIntCapY:
@@ -1023,7 +1023,7 @@ Sonic_LevelBound:
 		move.w	d1,d0					; use target level boundary while it's moving down to prevent unfair deaths
 .skipboundaryoverride:
 	endif
-		addi.w	#224,d0					; add screen beight
+		addi.w	#224,d0					; add screen height
 		cmp.w	obY(a0),d0				; has Sonic touched the bottom boundary?
 		blt.s	.bottom					; if yes, branch
 		rts						; return
@@ -1115,7 +1115,7 @@ Sonic_ChkRoll:
 
 		tst.w	obInertia(a0)				; is current speed zero?
 		bne.s	.ismoving				; if not, branch
-		move.w	#$200,obInertia(a0)			; force forward movement (this is used for the S-tunels in GHZ to not get stuck)
+		move.w	#$200,obInertia(a0)			; force forward movement (this is used for the S-tunnels in GHZ to not get stuck)
 
 ; locret_133E8:
 .ismoving:
@@ -1400,7 +1400,7 @@ Sonic_JumpAngle:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Subroutine for Sonic to interact with the floor after jumping/falling.
-; To save on resouces, the game will only check one out of four quadrants,
+; To save on resources, the game will only check one out of four quadrants,
 ; depending on which direction Sonic moving toward the most.
 ; This routine contains various writes to unused variables, likely used
 ; during development to debug the collision system while in air.
@@ -1533,7 +1533,7 @@ Sonic_FloorDown:
 
 ; loc_1365C:
 .steepslope:
-		move.w	#0,obVelX(a0)				; completely clear Sonic's horizontal speed when londing on a steep slope
+		move.w	#0,obVelX(a0)				; completely clear Sonic's horizontal speed when landing on a steep slope
 		cmpi.w	#$FC0,obVelY(a0)			; is Sonic's fall speed almost at the maximum screen shift speed?
 		ble.s	.noslopecap				; if not, branch
 		move.w	#$FC0,obVelY(a0)			; otherwise, cap it to not exceed maximum screen shift speed
@@ -1578,7 +1578,7 @@ Sonic_FloorLeft:
 	if FixBugs
 		clr.w	obSubpixelY(a0)				; reset subpixel portion
 	endif
-		tst.w	obVelY(a0)				; is vertical speed postive?
+		tst.w	obVelY(a0)				; is vertical speed positive?
 		bpl.s	.noyspeedreset				; if yes, branch
 		move.w	#0,obVelY(a0)				; if going up, reset it to zero
 
@@ -1656,7 +1656,7 @@ Sonic_FloorUp:
 	if FixBugs
 		clr.w	obSubpixelX(a0)				; reset subpixel portion
 	endif
-		move.w	#0,obVelX(a0)				; cleaer horizontal speed
+		move.w	#0,obVelX(a0)				; clear horizontal speed
 
 ; loc_13706:
 .norightgraze:

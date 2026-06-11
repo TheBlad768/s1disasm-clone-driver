@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------------
-; Object 45 - unused sidways spiked metal stomper from beta version (MZ)
+; Object 45 - unused sideways spiked metal stomper from beta version (MZ)
 ; ---------------------------------------------------------------------------
 
 SideStomp:
@@ -55,7 +55,7 @@ SStom_Main:	; Routine 0
 		move.w	obX(a1),objoff_30(a1)
 		move.w	obX(a0),objoff_3A(a1)
 		move.b	obSubtype(a0),obSubtype(a1)
-		move.b	#$20,obActWid(a1)
+		move.b	#64/2,obActWid(a1)
 		move.w	d2,objoff_34(a1)
 		move.b	#4,obPriority(a1)
 		cmpi.b	#1,(a2)		; is subobject spikes?
@@ -70,14 +70,14 @@ SStom_Main:	; Routine 0
 		move.b	#3,obPriority(a1)
 
 .fail:
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 
 SStom_Solid:	; Routine 2
 		move.w	obX(a0),-(sp)
 		bsr.w	SStom_Move
-		move.w	#$C+sonic_solid_width,d1
-		move.w	#$20,d2
-		move.w	#$20,d3
+		move.w	#24/2+sonic_solid_width,d1
+		move.w	#64/2,d2
+		move.w	#64/2,d3
 		move.w	(sp)+,d4
 		bsr.w	SolidObject
 	if FixBugs=0

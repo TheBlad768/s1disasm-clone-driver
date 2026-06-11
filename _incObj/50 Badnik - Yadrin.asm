@@ -57,9 +57,9 @@ Yad_Main:	; Routine 0
 		move.w	#ArtTile_Yadrin|Tile_Pal2,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$14,obActWid(a0)
-		move.b	#$11,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#40/2,obActWid(a0)
+		move.b	#34/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		move.b	#$CC,obColType(a0)
 		bsr.w	ObjectFall
 		bsr.w	ObjFloorDist

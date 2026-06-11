@@ -17,7 +17,7 @@ ADoor_Main:	; Routine 0
 		move.l	#Map_ADoor,obMap(a0)
 		move.w	#ArtTile_SBZ_Door|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
 
 ADoor_OpenShut:	; Routine 2
@@ -51,8 +51,8 @@ ADoor_Animate:
 		bsr.w	AnimateSprite
 		tst.b	obFrame(a0)	; is the door open?
 		bne.s	.remember	; if yes, branch
-		move.w	#6+sonic_solid_width,d1
-		move.w	#$20,d2
+		move.w	#12/2+sonic_solid_width,d1
+		move.w	#64/2,d2
 		move.w	d2,d3
 		addq.w	#1,d3
 		move.w	obX(a0),d4

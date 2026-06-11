@@ -13,8 +13,8 @@ Roll_Index:	dc.w Roll_Main-Roll_Index
 ; ===========================================================================
 
 Roll_Main:	; Routine 0
-		move.b	#$E,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#28/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		bsr.w	ObjectFall
 		bsr.w	ObjFloorDist
 		tst.w	d1
@@ -26,7 +26,7 @@ Roll_Main:	; Routine 0
 		move.w	#ArtTile_Roller,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 
 locret_E052:
 		rts
@@ -39,6 +39,12 @@ Roll_Action:	; Routine 2
 		jsr	Roll_Index2(pc,d1.w)
 		lea	(Ani_Roll).l,a1
 		bsr.w	AnimateSprite
+
+		; This part is identical to RememberState, except that it
+		; uses bgt instead of bhi for the offscreen check. As a result,
+		; Rollers cannot despawn when going too far offscreen to the left,
+		; which can cause occasional double spawning. It's not exactly
+		; clear if this behavior was intended or if it's an oversight.
 		move.w	obX(a0),d0
 		andi.w	#$FF80,d0
 		move.w	(v_screenposx).w,d1
@@ -46,7 +52,7 @@ Roll_Action:	; Routine 2
 		andi.w	#$FF80,d1
 		sub.w	d1,d0
 		cmpi.w	#$280,d0
-		bgt.w	Roll_ChkGone
+		bgt.w	Roll_ChkGone	; bgt (signed check) instead of the usual bhi (unisgned check)
 		bra.w	DisplaySprite
 ; ===========================================================================
 

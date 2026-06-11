@@ -18,17 +18,17 @@ Rock_Main:	; Routine 0
 		move.w	#ArtTile_GHZ_Purple_Rock|Tile_Pal4,obGfx(a0)
 		move.b	#4,obRender(a0)
 	if FixBugs=0
-		; This should be $18, currently it gets culled too soon.
-		move.b	#$13,obActWid(a0)
+		; This should be 48 pixels, currently it gets culled too soon.
+		move.b	#38/2,obActWid(a0)
 	else
-		move.b	#$18,obActWid(a0)
+		move.b	#48/2,obActWid(a0)
 	endif
 		move.b	#4,obPriority(a0)
 
 Rock_Solid:	; Routine 2
-		move.w	#$10+sonic_solid_width,d1
-		move.w	#$10,d2
-		move.w	#$10,d3
+		move.w	#32/2+sonic_solid_width,d1
+		move.w	#32/2,d2
+		move.w	#32/2,d3
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 	if FixBugs

@@ -25,7 +25,7 @@ Van_Main:	; Routine 0
 		move.l	#Map_Vanish,obMap(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
-		move.b	#$38,obActWid(a0)
+		move.b	#112/2,obActWid(a0)
 		move.w	#ArtTile_Warp,obGfx(a0)
 		move.w	#120,van_time(a0) ; set time for Sonic's disappearance to 2 seconds
 

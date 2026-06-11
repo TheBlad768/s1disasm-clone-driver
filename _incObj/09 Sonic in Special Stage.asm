@@ -63,6 +63,13 @@ SonicSS_Control: ; Routine 2
 		btst	#bitB,(v_jpadpress1).w			; is button B pressed?
 		beq.s	SonicSS_NoDebug				; if not, branch
 		move.w	#1,(v_debuguse).w			; change Sonic into a ring
+	if FixBugs
+		; A return command is missing here, causing Sonic to jump when
+		; entering debug mode. This is likely due to this being forked
+		; from an earlier version of the main Sonic object, because the
+		; prototype has the same problem in stages.
+		rts
+	endif
 
 ; Obj09_NoDebug:
 SonicSS_NoDebug:
@@ -128,13 +135,13 @@ SonicSS_Display:
 SonicSS_Move:
 		btst	#bitL,(v_jpadhold2).w			; is left being held?
 		beq.s	SonicSS_ChkRight			; if not, branch
-		bsr.w	SonicSS_MoveLeft			; apply leftside movement updates
+		bsr.w	SonicSS_MoveLeft			; apply left side movement updates
 
 ; Obj09_ChkRight:
 SonicSS_ChkRight:
 		btst	#bitR,(v_jpadhold2).w			; is right being held?
 		beq.s	SonicSS_CheckDpadLetGo			; if not, branch
-		bsr.w	SonicSS_MoveRight			; apply rightside movement updates
+		bsr.w	SonicSS_MoveRight			; apply right side movement updates
 ; ---------------------------------------------------------------------------
 
 ; This part is mostly identical to Sonic_CheckDpadLetGo in Obj01,
@@ -387,7 +394,7 @@ SonicSS_ExitStage:
 .noexit:	; Impossible condition, see notes below
 		cmpi.w	#2*($60*ss_rotatespeed),(v_ssrotate).w	; is stage spinning twice as fast as exit trigger above? ($3000)
 		blt.s	.noexit2				; if not, branch
-		move.w	#0,(v_ssrotate).w			; stop stage rotiation
+		move.w	#0,(v_ssrotate).w			; stop stage rotation
 		move.w	#$4000,(v_ssangle).w			; keep rotation fixed to 90 degrees clockwise
 		addq.b	#2,obRoutine(a0)			; advance to "SonicSS_ExitStage_Unused"
 		move.w	#60,sonss_exittimer(a0)			; set delay timer in there to one second

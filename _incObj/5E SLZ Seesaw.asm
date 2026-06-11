@@ -19,7 +19,7 @@ Seesaw:
 		subi.w	#$80,d1
 		andi.w	#$FF80,d1
 		sub.w	d1,d0
-		bmi.w	DeleteObject
+		bmi.w	DeleteObject ; this bmi isn't in the common out_of_range macro (and redundant)
 		cmpi.w	#$280,d0
 		bhi.w	DeleteObject
 		bra.w	DisplaySprite
@@ -38,7 +38,7 @@ See_Main:	; Routine 0
 		move.w	#ArtTile_SLZ_Seesaw,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$30,obActWid(a0)
+		move.b	#96/2,obActWid(a0)
 		move.w	obX(a0),see_origX(a0)
 		tst.b	obSubtype(a0)	; is object type 00 ?
 		bne.s	.noball		; if not, branch
@@ -71,7 +71,7 @@ See_Slope:	; Routine 2
 .notflat:
 		lea	(v_player).w,a1
 		move.w	obVelY(a1),see_speed(a0)
-		move.w	#$30,d1
+		move.w	#96/2,d1
 		jsr	(SlopeObject).l
 		rts
 ; ===========================================================================
@@ -84,9 +84,9 @@ See_Slope2:	; Routine 4
 		lea	(See_DataFlat).l,a2
 
 .notflat:
-		move.w	#$30,d1
+		move.w	#96/2,d1
 		jsr	(ExitPlatform).l
-		move.w	#$30,d1
+		move.w	#96/2,d1
 		move.w	obX(a0),d2
 		jsr	(SlopeObject_AssumeStoodOn).l
 		rts
@@ -133,7 +133,7 @@ See_Spikeball:	; Routine 6
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$8B,obColType(a0)
-		move.b	#$C,obActWid(a0)
+		move.b	#24/2,obActWid(a0)
 		move.w	obX(a0),see_origX(a0)
 		addi.w	#$28,obX(a0)
 		move.w	obY(a0),see_origY(a0)

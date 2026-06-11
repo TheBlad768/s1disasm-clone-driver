@@ -19,7 +19,7 @@ CSI_Main:	; Routine 0
 		move.l	#Map_ContScr,obMap(a0)
 		move.w	#ArtTile_Continue_Sonic|Tile_Prio,obGfx(a0)
 		move.b	#0,obRender(a0)
-		move.b	#$3C,obActWid(a0)
+		move.b	#120/2,obActWid(a0)
 		move.w	#$120,obX(a0)
 		move.w	#$C0,obScreenY(a0)
 		move.w	#0,(v_rings).w	; clear rings

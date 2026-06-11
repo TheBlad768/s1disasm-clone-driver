@@ -47,7 +47,7 @@ Stair_Main:	; Routine 0
 		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#3,obPriority(a1)
-		move.b	#$10,obActWid(a1)
+		move.b	#32/2,obActWid(a1)
 		move.b	obSubtype(a0),obSubtype(a1)
 		move.w	d2,obX(a1)
 		move.w	obY(a0),obY(a1)
@@ -79,8 +79,8 @@ Stair_Solid:	; Routine 4
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		addi.w	#sonic_solid_width,d1
-		move.w	#$10,d2
-		move.w	#$11,d3
+		move.w	#32/2,d2
+		move.w	#34/2,d3
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 		tst.b	d4

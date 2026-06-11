@@ -19,11 +19,11 @@ Moto_Main:	; Routine 0
 		move.w	#ArtTile_Moto_Bug,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$14,obActWid(a0)
+		move.b	#40/2,obActWid(a0)
 		tst.b	obAnim(a0)	; is object a smoke trail?
 		bne.s	.smoke		; if yes, branch
-		move.b	#$E,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#28/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		move.b	#$C,obColType(a0)
 		bsr.w	ObjectFall
 		jsr	(ObjFloorDist).l

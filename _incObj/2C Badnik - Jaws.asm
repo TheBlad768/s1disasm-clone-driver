@@ -23,10 +23,10 @@ Jaws_Main:	; Routine 0
 		move.b	#$A,obColType(a0)
 		move.b	#4,obPriority(a0)
 	if FixBugs
-		move.b	#$18,obActWid(a0)
+		move.b	#48/2,obActWid(a0)
 	else
-		; 16 pixels is too small, it should be 24 pixels.
-		move.b	#$10,obActWid(a0)
+		; 32 pixels is too small, it should be 48 pixels.
+		move.b	#32/2,obActWid(a0)
 	endif
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; load object subtype number

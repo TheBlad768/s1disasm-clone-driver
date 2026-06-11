@@ -15,14 +15,14 @@ hog_launchflag = objoff_32		; 0 to launch a cannonball
 ; ===========================================================================
 
 Hog_Main:	; Routine 0
-		move.b	#$13,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#38/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		move.l	#Map_Hog,obMap(a0)
 		move.w	#ArtTile_Ball_Hog|Tile_Pal2,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#5,obColType(a0)
-		move.b	#$C,obActWid(a0)
+		move.b	#24/2,obActWid(a0)
 		bsr.w	ObjectFall
 		jsr	(ObjFloorDist).l	; find floor
 		tst.w	d1
@@ -95,13 +95,13 @@ cbal_time = objoff_30		; time until the cannonball explodes (2 bytes)
 
 Cbal_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.b	#7,obHeight(a0)
+		move.b	#14/2,obHeight(a0)
 		move.l	#Map_Hog,obMap(a0)
 		move.w	#ArtTile_Ball_Hog|Tile_Pal2,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$87,obColType(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; move subtype to d0
 		mulu.w	#60,d0		; multiply by 60 frames (1 second)

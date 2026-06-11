@@ -33,7 +33,7 @@ LWall_Main:	; Routine 0
 		move.l	#Map_LWall,obMap(a1)
 		move.w	#ArtTile_MZ_Lava|Tile_Pal4,obGfx(a1)
 		move.b	#4,obRender(a1)
-		move.b	#$50,obActWid(a1)
+		move.b	#160/2,obActWid(a1)
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.b	#1,obPriority(a1)
@@ -75,8 +75,8 @@ LWall_Action:	; Routine 4
 		subq.b	#2,obRoutine(a0)
 
 LWall_Solid:	; Routine 2
-		move.w	#$20+sonic_solid_width,d1
-		move.w	#$18,d2
+		move.w	#64/2+sonic_solid_width,d1
+		move.w	#48/2,d2
 		move.w	d2,d3
 		addq.w	#1,d3
 		move.w	obX(a0),d4

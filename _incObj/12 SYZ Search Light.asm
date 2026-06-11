@@ -17,7 +17,7 @@ Light_Main:	; Routine 0
 		move.l	#Map_Light,obMap(a0)
 		move.w	#ArtTile_Level,obGfx(a0)
 		move.b	#4,obRender(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#6,obPriority(a0)
 
 Light_Animate:	; Routine 2

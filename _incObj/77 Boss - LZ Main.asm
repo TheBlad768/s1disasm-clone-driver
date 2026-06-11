@@ -50,7 +50,7 @@ BossLabyrinth_LoadBoss:
 		move.l	#Map_Eggman,obMap(a1)
 		move.w	#ArtTile_Eggman,obGfx(a1)
 		move.b	#4,obRender(a1)
-		move.b	#$20,obActWid(a1)
+		move.b	#64/2,obActWid(a1)
 		move.l	a0,objoff_34(a1)
 		dbf	d1,BossLabyrinth_Loop
 

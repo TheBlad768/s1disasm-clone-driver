@@ -33,7 +33,7 @@ Orb_Main:	; Routine 0
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$B,obColType(a0)
-		move.b	#$C,obActWid(a0)
+		move.b	#24/2,obActWid(a0)
 		moveq	#0,d2
 		lea	objoff_37(a0),a2
 		movea.l	a2,a3
@@ -55,7 +55,7 @@ Orb_Main:	; Routine 0
 		move.w	obGfx(a0),obGfx(a1)
 		ori.b	#4,obRender(a1)
 		move.b	#4,obPriority(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 		move.b	#3,obFrame(a1)
 		move.b	#$98,obColType(a1)
 		move.b	d2,obAngle(a1)
@@ -65,7 +65,7 @@ Orb_Main:	; Routine 0
 
 .fail:
 		moveq	#1,d0
-		btst	#0,obStatus(a0)	; is orbinaut facing left?
+		btst	#0,obStatus(a0)	; is Orbinaut facing left?
 		beq.s	.noflip		; if not, branch
 		neg.w	d0
 
@@ -73,10 +73,10 @@ Orb_Main:	; Routine 0
 		move.b	d0,objoff_36(a0)
 		move.b	obSubtype(a0),obRoutine(a0) ; if type is 02, skip Orb_ChkSonic
 		addq.b	#2,obRoutine(a0)
-		move.w	#-$40,obVelX(a0) ; move orbinaut to the left
-		btst	#0,obStatus(a0)	; is orbinaut facing left??
+		move.w	#-$40,obVelX(a0) ; move Orbinaut to the left
+		btst	#0,obStatus(a0)	; is Orbinaut facing left??
 		beq.s	.noflip2	; if not, branch
-		neg.w	obVelX(a0)	; move orbinaut to the right
+		neg.w	obVelX(a0)	; move Orbinaut to the right
 
 .noflip2:
 		rts
@@ -84,20 +84,20 @@ Orb_Main:	; Routine 0
 
 Orb_ChkSonic:	; Routine 2
 		move.w	(v_player+obX).w,d0
-		sub.w	obX(a0),d0	; is Sonic to the right of the orbinaut?
+		sub.w	obX(a0),d0	; is Sonic to the right of the Orbinaut?
 		bcc.s	.isright	; if yes, branch
 		neg.w	d0
 
 .isright:
-		cmpi.w	#$A0,d0		; is Sonic within $A0 pixels of orbinaut?
+		cmpi.w	#$A0,d0		; is Sonic within $A0 pixels of Orbinaut?
 		bhs.s	.animate	; if not, branch
 		move.w	(v_player+obY).w,d0
-		sub.w	obY(a0),d0	; is Sonic above the orbinaut?
+		sub.w	obY(a0),d0	; is Sonic above the Orbinaut?
 		bcc.s	.isabove	; if yes, branch
 		neg.w	d0
 
 .isabove:
-		cmpi.w	#$50,d0		; is Sonic within $50 pixels of orbinaut?
+		cmpi.w	#$50,d0		; is Sonic within $50 pixels of Orbinaut?
 		bhs.s	.animate	; if not, branch
 		tst.w	(v_debuguse).w	; is debug mode on?
 		bne.s	.animate	; if yes, branch
@@ -147,9 +147,9 @@ Orb_MoveOrb:	; Routine 6
 		movea.l	orb_parent(a0),a1
 		_cmpi.b	#id_Orbinaut,obID(a1) ; does parent object still exist?
 		bne.w	DeleteObject	; if not, delete
-		cmpi.b	#2,obFrame(a1)	; is orbinaut angry?
+		cmpi.b	#2,obFrame(a1)	; is Orbinaut angry?
 		bne.s	.circle		; if not, branch
-		cmpi.b	#$40,obAngle(a0) ; is spikeorb directly under the orbinaut?
+		cmpi.b	#$40,obAngle(a0) ; is spike orb directly under the Orbinaut?
 		bne.s	.circle		; if not, branch
 		addq.b	#2,obRoutine(a0)
 		subq.b	#1,objoff_37(a1)

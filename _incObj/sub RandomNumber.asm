@@ -5,7 +5,7 @@
 RandomNumber:
 		move.l	(v_random).w,d1			; load current pseudo random number
 		bne.s	.scramble			; if it's not 0, branch
-		move.l	#$2A6D365A,d1			; set intial/starting seed
+		move.l	#$2A6D365A,d1			; set initial/starting seed
 
 .scramble:
 		move.l	d1,d0				; copy to d0

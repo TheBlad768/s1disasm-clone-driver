@@ -12,7 +12,7 @@ Z80_Clock:       equ Master_Clock/15
 FM_Sample_Rate:  equ M68000_Clock/(6*6*4)
 PSG_Sample_Rate: equ Z80_Clock/16
 
-; VDP addressses
+; VDP addresses
 vdp_data_port:		equ $C00000
 vdp_control_port:	equ $C00004
 vdp_counter:		equ $C00008
@@ -192,14 +192,14 @@ standonobject:	equ $3D	; object index Sonic stands on
 locktime:	equ $3E	; temporary D-Pad control lock timer (2 bytes)
 
 ; Sonic's collision sizes
-sonic_width:		equ 9		; Sonic's width
-sonic_height:		equ $13		; Sonic's height
-sonic_roll_width:	equ 7		; Sonic's width (rolling)
-sonic_roll_height:	equ $E		; Sonic's height (rolling)
-sonic_solid_width:	equ $B		; Sonic's width (solid object collision)
-sonic_react_width:	equ 8		; Sonic's width (object collision)
-sonic_duck_height:	equ $A		; Sonic's height (object collision, ducking)
-sonic_quick_size:	equ $A		; Sonic's size (quick terrain find)
+sonic_width:		equ 18/2	; Sonic's width
+sonic_height:		equ 38/2	; Sonic's height
+sonic_roll_width:	equ 14/2	; Sonic's width (rolling)
+sonic_roll_height:	equ 28/2	; Sonic's height (rolling)
+sonic_solid_width:	equ 22/2	; Sonic's width (solid object collision)
+sonic_react_width:	equ 16/2	; Sonic's width (object collision)
+sonic_duck_height:	equ 20/2	; Sonic's height (object collision, ducking)
+sonic_quick_size:	equ 20/2	; Sonic's size (quick terrain find)
 
 ; Miscellaneous object scratch-RAM
 objoff_29:	equ $29

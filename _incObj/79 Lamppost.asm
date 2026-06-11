@@ -25,7 +25,7 @@ Lamp_Main:	; Routine 0
 		move.l	#Map_Lamp,obMap(a0)
 		move.w	#ArtTile_Lamppost,obGfx(a0)
 		move.b	#4,obRender(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.b	#5,obPriority(a0)
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
@@ -92,7 +92,7 @@ Lamp_Blue:	; Routine 2
 		move.l	#Map_Lamp,obMap(a1)
 		move.w	#ArtTile_Lamppost,obGfx(a1)
 		move.b	#4,obRender(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 		move.b	#4,obPriority(a1)
 		move.b	#2,obFrame(a1)	; use "ball only" frame
 		move.w	#$20,lamp_time(a1)
@@ -156,7 +156,7 @@ Lamp_StoreInfo:
 		move.w	(v_bg3screenposx).w,(v_lamp_bg3scrx).w 	; bg position
 		move.w	(v_bg3screenposy).w,(v_lamp_bg3scry).w 	; bg position
 		move.w	(v_waterpos2).w,(v_lamp_wtrpos).w 	; water height
-		move.b	(v_wtr_routine).w,(v_lamp_wtrrout).w	; rountine counter for water
+		move.b	(v_wtr_routine).w,(v_lamp_wtrrout).w	; routine counter for water
 		move.b	(f_wtr_state).w,(v_lamp_wtrstat).w 	; water direction
 		rts
 ; End of function Lamp_StoreInfo

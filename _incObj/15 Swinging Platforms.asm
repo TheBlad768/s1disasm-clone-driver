@@ -27,8 +27,8 @@ Swing_Main:	; Routine 0
 		move.w	#ArtTile_GHZ_MZ_Swing|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
-		move.b	#$18,obActWid(a0)
-		move.b	#8,obHeight(a0)
+		move.b	#48/2,obActWid(a0)
+		move.b	#16/2,obHeight(a0)
 		move.w	obY(a0),swing_origY(a0)
 		move.w	obX(a0),swing_origX(a0)
 		cmpi.b	#id_SLZ,(v_zone).w ; check if level is SLZ
@@ -36,8 +36,8 @@ Swing_Main:	; Routine 0
 
 		move.l	#Map_Swing_SLZ,obMap(a0) ; SLZ specific code
 		move.w	#ArtTile_SLZ_Swing|Tile_Pal3,obGfx(a0)
-		move.b	#$20,obActWid(a0)
-		move.b	#$10,obHeight(a0)
+		move.b	#64/2,obActWid(a0)
+		move.b	#32/2,obHeight(a0)
 		move.b	#$99,obColType(a0)
 
 .notSLZ:
@@ -46,8 +46,8 @@ Swing_Main:	; Routine 0
 
 		move.l	#Map_BBall,obMap(a0) ; SBZ specific code
 		move.w	#ArtTile_SBZ_Swing,obGfx(a0)
-		move.b	#$18,obActWid(a0)
-		move.b	#$18,obHeight(a0)
+		move.b	#48/2,obActWid(a0)
+		move.b	#48/2,obHeight(a0)
 		move.b	#$86,obColType(a0)
 		move.b	#$C,obRoutine(a0) ; goto Swing_Action next
 
@@ -92,7 +92,7 @@ Swing_Main:	; Routine 0
 		bclr	#6,obGfx(a1)
 		move.b	#4,obRender(a1)
 		move.b	#4,obPriority(a1)
-		move.b	#8,obActWid(a1)
+		move.b	#16/2,obActWid(a1)
 		move.b	#1,obFrame(a1)
 		move.b	d3,objoff_3C(a1)
 		subi.b	#$10,d3

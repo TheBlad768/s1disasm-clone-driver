@@ -121,7 +121,7 @@ ReactToItem:
 		tst.b	d1		; is obColType $80-$BF?
 		bmi.w	React_ChkHurt	; if yes, branch
 
-; obColType is $40-$7F (powerups)
+; obColType is $40-$7F (power-ups)
 
 		move.b	obColType(a1),d0
 		andi.b	#$3F,d0

@@ -10,7 +10,7 @@ MoveSonicInDemo:
 
 ; This is an unused subroutine for recording a demo
 DemoRecorder:
-		; This was likely intended for a deveveloper cartridge that used RAM instead of ROM.
+		; This was likely intended for a developer cartridge that used RAM instead of ROM.
 		lea	(EndOfRom).l,a1 ; Write past the end of the ROM.
 		move.w	(v_btnpushtime1).w,d0
 		adda.w	d0,a1

@@ -1703,7 +1703,7 @@ locret_72714:
 ; ===========================================================================
 ; loc_72716:
 WriteFMIorIIMain:
-		btst	#2,SMPS_Track.PlaybackControl(a5)	; Is track being overriden by sfx?
+		btst	#2,SMPS_Track.PlaybackControl(a5)	; Is track being overridden by sfx?
 		bne.s	.locret					; Return if yes
 		bra.w	WriteFMIorII
 ; ===========================================================================
@@ -2437,10 +2437,10 @@ FMInstrumentOperatorTable:
 		dc.b  $38		; Detune/multiple operator 3
 		dc.b  $34		; Detune/multiple operator 2
 		dc.b  $3C		; Detune/multiple operator 4
-		dc.b  $50		; Rate scalling/attack rate operator 1
-		dc.b  $58		; Rate scalling/attack rate operator 3
-		dc.b  $54		; Rate scalling/attack rate operator 2
-		dc.b  $5C		; Rate scalling/attack rate operator 4
+		dc.b  $50		; Rate scaling/attack rate operator 1
+		dc.b  $58		; Rate scaling/attack rate operator 3
+		dc.b  $54		; Rate scaling/attack rate operator 2
+		dc.b  $5C		; Rate scaling/attack rate operator 4
 		dc.b  $60		; Amplitude modulation/first decay rate operator 1
 		dc.b  $68		; Amplitude modulation/first decay rate operator 3
 		dc.b  $64		; Amplitude modulation/first decay rate operator 2

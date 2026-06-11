@@ -22,7 +22,7 @@ Saw_Main:	; Routine 0
 		move.w	#ArtTile_SBZ_Saw|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$20,obActWid(a0)
+		move.b	#64/2,obActWid(a0)
 		move.w	obX(a0),saw_origX(a0)
 		move.w	obY(a0),saw_origY(a0)
 		cmpi.b	#3,obSubtype(a0) ; is object a ground saw?

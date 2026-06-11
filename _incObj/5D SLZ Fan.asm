@@ -20,7 +20,7 @@ Fan_Main:	; Routine 0
 		move.l	#Map_Fan,obMap(a0)
 		move.w	#ArtTile_SLZ_Fan|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
 
 Fan_Delay:	; Routine 2

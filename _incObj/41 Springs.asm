@@ -40,7 +40,7 @@ Spring_Main:	; Routine 0
 		move.l	#Map_Spring,obMap(a0)
 		move.w	#ArtTile_Spring_Horizontal,obGfx(a0)
 		ori.b	#4,obRender(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
 		move.b	obSubtype(a0),d0
 		btst	#4,d0		; does the spring face left/right?
@@ -50,7 +50,7 @@ Spring_Main:	; Routine 0
 		move.b	#1,obAnim(a0)
 		move.b	#3,obFrame(a0)
 		move.w	#ArtTile_Spring_Vertical,obGfx(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 
 Spring_NotLR:
 		btst	#5,d0		; does the spring face downwards?
@@ -71,9 +71,9 @@ loc_DB72:
 ; ===========================================================================
 
 Spring_Up:	; Routine 2
-		move.w	#$10+sonic_solid_width,d1
-		move.w	#8,d2
-		move.w	#$10,d3
+		move.w	#32/2+sonic_solid_width,d1
+		move.w	#16/2,d2
+		move.w	#32/2,d3
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 		tst.b	obSolid(a0)	; is Sonic on top of the spring?
@@ -106,9 +106,9 @@ Spring_ResetUp:	; Routine 6
 ; ===========================================================================
 
 Spring_LR:	; Routine 8
-		move.w	#8+sonic_solid_width,d1
-		move.w	#$E,d2
-		move.w	#$F,d3
+		move.w	#16/2+sonic_solid_width,d1
+		move.w	#28/2,d2
+		move.w	#30/2,d3
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 		cmpi.b	#2,obRoutine(a0)
@@ -156,9 +156,9 @@ Spring_ResetLR:	; Routine $C
 ; ===========================================================================
 
 Spring_Dwn:	; Routine $E
-		move.w	#$10+sonic_solid_width,d1
-		move.w	#8,d2
-		move.w	#$10,d3
+		move.w	#32/2+sonic_solid_width,d1
+		move.w	#16/2,d2
+		move.w	#32/2,d3
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 		cmpi.b	#2,obRoutine(a0)

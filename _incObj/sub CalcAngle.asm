@@ -25,7 +25,7 @@ CalcAngle:
 .posX:
 		tst.w	d4				; check Y polarity
 		bpl.w	.posY				; if it's already positive, branch
-		neg.w	d4				; coonvert to positive
+		neg.w	d4				; convert to positive
 .posY:
 		cmp.w	d3,d4				; find out which one has a larger distance
 		bhs.w	.yIsBigger			; if Y has a larger distance, branch
@@ -35,7 +35,7 @@ CalcAngle:
 		divu.w	d3,d4				; divide by X distance
 		moveq	#0,d0				; prepare 0 degree angle
 		move.b	Angle_Data(pc,d4.w),d0		; load correct angle (advance up to correct angle 00 - 45 degrees)
-		bra.s	.checkXFlip			; continue to 360 accomodation
+		bra.s	.checkXFlip			; continue to 360 accommodation
 ; ===========================================================================
 
 .yIsBigger:	; degrees 45 to 90

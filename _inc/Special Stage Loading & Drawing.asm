@@ -8,7 +8,7 @@ SS_ShowLayout:
 		bsr.w	SS_ExecuteAnimationQueue		; animate queued events for touched blocks
 ; ---------------------------------------------------------------------------
 
-	; --- Calcuate the rotated position of the layout grid ---
+	; --- Calculate the rotated position of the layout grid ---
 		move.w	d5,-(sp)				; backup sprites rendered in BuildSprites (which is called before SS_ShowLayout)
 
 		lea	(v_ss_rotationmatrix).w,a1		; set start of rotation buffer (each entry is two words per cell, X/Y axis)
@@ -212,7 +212,7 @@ SS_AnimateBlocks:
 		andi.b	#7,(v_ani0_frame).w			; wrap around every 8 frames
 	.updateWallPalettes:
 		lea	(v_ss_spritesettings+8+8+6).l,a1	; load sprite settings array, skip blank, first wall, and target VRAM settings (word, +6)
-		lea	(SS_Wall_Palettes_VRAM).l,a0		; load wall VRAM settings, containg the palette line bits
+		lea	(SS_Wall_Palettes_VRAM).l,a0		; load wall VRAM settings, containing the palette line bits
 		moveq	#0,d0					; clear d0
 		move.b	(v_ani0_frame).w,d0			; get current frame
 		add.w	d0,d0					; double for word-based indexing

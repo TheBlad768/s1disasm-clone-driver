@@ -19,7 +19,7 @@ Smab_Main:	; Routine 0
 		move.l	#Map_Smab,obMap(a0)
 		move.w	#ArtTile_MZ_Block|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
 		move.b	obSubtype(a0),obFrame(a0)
 
@@ -30,9 +30,9 @@ sonicAniFrame = objoff_32		; Sonic's current animation number
 
 		move.w	(v_itembonus).w,objoff_34(a0)
 		move.b	(v_player+obAnim).w,sonicAniFrame(a0) ; load Sonic's animation number
-		move.w	#$10+sonic_solid_width,d1
-		move.w	#$10,d2
-		move.w	#$11,d3
+		move.w	#32/2+sonic_solid_width,d1
+		move.w	#32/2,d2
+		move.w	#34/2,d3
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 		btst	#3,obStatus(a0)	; has Sonic landed on the block?

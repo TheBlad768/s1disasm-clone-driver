@@ -16,13 +16,13 @@ brick_origY = objoff_30
 
 Brick_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.b	#$F,obHeight(a0)
-		move.b	#$F,obWidth(a0)
+		move.b	#30/2,obHeight(a0)
+		move.b	#30/2,obWidth(a0)
 		move.l	#Map_Brick,obMap(a0)
 		move.w	#ArtTile_Level|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.w	obY(a0),brick_origY(a0)
 		move.w	#$5C0,objoff_32(a0)
 
@@ -35,9 +35,9 @@ Brick_Action:	; Routine 2
 		add.w	d0,d0
 		move.w	Brick_TypeIndex(pc,d0.w),d1
 		jsr	Brick_TypeIndex(pc,d1.w)
-		move.w	#$10+sonic_solid_width,d1
-		move.w	#$10,d2
-		move.w	#$11,d3
+		move.w	#32/2+sonic_solid_width,d1
+		move.w	#32/2,d2
+		move.w	#34/2,d3
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 

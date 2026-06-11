@@ -18,7 +18,7 @@ Edge_Main:	; Routine 0
 		move.l	#Map_Edge,obMap(a0)
 		move.w	#ArtTile_GHZ_Edge_Wall|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.b	#6,obPriority(a0)
 		move.b	obSubtype(a0),obFrame(a0) ; copy object type number to frame number
 		bclr	#4,obFrame(a0)	; clear 4th bit (deduct $10)
@@ -28,8 +28,8 @@ Edge_Main:	; Routine 0
 ; ===========================================================================
 
 Edge_Solid:	; Routine 2
-		move.w	#$13,d1
-		move.w	#$28,d2
+		move.w	#38/2,d1
+		move.w	#80/2,d2
 		bsr.w	EdgeWall_SolidWall
 
 Edge_Display:	; Routine 4
