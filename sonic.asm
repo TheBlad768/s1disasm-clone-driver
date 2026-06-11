@@ -4041,7 +4041,7 @@ Demo_EndGHZ2:	include	"demodata/Ending - GHZ2.asm"
 ; ===========================================================================
 ; >>> Various level objects
 		include	"_incObj/11 GHZ Bridge.asm"
-		include	"_incObj/15 Swinging Platforms.asm"
+		include	"_incObj/15 Swinging Platforms.asm"	; includes "MvSonicOnPtfm" subroutine
 		include	"_incObj/17 GHZ Spiked Pole Helix.asm"
 		include	"_incObj/18 Platforms.asm"
 		include	"_incObj/19 Unused - Blank.asm" ; this was the rolling GHZ ball in the prototype

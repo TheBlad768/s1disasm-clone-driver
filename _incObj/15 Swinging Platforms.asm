@@ -159,48 +159,14 @@ Swing_Action2:	; Routine 4
 		bra.w	Swing_ChkDel
 
 		rts	; redundant rts
+; ===========================================================================
 
+		; shared by other platform objects
+		include "_incObj/sub MvSonicOnPtfm.asm"
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to	update Sonic's position when standing on a platform
-; (shared by other platform objects)
-; ---------------------------------------------------------------------------
-
-MvSonicOnPtfm:	; platform height is taken from d3
-		lea	(v_player).w,a1
-		move.w	obY(a0),d0
-		sub.w	d3,d0
-		bra.s	MvSonic2
-; ===========================================================================
-
-MvSonicOnPtfm2:	; platform height is assumed to be 9
-		lea	(v_player).w,a1
-		move.w	obY(a0),d0
-		subi.w	#9,d0
-
-MvSonic2:
-		tst.b	(f_playerctrl).w
-		bmi.s	.return
-		cmpi.b	#6,(v_player+obRoutine).w
-		bhs.s	.return
-		tst.w	(v_debuguse).w
-		bne.s	.return
-		moveq	#0,d1
-		move.b	obHeight(a1),d1
-		sub.w	d1,d0
-		move.w	d0,obY(a1)
-		sub.w	obX(a0),d2
-		sub.w	d2,obX(a1)
-
-	.return:
-		rts
-; End of function MvSonicOnPtfm
-
-
-; ===========================================================================
-; ---------------------------------------------------------------------------
-; Object 15 (part 2)
+; Subroutine to update swinging angle and positions for chain links and platform
 ; ---------------------------------------------------------------------------
 
 Swing_Move:
@@ -213,16 +179,11 @@ Swing_Move:
 
 loc_7B78:
 		bra.s	Swing_Move2
-; End of function Swing_Move
 
-; ===========================================================================
-; ---------------------------------------------------------------------------
-; Subroutine to update swinging angle and positions for chain links and ball
-; (Called from Object 48)
 ; ---------------------------------------------------------------------------
 
 ; Obj48_Move:
-GBall_Move:
+GBall_Move:	; called from wrecking ball for GHZ boss
 		tst.b	objoff_3D(a0)			; is ball on the left side of the screen?
 		bne.s	.left_side			; if yes, branch
 		move.w	objoff_3E(a0),d0
@@ -253,8 +214,8 @@ GBall_Move:
 
 Swing_Move2:
 		bsr.w	CalcSine
-		move.w	objoff_38(a0),d2
-		move.w	objoff_3A(a0),d3
+		move.w	swing_origY(a0),d2
+		move.w	swing_origX(a0),d3
 		lea	obSubtype(a0),a2
 		moveq	#0,d6
 		move.b	(a2)+,d6
@@ -278,12 +239,13 @@ loc_7BCE:
 		move.w	d5,obX(a1)
 		dbf	d6,loc_7BCE
 		rts
-; End of function Swing_Move2
+; End of function Swing_Move
 
+; ===========================================================================
 ; ===========================================================================
 
 Swing_ChkDel:
-		out_of_range.w	Swing_DelAll,objoff_3A(a0)
+		out_of_range.w	Swing_DelAll,swing_origX(a0)
 	if FixBugs
 		; This has been moved to prevent a display-after-free bug.
 		bra.w	DisplaySprite
