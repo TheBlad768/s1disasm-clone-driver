@@ -198,9 +198,18 @@ Got_ChgPos2:
 		add.w	d1,obX(a0)	; change item's position
 		move.w	obX(a0),d0
 		bmi.s	locret_C748
+
+
 		cmpi.w	#$200,d0	; has item moved beyond $200 on x-axis?
+	if FixBugs
+		; See the fix at Card_NoMove
+		bgt.s	locret_C748	; if yes, branch
+		cmpi.w	#$50,d0
+		bgt.w	DisplaySprite
+	else
 		bhs.s	locret_C748	; if yes, branch
 		bra.w	DisplaySprite
+	endif
 ; ===========================================================================
 
 locret_C748:
