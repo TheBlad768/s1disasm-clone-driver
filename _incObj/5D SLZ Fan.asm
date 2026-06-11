@@ -36,6 +36,11 @@ Fan_Delay:	; Routine 2
 .blow:
 		tst.b	fan_switch(a0)	; is fan switched on?
 		bne.w	.chkdel		; if not, branch
+	if FixBugs
+		; Fix fans affecting debug mode
+		tst.w	(v_debuguse).w	; is debug mode active?
+		bne.s	.animate	; if yes, branch
+	endif
 		lea	(v_player).w,a1
 		move.w	obX(a1),d0
 		sub.w	obX(a0),d0

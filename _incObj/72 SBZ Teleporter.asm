@@ -48,6 +48,11 @@ loc_166E0:
 		addi.w	#$20,d1
 		cmpi.w	#$40,d1
 		bhs.s	locret_1675C
+	if FixBugs
+		; Fix being able to activate teleporters while in debug mode
+		tst.w	(v_debuguse).w		; is debug mode active?
+		bne.s	locret_1675C		; if yes, branch
+	endif
 		tst.b	(f_playerctrl).w
 		bne.s	locret_1675C
 		cmpi.b	#7,obSubtype(a0)
