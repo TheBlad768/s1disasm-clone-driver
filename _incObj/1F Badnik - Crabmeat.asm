@@ -19,14 +19,14 @@ crab_mode = objoff_32
 ; ===========================================================================
 
 Crab_Main:	; Routine 0
-		move.b	#$10,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#32/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		move.l	#Map_Crab,obMap(a0)
 		move.w	#ArtTile_Crabmeat,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#6,obColType(a0)
-		move.b	#$15,obActWid(a0)
+		move.b	#42/2,obActWid(a0)
 		bsr.w	ObjectFall
 		jsr	(ObjFloorDist).l	; find floor
 		tst.w	d1
@@ -192,7 +192,7 @@ Crab_BallMain:	; Routine 6
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
 		move.b	#$87,obColType(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.w	#-$400,obVelY(a0)
 		move.b	#7,obAnim(a0)
 

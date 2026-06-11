@@ -19,7 +19,7 @@ Elec_Main:	; Routine 0
 		move.l	#Map_Elec,obMap(a0)
 		move.w	#ArtTile_SBZ_Electric_Orb,obGfx(a0)
 		ori.b	#4,obRender(a0)
-		move.b	#$28,obActWid(a0)
+		move.b	#80/2,obActWid(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; read object type
 		lsl.w	#4,d0		; multiply by $10

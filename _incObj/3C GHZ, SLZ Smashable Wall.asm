@@ -22,15 +22,15 @@ Smash_Main:	; Routine 0
 		move.l	#Map_Smash,obMap(a0)
 		move.w	#ArtTile_GHZ_SLZ_Smashable_Wall|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
 		move.b	obSubtype(a0),obFrame(a0)
 
 Smash_Solid:	; Routine 2
 		move.w	(v_player+obVelX).w,smash_speed(a0) ; load Sonic's horizontal speed
-		move.w	#$10+sonic_solid_width,d1
-		move.w	#$20,d2
-		move.w	#$20,d3
+		move.w	#32/2+sonic_solid_width,d1
+		move.w	#64/2,d2
+		move.w	#64/2,d3
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 		btst	#5,obStatus(a0)	; is Sonic pushing against the wall?

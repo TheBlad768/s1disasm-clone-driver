@@ -77,7 +77,7 @@ CStom_MakeStomper:
 		move.b	#4,obRender(a1)
 		move.w	obY(a1),objoff_30(a1)
 		move.b	obSubtype(a0),obSubtype(a1)
-		move.b	#$10,obActWid(a1)
+		move.b	#32/2,obActWid(a1)
 		move.w	d2,objoff_34(a1)
 		move.b	#4,obPriority(a1)
 		move.b	(a2)+,obFrame(a1)
@@ -88,7 +88,7 @@ CStom_MakeStomper:
 		andi.w	#$F0,d0
 		cmpi.w	#$20,d0
 		beq.s	CStom_MakeStomper
-		move.b	#$38,obActWid(a1)
+		move.b	#112/2,obActWid(a1)
 		move.b	#$90,obColType(a1)
 		addq.w	#1,d1
 
@@ -120,8 +120,8 @@ CStom_Block:	; Routine 2
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		addi.w	#sonic_solid_width,d1
-		move.w	#$C,d2
-		move.w	#$D,d3
+		move.w	#24/2,d2
+		move.w	#26/2,d3
 		move.w	obX(a0),d4
 		bsr.w	SolidObject
 		btst	#3,obStatus(a0)
@@ -142,7 +142,7 @@ CStom_Display:
 
 ; loc_B7E2:
 CStom_Chain:	; Routine 8
-		move.b	#$80,obHeight(a0)
+		move.b	#256/2,obHeight(a0)
 		bset	#4,obRender(a0)
 		movea.l	objoff_3C(a0),a1
 		move.b	objoff_32(a1),d0

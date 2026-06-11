@@ -51,6 +51,11 @@ PlatformObject:
 		cmpi.w	#-16,d0
 		blo.w	Plat_Exit				; branch if Sonic is more than 16px below top of platform
 
+	if FixBugs
+		; Fix getting stuck on platforms when entering debug mode
+		tst.w	(v_debuguse).w				; is debug mode active?
+		bne.w	Plat_Exit				; if yes, prevent getting stuck to platform
+	endif
 		tst.b	(f_playerctrl).w			; is object collision off?
 		bmi.w	Plat_Exit				; if yes, branch
 		cmpi.b	#6,obRoutine(a1)			; is Sonic dying?

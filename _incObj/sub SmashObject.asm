@@ -49,7 +49,7 @@ SmashObject:
 		move.w	(a4)+,obVelY(a1)		; load next Y-speed from input array
 
 	if FixBugs=0
-		; This check ensures that fragments that are loader earlier in RAM than
+		; This check ensures that fragments that are loaded earlier in RAM than
 		; the first fragment will still be handled on the frame they are spawned in,
 		; because ExecuteObjects has already gone past that RAM location.
 		; However, the above fix makes this special case redundant.

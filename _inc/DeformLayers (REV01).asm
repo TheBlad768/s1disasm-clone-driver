@@ -625,7 +625,7 @@ Deform_SBZ2:;loc_68A2:
 		asl.l	#5,d5
 		bsr.w	BGScroll_XY
 		move.w	(v_bgscreenposy).w,(v_bgscrposy_vdp).w
-	; copy fg & bg x-position to hscroll table
+	; copy fg & bg x-position to h-scroll table
 		lea	(v_hscrolltablebuffer).w,a1
 		move.w	#223,d1
 		move.w	(v_screenposx).w,d0

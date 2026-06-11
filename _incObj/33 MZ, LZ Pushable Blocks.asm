@@ -12,14 +12,14 @@ PushB_Index:	dc.w PushB_Main-PushB_Index
 		dc.w PushB_Action-PushB_Index
 		dc.w PushB_ChkVisible-PushB_Index
 
-PushB_Var:	dc.b $10, 0	; object width, frame number
-		dc.b $40, 1
+PushB_Var:	dc.b 32/2,  0	; object width, frame number
+		dc.b 128/2, 1
 ; ===========================================================================
 
 PushB_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.b	#$F,obHeight(a0)
-		move.b	#$F,obWidth(a0)
+		move.b	#30/2,obHeight(a0)
+		move.b	#30/2,obWidth(a0)
 		move.l	#Map_Push,obMap(a0)
 		move.w	#ArtTile_MZ_Block|Tile_Pal3,obGfx(a0) ; MZ specific code
 		cmpi.b	#id_LZ,(v_zone).w
@@ -58,8 +58,8 @@ PushB_Action:	; Routine 2
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		addi.w	#sonic_solid_width,d1
-		move.w	#$10,d2
-		move.w	#$11,d3
+		move.w	#32/2,d2
+		move.w	#34/2,d3
 		move.w	obX(a0),d4
 		bsr.w	loc_C186
 		cmpi.w	#id_MZ_act1,(v_zone).w ; is the level MZ act 1?
@@ -179,8 +179,8 @@ loc_C0E6:
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		addi.w	#sonic_solid_width,d1
-		move.w	#$10,d2
-		move.w	#$11,d3
+		move.w	#32/2,d2
+		move.w	#34/2,d3
 		move.w	(sp)+,d4
 		bsr.w	loc_C186
 		bsr.s	PushB_ChkLava

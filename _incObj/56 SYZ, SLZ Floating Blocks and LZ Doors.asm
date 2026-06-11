@@ -16,15 +16,15 @@ fb_origY = objoff_30		; original y-axis position
 fb_height = objoff_3A		; total object height
 fb_type = objoff_3C		; subtype (2nd digit only)
 
-FBlock_Var:	; width/2, height/2
-		dc.b  $10, $10	; subtype 0x/8x
-		dc.b  $20, $20	; subtype 1x/9x
-		dc.b  $10, $20	; subtype 2x/Ax
-		dc.b  $20, $1A	; subtype 3x/Bx
-		dc.b  $10, $27	; subtype 4x/Cx
-		dc.b  $10, $10	; subtype 5x/Dx
-		dc.b	8, $20	; subtype 6x/Ex
-		dc.b  $40, $10	; subtype 7x/Fx
+FBlock_Var:	; width, height
+		dc.b  32/2, 32/2	; subtype 0x/8x
+		dc.b  64/2, 64/2	; subtype 1x/9x
+		dc.b  32/2, 64/2	; subtype 2x/Ax
+		dc.b  64/2, 52/2	; subtype 3x/Bx
+		dc.b  32/2, 78/2	; subtype 4x/Cx
+		dc.b  32/2, 32/2	; subtype 5x/Dx
+		dc.b  16/2, 64/2	; subtype 6x/Ex
+		dc.b  128/2, 32/2	; subtype 7x/Fx
 ; ===========================================================================
 
 FBlock_Main:	; Routine 0

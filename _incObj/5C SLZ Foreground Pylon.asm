@@ -16,7 +16,7 @@ Pyl_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_Pylon,obMap(a0)
 		move.w	#ArtTile_SLZ_Pylon|Tile_Prio,obGfx(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 
 Pyl_Display:	; Routine 2
 		move.l	(v_screenposx).w,d1

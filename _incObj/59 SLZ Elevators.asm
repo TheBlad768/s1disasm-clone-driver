@@ -19,7 +19,7 @@ Elev_Index:	dc.w Elev_Main-Elev_Index
 		dc.w Elev_Action-Elev_Index
 		dc.w Elev_MakeMulti-Elev_Index
 
-Elev_Var1:	dc.b $28, 0		; width, frame number
+Elev_Var1:	dc.b 80/2, 0		; width, frame number
 
 Elev_Var2:	dc.b $10, 1		; distance to move, action type
 		dc.b $20, 1

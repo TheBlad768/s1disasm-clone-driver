@@ -287,7 +287,7 @@ SetupValues:	dc.w $8000				; VDP register start number
 	SetupValues_VDP:
 		; Note that most of these are immediately overwritten again in VDPSetupArray
 		dc.b 4					; VDP $80 - 8-colour mode
-		dc.b $14				; VDP $81 - Megadrive mode, DMA enable
+		dc.b $14				; VDP $81 - Mega Drive mode, DMA enable
 		dc.b ($C000>>10)			; VDP $82 - foreground nametable address
 		dc.b ($F000>>10)			; VDP $83 - window nametable address
 		dc.b ($E000>>13)			; VDP $84 - background nametable address
@@ -299,10 +299,10 @@ SetupValues:	dc.w $8000				; VDP register start number
 		dc.b 255				; VDP $8A - HBlank register
 		dc.b 0					; VDP $8B - full screen scroll
 		dc.b $81				; VDP $8C - 40 cell display
-		dc.b ($DC00>>10)			; VDP $8D - hscroll table address
+		dc.b ($DC00>>10)			; VDP $8D - hs-croll table address
 		dc.b 0					; VDP $8E - unused
 		dc.b 1					; VDP $8F - VDP increment
-		dc.b 1					; VDP $90 - 64 cell hscroll size
+		dc.b 1					; VDP $90 - 64 cell h-scroll size
 		dc.b 0					; VDP $91 - window h position
 		dc.b 0					; VDP $92 - window v position
 		dc.w $FFFF				; VDP $93/94 - DMA length
@@ -375,7 +375,7 @@ CheckSumCheck:
 
 		movea.l	#Checksum,a1			; read the checksum
 		cmp.w	(a1),d1				; compare calculated value with checksum in ROM header
-		bne.w	CheckSumError			; if they don't match, a checksum error has occured
+		bne.w	CheckSumError			; if they don't match, a checksum error has occurred
 	endif
 
 CheckSumOk:
@@ -648,9 +648,9 @@ VBlank:
 		move.l	(v_scrposy_vdp).w,(vdp_data_port).l ; send screen y-axis pos. to VSRAM
 
 		; Wait here in a loop doing nothing for a while. This seems to be a pretty harsh attempt
-		; to push CRAM dots outside of the visable view area, due to Sonic 1 not using all
+		; to push CRAM dots outside of the visible view area, due to Sonic 1 not using all
 		; the available screen space PAL offers, as they would otherwise be seen at the bottom.
-		btst	#6,(v_megadrive).w		; is Megadrive PAL?
+		btst	#6,(v_megadrive).w		; is Mega Drive PAL?
 		beq.s	.notPAL				; if not, branch
 		move.w	#$700,d0			; set to waste a bunch of cycles
 	.waitPAL:
@@ -711,7 +711,7 @@ VBlank_Lag:
 
 		; Same as in the opening block of the VBlank routine, this time during a lag frame.
 		; This only happens if the level is LZ (note, Sonic 2/3/&K would change this so it runs in any level).
-		btst	#6,(v_megadrive).w		; is Megadrive PAL?
+		btst	#6,(v_megadrive).w		; is Mega Drive PAL?
 		beq.s	.paletteTransfer		; if not, branch
 		move.w	#$700,d0			; set to waste a bunch of cycles
 	.waitPAL:
@@ -721,7 +721,7 @@ VBlank_Lag:
 		move.w	#1,(f_hblank_pal).w		; set HBlank flag
 		stopZ80					; stop Z80 for CRAM transfers
 		waitZ80					; wait until Z80 has stopped
-		tst.b	(f_wtr_state).w			; is the screen completely underewater?
+		tst.b	(f_wtr_state).w			; is the screen completely underwater?
 		bne.s	.waterAbove 			; if not, branch
 		writeCRAM	v_palette,0		; write regular palette buffer to CRAM
 		bra.s	.waterBelow			; skip over
@@ -1059,7 +1059,7 @@ HBlank:
 JoypadInit:
 		stopZ80					; request Z80 stop on
 		waitZ80					; wait until it has stopped
-		moveq	#$40,d0				; prepare intialise value
+		moveq	#$40,d0				; prepare initialise value
 		move.b	d0,(port_1_control).l		; init port 1 (joypad 1)
 		move.b	d0,(port_2_control).l		; init port 2 (joypad 2)
 		move.b	d0,(expansion_control).l	; init port 3 (expansion/extra)
@@ -1616,7 +1616,7 @@ PalCycle_Sega:
 
 ; loc_206A:
 PCycSega_FadeIn:
-		subq.b	#1,(v_pcyc_time).w		; decrement delay until next brightess increase
+		subq.b	#1,(v_pcyc_time).w		; decrement delay until next brightness increase
 		bpl.s	.delayFadeIn			; does delay time remain? if yes, branch
 
 		move.b	#4,(v_pcyc_time).w		; reset delay between fade-in increments
@@ -1812,7 +1812,7 @@ GM_Sega:
 		disable_display				; disable screen output
 		bsr.w	ClearScreen			; wipe the screen
 
-		locVRAM	ArtTile_Sega_Tiles*tile_size	; set target VRAM location for Sega logo pattenrs
+		locVRAM	ArtTile_Sega_Tiles*tile_size	; set target VRAM location for Sega logo patterns
 		lea	(Nem_SegaLogo).l,a0		; load Sega logo patterns
 		bsr.w	NemDec				; decompress Nemesis-compressed patterns directly to VRAM
 
@@ -1970,7 +1970,7 @@ Tit_LoadText:
 		bsr.w	KosDec				; decompress Kosinski-compressed chunks mappings to buffer
 
 		bsr.w	LevelLayoutLoad			; load level layout for the background
-		bsr.w	PaletteFadeOut			; fade-out "SONIC TEAM PRESENtS" screen
+		bsr.w	PaletteFadeOut			; fade-out "SONIC TEAM PRESENTS" screen
 ; ---------------------------------------------------------------------------
 
 		; "SONIC TEAM PRESENTS" screen has faded out, load remaining patterns and fade in
@@ -2031,7 +2031,7 @@ Tit_LoadText:
 
 .isjap:
 		move.b	#id_PSBTM,(v_ttlsonichide).w	; load title screen HUD object
-		move.b	#2,(v_ttlsonichide+obFrame).w	; load object which hides part of Sonic's torse behind the emblem
+		move.b	#2,(v_ttlsonichide+obFrame).w	; load object which hides part of Sonic's torso behind the emblem
 
 		jsr	(ExecuteObjects).l		; load title screen objects
 		bsr.w	DeformLayers			; initialize background deformation before fade-in

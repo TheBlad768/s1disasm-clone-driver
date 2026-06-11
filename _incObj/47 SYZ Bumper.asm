@@ -17,7 +17,7 @@ Bump_Main:	; Routine 0
 		move.l	#Map_Bump,obMap(a0)
 		move.w	#ArtTile_SYZ_Bumper,obGfx(a0)
 		move.b	#4,obRender(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#1,obPriority(a0)
 		move.b	#$D7,obColType(a0)
 

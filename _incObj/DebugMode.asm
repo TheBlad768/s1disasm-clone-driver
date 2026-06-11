@@ -32,7 +32,24 @@ Debug_Init:	; Routine 0
 
 		move.b	#fr_Null,obFrame(a0)			; set Sonic's frame to null (blank)
 		move.b	#id_Walk,obAnim(a0)			; set Sonic's animation to null (walk)
+
 	if FixBugs
+		; Fix various issues caused by entering debug mode.
+		; Reset Sonic to normal state and clear various flags.
+		bset	#1,obStatus(a0)				; force airborne state to speed up vertical camera
+		move.b	#2,obRoutine(a0)			; force to Sonic_Control routine
+		move.w	#$60,(v_lookshift).w			; reset up/down camera shift
+
+		moveq	#0,d0					; set to clear values
+		move.b	d0,(f_playerctrl).w			; clear control override flag
+		move.b	d0,(f_nobgscroll).w			; clear deform stop flag
+		move.w	d0,obVelX(a0)				; clear X-velocity
+		move.w	d0,obVelY(a0)				; clear Y-velocity
+		move.w	d0,obInertia(a0)			; clear ground speed
+		move.b	d0,obAngle(a0)				; clear angle
+		move.b	d0,jumping(a0)				; clear jump flag
+		move.b	d0,sticktoconvex(a0)			; clear SBZ gear flag
+
 		; Debug Mode makes no attempt to check if Sonic was standing on any
 		; object before entering it, causing behavior such as being stuck to
 		; platforms or warped back down to an object that Sonic was previously
@@ -40,17 +57,25 @@ Debug_Init:	; Routine 0
 		btst	#3,obStatus(a0)				; is Sonic standing on an object?
 		beq.s	.notOnObject				; if not, branch
 		bclr	#3,obStatus(a0)				; clear Sonic's standing flag
-		moveq	#0,d0
 		move.b	standonobject(a0),d0			; get object ID
 		clr.b	standonobject(a0)			; clear object ID
-		lsl.w	#object_size_bits,d0
-		addi.l	#v_objspace&$FFFFFF,d0
-		movea.l	d0,a2
+		lsl.w	#object_size_bits,d0			; multiply by $40 (object_size)
+		addi.l	#v_objspace&$FFFFFF,d0			; add base object RAM location
+		movea.l	d0,a2					; a2 = address of stood-on object
 		bclr	#3,obStatus(a2)				; clear object's standing flag
-		clr.b	obSolid(a2)
+		clr.b	obSolid(a2)				; clear object's solid state
+	.notOnObject:
 
-.notOnObject:
+		; Exit underwater state if applicable
+		bclr	#6,obStatus(a0)				; clear underwater status
+		beq.s	.notUnderwater				; if Sonic wasn't underwater, branch
+		jsr	(ResumeMusic).l				; resume music after a countdown
+		move.w  #$600,(v_sonspeedmax).w			; restore Sonic's speed
+		move.w  #$C,(v_sonspeedacc).w			; restore Sonic's acceleration
+		move.w  #$80,(v_sonspeeddec).w			; restore Sonic's deceleration
+	.notUnderwater:
 	endif
+
 		cmpi.b	#id_Special,(v_gamemode).w		; is game mode $10 (special stage)?
 		bne.s	.isLevel				; if not, branch
 		move.w	#0,(v_ssrotate).w			; stop special stage rotating
@@ -78,9 +103,9 @@ Debug_Init:	; Routine 0
 		; If the D-Pad is held while entering debug mode, the initial move speed
 		; is incredibly slow. The cause is this value getting set to just a 1,
 		; instead of the normal 15 when no D-Pad button is pressed in Debug_Control.
-		move.b	#debug_startspeed,(v_debugspeed).w	; set inital move speed (normal 15)
+		move.b	#debug_startspeed,(v_debugspeed).w	; set initial move speed (normal 15)
 	else
-		move.b	#1,(v_debugspeed).w			; set inital move speed (just 1)
+		move.b	#1,(v_debugspeed).w			; set initial move speed (just 1)
 	endif
 ; ---------------------------------------------------------------------------
 
@@ -144,8 +169,8 @@ Debug_Move:
 		moveq	#0,d1					; clear d1
 		move.b	(v_debugspeed).w,d1			; get current debug move speed
 		addq.w	#1,d1					; add one unit to base speed (at max speed, $FF+1=$100)
-		swap	d1					; move delta to upper word (calcuations use longwords for subpixels)
-		asr.l	#4,d1					; divide speed by 16 to reasonably slow it down (upper nybble is pixels per seconds)
+		swap	d1					; move delta to upper word (calculations use longwords for subpixels)
+		asr.l	#4,d1					; divide speed by 16 to reasonably slow it down (upper nybble is pixels per frame)
 
 		move.l	obY(a0),d2				; d2 = current debug object Y-position
 		move.l	obX(a0),d3				; d3 = current debug object X-position

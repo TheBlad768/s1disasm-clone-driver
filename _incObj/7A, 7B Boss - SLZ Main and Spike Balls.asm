@@ -60,7 +60,7 @@ BossStarLight_LoadBoss:
 		move.l	#Map_Eggman,obMap(a1) 			; load mappings and graphics for the object
 		move.w	#ArtTile_Eggman,obGfx(a1)
 		move.b	#4,obRender(a1) 			; set the object to position based on where it is in the level and not a static position on screen
-		move.b	#$20,obActWid(a1) 			; define horizontal width radius (used to hide objects when they leave the screen space)
+		move.b	#64/2,obActWid(a1) 			; define horizontal width radius (used to hide objects when they leave the screen space)
 
 ; objoff_34 is used here as a reference back to the main boss controller. 
 ; This is because when we are in ExecuteObjects, a0 is set to each object and sub objects own slot, so we need a way to find the original boss object.
@@ -108,7 +108,7 @@ BossStarLight_ShipMain:	; Routine 2
 ; obStatus stores the logical bits, but obRender is visual bits, so this simply moves them from one to the other
 
 		moveq	#3,d0 					; move first 2 bits into d0
-		and.b	obStatus(a0),d0 			; AND with obstatus so now d0 contains X and Y logical flip bits only
+		and.b	obStatus(a0),d0 			; AND with obStatus so now d0 contains X and Y logical flip bits only
 		andi.b	#$FC,obRender(a0) 			; clear the x and y flip
 		or.b	d0,obRender(a0) 			; OR the two together, so now DisplaySprite has X and Y orientation and above render bits
 		jmp	(DisplaySprite).l
@@ -502,7 +502,7 @@ BossStarLight_PipeMain:	; Routine 8
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 7B - exploding spikeys that Eggman drops (SLZ)
+; Object 7B - exploding spike balls that Eggman drops (SLZ)
 ; ---------------------------------------------------------------------------
 
 BossSpikeball:
@@ -516,7 +516,7 @@ BossSpikeball:
 		subi.w	#$80,d1
 		andi.w	#$FF80,d1
 		sub.w	d1,d0
-		bmi.w	BossStarLight_Delete
+		bmi.w	BossStarLight_Delete ; this bmi isn't in the common out_of_range macro (and redundant)
 		cmpi.w	#$280,d0
 		bhi.w	BossStarLight_Delete
 		jmp	(DisplaySprite).l
@@ -537,7 +537,7 @@ BossSpikeball_Main:	; Routine 0
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$8B,obColType(a0)
-		move.b	#$C,obActWid(a0)
+		move.b	#24/2,obActWid(a0)
 		movea.l	objoff_3C(a0),a1
 		move.w	obX(a1),obBossX(a0)
 		move.w	obY(a1),objoff_34(a0)
@@ -866,7 +866,7 @@ BossSpikeball_Loop:
 		move.b	#$98,obColType(a1)
 		ori.b	#4,obRender(a1)
 		bset	#7,obRender(a1)
-		move.b	#$C,obActWid(a1)
+		move.b	#24/2,obActWid(a1)
 
 loc_1909A:
 		dbf	d1,BossSpikeball_Loop	; repeat sequence 3 more times

@@ -115,7 +115,7 @@ v_jpadpress1:		ds.b	1		; joypad input - pressed
 			ds.b	6		; unused
 v_vdp_buffer1:		ds.w	1		; VDP instruction buffer of register $81 (used for enabling/disabling display)
 			ds.b	6		; unused
-v_generictimer:		ds.w	1		; generic timer, decrements to 0 in vblank (word)
+v_generictimer:		ds.w	1		; generic timer, decrements to 0 in VBlank (word)
 v_scrposy_vdp:		ds.w	1		; screen position y (VDP)
 v_bgscrposy_vdp:	ds.w	1		; background screen position y (VDP)
 v_scrposx_vdp:		ds.w	1		; screen position x (VDP)
@@ -129,7 +129,7 @@ v_pfade_start:		ds.b	1		; palette fading - start position in bytes
 v_pfade_size:		ds.b	1		; palette fading - number of colours
 
 v_misc_variables:
-v_vblank_0e_counter:	ds.b	1		; tracks how many times vertical interrupts routine 0E occured (pretty much unused because routine 0E is unused)
+v_vblank_0e_counter:	ds.b	1		; tracks how many times vertical interrupts routine 0E occurred (pretty much unused because routine 0E is unused)
 			ds.b	1		; unused
 v_vblank_routine:	ds.b	1		; VBlank - routine counter (previously called v_vbla_routine)
 			ds.b	1		; unused
@@ -207,8 +207,8 @@ v_bg1_xblock:		ds.b	1		; background x-block parity (for redraw)
 v_bg1_yblock:		ds.b	1		; background y-block parity (for redraw)
 v_bg2_xblock:		ds.b	1		; secondary background x-block parity (for redraw)
 v_bg2_yblock:		ds.b	1		; secondary background y-block parity (unused)
-v_bg3_xblock:		ds.b	1		; teritary background x-block parity (for redraw)
-v_bg3_yblock:		ds.b	1		; teritary background y-block parity (unused)
+v_bg3_xblock:		ds.b	1		; tertiary background x-block parity (for redraw)
+v_bg3_yblock:		ds.b	1		; tertiary background y-block parity (unused)
 			ds.b	2		; unused
 v_fg_scroll_flags:	ds.w	1		; screen redraw flags for foreground
 v_bg1_scroll_flags:	ds.w	1		; screen redraw flags for background 1
@@ -269,7 +269,7 @@ v_gfxbigring:		ds.w	1		; settings for giant ring graphics loading
 f_conveyrev:		ds.b	1		; flag set to reverse conveyor belts in LZ/SBZ
 v_obj63:		ds.b	6		; object 63 (LZ/SBZ platforms) variables
 f_wtunnelmode:		ds.b	1		; LZ water tunnel mode
-f_playerctrl:		ds.b	1		; Player control override flags (object ineraction, control enable)
+f_playerctrl:		ds.b	1		; Player control override flags (object interaction, control enable)
 f_wtunnelallow:		ds.b	1		; LZ water tunnels (00 = enabled; 01 = disabled)
 f_slidemode:		ds.b	1		; LZ water slide mode
 v_obj6B:		ds.b	1		; object 6B (SBZ stomper) variable
@@ -362,7 +362,7 @@ v_timecent:	equ	v_time+3		; time - centiseconds
 v_score:		ds.l	1		; score
 			ds.b	2		; unused
 v_shield:		ds.b	1		; shield status (00 = no; 01 = yes)
-v_invinc:		ds.b	1		; invinciblity status (00 = no; 01 = yes)
+v_invinc:		ds.b	1		; invincibility status (00 = no; 01 = yes)
 v_shoes:		ds.b	1		; speed shoes status (00 = no; 01 = yes)
 v_unused1:		ds.b	1		; an unused fourth player status (Goggles?)
 
@@ -460,7 +460,7 @@ f_demo:			ds.w	1		; demo mode flag (0 = no; 1 = yes; $8001 = ending)
 v_demonum:		ds.w	1		; demo level number (not the same as the level number)
 v_creditsnum:		ds.w	1		; credits index number
 			ds.b	2		; unused
-v_megadrive:		ds.b	1		; Megadrive machine type
+v_megadrive:		ds.b	1		; Mega Drive machine type
 			ds.b	1		; unused
 f_debugmode:		ds.w	1		; debug mode flag
 v_init:			ds.l	1		; 'init' text string

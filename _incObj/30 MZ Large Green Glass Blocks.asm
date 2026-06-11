@@ -32,13 +32,13 @@ Glass_Vars2:	dc.b 6,	0, 2
 Glass_Main:	; Routine 0
 		lea	(Glass_Vars1).l,a2
 		moveq	#1,d1
-		move.b	#$48,obHeight(a0)
+		move.b	#144/2,obHeight(a0)
 		cmpi.b	#3,obSubtype(a0) ; is object type 0/1/2 ?
 		blo.s	.IsType012	; if yes, branch
 
 		lea	(Glass_Vars2).l,a2
 		moveq	#1,d1
-		move.b	#$38,obHeight(a0)
+		move.b	#112/2,obHeight(a0)
 
 .IsType012:
 		movea.l	a0,a1
@@ -62,13 +62,13 @@ Glass_Main:	; Routine 0
 		move.b	#4,obRender(a1)
 		move.w	obY(a1),objoff_30(a1)
 		move.b	obSubtype(a0),obSubtype(a1)
-		move.b	#$20,obActWid(a1)
+		move.b	#64/2,obActWid(a1)
 		move.b	#4,obPriority(a1)
 		move.b	(a2)+,obFrame(a1)
 		move.l	a0,glass_parent(a1)
 		dbf	d1,.Repeat	; repeat once to load "reflection object"
 
-		move.b	#$10,obActWid(a1)
+		move.b	#32/2,obActWid(a1)
 		move.b	#3,obPriority(a1)
 		addq.b	#8,obSubtype(a1)
 		andi.b	#$F,obSubtype(a1)
@@ -79,9 +79,9 @@ Glass_Main:	; Routine 0
 
 Glass_Block012:	; Routine 2
 		bsr.w	Glass_Types
-		move.w	#$20+sonic_solid_width,d1
-		move.w	#$48,d2
-		move.w	#$49,d3
+		move.w	#64/2+sonic_solid_width,d1
+		move.w	#144/2,d2
+		move.w	#146/2,d3
 		move.w	obX(a0),d4
 		bra.w	SolidObject
 ; ===========================================================================
@@ -95,9 +95,9 @@ Glass_Reflect012:
 
 Glass_Block34:	; Routine 6
 		bsr.w	Glass_Types
-		move.w	#$20+sonic_solid_width,d1
-		move.w	#$38,d2
-		move.w	#$39,d3
+		move.w	#64/2+sonic_solid_width,d1
+		move.w	#112/2,d2
+		move.w	#114/2,d3
 		move.w	obX(a0),d4
 		bra.w	SolidObject
 ; ===========================================================================

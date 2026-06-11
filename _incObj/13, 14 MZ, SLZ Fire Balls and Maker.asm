@@ -76,8 +76,8 @@ LBall_Speeds:	dc.w -$400, -$500, -$600, -$700, -$200
 
 LBall_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
-		move.b	#8,obHeight(a0)
-		move.b	#8,obWidth(a0)
+		move.b	#16/2,obHeight(a0)
+		move.b	#16/2,obWidth(a0)
 		move.l	#Map_Fire,obMap(a0)
 		move.w	#ArtTile_MZ_Fireball,obGfx(a0)
 		cmpi.b	#id_SLZ,(v_zone).w	; check if level is SLZ
@@ -98,11 +98,11 @@ LBall_Main:	; Routine 0
 		move.b	obSubtype(a0),d0
 		add.w	d0,d0
 		move.w	LBall_Speeds(pc,d0.w),obVelY(a0) ; load object speed (vertical)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		cmpi.b	#6,obSubtype(a0) ; is object type below $6 ?
 		blo.s	.sound		; if yes, branch
 
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#2,obAnim(a0)	; use horizontal animation
 		move.w	obVelY(a0),obVelX(a0) ; set horizontal speed
 		move.w	#0,obVelY(a0)	; delete vertical speed
@@ -139,7 +139,7 @@ LBall_TypeIndex:dc.w LBall_Type00-LBall_TypeIndex
 		dc.w LBall_Type07-LBall_TypeIndex
 		dc.w LBall_Type08-LBall_TypeIndex
 ; ===========================================================================
-; lavaball types 00-03 fly up and fall back down
+; lava ball types 00-03 fly up and fall back down
 
 LBall_Type00:
 		addi.w	#$18,obVelY(a0)	; increase object's downward speed

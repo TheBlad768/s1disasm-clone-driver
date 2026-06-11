@@ -747,7 +747,7 @@ smpsDetune macro val
 	dc.b	$E1,val
 	endm
 
-; E2xx - Useless
+; E2xx - Used for setting a variable which can be read by the game, for synchonisation. Ristar does this.
 smpsNop macro val
 	if SonicDriverVer<3
 		dc.b	$E2,val

@@ -13,6 +13,11 @@ ExitPlatform:
 ExitPlatform2:	; input width is already in d2
 		add.w	d2,d2				; double input platform width
 		lea	(v_player).w,a1			; load Sonic player object
+	if FixBugs
+		; Fix getting stuck on platforms when entering debug mode
+		tst.w	(v_debuguse).w			; is debug mode active?
+		bne.s	.exitedPlatform			; if yes, exit platform right away
+	endif
 		btst	#1,obStatus(a1)			; is Sonic airborne?
 		bne.s	.exitedPlatform			; if yes, exit platform right away
 

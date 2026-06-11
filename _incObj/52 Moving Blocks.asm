@@ -15,11 +15,11 @@ MBlock_Index:	dc.w MBlock_Main-MBlock_Index
 mblock_origX = objoff_30
 mblock_origY = objoff_32
 
-MBlock_Var:	dc.b $10, 0		; object width, frame number
-		dc.b $20, 1
-		dc.b $20, 2
-		dc.b $40, 3
-		dc.b $30, 4
+MBlock_Var:	dc.b 32/2, 0		; object width, frame number
+		dc.b 64/2, 1
+		dc.b 64/2, 2
+		dc.b 128/2, 3
+		dc.b 96/2, 4
 ; ===========================================================================
 
 MBlock_Main:	; Routine 0
@@ -207,7 +207,7 @@ MBlock_Type07:
 
 MBlock_07_ChkDel:
 		; This line, combined with the coordinate being pushed to
-		; the stack in MBlock_StandOn, can be disasterous.
+		; the stack in MBlock_StandOn, can be disastrous.
 		addq.l	#4,sp
 
 		out_of_range.w	DeleteObject,mblock_origX(a0)

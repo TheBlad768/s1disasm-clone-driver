@@ -77,9 +77,9 @@ Over_ChgMode:
 ; ===========================================================================
 
 Over_ResetLvl:
-		if Revision<>0
-			clr.l	(v_lamp_time).w
-		endif
+	if Revision<>0
+		clr.l	(v_lamp_time).w
+	endif
 		move.w	#1,(f_restart).w ; restart level
 
 Over_Display:

@@ -27,10 +27,10 @@ Pri_Index:	dc.w Pri_Main-Pri_Index
 
 pri_origY = objoff_30		; original y-axis position
 
-Pri_Var:	dc.b 2,	$20, 4,	0	; routine, width, priority, frame
-		dc.b 4,	$C, 5, 1
-		dc.b 6,	$10, 4,	3
-		dc.b 8,	$10, 3,	5
+Pri_Var:	dc.b 2,	64/2, 4, 0	; routine, width, priority, frame
+		dc.b 4,	24/2, 5, 1
+		dc.b 6,	32/2, 4, 3
+		dc.b 8,	32/2, 3, 5
 ; ===========================================================================
 
 Pri_Main:	; Routine 0
@@ -59,9 +59,9 @@ Pri_Main:	; Routine 0
 Pri_BodyMain:	; Routine 2
 		cmpi.b	#2,(v_bossstatus).w	; has the prison been opened?
 		beq.s	.open			; if yes, branch
-		move.w	#$20+sonic_solid_width,d1
-		move.w	#$18,d2
-		move.w	#$18,d3
+		move.w	#64/2+sonic_solid_width,d1
+		move.w	#48/2,d2
+		move.w	#48/2,d3
 		move.w	obX(a0),d4
 		jmp	(SolidObject).l
 ; ===========================================================================
@@ -79,9 +79,9 @@ Pri_BodyMain:	; Routine 2
 ; ===========================================================================
 ; Pri_Switched:
 Pri_Switch:	; Routine 4
-		move.w	#$C+sonic_solid_width,d1
-		move.w	#8,d2
-		move.w	#8,d3
+		move.w	#24/2+sonic_solid_width,d1
+		move.w	#16/2,d2
+		move.w	#16/2,d3
 		move.w	obX(a0),d4
 		jsr	(SolidObject).l
 		lea	(Ani_Pri).l,a1

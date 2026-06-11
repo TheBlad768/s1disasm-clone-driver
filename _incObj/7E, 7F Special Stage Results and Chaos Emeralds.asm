@@ -78,8 +78,15 @@ loc_C85A:
 		move.w	obX(a0),d0
 		bmi.s	locret_C86A
 		cmpi.w	#$200,d0	; has item moved beyond $200 on x-axis?
+	if FixBugs
+		; See the fix at Card_NoMove
+		bgt.s	locret_C86A	; if yes, branch
+		cmpi.w	#$50,d0
+		bgt.w	DisplaySprite
+	else
 		bhs.s	locret_C86A	; if yes, branch
 		bra.w	DisplaySprite
+	endif
 ; ===========================================================================
 
 locret_C86A:
@@ -157,7 +164,7 @@ SSR_Display2:
 		bra.w	DisplaySprite
 ; ===========================================================================
 SSR_Config:	dc.w $20, $120,	$C4	; start x-pos, main x-pos, y-pos
-		dc.b 2,	0		; rountine number, frame number
+		dc.b 2,	0		; routine number, frame number
 		dc.w $320, $120, $118
 		dc.b 2,	1
 		dc.w $360, $120, $128

@@ -18,7 +18,7 @@ Shi_Main:	; Routine 0
 		move.l	#Map_Shield,obMap(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		tst.b	obAnim(a0)	; is object a shield?
 		bne.s	.stars		; if not, branch
 		move.w	#ArtTile_Shield,obGfx(a0)	; shield specific code

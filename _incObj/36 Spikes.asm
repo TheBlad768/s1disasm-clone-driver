@@ -19,12 +19,12 @@ Spikes_Index:	dc.w Spikes_Main-Spikes_Index		; 0 - init
 		dc.w Spikes_Solid-Spikes_Index		; 2 - main mode
 ; ===========================================================================
 Spikes_Config:	; 	frame,	display and collision width/2
-		dc.b	0,	$28/2			; subtype $0x: 3 spikes, upright
-		dc.b	1,	$20/2			; subtype $1x: 3 spikes, sideways
-		dc.b	2,	$08/2			; subtype $2x: 1 spike,  upright
-		dc.b	3,	$38/2			; subtype $3x: 3 spikes, upright (wide)
-		dc.b	4,	$80/2			; subtype $4x: 6 spikes, upright (wide)
-		dc.b	5,	$20/2			; subtype $5x: 1 spike,  sideways
+		dc.b	0,	40/2			; subtype $0x: 3 spikes, upright
+		dc.b	1,	32/2			; subtype $1x: 3 spikes, sideways
+		dc.b	2,	8/2			; subtype $2x: 1 spike,  upright
+		dc.b	3,	56/2			; subtype $3x: 3 spikes, upright (wide)
+		dc.b	4,	128/2			; subtype $4x: 6 spikes, upright (wide)
+		dc.b	5,	32/2			; subtype $5x: 1 spike,  sideways
 		; (More spike types could theoretically be added here...)
 ; ===========================================================================
 
@@ -56,11 +56,11 @@ Spikes_Solid:	; Routine 2
 		beq.s	Spikes_SideWays			; if yes, branch
 		cmpi.b	#1,obFrame(a0)			; is spikes type $1x? (3 spikes, sideways)
 		bne.s	Spikes_Upright			; if not, branch (spikes are upright)
-		move.w	#$28/2,d2			; set collision height for triple sideways spikes
+		move.w	#40/2,d2			; set collision height for triple sideways spikes
 
 Spikes_SideWays:
 		; Spikes types $1x and $5x face sideways
-		move.w	#$10+sonic_solid_width,d1	; set collision width for sideways spikes
+		move.w	#32/2+sonic_solid_width,d1	; set collision width for sideways spikes
 		move.w	d2,d3				; copy collision height to secondary height input
 		addq.w	#1,d3				; secondary height is +1
 		move.w	obX(a0),d4			; set base X-position for collision detection
@@ -91,8 +91,8 @@ Spikes_Upright:
 		moveq	#0,d1				; clear d1
 		move.b	obActWid(a0),d1			; use display width as damage trigger width
 		addi.w	#sonic_solid_width,d1		; add Sonic's collision width to trigger width
-		move.w	#$20/2,d2			; set collision height for upright spikes
-		move.w	#($20/2)+1,d3			; secondary collision height is +1
+		move.w	#32/2,d2			; set collision height for upright spikes
+		move.w	#(32/2)+1,d3			; secondary collision height is +1
 		move.w	obX(a0),d4			; set base X-position for collision detection
 		bsr.w	SolidObject			; check if Sonic touched the spikes
 	if FixBugs
@@ -232,7 +232,7 @@ Spikes_WaitAndMove:
 
 		subi.w	#8*$100,spikes_move_pos(a0)	; move in by 8px
 		bhs.s	.return				; if still moving in, branch
-		move.w	#0,spikes_move_pos(a0)		; fix postion delta to 0px
+		move.w	#0,spikes_move_pos(a0)		; fix position delta to 0px
 		move.w	#0,spikes_move_direction(a0)	; set to retract spikes on next run
 		move.w	#60,spikes_move_delay(a0)	; set time delay to 1 second
 		bra.s	.return				; return (could've been an rts)

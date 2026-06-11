@@ -20,7 +20,7 @@ Fan_Main:	; Routine 0
 		move.l	#Map_Fan,obMap(a0)
 		move.w	#ArtTile_SLZ_Fan|Tile_Pal3,obGfx(a0)
 		ori.b	#4,obRender(a0)
-		move.b	#$10,obActWid(a0)
+		move.b	#32/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
 
 Fan_Delay:	; Routine 2
@@ -36,6 +36,11 @@ Fan_Delay:	; Routine 2
 .blow:
 		tst.b	fan_switch(a0)	; is fan switched on?
 		bne.w	.chkdel		; if not, branch
+	if FixBugs
+		; Fix fans affecting debug mode
+		tst.w	(v_debuguse).w	; is debug mode active?
+		bne.s	.animate	; if yes, branch
+	endif
 		lea	(v_player).w,a1
 		move.w	obX(a1),d0
 		sub.w	obX(a0),d0

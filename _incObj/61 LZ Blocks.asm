@@ -11,10 +11,10 @@ LabyrinthBlock:
 LBlk_Index:	dc.w LBlk_Main-LBlk_Index
 		dc.w LBlk_Action-LBlk_Index
 
-LBlk_Var:	dc.b $10, $10		; width, height
-		dc.b $20, $C
-		dc.b $10, $10
-		dc.b $10, $10
+LBlk_Var:	dc.b 32/2, 32/2		; width, height
+		dc.b 64/2, 24/2
+		dc.b 32/2, 32/2
+		dc.b 32/2, 32/2
 
 lblk_origX = objoff_34		; original x-axis position
 lblk_origY = objoff_30		; original y-axis position

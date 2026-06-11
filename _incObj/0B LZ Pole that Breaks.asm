@@ -21,7 +21,7 @@ Pole_Main:	; Routine 0
 		move.l	#Map_Pole,obMap(a0)
 		move.w	#ArtTile_LZ_Pole|Tile_Pal3,obGfx(a0)
 		move.b	#4,obRender(a0)
-		move.b	#8,obActWid(a0)
+		move.b	#16/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
 		move.b	#$E1,obColType(a0)
 		moveq	#0,d0
