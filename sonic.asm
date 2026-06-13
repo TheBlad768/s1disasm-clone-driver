@@ -3226,6 +3226,15 @@ GM_Special:	; white fade-out from previous game mode
 		bsr.w	PalLoad_Fade			; ...into the palette fade-in buffer
 		jsr	(SS_Load).l			; load SS layout data (based on last stage entered and collected emeralds)
 
+	if FixBugs
+		; Set custom level boundaries so that the fixed
+		; debug mode will not break for Special Stages.
+		move.w	#$2B0,(v_limittop2).w		; set top boundary
+		move.w	#$7D0,(v_limitbtm2).w		; set bottom boundary
+		move.w	#$2E0,(v_limitleft2).w		; set left boundary
+		move.w	#$7A0,(v_limitright2).w		; set right boundary
+	endif
+
 		move.l	#0,(v_screenposx).w		; reset X-camera position
 		move.l	#0,(v_screenposy).w		; reset Y-camera position
 		move.b	#id_SonicSpecial,(v_player).w	; load special stage Sonic object
