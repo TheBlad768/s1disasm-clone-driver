@@ -30,7 +30,7 @@ Spring_Index:	dc.w Spring_Main-Spring_Index		; 0
 		dc.w Spring_AniDown-Spring_Index	; 10
 		dc.w Spring_ResetDown-Spring_Index	; 12
 
-spring_pow: equ objoff_30		; power of current spring
+spring_pow:	equ objoff_30		; power of current spring
 
 Spring_Powers:	dc.w -$1000		; power of red spring
 		dc.w -$A00		; power of yellow spring
@@ -82,7 +82,7 @@ Spring_Up:	; Routine 2
 		bsr.w	SolidObject				; check Sonic's collision with spring
 		tst.b	obSolid(a0)				; is Sonic on top of the spring?
 		bne.s	.bounceUp				; if yes, branch
-		rts
+		rts						; return
 ; ---------------------------------------------------------------------------
 
 	; Spring_BounceUp:
@@ -108,7 +108,7 @@ Spring_AniUp:	; Routine 4
 Spring_ResetUp:	; Routine 6
 		move.b	#1,obPrevAni(a0)			; reset animation
 		subq.b	#4,obRoutine(a0)			; goto "Spring_Up" routine
-		rts
+		rts						; return
 ; ===========================================================================
 ; ===========================================================================
 
@@ -153,8 +153,8 @@ Spring_LR:	; Routine 8
 	.clearPush:
 		bclr	#5,obStatus(a0)				; clear spring's pushed flag
 		bclr	#5,obStatus(a1)				; clear Sonic's pushing flag
-		move.w	#sfx_Spring,d0
-		jsr	(QueueSound2).l				; play spring sound
+		move.w	#sfx_Spring,d0				; set spring sound
+		jsr	(QueueSound2).l				; play it
 ; ---------------------------------------------------------------------------
 
 Spring_AniLR:	; Routine $A
@@ -165,7 +165,7 @@ Spring_AniLR:	; Routine $A
 Spring_ResetLR:	; Routine $C
 		move.b	#2,obPrevAni(a0)			; reset animation
 		subq.b	#4,obRoutine(a0)			; goto "Spring_LR" routine
-		rts
+		rts						; return
 ; ===========================================================================
 ; ===========================================================================
 
@@ -189,7 +189,7 @@ Spring_Down:	; Routine $E
 
 	; locret_DCAE:
 	.return:
-		rts
+		rts						; return
 ; ---------------------------------------------------------------------------
 
 	; Spring_BounceDown:
@@ -203,8 +203,8 @@ Spring_Down:	; Routine $E
 		move.b	#2,obRoutine(a1)			; set Sonic to Sonic_Control routine
 		bclr	#3,obStatus(a0)				; clear spring's Sonic touch flag
 		clr.b	obSolid(a0)				; clear spring's solidity flag
-		move.w	#sfx_Spring,d0
-		jsr	(QueueSound2).l	; play spring sound
+		move.w	#sfx_Spring,d0				; set spring sound
+		jsr	(QueueSound2).l				; play it
 ; ---------------------------------------------------------------------------
 
 Spring_AniDown:	; Routine $10
@@ -216,7 +216,7 @@ Spring_ResetDown:
 		; Routine $12
 		move.b	#1,obPrevAni(a0)			; reset animation
 		subq.b	#4,obRoutine(a0)			; goto "Spring_Down" routine
-		rts
+		rts						; return
 ; ===========================================================================
 ; ===========================================================================
 

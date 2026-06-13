@@ -26,7 +26,7 @@ EEgg_Main:	; Routine 0
 		move.b	#0,obRender(a0)
 		move.b	#2,obPriority(a0)
 		move.b	#2,obAnim(a0)	; use "END" animation
-		cmpi.b	#6,(v_emeralds).w ; do you have all 6 emeralds?
+		cmpi.b	#ss_emeralds_num,(v_emeralds).w ; do you have all 6 emeralds?
 		beq.s	EEgg_Animate	; if yes, branch
 
 		move.b	#id_CreditsText,(v_tryagain).w ; load credits object
@@ -48,7 +48,7 @@ EEgg_Juggle:	; Routine 4
 
 .noflip:
 		lea	(v_eggmanchaos).w,a1 ; get RAM address for emeralds
-		moveq	#5,d1
+		moveq	#ss_emeralds_num-1,d1
 
 .emeraldloop:
 		move.b	d0,objoff_3E(a1)
@@ -92,7 +92,7 @@ TCha_Main:	; Routine 0
 		movea.l	a0,a1
 		moveq	#0,d2
 		moveq	#0,d3
-		moveq	#5,d1
+		moveq	#ss_emeralds_num-1,d1
 		sub.b	(v_emeralds).w,d1
 
 .makeemerald:

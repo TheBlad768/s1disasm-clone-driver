@@ -22,10 +22,10 @@ BuildSpr_Cameras:
 
 BuildSprites:
 		lea	(v_spritetablebuffer).w,a2
-		moveq	#0,d5
+		moveq	#0,d5				; d5 will be used as counter for total rendered sprites
+
 		lea	(v_spritequeue).w,a4
 		moveq	#spritelayer_num-1,d7
-
 .priorityLoop:
 		tst.w	(a4)				; are there objects left to draw in current priority layer?
 		beq.w	.nextPriority			; if not, go to next priority layer

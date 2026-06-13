@@ -44,7 +44,10 @@ Mon_Main:	; Routine 0
 		lea	(v_objstate).w,a2		; get object respawn table
 		moveq	#0,d0				; clear d0
 		move.b	obRespawnNo(a0),d0		; get monitor's respawn table index number
+	if FixBugs=0
+		; This has been relocated into the RememberState fix below
 		bclr	#7,2(a2,d0.w)			; immediately clear the respawn block flag (...why?)
+	endif
 		btst	#0,2(a2,d0.w)			; has monitor already been broken?
 		beq.s	.notbroken			; if not, branch
 
@@ -165,11 +168,10 @@ Mon_Animate:	; Routine 6
 
 Mon_Display:	; Routine 8
 	if FixBugs
+		bra.w	RememberState			; handle display, respawn table, and offscreen delete
+	else
 		; Objects shouldn't call DisplaySprite and DeleteObject in
 		; the same frame or else cause a null-pointer dereference.
-		out_of_range.w	DeleteObject		; check if monitor has gone offscreen and delete it if so
-		bra.w	DisplaySprite			; otherwise, display it
-	else
 		bsr.w	DisplaySprite			; display monitor
 		out_of_range.w	DeleteObject		; check if monitor has gone offscreen and delete it if so
 		rts					; return

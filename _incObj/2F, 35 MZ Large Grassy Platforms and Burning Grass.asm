@@ -185,7 +185,7 @@ loc_B01C:
 		move.l	objoff_30(a0),objoff_30(a1)
 		move.l	a0,objoff_38(a1)
 		movea.l	a0,a2
-		bsr.s	sub_B09C
+		bsr.s	LGrass_AddChildToList
 
 loc_B07A:
 		moveq	#0,d2
@@ -205,21 +205,30 @@ loc_B086:
 
 locret_B09A:
 		rts
-; ===========================================================================
 
-sub_B09C:
-		lea	objoff_36(a2),a2
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to add child to list in parent OST
+; 
+; input:
+;	a1 = address of OST of child fire
+;	a2 = address of OST of parent platform
+; ---------------------------------------------------------------------------
+
+; sub_B09C:
+LGrass_AddChildToList:
+		lea	objoff_36(a2),a2			; load list of child objects
 		moveq	#0,d0
-		move.b	(a2),d0
-		addq.b	#1,(a2)
-		lea	1(a2,d0.w),a2
-		move.w	a1,d0
+		move.b	(a2),d0					; get child count
+		addq.b	#1,(a2)					; increment child counter
+		lea	1(a2,d0.w),a2				; go to end of list
+		move.w	a1,d0					; get child OST address
 		subi.w	#v_objspace&$FFFF,d0
 		lsr.w	#object_size_bits,d0
-		andi.w	#$7F,d0
-		move.b	d0,(a2)
+		andi.w	#$7F,d0					; d0 = OST index of child
+		move.b	d0,(a2)					; copy d0 to end of list
 		rts
-; End of function sub_B09C
+; End of function LGrass_AddChildToList
 
 ; ===========================================================================
 
@@ -363,7 +372,7 @@ GFire_Spread:	; Routine 2
 		move.w	objoff_3C(a0),objoff_3C(a1)
 		move.b	#1,obSubtype(a1)
 		movea.l	objoff_38(a0),a2
-		bsr.w	sub_B09C
+		bsr.w	LGrass_AddChildToList
 
 loc_B2B0:
 		bra.s	GFire_Animate
