@@ -511,7 +511,7 @@ loc_17BFA:
 		addq.w	#1,objoff_32(a0)
 
 GBall_Display:
-		bsr.w	sub_17C2A
+		bsr.w	GBall_UpdateBase
 		move.b	obAngle(a0),d0
 		jsr	(Swing_Move2).l
 		jmp	(DisplaySprite).l
@@ -519,31 +519,36 @@ GBall_Display:
 
 ; GBall_Display2:
 GBall_Base2:	; Routine 4
-		bsr.w	sub_17C2A
+		bsr.w	GBall_UpdateBase
 		jsr	(GBall_Move).l
 		jmp	(DisplaySprite).l
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to animate, update position, and destroy base on defeat
+; ---------------------------------------------------------------------------
 
-sub_17C2A:
-		movea.l	objoff_34(a0),a1
-		addi.b	#$20,obAniFrame(a0)
-		bcc.s	loc_17C3C
-		bchg	#0,obFrame(a0)
+; sub_17C2A:
+GBall_UpdateBase:
+		movea.l	objoff_34(a0),a1			; get address of OST of parent
+		addi.b	#$20,obAniFrame(a0)			; increment frame counter
+		bcc.s	.no_chg					; branch if byte doesn't wrap from $C0 to 0
+		bchg	#0,obFrame(a0)				; change frame every 8th frame
 
-loc_17C3C:
-		move.w	obX(a1),objoff_3A(a0)
+	.no_chg:
+		move.w	obX(a1),objoff_3A(a0)			; get position from parent (ship)
 		move.w	obY(a1),d0
 		add.w	objoff_32(a0),d0
 		move.w	d0,objoff_38(a0)
 		move.b	obStatus(a1),obStatus(a0)
-		tst.b	obStatus(a1)
-		bpl.s	locret_17C66
-		_move.b	#id_Explosion,obID(a0)
+		tst.b	obStatus(a1)				; has boss been beaten?
+		bpl.s	.not_beaten				; if not, branch
+		_move.b	#id_Explosion,obID(a0)			; replace base with explosion object
 		move.b	#0,obRoutine(a0)
 
-locret_17C66:
+	.not_beaten:
 		rts
-; End of function sub_17C2A
+; End of function GBall_UpdateBase
 
 ; ===========================================================================
 

@@ -160,7 +160,7 @@ Sonic_Display:
 
 		moveq	#0,d0					; clear d0
 		move.b	(v_zone).w,d0				; get current zone ID
-		cmpi.w	#id_LZ_act4,(v_zone).w			; check if level is SBZ3 (LZ4)
+		cmpi.w	#id_LZ_act4,(v_zone_act).w		; check if level is SBZ3 (LZ4)
 		bne.s	.music					; if not, branch
 		moveq	#5,d0					; play SBZ music instead of LZ
 
@@ -1033,12 +1033,12 @@ Sonic_LevelBound:
 .bottom:
 	if 1 ; no FixBugs - ProjectSonic1TwoEight: always required...
 		; See below...
-		cmpi.w	#id_SBZ_act2,(v_zone).w			; is level SBZ2?
+		cmpi.w	#id_SBZ_act2,(v_zone_act).w		; is level SBZ2?
 		bne.s	JumpTo_KillSonic			; if not, kill Sonic
 		cmpi.w	#$2000,(v_player+obX).w			; is Sonic far enough into the level?
 		blo.s	JumpTo_KillSonic			; if not, kill Sonic
 	else
-		cmpi.w	#id_SBZ_act2,(v_zone).w			; is level SBZ2?
+		cmpi.w	#id_SBZ_act2,(v_zone_act).w		; is level SBZ2?
 		bne.w	KillSonic				; if not, kill Sonic
 		cmpi.w	#$2000,(v_player+obX).w			; is Sonic far enough into the level?
 		blo.w	KillSonic				; if not, kill Sonic
@@ -1047,7 +1047,7 @@ Sonic_LevelBound:
 		; Transition from SBZ2 to SBZ3
 		clr.b	(v_lastlamp).w				; clear lamppost counter
 		move.w	#1,(f_restart).w			; restart the level
-		move.w	#id_LZ_act4,(v_zone).w			; set level to SBZ3 (LZ4)
+		move.w	#id_LZ_act4,(v_zone_act).w		; set level to SBZ3 (LZ4)
 		rts						; return
 ; ===========================================================================
 

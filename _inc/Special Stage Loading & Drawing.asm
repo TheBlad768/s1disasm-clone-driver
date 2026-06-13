@@ -501,6 +501,11 @@ SS_LayoutIndex:
 		dc.l SS_4
 		dc.l SS_5
 		dc.l SS_6
+
+	if ((*-SS_LayoutIndex)/4<>ss_emeralds_num)&(MOMPASS=1)
+		warning "SS_LayoutIndex does not match expected emerald count!"
+	endif
+
 		even
 
 ; ---------------------------------------------------------------------------
@@ -515,6 +520,11 @@ SS_StartLoc:
 		binclude	"startpos/Special Stages/ss4.bin"
 		binclude	"startpos/Special Stages/ss5.bin"
 		binclude	"startpos/Special Stages/ss6.bin"
+
+	if ((*-SS_StartLoc)/4<>ss_emeralds_num)&(MOMPASS=1)
+		warning "SS_StartLoc does not match expected emerald count!"
+	endif
+
 		even
 
 ; ---------------------------------------------------------------------------
@@ -525,7 +535,7 @@ SS_Load:
 		moveq	#0,d0					; clear d0
 		move.b	(v_lastspecial).w,d0			; load number of last special stage entered (0-5)
 		addq.b	#1,(v_lastspecial).w			; remember new last-visited special stage number
-		cmpi.b	#6,(v_lastspecial).w			; has it wrapped over the maximum?
+		cmpi.b	#ss_emeralds_num,(v_lastspecial).w	; has it wrapped over the maximum?
 		blo.s	SS_FindUnbeatenStage			; if not, branch
 		move.b	#0,(v_lastspecial).w			; reset if higher than 6
 
@@ -533,7 +543,7 @@ SS_FindUnbeatenStage:
 		; Skip special stages whose emerald has already been collected. The game cycles through stage IDs
 		; using v_lastspecial: If the selected stage matches an entry in v_emldlist, execution branches
 		; back to SS_Load and the next stage is selected. This repeats until an unbeaten stage is found.
-		cmpi.b	#6,(v_emeralds).w			; do you already have all emeralds?
+		cmpi.b	#ss_emeralds_num,(v_emeralds).w		; do you already have all emeralds?
 		beq.s	SS_LoadData				; if yes, load stage anyway (should not happen, probably a failsafe)
 		moveq	#0,d1					; clear d1
 		move.b	(v_emeralds).w,d1			; get number of already collected emeralds

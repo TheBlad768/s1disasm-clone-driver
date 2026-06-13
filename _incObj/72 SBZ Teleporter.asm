@@ -92,7 +92,7 @@ Tele_Bump:	; Routine 4
 		move.w	d2,obY(a1)
 		cmpi.b	#$80,objoff_32(a0)
 		bne.s	locret_16796
-		bsr.w	sub_1681C
+		bsr.w	Tele_Move
 		addq.b	#2,obRoutine(a0)
 		move.w	#sfx_Teleport,d0
 		jsr	(QueueSound2).l	; play teleport sound
@@ -123,7 +123,7 @@ loc_167C2:
 		movea.l	objoff_3C(a0),a2
 		move.w	(a2,d1.w),objoff_36(a0)
 		move.w	2(a2,d1.w),objoff_38(a0)
-		bra.w	sub_1681C
+		bra.w	Tele_Move
 ; ===========================================================================
 
 loc_167DA:
@@ -149,77 +149,83 @@ loc_16800:
 		move.w	#0,obVelX(a1)
 		move.w	#$200,obVelY(a1)
 		rts
-; ===========================================================================
 
-sub_1681C:
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to set Sonic's speed & direction in a teleport pipe
+; ---------------------------------------------------------------------------
+
+; sub_1681C:
+Tele_Move:
 		moveq	#0,d0
 		move.w	#$1000,d2
 		move.w	objoff_36(a0),d0
-		sub.w	obX(a1),d0
-		bge.s	loc_16830
+		sub.w	obX(a1),d0				; d0 = x distance between Sonic and next target (-ve if Sonic is to the right)
+		bge.s	.sonic_is_left				; branch if +ve
 		neg.w	d0
 		neg.w	d2
 
-loc_16830:
+	.sonic_is_left:
 		moveq	#0,d1
 		move.w	#$1000,d3
 		move.w	objoff_38(a0),d1
-		sub.w	obY(a1),d1
-		bge.s	loc_16844
+		sub.w	obY(a1),d1				; d1 = y distance between Sonic and next target (-ve if Sonic is below)
+		bge.s	.sonic_is_above				; branch if +ve
 		neg.w	d1
 		neg.w	d3
 
-loc_16844:
-		cmp.w	d0,d1
-		blo.s	loc_1687A
+	.sonic_is_above:
+		cmp.w	d0,d1					; is x distance > y distance?
+		bcs.s	Tele_Move_X				; if yes, branch
+
 		moveq	#0,d1
 		move.w	objoff_38(a0),d1
-		sub.w	obY(a1),d1
-		swap	d1
-		divs.w	d3,d1
+		sub.w	obY(a1),d1				; d1 = y distance between Sonic and next target (-ve if Sonic is below)
+		swap	d1					; move into high word
+		divs.w	d3,d1					; divide by $1000 or -$1000
 		moveq	#0,d0
 		move.w	objoff_36(a0),d0
-		sub.w	obX(a1),d0
-		beq.s	loc_16866
-		swap	d0
-		divs.w	d1,d0
+		sub.w	obX(a1),d0				; d0 = x distance between Sonic and next target (-ve if Sonic is to the right)
+		beq.s	.x_match				; branch if 0
+		swap	d0					; move into high word
+		divs.w	d1,d0					; divide by d1
 
-loc_16866:
+	.x_match:
 		move.w	d0,obVelX(a1)
 		move.w	d3,obVelY(a1)
 		tst.w	d1
-		bpl.s	loc_16874
+		bpl.s	.abs_time
 		neg.w	d1
 
-loc_16874:
-		move.w	d1,objoff_2E(a0)
-		rts
+	.abs_time:
+		move.w	d1,objoff_2E(a0)			; set travel time for current direction
+		rts	
 ; ===========================================================================
 
-loc_1687A:
+Tele_Move_X:
 		moveq	#0,d0
 		move.w	objoff_36(a0),d0
-		sub.w	obX(a1),d0
+		sub.w	obX(a1),d0				; d0 = x distance between Sonic and next target (-ve if Sonic is to the right)
 		swap	d0
 		divs.w	d2,d0
 		moveq	#0,d1
 		move.w	objoff_38(a0),d1
-		sub.w	obY(a1),d1
-		beq.s	loc_16898
+		sub.w	obY(a1),d1				; d1 = y distance between Sonic and next target (-ve if Sonic is below)
+		beq.s	.y_match				; branch if 0
 		swap	d1
 		divs.w	d0,d1
 
-loc_16898:
+	.y_match:
 		move.w	d1,obVelY(a1)
 		move.w	d2,obVelX(a1)
 		tst.w	d0
-		bpl.s	loc_168A6
+		bpl.s	.abs_time
 		neg.w	d0
 
-loc_168A6:
-		move.w	d0,objoff_2E(a0)
+	.abs_time:
+		move.w	d0,objoff_2E(a0)			; set travel time for current direction
 		rts
-; End of function sub_1681C
+; End of function Tele_Move
 
 ; ===========================================================================
 Tele_Data:	dc.w .type00-Tele_Data

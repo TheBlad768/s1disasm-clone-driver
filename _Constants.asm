@@ -115,6 +115,14 @@ id_FZ:		equ (id_SBZ<<8)+act3	; $0502 (real SBZ3)
 id_EndZ_good:	equ (id_EndZ<<8)+act1	; $0600 (good ending, all emeralds)
 id_EndZ_bad:	equ (id_EndZ<<8)+act2	; $0601 (bad ending, not all emeralds)
 
+; Special Stage
+ss_emeralds_num:	equ 6		; total number of Chaos Emeralds and Special Stages
+ss_giantring_rings:	equ 50		; number of rings required for giant rings to spawn
+ss_continue_rings:	equ 50		; number of rings required to earn an extra continue
+ss_rotatespeed:		equ $40		; base special stage rotation speed
+ss_timeout:		equ 30		; delay after touching an UP/DOWN or R block
+ss_blocksize:		equ 24		; logical size of a single block
+
 ; Colours
 cBlack:		equ $000		; colour black
 cWhite:		equ $EEE		; colour white

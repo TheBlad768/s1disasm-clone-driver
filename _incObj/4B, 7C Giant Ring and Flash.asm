@@ -1,5 +1,6 @@
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 4B - giant ring for entry to special stage
+; Object 4B - Giant Ring for entry to Special Stage
 ; ---------------------------------------------------------------------------
 
 GiantRing:
@@ -12,61 +13,66 @@ GRing_Index:	dc.w GRing_Main-GRing_Index
 		dc.w GRing_Animate-GRing_Index
 		dc.w GRing_Collect-GRing_Index
 		dc.w GRing_Delete-GRing_Index
+
+gring_parent:	equ objoff_3C	; parent giant ring object address used by flash object
 ; ===========================================================================
 
 GRing_Main:	; Routine 0
-		move.l	#Map_GRing,obMap(a0)
-		move.w	#ArtTile_Giant_Ring|Tile_Pal2,obGfx(a0)
-		ori.b	#4,obRender(a0)
-		move.b	#128/2,obActWid(a0)
-		tst.b	obRender(a0)
-		bpl.s	GRing_Animate
-		cmpi.b	#6,(v_emeralds).w ; do you have 6 emeralds?
-		beq.w	GRing_Delete	; if yes, branch
-		cmpi.w	#50,(v_rings).w	; do you have at least 50 rings?
-		bhs.s	GRing_Okay	; if yes, branch
-		rts
+		move.l	#Map_GRing,obMap(a0)			; set mappings
+		move.w	#ArtTile_Giant_Ring|Tile_Pal2,obGfx(a0)	; set art tile and palette line
+		ori.b	#4,obRender(a0)				; set to playfield positioned mode
+		move.b	#128/2,obActWid(a0)			; set sprite display width
+
+		tst.b	obRender(a0)				; is giant ring on screen?
+		bpl.s	GRing_Animate				; if not, branch
+		cmpi.b	#ss_emeralds_num,(v_emeralds).w		; do you have all 6 emeralds?
+		beq.w	GRing_Delete				; if yes, branch
+		cmpi.w	#ss_giantring_rings,(v_rings).w		; do you have at least 50 rings?
+		bhs.s	GRing_Okay				; if yes, branch
+		rts						; otherwise, don't show giant ring
 ; ===========================================================================
 
 GRing_Okay:
-		addq.b	#2,obRoutine(a0)
-		move.b	#2,obPriority(a0)
-		move.b	#$52,obColType(a0)
-		move.w	#$C40,(v_gfxbigring).w	; Signal that Art_BigRing should be loaded ($C40 is the size of Art_BigRing)
+		addq.b	#2,obRoutine(a0)			; set to GRing_Animate
+		move.b	#2,obPriority(a0)			; set sprite priority
+		move.b	#$52,obColType(a0)			; set col type (ReactToItem will advance obRoutine on collection)
+		move.w	#$C40,(v_gfxbigring).w			; trigger AniArt_GiantRing to load graphics ($C40 is the size of Art_BigRing)
+; ---------------------------------------------------------------------------
 
 GRing_Animate:	; Routine 2
-		move.b	(v_ani1_frame).w,obFrame(a0)
-		out_of_range.w	DeleteObject
-		bra.w	DisplaySprite
+		move.b	(v_ani1_frame).w,obFrame(a0)		; set frame (updated in SynchroAnimate => Sync2)
+		out_of_range.w	DeleteObject			; is giant ring offscreen? if yes, delete it
+		bra.w	DisplaySprite				; otherwise, display sprite
 ; ===========================================================================
 
 GRing_Collect:	; Routine 4
-		subq.b	#2,obRoutine(a0)
-		move.b	#0,obColType(a0)
-		bsr.w	FindFreeObj
-		bne.w	GRing_PlaySnd
-		_move.b	#id_RingFlash,obID(a1) ; load giant ring flash object
-		move.w	obX(a0),obX(a1)
-		move.w	obY(a0),obY(a1)
-		move.l	a0,objoff_3C(a1)
-		move.w	(v_player+obX).w,d0
-		cmp.w	obX(a0),d0	; has Sonic come from the left?
-		blo.s	GRing_PlaySnd	; if yes, branch
-		bset	#0,obRender(a1)	; reverse flash object
+		subq.b	#2,obRoutine(a0)			; go back to GRing_Animate
+		move.b	#0,obColType(a0)			; disable further collision with ring
+
+		bsr.w	FindFreeObj				; find a free object RAM slot
+		bne.w	GRing_PlaySnd				; if RAM is full, branch
+		_move.b	#id_RingFlash,obID(a1)			; load giant ring flash object
+		move.w	obX(a0),obX(a1)				; copy X-position
+		move.w	obY(a0),obY(a1)				; copy Y-position
+		move.l	a0,gring_parent(a1)			; make flash object remember parent ring object
+		move.w	(v_player+obX).w,d0			; get Sonic's X-position
+		cmp.w	obX(a0),d0				; has Sonic entered the giant ring from the right?
+		blo.s	GRing_PlaySnd				; if not, branch
+		bset	#0,obRender(a1)				; set X-flip flag for flash object
 
 GRing_PlaySnd:
-		move.w	#sfx_GiantRing,d0
-		jsr	(QueueSound2).l	; play giant ring sound
-		bra.s	GRing_Animate
+		move.w	#sfx_GiantRing,d0			; set giant ring sound
+		jsr	(QueueSound2).l				; play it
+		bra.s	GRing_Animate				; keep animating ring until it's deleted by flash
 ; ===========================================================================
 
 GRing_Delete:	; Routine 6
-		bra.w	DeleteObject
+		bra.w	DeleteObject				; delete giant ring
 
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Object 7C - flash effect when you collect the giant ring
+; Object 7C - Flash effect when you collect the Giant Ring
 ; ---------------------------------------------------------------------------
 
 RingFlash:
@@ -81,48 +87,55 @@ Flash_Index:	dc.w Flash_Main-Flash_Index
 ; ===========================================================================
 
 Flash_Main:	; Routine 0
-		addq.b	#2,obRoutine(a0)
-		move.l	#Map_Flash,obMap(a0)
-		move.w	#ArtTile_Giant_Ring_Flash|Tile_Pal2,obGfx(a0)
-		ori.b	#4,obRender(a0)
-		move.b	#0,obPriority(a0)
-		move.b	#64/2,obActWid(a0)
-		move.b	#$FF,obFrame(a0)
+		addq.b	#2,obRoutine(a0)			; set to Flash_ChkDel
+		move.l	#Map_Flash,obMap(a0)			; set mappings
+		move.w	#ArtTile_Giant_Ring_Flash|Tile_Pal2,obGfx(a0) ; set art tile and palette line
+		ori.b	#4,obRender(a0)				; set to playfield positioned mode
+		move.b	#0,obPriority(a0)			; set to maximum sprite priority
+		move.b	#64/2,obActWid(a0)			; set sprite display width
+		move.b	#-1,obFrame(a0)				; set to frame -1 so first run of Flash_Collect will set it to 0
+; ---------------------------------------------------------------------------
 
 Flash_ChkDel:	; Routine 2
-		bsr.s	Flash_Collect
-		out_of_range.w	DeleteObject
-		bra.w	DisplaySprite
+		bsr.s	Flash_Collect				; advance ring animation, delete Sonic, and set flag
+		out_of_range.w	DeleteObject			; is object offscreen? if yes, delete
+		bra.w	DisplaySprite				; otherwise, display sprite
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to handle the Giant Ring flash advance ring animation,
+; delete Sonic, and set flag (this did not need to be a subroutine...)
+; ---------------------------------------------------------------------------
 
 Flash_Collect:
-		subq.b	#1,obTimeFrame(a0)
-		bpl.s	locret_9F76
-		move.b	#1,obTimeFrame(a0)
-		addq.b	#1,obFrame(a0)
-		cmpi.b	#8,obFrame(a0)	; has animation finished?
-		bhs.s	Flash_End	; if yes, branch
-		cmpi.b	#3,obFrame(a0)	; is 3rd frame displayed?
-		bne.s	locret_9F76	; if not, branch
-		movea.l	objoff_3C(a0),a1	; get parent object address
-		move.b	#6,obRoutine(a1) ; delete parent object
-		move.b	#id_Null,(v_player+obAnim).w ; make Sonic invisible
-		move.b	#1,(f_bigring).w ; stop Sonic getting bonuses
-		clr.b	(v_invinc).w	; remove invincibility
-		clr.b	(v_shield).w	; remove shield
+		subq.b	#1,obTimeFrame(a0)			; decrement delay until next frame
+		bpl.s	.return					; if time remains, branch
+		move.b	#1,obTimeFrame(a0)			; reset delay to 2 frames
+		addq.b	#1,obFrame(a0)				; advance to next frame
+		cmpi.b	#8,obFrame(a0)				; has animation finished? (8 frames)
+		bhs.s	.deleteSonic				; if yes, branch
+		cmpi.b	#3,obFrame(a0)				; is 3rd frame displayed?
+		bne.s	.return					; if not, branch
 
-locret_9F76:
-		rts
-; ===========================================================================
+		movea.l	gring_parent(a0),a1			; get parent giant ring object address
+		move.b	#6,obRoutine(a1)			; delete parent object
+		move.b	#id_Null,(v_player+obAnim).w		; make Sonic invisible
+		move.b	#1,(f_bigring).w			; set flag that giant ring was collected
+		clr.b	(v_invinc).w				; remove invincibility
+		clr.b	(v_shield).w				; remove shield
 
-Flash_End:
-		addq.b	#2,obRoutine(a0)
-		move.w	#0,(v_player).w ; remove Sonic object
-		addq.l	#4,sp
-		rts
+	.return:
+		rts						; return
+; ---------------------------------------------------------------------------
+
+	.deleteSonic:
+		addq.b	#2,obRoutine(a0)			; set to Flash_Delete
+		move.w	#0,(v_player).w				; delete Sonic object
+		addq.l	#4,sp					; skip returning to Flash_ChkDel
+		rts						; return
 ; End of function Flash_Collect
 
 ; ===========================================================================
 
 Flash_Delete:	; Routine 4
-		bra.w	DeleteObject
+		bra.w	DeleteObject				; delete flash object

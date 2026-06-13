@@ -9,27 +9,27 @@ Animals:
 		move.w	Anml_Index(pc,d0.w),d1
 		jmp	Anml_Index(pc,d1.w)
 ; ===========================================================================
-Anml_Index:	dc.w Anml_Main-Anml_Index
-		dc.w Anml_ChkFloor-Anml_Index
-		dc.w Anml_Type0-Anml_Index
-		dc.w Anml_Type1-Anml_Index
-		dc.w Anml_Type0-Anml_Index
-		dc.w Anml_Type0-Anml_Index
-		dc.w Anml_Type0-Anml_Index
-		dc.w Anml_Type1-Anml_Index
-		dc.w Anml_Type0-Anml_Index
-		dc.w Anml_FromPrison-Anml_Index
-		dc.w Anml_End_0A-Anml_Index
-		dc.w Anml_End_0A-Anml_Index
-		dc.w Anml_End_0C-Anml_Index
-		dc.w Anml_End_0D-Anml_Index
-		dc.w Anml_End_0E-Anml_Index
-		dc.w Anml_End_0F-Anml_Index
-		dc.w Anml_End_0E-Anml_Index
-		dc.w Anml_End_0F-Anml_Index
-		dc.w Anml_End_0E-Anml_Index
-		dc.w Anml_End_13-Anml_Index
-		dc.w Anml_End_14-Anml_Index
+Anml_Index:	dc.w Anml_Main-Anml_Index	; 0
+		dc.w Anml_ChkFloor-Anml_Index	; 2
+		dc.w Anml_Type0-Anml_Index	; 4
+		dc.w Anml_Type1-Anml_Index	; 6
+		dc.w Anml_Type0-Anml_Index	; 8
+		dc.w Anml_Type0-Anml_Index	; A
+		dc.w Anml_Type0-Anml_Index	; C
+		dc.w Anml_Type1-Anml_Index	; E
+		dc.w Anml_Type0-Anml_Index	; 10
+		dc.w Anml_FromPrison-Anml_Index	; 12
+		dc.w Anml_End_0A-Anml_Index	; 14
+		dc.w Anml_End_0A-Anml_Index	; 16
+		dc.w Anml_End_0C-Anml_Index	; 18
+		dc.w Anml_End_0D-Anml_Index	; 1A
+		dc.w Anml_End_0E-Anml_Index	; 1C
+		dc.w Anml_End_0F-Anml_Index	; 1E
+		dc.w Anml_End_0E-Anml_Index	; 20
+		dc.w Anml_End_0F-Anml_Index	; 22
+		dc.w Anml_End_0E-Anml_Index	; 24
+		dc.w Anml_End_13-Anml_Index	; 26
+		dc.w Anml_End_14-Anml_Index	; 28
 ; ===========================================================================
 
 Anml_VarIndex:	; two index IDs for Anml_Variables
@@ -102,20 +102,22 @@ Anml_EndVram:	dc.w ArtTile_Ending_Flicky	; $A
 
 ; Anml_Ending: <- old misnomer!
 Anml_Main:	; Routine 0
-		tst.b	obSubtype(a0)	; did animal come from a destroyed enemy?
-		beq.w	Anml_FromEnemy	; if yes, branch
+		tst.b	obSubtype(a0)			; did animal come from a destroyed enemy?
+		beq.w	Anml_FromEnemy			; if yes, branch
+
+		; Animal was placed in-level with a custom subtype (Ending Sequence)
 		moveq	#0,d0
-		move.b	obSubtype(a0),d0 ; move object type to d0
-		add.w	d0,d0		; multiply d0 by 2
-		move.b	d0,obRoutine(a0) ; move d0 to routine counter
+		move.b	obSubtype(a0),d0		; move object type to d0
+		add.w	d0,d0				; multiply d0 by 2
+		move.b	d0,obRoutine(a0)		; move d0 to routine counter
 		subi.w	#$14,d0
 		move.w	Anml_EndVram(pc,d0.w),obGfx(a0)
 		add.w	d0,d0
 		move.l	Anml_EndMap(pc,d0.w),obMap(a0)
 		lea	Anml_EndSpeed(pc),a1
-		move.w	(a1,d0.w),objoff_32(a0) ; load horizontal speed
+		move.w	(a1,d0.w),objoff_32(a0)		; load horizontal speed
 		move.w	(a1,d0.w),obVelX(a0)
-		move.w	2(a1,d0.w),objoff_34(a0) ; load vertical speed
+		move.w	2(a1,d0.w),objoff_34(a0)	; load vertical speed
 		move.w	2(a1,d0.w),obVelY(a0)
 		move.b	#24/2,obHeight(a0)
 		move.b	#4,obRender(a0)
@@ -140,12 +142,12 @@ Anml_FromEnemy:
 		lsl.w	#3,d0
 		lea	Anml_Variables(pc),a1
 		adda.w	d0,a1
-		move.w	(a1)+,objoff_32(a0)	; load horizontal speed
-		move.w	(a1)+,objoff_34(a0)	; load vertical speed
-		move.l	(a1)+,obMap(a0)	; load mappings
+		move.w	(a1)+,objoff_32(a0)		; load horizontal speed
+		move.w	(a1)+,objoff_34(a0)		; load vertical speed
+		move.l	(a1)+,obMap(a0)			; load mappings
 		move.w	#ArtTile_Animal_1,obGfx(a0)	; VRAM setting for 1st animal
-		btst	#0,objoff_30(a0)	; is 1st animal used?
-		beq.s	loc_90C0	; if yes, branch
+		btst	#0,objoff_30(a0)		; is 1st animal used?
+		beq.s	loc_90C0			; if yes, branch
 		move.w	#ArtTile_Animal_2,obGfx(a0)	; VRAM setting for 2nd animal
 
 loc_90C0:
@@ -159,9 +161,10 @@ loc_90C0:
 		move.w	#-$400,obVelY(a0)
 		tst.b	(v_bossstatus).w
 		bne.s	loc_911C
+
 		bsr.w	FindFreeObj
 		bne.s	Anml_Display
-		_move.b	#id_Points,obID(a1) ; load points object
+		_move.b	#id_Points,obID(a1)		; load points object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
 		move.w	objoff_3E(a0),d0
@@ -222,7 +225,7 @@ Anml_Type0:
 
 loc_91AE:
 		tst.b	obSubtype(a0)
-		bne.s	loc_9224
+		bne.s	Anml_End_ChkDel
 		tst.b	obRender(a0)
 		bpl.w	DeleteObject
 		bra.w	DisplaySprite
@@ -255,22 +258,24 @@ loc_91FC:
 
 loc_9212:
 		tst.b	obSubtype(a0)
-		bne.s	loc_9224
+		bne.s	Anml_End_ChkDel
 		tst.b	obRender(a0)
 		bpl.w	DeleteObject
 		bra.w	DisplaySprite
 ; ===========================================================================
 
-loc_9224:
-		move.w	obX(a0),d0
-		sub.w	(v_player+obX).w,d0
-		bcs.s	loc_923C
-		subi.w	#$180,d0
-		bpl.s	loc_923C
-		tst.b	obRender(a0)
-		bpl.w	DeleteObject
+; loc_9224:
+Anml_End_ChkDel:
+		move.w	obX(a0),d0			; get animal's X-position
+		sub.w	(v_player+obX).w,d0		; subtract Sonic's X-position
+		bcs.s	.display			; if Sonic is to the right of the animal, branch
+		subi.w	#$180,d0			; check if Sonic has passed the animal to the left
+		bpl.s	.display			; if not, branch
+		tst.b	obRender(a0)			; is animal still on screen?
+		bpl.w	DeleteObject			; if not, delete it
 
-loc_923C:
+	; loc_923C:
+	.display:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
@@ -289,8 +294,8 @@ loc_925C:
 
 ; loc_9260:
 Anml_End_0A:
-		bsr.w	sub_9404
-		bcc.s	loc_927C
+		bsr.w	Anml_CheckCloseToSonic
+		bhs.s	loc_927C
 		move.w	objoff_32(a0),obVelX(a0)
 		move.w	objoff_34(a0),obVelY(a0)
 		move.b	#$E,obRoutine(a0)
@@ -298,12 +303,12 @@ Anml_End_0A:
 ; ===========================================================================
 
 loc_927C:
-		bra.w	loc_9224
+		bra.w	Anml_End_ChkDel
 ; ===========================================================================
 
 ; loc_9280:
 Anml_End_0C:
-		bsr.w	sub_9404
+		bsr.w	Anml_CheckCloseToSonic
 		bpl.s	loc_92B6
 		clr.w	obVelX(a0)
 		clr.w	objoff_32(a0)
@@ -318,12 +323,12 @@ Anml_End_0C:
 		andi.b	#1,obFrame(a0)
 
 loc_92B6:
-		bra.w	loc_9224
+		bra.w	Anml_End_ChkDel
 ; ===========================================================================
 
 ; loc_92BA:
 Anml_End_0D:
-		bsr.w	sub_9404
+		bsr.w	Anml_CheckCloseToSonic
 		bpl.s	loc_9310
 		move.w	objoff_32(a0),obVelX(a0)
 		move.w	objoff_34(a0),obVelY(a0)
@@ -351,12 +356,12 @@ loc_9306:
 		move.w	objoff_34(a0),obVelY(a0)
 
 loc_9310:
-		bra.w	loc_9224
+		bra.w	Anml_End_ChkDel
 ; ===========================================================================
 
 ; loc_9314:
 Anml_End_0E:
-		bsr.w	sub_9404
+		bsr.w	Anml_CheckCloseToSonic
 		bpl.s	loc_932E
 		clr.w	obVelX(a0)
 		clr.w	objoff_32(a0)
@@ -365,12 +370,12 @@ Anml_End_0E:
 		bsr.w	loc_93EC
 
 loc_932E:
-		bra.w	loc_9224
+		bra.w	Anml_End_ChkDel
 ; ===========================================================================
 
 ; loc_9332:
 Anml_End_0F:
-		bsr.w	sub_9404
+		bsr.w	Anml_CheckCloseToSonic
 		bpl.s	loc_936C
 		bsr.w	ObjectFall
 		move.b	#1,obFrame(a0)
@@ -386,12 +391,12 @@ Anml_End_0F:
 		move.w	objoff_34(a0),obVelY(a0)
 
 loc_936C:
-		bra.w	loc_9224
+		bra.w	Anml_End_ChkDel
 ; ===========================================================================
 
 ; loc_9370:
 Anml_End_13:
-		bsr.w	sub_9404
+		bsr.w	Anml_CheckCloseToSonic
 		bpl.s	loc_93C0
 		bsr.w	SpeedToPos
 		addi.w	#$18,obVelY(a0)
@@ -417,7 +422,7 @@ loc_93AA:
 		andi.b	#1,obFrame(a0)
 
 loc_93C0:
-		bra.w	loc_9224
+		bra.w	Anml_End_ChkDel
 ; ===========================================================================
 
 loc_93C4:
@@ -444,14 +449,19 @@ loc_93EC:
 
 locret_9402:
 		rts
-; ===========================================================================
 
-sub_9404:
-		move.w	(v_player+obX).w,d0
-		sub.w	obX(a0),d0
-		subi.w	#$B8,d0
-		rts
-; End of function sub_9404
+; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to check if Sonic is more than 184px to the right of animal
+; ---------------------------------------------------------------------------
+
+; sub_9404:
+Anml_CheckCloseToSonic:
+		move.w	(v_player+obX).w,d0		; get Sonic's X-position
+		sub.w	obX(a0),d0			; subtract X-position of animal
+		subi.w	#(320/2)+24,d0			; check if Sonic is 184px to the right of the animal (i.e. just barely on screen)
+		rts					; result in CCR
+; End of function Anml_CheckCloseToSonic
 
 
 ; ===========================================================================
@@ -477,23 +487,24 @@ Poi_Index:	dc.w Poi_Main-Poi_Index
 ; ===========================================================================
 
 Poi_Main:	; Routine 0
-		addq.b	#2,obRoutine(a0)
-		move.l	#Map_Points,obMap(a0)
-		move.w	#ArtTile_Points|Tile_Pal2,obGfx(a0)
-		move.b	#4,obRender(a0)
-		move.b	#1,obPriority(a0)
-		move.b	#16/2,obActWid(a0)
-		move.w	#-$300,obVelY(a0) ; move object upwards
+		addq.b	#2,obRoutine(a0)		; advance to Poi_Slower
+		move.l	#Map_Points,obMap(a0)		; set mappings
+		move.w	#ArtTile_Points|Tile_Pal2,obGfx(a0) ; set art tile and palette
+		move.b	#4,obRender(a0)			; set to playfield-positioned mode
+		move.b	#1,obPriority(a0)		; set sprite priority (above Sonic)
+		move.b	#16/2,obActWid(a0)		; set display width
+		move.w	#-$300,obVelY(a0)		; move points object upwards
+; ---------------------------------------------------------------------------
 
 Poi_Slower:	; Routine 2
-		tst.w	obVelY(a0)	; is object moving?
-		bpl.w	DeleteObject	; if not, delete
-		bsr.w	SpeedToPos
-		addi.w	#$18,obVelY(a0)	; reduce object speed
+		tst.w	obVelY(a0)			; has point object stopped moving up?
+		bpl.w	DeleteObject			; if yes, delete it
+		bsr.w	SpeedToPos			; update position based on velocity
+		addi.w	#$18,obVelY(a0)			; reduce upward speed
 	if FixBugs
-		bra.w	DisplaySprite
+		bra.w	DisplaySprite			; display points object
 	else
-		rts
+		rts					; return to top Points routine for display
 	endif
 
 ; ===========================================================================

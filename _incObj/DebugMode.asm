@@ -22,6 +22,11 @@ Debug_Init:	; Routine 0
 
 		move.w	(v_limittop2).w,(v_limittopdb).w	; buffer level x-boundary
 		move.w	(v_limitbtm1).w,(v_limitbtmdb).w	; buffer level y-boundary
+	if FixBugs
+		; Do not affect camera and position in Special Stages
+		cmpi.b	#id_Special,(v_gamemode).w		; are we in a Special Stage?
+		beq.s	.wrapDone				; if yes, skip wrapping
+	endif
 		move.w	#0,(v_limittop2).w			; unlock top screen boundary
 		move.w	#$800-224,(v_limitbtm1).w		; unlock bottom level boundary, minus screen height
 
@@ -29,6 +34,7 @@ Debug_Init:	; Routine 0
 		andi.w	#$7FF,(v_player+obY).w			; wrap Sonic's Y-position
 		andi.w	#$7FF,(v_screenposy).w			; wrap screen Y-position
 		andi.w	#$3FF,(v_bgscreenposy).w		; wrap background Y-position
+	.wrapDone:
 
 		move.b	#fr_Null,obFrame(a0)			; set Sonic's frame to null (blank)
 		move.b	#id_Walk,obAnim(a0)			; set Sonic's animation to null (walk)
@@ -371,18 +377,23 @@ DebugList:
 		dc.w .SYZ-DebugList
 		dc.w .SBZ-DebugList
 		zonewarning DebugList,2
-		dc.w .Ending-DebugList
+		dc.w .EndingSS-DebugList
 
-dbug:	macro map,object,subtype,frame,vram
+dbug: macro map,object,subtype,frame,vram
 		dc.l map+(object<<24)
 		dc.b subtype,frame
 		dc.w vram
 		endm
 
-.GHZ:
-		dc.w (.GHZend-.GHZ-2)/8
+dbugheader: macro {INTLABEL}
+__LABEL__:	label	*
+		dc.w	(__LABEL___end-__LABEL__-2)/8
+		endm
 
+; ---------------------------------------------------------------------------
 ;			mappings	object		subtype	frame	VRAM setting
+; ---------------------------------------------------------------------------
+.GHZ:		dbugheader
 		dbug 	Map_Ring,	id_Rings,	0,	0,	ArtTile_Ring|Tile_Pal2
 		dbug	Map_Monitor,	id_Monitor,	0,	0,	ArtTile_Monitor
 		dbug	Map_Crab,	id_Crabmeat,	0,	0,	ArtTile_Crabmeat
@@ -399,12 +410,9 @@ dbug:	macro map,object,subtype,frame,vram
 		dbug	Map_Lamp,	id_Lamppost,	1,	0,	ArtTile_Lamppost
 		dbug	Map_GRing,	id_GiantRing,	0,	0,	ArtTile_Giant_Ring|Tile_Pal2
 		dbug	Map_Bonus,	id_HiddenBonus,	1,	1,	ArtTile_Hidden_Points|Tile_Prio
-.GHZend:
-
-.LZ:
-		dc.w (.LZend-.LZ-2)/8
-
-;			mappings	object		subtype	frame	VRAM setting
+.GHZ_end:
+; ---------------------------------------------------------------------------
+.LZ:		dbugheader
 		dbug 	Map_Ring,	id_Rings,	0,	0,	ArtTile_Ring|Tile_Pal2
 		dbug	Map_Monitor,	id_Monitor,	0,	0,	ArtTile_Monitor
 		dbug	Map_Spring,	id_Springs,	0,	0,	ArtTile_Spring_Horizontal
@@ -434,12 +442,9 @@ dbug:	macro map,object,subtype,frame,vram
 		dbug	Map_Pole,	id_Pole,	0,	0,	ArtTile_LZ_Pole|Tile_Pal3
 		dbug	Map_Flap,	id_FlapDoor,	2,	0,	ArtTile_LZ_Flapping_Door|Tile_Pal3
 		dbug	Map_Lamp,	id_Lamppost,	1,	0,	ArtTile_Lamppost
-.LZend:
-
-.MZ:
-		dc.w (.MZend-.MZ-2)/8
-
-;			mappings	object		subtype	frame	VRAM setting
+.LZ_end:
+; ---------------------------------------------------------------------------
+.MZ:		dbugheader
 		dbug 	Map_Ring,	id_Rings,	0,	0,	ArtTile_Ring|Tile_Pal2
 		dbug	Map_Monitor,	id_Monitor,	0,	0,	ArtTile_Monitor
 		dbug	Map_Buzz,	id_BuzzBomber,	0,	0,	ArtTile_Buzz_Bomber
@@ -463,12 +468,9 @@ dbug:	macro map,object,subtype,frame,vram
 		dbug	Map_Bas,	id_Basaran,	0,	0,	ArtTile_Basaran
 		dbug	Map_Cat,	id_Caterkiller,	0,	0,	ArtTile_MZ_SYZ_Caterkiller|Tile_Pal2
 		dbug	Map_Lamp,	id_Lamppost,	1,	0,	ArtTile_Lamppost
-.MZend:
-
-.SLZ:
-		dc.w (.SLZend-.SLZ-2)/8
-
-;			mappings	object		subtype	frame	VRAM setting
+.MZ_end:
+; ---------------------------------------------------------------------------
+.SLZ:		dbugheader
 		dbug 	Map_Ring,	id_Rings,	0,	0,	ArtTile_Ring|Tile_Pal2
 		dbug	Map_Monitor,	id_Monitor,	0,	0,	ArtTile_Monitor
 		dbug	Map_Elev,	id_Elevator,	0,	0,	ArtTile_Level|Tile_Pal3
@@ -484,12 +486,9 @@ dbug:	macro map,object,subtype,frame,vram
 		dbug	Map_Bomb,	id_Bomb,	0,	0,	ArtTile_Bomb
 		dbug	Map_Orb,	id_Orbinaut,	0,	0,	ArtTile_SLZ_Orbinaut|Tile_Pal2
 		dbug	Map_Lamp,	id_Lamppost,	1,	0,	ArtTile_Lamppost
-.SLZend:
-
-.SYZ:
-		dc.w (.SYZend-.SYZ-2)/8
-
-;			mappings	object		subtype	frame	VRAM setting
+.SLZ_end:
+; ---------------------------------------------------------------------------
+.SYZ:		dbugheader
 		dbug 	Map_Ring,	id_Rings,	0,	0,	ArtTile_Ring|Tile_Pal2
 		dbug	Map_Monitor,	id_Monitor,	0,	0,	ArtTile_Monitor
 		dbug	Map_Spike,	id_Spikes,	0,	0,	ArtTile_Spikes
@@ -505,12 +504,9 @@ dbug:	macro map,object,subtype,frame,vram
 		dbug	Map_But,	id_Button,	0,	0,	ArtTile_Button+4
 		dbug	Map_Cat,	id_Caterkiller,	0,	0,	ArtTile_MZ_SYZ_Caterkiller|Tile_Pal2
 		dbug	Map_Lamp,	id_Lamppost,	1,	0,	ArtTile_Lamppost
-.SYZend:
-
-.SBZ:
-		dc.w (.SBZend-.SBZ-2)/8
-
-;			mappings	object		subtype	frame	VRAM setting
+.SYZ_end:
+; ---------------------------------------------------------------------------
+.SBZ:		dbugheader
 		dbug 	Map_Ring,	id_Rings,	0,	0,	ArtTile_Ring|Tile_Pal2
 		dbug	Map_Monitor,	id_Monitor,	0,	0,	ArtTile_Monitor
 		dbug	Map_Bomb,	id_Bomb,	0,	0,	ArtTile_Bomb
@@ -540,14 +536,12 @@ dbug:	macro map,object,subtype,frame,vram
 		dbug	Map_Invis,	id_Invisibarrier, $11,	0,	ArtTile_Monitor|Tile_Prio
 		dbug	Map_Hog,	id_BallHog,	4,	0,	ArtTile_Ball_Hog|Tile_Pal2
 		dbug	Map_Lamp,	id_Lamppost,	1,	0,	ArtTile_Lamppost
-.SBZend:
-
-.Ending:
-		dc.w (.Endingend-.Ending-2)/8
-
-;			mappings	object		subtype	frame	VRAM setting
-		dbug 	Map_Ring,	id_Rings,	0,	0,	ArtTile_Ring|Tile_Pal2
+.SBZ_end:
+; ---------------------------------------------------------------------------
+; This list is used by both the Ending Sequence and the Special Stages
+.EndingSS:	dbugheader
 	if Revision=0
+		dbug 	Map_Ring,	id_Rings,	0,	0,	ArtTile_Ring|Tile_Pal2
 		dbug	Map_Bump,	id_Bumper,	0,	0,	ArtTile_SYZ_Bumper
 		if FixBugs
 			dbug	Map_Animal2,	id_Animals,	$A,	0,	ArtTile_Ending_Flicky
@@ -567,8 +561,10 @@ dbug:	macro map,object,subtype,frame,vram
 		dbug	Map_Animal2,	id_Animals,	$13,	0,	ArtTile_Ending_Chicken
 		dbug	Map_Animal3,	id_Animals,	$14,	0,	ArtTile_Ending_Squirrel
 	else
+		; REV01 cleared out most of this list, only leaving rings (two for some reason...)
+		dbug 	Map_Ring,	id_Rings,	0,	0,	ArtTile_Ring|Tile_Pal2
 		dbug 	Map_Ring,	id_Rings,	0,	8,	ArtTile_Ring|Tile_Pal2
 	endif
-.Endingend:
+.EndingSS_end:
 
 		even

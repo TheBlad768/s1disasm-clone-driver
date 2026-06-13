@@ -657,7 +657,7 @@ LoadTilesFromStart:
 		beq.w	Draw_GHz_Bg
 		cmpi.b	#id_MZ,(v_zone).w
 		beq.w	Draw_Mz_Bg
-		cmpi.w	#id_SBZ_act1,(v_zone).w
+		cmpi.w	#id_SBZ_act1,(v_zone_act).w
 		beq.w	Draw_SBz_Bg
 		cmpi.b	#id_EndZ,(v_zone).w
 		beq.w	Draw_GHz_Bg

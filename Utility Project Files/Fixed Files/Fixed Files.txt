@@ -1,0 +1,48 @@
+These are replacement files for data which cannot be patched with FixBugs. Their changes
+are noted below, apply them at your discretion:
+
+_maps/
+ - Buzz Bomber.asm
+	Fixed its second firing frame being cut-off
+
+ - Sonic.asm
+	Realigned Sonic's ducking sprite to be correctly centered
+
+artnem/
+ - Sega Logo (REVXX).bin
+	Removed a stray pixel
+
+artunc/
+ - Sonic.unc
+	Added shoe stripes to frames that were missing them (mostly from Sonic 2)
+
+objpos/
+ - ghz1.bin
+	Removed misplaced Motobug at 0C50,034C
+
+ - ghz2.bin
+	Removed misplaced Crabmeat at 10D0,0370
+
+ - ghz3 (REVXX).bin
+	Removed misplaced rock at 18D4,0771 and misplaced Buzz Bomber at 21B0,0000
+
+ - syz2.bin
+	Removed misplaced spring at 0B10,0ABA
+
+ - lz1 (REVXX).bin
+	Removed misplaced spikes at 12D3,0675, signpost is no longer partially buried in the ground
+
+ - lz2.bin
+	Moved hidden points closer to the signpost so that their graphics now load correctly,
+	signpost is no longer partially buried in the ground
+
+ - slz2.bin
+	Added an invisible wall to prevent Sonic from jumping over a certain wall (lifted from
+	Sonic Jam, originally ripped by Devon)
+
+ - sbz2.bin
+	Replace monitors inside of walls with invisible blocks
+	(read '26, 2E Monitors and Power-Ups.asm' for more information)
+
+ - sbz3.bin
+	Small platform in hidden path now appears correctly

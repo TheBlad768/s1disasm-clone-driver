@@ -1,3 +1,4 @@
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Object 43 - Roller enemy (SYZ)
 ; ---------------------------------------------------------------------------
@@ -40,11 +41,15 @@ Roll_Action:	; Routine 2
 		lea	(Ani_Roll).l,a1
 		bsr.w	AnimateSprite
 
+	if FixBugs
+		bra.w	RememberState	; use regular RememberState logic
+	else
 		; This part is identical to RememberState, except that it
 		; uses bgt instead of bhi for the offscreen check. As a result,
 		; Rollers cannot despawn when going too far offscreen to the left,
 		; which can cause occasional double spawning. It's not exactly
-		; clear if this behavior was intended or if it's an oversight.
+		; clear if this behavior was intended or if it's an oversight,
+		; but it definitely is very inconsistent and unclean.
 		move.w	obX(a0),d0
 		andi.w	#$FF80,d0
 		move.w	(v_screenposx).w,d1
@@ -52,19 +57,21 @@ Roll_Action:	; Routine 2
 		andi.w	#$FF80,d1
 		sub.w	d1,d0
 		cmpi.w	#$280,d0
-		bgt.w	Roll_ChkGone	; bgt (signed check) instead of the usual bhi (unisgned check)
+		bgt.w	.delete		; bgt (signed check) instead of the usual bhi (unisgned check)
 		bra.w	DisplaySprite
-; ===========================================================================
-
-Roll_ChkGone:
+; ---------------------------------------------------------------------------
+	; Roll_ChkGone:
+	.delete:
 		lea	(v_objstate).w,a2
 		moveq	#0,d0
 		move.b	obRespawnNo(a0),d0
-		beq.s	Roll_Delete
+		beq.s	.noRespawnEntry
 		bclr	#7,2(a2,d0.w)
-
-Roll_Delete:
+	; Roll_Delete:
+	.noRespawnEntry:
 		bra.w	DeleteObject
+	endif
+
 ; ===========================================================================
 Roll_Index2:	dc.w Roll_RollChk-Roll_Index2
 		dc.w Roll_RollNoChk-Roll_Index2

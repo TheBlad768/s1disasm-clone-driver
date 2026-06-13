@@ -24,7 +24,7 @@ eson_time = objoff_30	; time to wait between events
 ; ===========================================================================
 
 ESon_Main:	; Routine 0
-		cmpi.b	#6,(v_emeralds).w ; do you have all 6 emeralds?
+		cmpi.b	#ss_emeralds_num,(v_emeralds).w ; do you have all 6 emeralds?
 		beq.s	ESon_Main2	; if yes, branch
 		addi.b	#$10,ob2ndRout(a0) ; else, skip emerald sequence
 		move.w	#216,eson_time(a0)
@@ -155,7 +155,7 @@ ECha_CreateEms:
 		movea.l	a0,a1
 		moveq	#0,d3
 		moveq	#1,d2
-		moveq	#5,d1
+		moveq	#ss_emeralds_num-1,d1
 
 ECha_LoadLoop:
 		move.b	#id_EndChaos,obID(a1) ; load chaos emerald object
@@ -170,7 +170,7 @@ ECha_LoadLoop:
 		move.b	d2,obFrame(a1)
 		addq.b	#1,d2
 		move.b	d3,obAngle(a1)
-		addi.b	#$100/6,d3	; angle between each emerald
+		addi.b	#$100/ss_emeralds_num,d3	; angle between each emerald
 		lea	object_size(a1),a1
 		dbf	d1,ECha_LoadLoop ; repeat 5 more times
 

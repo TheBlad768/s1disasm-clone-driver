@@ -8,7 +8,7 @@ ResumeMusic:
 		bhi.s	.replenishAir			; if yes, branch
 
 		move.w	#bgm_LZ,d0			; play LZ music
-		cmpi.w	#id_LZ_act4,(v_zone).w		; check if level is SBZ3 (LZ4)
+		cmpi.w	#id_LZ_act4,(v_zone_act).w	; check if level is SBZ3 (LZ4)
 		bne.s	.notSBZ				; if not, branch
 		move.w	#bgm_SBZ,d0			; play SBZ music instead
 	.notSBZ:

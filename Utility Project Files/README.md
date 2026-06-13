@@ -25,3 +25,6 @@ Project file for the [S1SSEdit](https://info.sonicretro.org/S1SSEdit) special st
 
 ## `Legacy Utility Project Files.zip`
 Archive that contains project files for [PlaneEd](https://info.sonicretro.org/PlaneEd) and both major versions of [SonED2](https://info.sonicretro.org/SonED2). These are only provided for historical purposes, as the utilities themselves are considered superseded by modern alternatives, and they may require additional adjustments to match newer naming conventions.
+
+## Fixed Files
+Data that cannot be edited with FixBugs, changes are listed in the folder.
