@@ -3549,7 +3549,7 @@ GM_Ending:
 		move.w	#30,(v_air).w			; replenish air
 
 		move.w	#id_EndZ_good,(v_zone_act).w	; set to good ending by default (level number 600, extra flowers)
-		cmpi.b	#6,(v_emeralds).w		; do you have all 6 emeralds?
+		cmpi.b	#ss_emeralds_num,(v_emeralds).w	; do you have all 6 emeralds?
 		beq.s	End_LoadData			; if yes, use good ending
 		move.w	#id_EndZ_bad,(v_zone_act).w	; otherwise, set to bad ending (level number 601, no extra flowers)
 
