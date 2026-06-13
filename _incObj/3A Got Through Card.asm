@@ -127,7 +127,7 @@ Got_ChkBonus:
 		move.w	#sfx_Cash,d0
 		jsr	(QueueSound2).l	; play "ker-ching" sound
 		addq.b	#2,obRoutine(a0)
-		cmpi.w	#id_SBZ_act2,(v_zone).w	; is level SBZ2?
+		cmpi.w	#id_SBZ_act2,(v_zone_act).w	; is level SBZ2?
 		bne.s	Got_SetDelay		; if not, branch
 		addq.b	#4,obRoutine(a0)	; prepare SBZ3 transition cutscene
 
@@ -156,7 +156,7 @@ Got_NextLevel:	; Routine $A
 		add.w	d1,d1
 		add.w	d1,d0
 		move.w	LevelOrder(pc,d0.w),d0	; load level from level order array
-		move.w	d0,(v_zone).w		; set new level number
+		move.w	d0,(v_zone_act).w		; set new level number
 		tst.w	d0			; is new level number GHZ1? (000)
 		bne.s	Got_ChkSS		; if not, branch
 		move.b	#id_Sega,(v_gamemode).w	; otherwise, instantly return to the Sega screen

@@ -19,7 +19,7 @@ Revision = 1
 
 FixBugs = 0
 ;	| If 1, enables various bugfixes across the game and sound driver
-;	|       (see also FixMusicAndSFXDataBugs)
+;	|       (see also "Utility Project FIles/Fixed Files", and FixMusicAndSFXDataBugs)
 
 CheatsEnabled = 0
 ;	| If 1, all in-game cheats (Level Select, Debug Mode, Slow-Motion, Japanese Credits)
@@ -1963,7 +1963,7 @@ Tit_LoadText:
 		move.w	#0,(v_debuguse).w		; exit debug mode if necessary
 		move.w	#0,(f_demo).w			; disable demo mode
 		move.w	#0,(v_unused2).w		; unused variable
-		move.w	#id_GHZ_act1,(v_zone).w		; set level to GHZ1 (000)
+		move.w	#id_GHZ_act1,(v_zone_act).w	; set level to GHZ1 (000)
 		move.w	#0,(v_pcyc_time).w		; disable palette cycling
 		bsr.w	LevelSizeLoad			; load level size (will use GHZ1's sizes)
 		bsr.w	DeformLayers			; initialize background deformation before fade-in (redundant here)
@@ -2213,7 +2213,7 @@ LevSel_PlaySnd:
 
 LevSel_Ending:
 		move.b	#id_Ending,(v_gamemode).w 	; set screen mode to $18 (Ending)
-		move.w	#id_EndZ_good,(v_zone).w  	; set level to 0600 (good Ending)
+		move.w	#id_EndZ_good,(v_zone_act).w  	; set level to 0600 (good Ending)
 		rts
 ; ===========================================================================
 
@@ -2232,7 +2232,7 @@ LevSel_Level_SS:
 		cmpi.w	#id_SS<<8,d0			; check if selected level Special Stage (0700 is used as dummy value)
 		bne.s	LevSel_Level			; if not, branch
 		move.b	#id_Special,(v_gamemode).w	; set screen mode to $10 (Special Stage)
-		clr.w	(v_zone).w			; clear level
+		clr.w	(v_zone_act).w			; clear level
 		move.b	#3,(v_lives).w			; set lives to 3
 		moveq	#0,d0				; set d0 to 0
 		move.w	d0,(v_rings).w			; clear rings
@@ -2246,7 +2246,7 @@ LevSel_Level_SS:
 
 LevSel_Level:
 		andi.w	#$3FFF,d0			; mask out invalid bits of level number
-		move.w	d0,(v_zone).w			; set new level number (zone and act)
+		move.w	d0,(v_zone_act).w		; set new level number (zone and act)
 
 PlayLevel:
 		move.b	#id_Level,(v_gamemode).w	; set screen mode to $0C (level)
@@ -2375,7 +2375,7 @@ GotoDemo_ChkLoop:
 		andi.w	#7,d0				; limit to four demo entries
 		add.w	d0,d0				; double for word-based indexing
 		move.w	Demo_Levels(pc,d0.w),d0		; load level number for demo
-		move.w	d0,(v_zone).w			; set level for demo
+		move.w	d0,(v_zone_act).w		; set level for demo
 
 		addq.w	#1,(v_demonum).w		; add 1 to demo number
 		cmpi.w	#4,(v_demonum).w		; is demo number less than 4?
@@ -2390,7 +2390,7 @@ GotoDemo_NoReset:
 		cmpi.w	#$600,d0			; is level number 0600 (Special Stage dummy value)?
 		bne.s	GotoDemo_NotSS			; if not, branch
 		move.b	#id_Special,(v_gamemode).w	; set game mode to $10 (Special Stage)
-		clr.w	(v_zone).w			; clear level number
+		clr.w	(v_zone_act).w			; clear level number
 		clr.b	(v_lastspecial).w		; clear special stage number to play demo in stage 1
 
 ; Demo_Level:
@@ -2774,12 +2774,12 @@ Level_GetBgm:
 
 		moveq	#0,d0				; clear d0
 		move.b	(v_zone).w,d0			; get current Zone ID
-		cmpi.w	#id_LZ_act4,(v_zone).w		; is level SBZ3 (LZ4)?
+		cmpi.w	#id_LZ_act4,(v_zone_act).w	; is level SBZ3 (LZ4)?
 		bne.s	Level_BgmNotLZ4			; if not, branch
 		moveq	#5,d0				; use 5th music (SBZ)
 
 Level_BgmNotLZ4:
-		cmpi.w	#id_FZ,(v_zone).w		; is level FZ?
+		cmpi.w	#id_FZ,(v_zone_act).w		; is level FZ?
 		bne.s	Level_PlayBgm			; if not, branch
 		moveq	#6,d0				; use 6th music (FZ)
 
@@ -3296,9 +3296,9 @@ SS_ChkEnd:
 	endif
 
 		move.b	#id_Level,(v_gamemode).w	; set screen mode to $0C (level)
-		cmpi.w	#id_FZ+1,(v_zone).w		; is level number higher than FZ (0502)?
+		cmpi.w	#id_FZ+1,(v_zone_act).w		; is level number higher than FZ (0502)?
 		blo.s	SS_Finish			; if not, branch
-		clr.w	(v_zone).w			; set to GHZ1 (possibly as a failsafe)
+		clr.w	(v_zone_act).w			; set to GHZ1 (possibly as a failsafe)
 
 
 SS_Finish:
@@ -3548,10 +3548,10 @@ GM_Ending:
 		move.w	(v_hblank_hreg).w,(a6)		; write to VDP
 		move.w	#30,(v_air).w			; replenish air
 
-		move.w	#id_EndZ_good,(v_zone).w	; set to good ending by default (level number 600, extra flowers)
+		move.w	#id_EndZ_good,(v_zone_act).w	; set to good ending by default (level number 600, extra flowers)
 		cmpi.b	#6,(v_emeralds).w		; do you have all 6 emeralds?
 		beq.s	End_LoadData			; if yes, use good ending
-		move.w	#id_EndZ_bad,(v_zone).w		; otherwise, set to bad ending (level number 601, no extra flowers)
+		move.w	#id_EndZ_bad,(v_zone_act).w	; otherwise, set to bad ending (level number 601, no extra flowers)
 
 End_LoadData:
 		moveq	#plcid_Ending,d0		; load ending sequence patterns (GHZ art, animals, etc.)
@@ -3859,7 +3859,7 @@ EndingDemoLoad:
 		andi.w	#$F,d0				; limit to 16 possible entries (redundant)
 		add.w	d0,d0				; double for word-based indexing
 		move.w	EndDemo_Levels(pc,d0.w),d0	; get relevant zone and act for the next credits demo
-		move.w	d0,(v_zone).w			; set level from level array
+		move.w	d0,(v_zone_act).w		; set level from level array
 
 		addq.w	#1,(v_creditsnum).w		; increase credits page number for next time
 		cmpi.w	#9,(v_creditsnum).w		; are we past the final credits page now?

@@ -20,7 +20,7 @@ OPL_Index:	dc.w OPL_Main-OPL_Index
 
 OPL_Main:
 		addq.b	#2,(v_opl_routine).w		; goto OPL_Next next
-		move.w	(v_zone).w,d0			; get zone/act numbers
+		move.w	(v_zone_act).w,d0		; get zone/act numbers
 		lsl.b	#6,d0
 		lsr.w	#4,d0				; combine zone/act into single number, times 4
 		lea	(ObjPos_Index).l,a0

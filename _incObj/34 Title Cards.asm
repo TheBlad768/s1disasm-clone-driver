@@ -27,13 +27,13 @@ Card_LoadForZone:	; Routine 0
 
 		moveq	#0,d0					; clear d0 (zone is a byte, we need words)
 		move.b	(v_zone).w,d0				; get current zone ID and use it as index for mappings and config data
-		cmpi.w	#id_LZ_act4,(v_zone).w			; check if level is SBZ3 (LZ4)
+		cmpi.w	#id_LZ_act4,(v_zone_act).w		; check if level is SBZ3 (LZ4)
 		bne.s	.notLZ4					; if not, branch
 		moveq	#5,d0					; use title card number 5 instead (SBZ)
 	; Card_CheckFZ:
 	.notLZ4:
 		move.w	d0,d2					; d2 = frame ID to use
-		cmpi.w	#id_FZ,(v_zone).w			; check if level is FZ
+		cmpi.w	#id_FZ,(v_zone_act).w			; check if level is FZ
 		bne.s	.notFZ					; if it isn't, branch
 		moveq	#6,d0					; use FZ entry in Card_ConData (entry 6)
 		moveq	#$B,d2					; use "FINAL" sprite mappings (frame ID $B)

@@ -339,10 +339,11 @@ v_debuguse:		ds.w	1		; debug mode use & routine counter (when Sonic is a ring/it
 v_debugspeedtimer:	ds.b	1		; debug mode - timer before movement starts
 v_debugspeed:		ds.b	1		; debug mode - movement speed
 v_vblank_count:		ds.l	1		; vertical interrupt counter (adds 1 every VBlank)
-v_vblank_word = v_vblank_count+2 			; low word for vertical interrupt counter (2 bytes)
+v_vblank_word = v_vblank_count+2 		; low word for vertical interrupt counter (2 bytes)
 v_vblank_byte = v_vblank_word+1			; low byte for vertical interrupt counter
 v_zone:			ds.b	1		; current zone number
 v_act:			ds.b	1		; current act number
+v_zone_act:		equ	v_zone		; when v_zone is read as a word
 v_lives:		ds.b	1		; number of lives
 			ds.b	1		; unused
 v_air:			ds.w	1		; air remaining while underwater

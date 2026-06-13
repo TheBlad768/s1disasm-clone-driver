@@ -21,14 +21,14 @@ LevelDataLoad:
 		move.w	(a2)+,d0
 		move.w	(a2),d0
 		andi.w	#$FF,d0
-		cmpi.w	#id_LZ_act4,(v_zone).w ; is level SBZ3 (LZ4)?
+		cmpi.w	#id_LZ_act4,(v_zone_act).w ; is level SBZ3 (LZ4)?
 		bne.s	.notSBZ3	; if not, branch
 		moveq	#palid_SBZ3,d0	; use SB3 palette
 
 .notSBZ3:
-		cmpi.w	#id_SBZ_act2,(v_zone).w ; is level SBZ2?
+		cmpi.w	#id_SBZ_act2,(v_act_zone).w ; is level SBZ2?
 		beq.s	.isSBZorFZ	; if yes, branch
-		cmpi.w	#id_FZ,(v_zone).w ; is level FZ?
+		cmpi.w	#id_FZ,(v_zone_act).w ; is level FZ?
 		bne.s	.normalpal	; if not, branch
 
 .isSBZorFZ:
@@ -79,7 +79,7 @@ LevLoad_ClrRam:
 
 ; "LevelLayoutLoad2" is run twice - for the level and the background
 LevelLayoutLoad2:
-		move.w	(v_zone).w,d0
+		move.w	(v_zone_act).w,d0
 		lsl.b	#6,d0
 		lsr.w	#5,d0
 		move.w	d0,d2
