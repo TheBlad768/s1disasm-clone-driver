@@ -150,7 +150,7 @@ LCon_Platform:	; Routine 2
 		moveq	#0,d1
 		move.b	obActWid(a0),d1
 		jsr	(PlatformObject).l
-		bra.w	sub_12502
+		bra.w	LCon_Platform_Update
 ; ===========================================================================
 
 ; loc_124C2:
@@ -159,7 +159,7 @@ LCon_OnPlatform: ; Routine 4
 		move.b	obActWid(a0),d1
 		jsr	(ExitPlatform).l
 		move.w	obX(a0),-(sp)
-		bsr.w	sub_12502
+		bsr.w	LCon_Platform_Update
 		move.w	(sp)+,d2
 		jmp	(MvSonicOnPtfm2).l
 ; ===========================================================================
@@ -181,52 +181,56 @@ loc_124F2:
 loc_124FC:
 		addq.l	#4,sp
 		bra.w	RememberState
+
 ; ===========================================================================
+; ---------------------------------------------------------------------------
+; Subroutine to get next corner coordinates and update platform position
+; ---------------------------------------------------------------------------
 
-
-sub_12502:
-		tst.b	(f_switch+$E).w
-		beq.s	loc_12520
-		tst.b	objoff_3B(a0)
-		bne.s	loc_12520
-		move.b	#1,objoff_3B(a0)
-		move.b	#1,(f_conveyrev).w
+; sub_12502:
+LCon_Platform_Update:
+		tst.b	(f_switch+$E).w				; has button $E been pressed?
+		beq.s	.no_reverse				; if not, branch
+		tst.b	objoff_3B(a0)				; is reverse flag already set?
+		bne.s	.no_reverse				; if yes, branch
+		move.b	#1,objoff_3B(a0)			; set local flag
+		move.b	#1,(f_conveyrev).w			; set global flag
 		neg.b	objoff_3A(a0)
-		bra.s	loc_12534
+		bra.s	.next_corner
 ; ===========================================================================
 
-loc_12520:
+.no_reverse:
 		move.w	obX(a0),d0
-		cmp.w	objoff_34(a0),d0
-		bne.s	loc_1256A
+		cmp.w	objoff_34(a0),d0			; is platform at corner?
+		bne.s	.not_at_corner				; if not, branch
 		move.w	obY(a0),d0
 		cmp.w	objoff_36(a0),d0
-		bne.s	loc_1256A
+		bne.s	.not_at_corner
 
-loc_12534:
+.next_corner:
 		moveq	#0,d1
 		move.b	objoff_38(a0),d1
 		add.b	objoff_3A(a0),d1
-		cmp.b	objoff_39(a0),d1
-		blo.s	loc_12552
+		cmp.b	objoff_39(a0),d1			; is next corner valid?
+		bcs.s	.is_valid				; if yes, branch
 		move.b	d1,d0
-		moveq	#0,d1
+		moveq	#0,d1					; reset corner counter to 0
 		tst.b	d0
-		bpl.s	loc_12552
+		bpl.s	.is_valid
 		move.b	objoff_39(a0),d1
 		subq.b	#4,d1
 
-loc_12552:
+	.is_valid:
 		move.b	d1,objoff_38(a0)
 		movea.l	objoff_3C(a0),a1
 		move.w	(a1,d1.w),objoff_34(a0)
 		move.w	2(a1,d1.w),objoff_36(a0)
 		bsr.w	LCon_ChangeDir
 
-loc_1256A:
+	.not_at_corner:
 		bsr.w	SpeedToPos
-		rts
-; End of function sub_12502
+		rts	
+; End of function LCon_Platform_Update
 ; ===========================================================================
 
 LCon_ChangeDir:

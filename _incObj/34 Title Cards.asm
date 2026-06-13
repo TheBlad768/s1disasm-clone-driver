@@ -27,13 +27,13 @@ Card_LoadForZone:	; Routine 0
 
 		moveq	#0,d0					; clear d0 (zone is a byte, we need words)
 		move.b	(v_zone).w,d0				; get current zone ID and use it as index for mappings and config data
-		cmpi.w	#id_LZ_act4,(v_zone).w			; check if level is SBZ3 (LZ4)
+		cmpi.w	#id_LZ_act4,(v_zone_act).w		; check if level is SBZ3 (LZ4)
 		bne.s	.notLZ4					; if not, branch
 		moveq	#5,d0					; use title card number 5 instead (SBZ)
 	; Card_CheckFZ:
 	.notLZ4:
 		move.w	d0,d2					; d2 = frame ID to use
-		cmpi.w	#id_FZ,(v_zone).w			; check if level is FZ
+		cmpi.w	#id_FZ,(v_zone_act).w			; check if level is FZ
 		bne.s	.notFZ					; if it isn't, branch
 		moveq	#6,d0					; use FZ entry in Card_ConData (entry 6)
 		moveq	#$B,d2					; use "FINAL" sprite mappings (frame ID $B)
@@ -71,7 +71,7 @@ Card_Loop:
 		move.b	#240/2,obActWid(a1)			; set display width (redundant for screen-positioned sprites)
 		move.b	#0,obRender(a1)				; set to screen-positioned sprite mode
 		move.b	#0,obPriority(a1)			; set to highest sprite priority
-		move.w	#60,obTimeFrame(a1)			; set time delay before moving out again to 1 second
+		move.w	#1*60,obTimeFrame(a1)			; set time delay before moving out again to 1 second
 
 		lea	object_size(a1),a1			; advance to next card object (all elements are back-to-back in RAM)
 		dbf	d1,Card_Loop				; repeat sequence another 3 times
@@ -83,7 +83,7 @@ Card_MoveIn:	; Routine 2
 		move.w	card_mainX(a0),d0			; get target moving in X-position
 		cmp.w	obX(a0),d0				; has item reached its target position?
 		beq.s	.checkOffScreen				; if yes, branch
-		bge.s	.updateXPos				; if item is moving in from the left? if yes, branch
+		bge.s	.updateXPos				; is item moving in from the left? if yes, branch
 		neg.w	d1					; negate move-in direction if coming from the right
 	; Card_Move:
 	.updateXPos:
@@ -174,31 +174,30 @@ Card_ChangeArt:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Title card element setup data. Format:
-; - y-axis position (word)
-; - base routine number (byte)
-; - frame ID (byte)
-; (Note that the frame ID for the level name is dynamic, 0 is a trigger)
+; - Y-position
+; - base routine number
+; - frame ID
 ; ---------------------------------------------------------------------------
 Card_ItemData:
-		; Name
-		dc.w $80+80	; =$D0
-		dc.b 2		; =Card_MoveIn
-		dc.b 0		; dynamic frame ID (see Card_Loop)
+		; Level Name
+		dc.w $D0
+		dc.b 2
+		dc.b 0	; dynamic frame ID (see Card_Loop)
 
 		; ZONE
-		dc.w $80+100	; =$E4
-		dc.b 2		; =Card_MoveIn
-		dc.b 6		; =frame ID 6
+		dc.w $E4
+		dc.b 2
+		dc.b 6
 
 		; ACT
-		dc.w $80+106	; =$EA
-		dc.b 2		; =Card_MoveIn
-		dc.b 7		; =frame ID 7
+		dc.w $EA
+		dc.b 2
+		dc.b 7
 
 		; Oval
-		dc.w $80+96	; =$E0
-		dc.b 2		; =Card_MoveIn
-		dc.b $A		; =frame ID $A
+		dc.w $E0
+		dc.b 2
+		dc.b $A
 
 ; ---------------------------------------------------------------------------
 ; Title card start and target X-positioning data. Format:

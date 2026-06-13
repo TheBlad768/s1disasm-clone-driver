@@ -9,9 +9,6 @@ sonss_timeout_r:	equ	objoff_37	; timeout before an R block can be triggered agai
 sonss_exittimer:	equ	objoff_38	; (unused) timer for the secondary exiting routine (word)
 sonss_ghoststate:	equ	objoff_3A	; current solidity state of ghost blocks (byte)
 ; ---------------------------------------------------------------------------
-ss_rotatespeed:		equ	$40		; base special stage rotation speed
-ss_blocksize:		equ	24		; logical size of a single block
-ss_timeout:		equ	30		; delay after touching an UP/DOWN or R block
 sonss_maxspeed:		equ	$800		; Sonic's max speed when moving left/right
 sonss_acceleration:	equ	$C		; Sonic's acceleration
 sonss_deceleration:	equ	$40		; Sonic's deceleration
@@ -634,7 +631,7 @@ SonicSS_ChkRing:
 ; Obj09_GetCont:
 SonicSS_GetContinue:
 		jsr	(CollectRing).l				; add a ring
-		cmpi.w	#50,(v_rings).w				; check if you now have 50 rings
+		cmpi.w	#ss_continue_rings,(v_rings).w		; check if you now have 50 rings
 		blo.s	SonicSS_NoContinue			; if not, branch
 		bset	#0,(v_lifecount).w			; remember that a continue has already been awarded
 		bne.s	SonicSS_NoContinue			; if flag was already set, branch
@@ -683,7 +680,7 @@ SonicSS_ChkEmerald:
 
 ; Obj09_GetEmer:
 SonicSS_GetEmerald:
-		cmpi.b	#6,(v_emeralds).w			; do you already have all the emeralds?
+		cmpi.b	#ss_emeralds_num,(v_emeralds).w		; do you already have all the emeralds?
 		beq.s	SonicSS_NoEmerald			; if yes, branch (probably a failsafe)
 
 		subi.b	#id_SS_Emerald1_Blue,d4			; make emerald block ID 0-based

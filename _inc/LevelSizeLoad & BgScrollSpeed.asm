@@ -13,7 +13,7 @@ LevelSizeLoad:
 		; Fix title screen not always scrolling after a game over
 		move.b	d0,(f_nobgscroll).w
 	endif
-		move.w	(v_zone).w,d0
+		move.w	(v_zone_act).w,d0
 		lsl.b	#6,d0
 		lsr.w	#4,d0
 		move.w	d0,d1
@@ -86,7 +86,7 @@ LevSz_StartLoc:
 		bra.s	LevSz_SkipStartPos		; skip normal logic
 LevSz_NotTitle:
 	endif
-		move.w	(v_zone).w,d0
+		move.w	(v_zone_act).w,d0
 		lsl.b	#6,d0
 		lsr.w	#4,d0
 		lea	StartLocArray(pc,d0.w),a1 ; load Sonic's start location

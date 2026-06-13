@@ -272,20 +272,24 @@ jmi:		macro loc
 
 ; ---------------------------------------------------------------------------
 ; check if object moves out of range
-; input: location to jump to if out of range, x-axis pos (obX(a0) by default)
+; input: location to jump to if out of range, x-axis pos (obX(a0) by default), optional bmi exit
 ; ---------------------------------------------------------------------------
 
-out_of_range:	macro exit,pos
-		if (narg=2)
+out_of_range:	macro exit,pos,bmicheck
+	if (narg>=2)
 		move.w	pos,d0		; get object position (if specified as not obX)
-		else
+	else
 		move.w	obX(a0),d0	; get object position
-		endif
+	endif
 		andi.w	#$FF80,d0	; round down to nearest $80
 		move.w	(v_screenposx).w,d1 ; get screen position
 		subi.w	#128,d1
 		andi.w	#$FF80,d1
 		sub.w	d1,d0		; approx distance between object and screen
+	if (narg=3)
+		; This bmi is in a few out_of_range calls (albeit redundant)
+		bmi.\0	exit
+	endif
 		cmpi.w	#128+320+192,d0
 		bhi.\0	exit
 		endm
