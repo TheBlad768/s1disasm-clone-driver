@@ -22,6 +22,9 @@ Mon_Main:	; Routine 0
 		; SBZ2 has a handful of these broken monitors hidden in walls, all
 		; of which match to properly sized invisible solid barriers, likely
 		; originating from improper data conversion late into development.
+
+		; If you have replaced the SBZ2 object data with its fixed version,
+		; this fix is not necessary.
 		cmpi.b	#8,obSubtype(a0)		; is monitor subtype valid? i.e. no higher than goggles monitor (ID 8)
 		bls.s	.valid				; if yes, branch
 		move.b	#id_Invisibarrier,obID(a0)	; otherwise, convert this monitor to an invisible solid barrier
