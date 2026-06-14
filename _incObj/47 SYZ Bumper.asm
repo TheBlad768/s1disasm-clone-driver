@@ -56,7 +56,7 @@ Bump_Hit:	; Routine 2
 		move.b	obRespawnNo(a0),d0		; get bumper's respawn table index
 		beq.s	.addscore			; if it doesn't have one, branch
 		cmpi.b	#10+$80,2(a2,d0.w)		; has bumper been hit 10 times? ($80 is bit 7, i.e. respawn block flag)
-		bhs.s	Bump_Display			; if yes, award no more pointspoints
+		bhs.s	Bump_Display			; if yes, award no more points
 		addq.b	#1,2(a2,d0.w)			; remember one more bumper hit in respawn data
 	.addscore:
 		moveq	#1,d0				; set to add 10 points

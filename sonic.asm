@@ -2031,7 +2031,7 @@ Tit_LoadText:
 
 		move.b	#id_TitleSonic,(v_titlesonic).w	; load big Sonic object
 		move.b	#id_PSBTM,(v_pressstart).w	; load "PRESS START BUTTON" object
-		;clr.b	(v_pressstart+obRoutine).w	; The 'Mega Games 10' version of Sonic 1 added this line to fix the 'PRESS START BUTTON' object not appearing
+	;	clr.b	(v_pressstart+obRoutine).w	; The 'Mega Games 10' version of Sonic 1 added this line to fix the 'PRESS START BUTTON' object not appearing
 
 	if Revision<>0
 		tst.b	(v_megadrive).w			; is console Japanese?
@@ -2039,8 +2039,8 @@ Tit_LoadText:
 	endif
 		move.b	#id_PSBTM,(v_titletm).w		; load title screen HUD object
 		move.b	#3,(v_titletm+obFrame).w	; set it to the "TM" frame
+	.isjap:
 
-.isjap:
 		move.b	#id_PSBTM,(v_ttlsonichide).w	; load title screen HUD object
 		move.b	#2,(v_ttlsonichide+obFrame).w	; load object which hides part of Sonic's torso behind the emblem
 
@@ -3720,16 +3720,19 @@ End_SlowFade:
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine controlling Sonic on the ending sequence
-; Many aspects of the game use the concept of a state machine. If you are interested and want to learn more, these are Mealy and Moore machines which have plenty of resources to teach you!
-; This subroutine is a Moore machine. Once you understand these concepts, Sonic 1's game logic will make a lot more sense to you!
+; Subroutine controlling Sonic on the ending sequence.
+; 
+; Many aspects of the game use the concept of a state machine.
+; If you are interested and want to learn more, these are Mealy and Moore machines
+; which have plenty of resources to teach you! This subroutine is a Moore machine.
+; Once you understand these concepts, Sonic 1's game logic will make a lot more sense to you!
 ; ---------------------------------------------------------------------------
 
 End_MoveSonic:
 		move.b	(v_sonicend).w,d0		; get ending cutscene routine number
 		bne.s	End_MoveSon2			; if it's non-zero, branch to second script
 
-		cmpi.w	#$90,(v_player+obX).w		; has Sonic passed $90 on the X-axis (from the right)?
+		cmpi.w	#(320/2)-16,(v_player+obX).w	; has Sonic passed $90 on the X-axis (from the right)?
 		bhs.s	End_MoveSonExit			; if not, branch
 
 		addq.b	#2,(v_sonicend).w		; advance ending cutscene routine number
@@ -3742,7 +3745,7 @@ End_MoveSon2:
 		subq.b	#2,d0				; subtract 2 from cutscene routine number
 		bne.s	End_MoveSon3			; if it's still non-zero, branch to third script
 
-		cmpi.w	#$A0,(v_player+obX).w		; has Sonic passed $A0 on the X-axis (from the left)?
+		cmpi.w	#320/2,(v_player+obX).w		; has Sonic passed $A0 on the X-axis (from the left)?
 		blo.s	End_MoveSonExit			; if not, branch
 
 		addq.b	#2,(v_sonicend).w		; advance ending cutscene routine number
@@ -3763,7 +3766,7 @@ End_MoveSon3:
 		bne.s	End_MoveSonExit			; if it's still non-zero, the below code has already run, branch to do nothing anymore
 
 		addq.b	#2,(v_sonicend).w		; advance ending cutscene routine number
-		move.w	#$A0,(v_player+obX).w		; force Sonic to the middle of the screen
+		move.w	#320/2,(v_player+obX).w		; force Sonic to the middle of the screen
 		move.b	#id_EndSonic,(v_player).w	; replace real Sonic object with a fake ending sequence Sonic object
 		clr.w	(v_player+obRoutine).w		; reset routine counter to initialize fake ending Sonic
 
