@@ -321,7 +321,7 @@ RLoss_Bounce:	; Routine 2
 
 		move.b	(v_vblank_byte).w,d0			; get VBlank counter byte
 		add.b	d7,d0					; add object RAM index as crude spreading-out of collision check over multiple frames
-		andi.b	#3,d0					; only check for floor collision every 4th fram
+		andi.b	#3,d0					; only check for floor collision every 4th frame
 		bne.s	.chkdel					; if on any other frame, branch
 
 		jsr	(ObjFloorDist).l			; calculate distance between this ring and the floor

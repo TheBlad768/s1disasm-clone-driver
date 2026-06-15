@@ -37,7 +37,7 @@ Moto_Main:	; Routine 0
 		tst.w	d1				; has Motobug hit the floor?
 		bpl.s	.hide				; if not, branch
 		add.w	d1,obY(a0)			; match object's position with the floor
-		move.w	#0,obVelY(a0)			; clear falling spped
+		move.w	#0,obVelY(a0)			; clear falling speed
 		addq.b	#2,obRoutine(a0)		; advance to Moto_Action
 		bchg	#0,obStatus(a0)			; make Motobug face to the left on spawn
 	.hide:

@@ -7,7 +7,7 @@
     </ImageFromMappings>
     <ImageFromMappings id="img2">
       <ArtFile filename="../../artnem/Enemy Newtron.nem"/>
-      <MapFile type="ASM" filename="../../_maps/Newtron.asm" frame="1" startpal="0"/>
+      <MapFile type="ASM" filename="../../_maps/Newtron.asm" frame="1" startpal="1"/>
     </ImageFromMappings>
   </Images>
   <Subtypes>
