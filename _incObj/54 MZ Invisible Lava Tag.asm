@@ -25,20 +25,16 @@ LTag_Main:	; Routine 0
 		move.b	obSubtype(a0),d0			; get size in subtype (0-2)
 		move.b	LTag_ColTypes(pc,d0.w),obColType(a0)	; set collision response type/size based on subtype
 		move.l	#Map_LTag,obMap(a0)			; set mappings (blank)
-	if FixBugs
-		move.b	#4,obRender(a0)				; set playfield-positioned mode
-	else
-		; There isn't any need to set the object visible flag, since the object has
-		; blank mappings (they did exist in the prototype, but were blanked out for
-		; the final). Additionally, if one decided to implement proper mappings like
-		; in Sonic 2, it would cause it to appear when dying.
+		; The reason why this object enables its object visible flag despite being
+		; blank is because of an optimization made to ReachToItem that skips over
+		; objects that haven't set it. From Sonic 2 onwards, this check was removed.
 
-		; This bug does technically affect Sonic 2, but was hackishly fixed by having
-		; the object use a set of blank mappings when not in edit mode. However, the
-		; ARZ leaf generator (whose initialization routine was likely copied from here)
-		; does suffer from this bug.
+		; This, however, creates a flaw. If the object DID have proper mappings, it
+		; would appear when dying. In fact, this occurs in Sonic 2 with the ARZ leaf
+		; generator, whose initialization code was likely copied from here. It would
+		; also effect the lava in that game had it not been for a hackish workaround
+		; where it uses blank mappings outside of edit mode.
 		move.b	#$84,obRender(a0)			; set object visible flag and playfield-positioned mode
-	endif
 ; ---------------------------------------------------------------------------
 
 LTag_ChkDel:	; Routine 2
