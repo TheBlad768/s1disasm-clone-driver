@@ -1,98 +1,125 @@
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Subroutine to react to obColType(a0)
+; Subroutine to collide Sonic with objects using obColType(a0)
+; 
+; input:
+;	a0 = address of OST of Sonic
+; 
+; output:
+;	d0.l = -1 if Sonic touches an enemy or harmful object while invincible, or is hurt/killed
+;	a2 = address of OST of object hurting/killing Sonic
 ; ---------------------------------------------------------------------------
 
 ReactToItem:
-		nop	
-		move.w	obX(a0),d2	; load Sonic's x-axis position
-		move.w	obY(a0),d3	; load Sonic's y-axis position
+		nop						; useless nop (probably so an rts could easily be inserted here)
+		move.w	obX(a0),d2				; load Sonic's x-axis position
+		move.w	obY(a0),d3				; load Sonic's y-axis position
 		subq.w	#sonic_react_width,d2
 		moveq	#0,d5
-		move.b	obHeight(a0),d5	; load Sonic's height
+		move.b	obHeight(a0),d5				; load Sonic's height
 		subq.b	#3,d5
 		sub.w	d5,d3
-		cmpi.b	#fr_Duck,obFrame(a0) ; is Sonic ducking?
-		bne.s	.notducking	; if not, branch
+		cmpi.b	#fr_Duck,obFrame(a0)			; is Sonic ducking?
+		bne.s	.notducking				; if not, branch
 		addi.w	#((sonic_height-3)-sonic_duck_height)*2,d3
 		moveq	#sonic_duck_height,d5
-
-.notducking:
+	.notducking:
 		move.w	#sonic_react_width*2,d4
 		add.w	d5,d5
-		lea	(v_lvlobjspace).w,a1 ; set object RAM start address
+
+		lea	(v_lvlobjspace).w,a1			; set object RAM start address
 		move.w	#(v_lvlobjend-v_lvlobjspace)/$40-1,d6
-
-.loop:
+; .loop:
+React_LoopObjects:
 		tst.b	obRender(a1)
-		bpl.s	.next
-		move.b	obColType(a1),d0 ; load collision type
-		bne.s	.proximity	; if nonzero, branch
-
-.next:
-		lea	object_size(a1),a1	; next object RAM
-		dbf	d6,.loop	; repeat $5F more times
+		bpl.s	React_CheckNext
+		move.b	obColType(a1),d0			; load collision type
+		bne.s	React_ColTypeSet			; if nonzero, branch
+; .next:
+React_CheckNext:
+		lea	object_size(a1),a1			; next object RAM
+		dbf	d6,React_LoopObjects			; repeat $5F more times
 
 		moveq	#0,d0
 		rts
+
 ; ===========================================================================
-.sizes:		;   width, height
-		dc.b  $14, $14		; $01
-		dc.b   $C, $14		; $02
-		dc.b  $14,  $C		; $03
-		dc.b	4, $10		; $04
-		dc.b   $C, $12		; $05
-		dc.b  $10, $10		; $06
-		dc.b	6,   6		; $07
-		dc.b  $18,  $C		; $08
-		dc.b   $C, $10		; $09
-		dc.b  $10,  $C		; $0A
-		dc.b	8,   8		; $0B
-		dc.b  $14, $10		; $0C
-		dc.b  $14,   8		; $0D
-		dc.b   $E,  $E		; $0E
-		dc.b  $18, $18		; $0F
-		dc.b  $28, $10		; $10
-		dc.b  $10, $18		; $11
-		dc.b	8, $10		; $12
-		dc.b  $20, $70		; $13
-		dc.b  $40, $20		; $14
-		dc.b  $80, $20		; $15
-		dc.b  $20, $20		; $16
-		dc.b	8,   8		; $17
-		dc.b	4,   4		; $18
-		dc.b  $20,   8		; $19
-		dc.b   $C,  $C		; $1A
-		dc.b	8,   4		; $1B
-		dc.b  $18,   4		; $1C
-		dc.b  $28,   4		; $1D
-		dc.b	4,   8		; $1E
-		dc.b	4, $18		; $1F
-		dc.b	4, $28		; $20
-		dc.b	4, $20		; $21
-		dc.b  $18, $18		; $22
-		dc.b   $C, $18		; $23
-		dc.b  $48,   8		; $24
+;.sizes:
+React_Sizes:
+
+; Flags to further split objects into individual property subgroups.
+col_badnik:	equ 0			; destroyable badniks
+col_item:	equ $40			; monitors, rings, giant rings
+col_hurt:	equ $80			; damaging objects when touched
+col_special:	equ $C0			; objects with special collision properties (Yadrin, Caterkiller, SYZ bumpers)
+
+; Hitbox sizes are stored as box extents (half-width and half-height; similar to radii).
+hitbox: macro width,height,{INTLABEL}
+__LABEL__:	label	(*-React_Sizes)/2+1
+		dc.b	width/2, height/2
+		endm
+
+		;     width, height
+col_40x40:	hitbox	 40, 40		; $01 - GHZ ball
+col_24x40:	hitbox	 24, 40		; $02 - (unused)
+col_40x24:	hitbox	 40, 24		; $03 - (unused)
+col_8x32:	hitbox	  8, 32		; $04 - GHZ spike pole, SYZ boss spike
+col_24x36:	hitbox	 24, 36		; $05 - Ball Hog, Burrobot
+col_32x32:	hitbox	 32, 32		; $06 - SBZ spikeball, Crabmeat, Monitor, SYZ spikeball, Prison
+col_12x12:	hitbox	 12, 12		; $07 - Cannonball, Crab/Buzz missile, Ring
+col_48x24:	hitbox	 48, 24		; $08 - Buzz Bomber
+col_24x32:	hitbox	 24, 32		; $09 - Chopper
+col_32x24:	hitbox	 32, 24		; $0A - Jaws
+col_16x16:	hitbox	 16, 16		; $0B - MZ fire, Fireball, Batbrain, LZ spikeball, SLZ seesaw spike, Orbinaut, Caterkiller
+col_40x32:	hitbox	 40, 32		; $0C - Newtron, Motobug, Yadrin
+col_40x16:	hitbox	 40, 16		; $0D - Newtron
+col_28x28:	hitbox	 28, 28		; $0E - Roller
+col_48x48:	hitbox	 48, 48		; $0F - Bosses
+col_80x32:	hitbox	 80, 32		; $10 - MZ stomper
+col_32x48:	hitbox	 32, 48		; $11 - MZ stomper
+col_16x32:	hitbox	 16, 32		; $12 - Giant ring
+col_64x224:	hitbox	 64,224		; $13 - MZ geyser
+col_128x64:	hitbox	128, 64		; $14 - MZ lava wall, MZ lava tag
+col_256x64:	hitbox	256, 64		; $15 - MZ lava tag
+col_64x64:	hitbox	 64, 64		; $16 - MZ lava tag
+col_16x16_alt:	hitbox	 16, 16		; $17 - SYZ bumper
+col_8x8:	hitbox	  8,  8		; $18 - SYZ spike chain, Bomb shrapnel, Orbinaut spike, LZ gargoyle fire
+col_64x16:	hitbox	 64, 16		; $19 - SLZ swing
+col_24x24:	hitbox	 24, 24		; $1A - Bomb enemy, FZ plasma
+col_16x8:	hitbox	 16,  8		; $1B - LZ harpoon
+col_48x8:	hitbox	 48,  8		; $1C - LZ harpoon
+col_80x8:	hitbox	 80,  8		; $1D - LZ harpoon
+col_8x16:	hitbox	  8, 16		; $1E - LZ harpoon
+col_8x48:	hitbox	  8, 48		; $1F - LZ harpoon
+col_8x80:	hitbox	  8, 80		; $20 - LZ harpoon
+col_8x64:	hitbox	  8, 64		; $21 - LZ pole
+col_48x48_alt:	hitbox	 48, 48		; $22 - SBZ saw
+col_24x48:	hitbox	 24, 48		; $23 - SBZ flamethrower
+col_144x16:	hitbox	144, 16		; $24 - SBZ electric
+
+; (This list could theoretically go up to $3F entries...)
 ; ===========================================================================
 
-.proximity:
+; .proximity:
+React_ColTypeSet:
 		andi.w	#$3F,d0
 		add.w	d0,d0
-		lea	.sizes-2(pc,d0.w),a2
+		lea	React_Sizes-2(pc,d0.w),a2		; skip first entry (coltype can't be 0)
 		moveq	#0,d1
 		move.b	(a2)+,d1
 		move.w	obX(a1),d0
 		sub.w	d1,d0
 		sub.w	d2,d0
-		bcc.s	.outsidex	; branch if not touching
+		bcc.s	.outsidex				; branch if not touching
 		add.w	d1,d1
 		add.w	d1,d0
-		bcs.s	.withinx	; branch if touching
-		bra.w	.next
+		bcs.s	.withinx				; branch if touching
+		bra.w	React_CheckNext
 ; ===========================================================================
 
 .outsidex:
 		cmp.w	d4,d0
-		bhi.w	.next
+		bhi.w	React_CheckNext
 
 .withinx:
 		moveq	#0,d1
@@ -100,47 +127,50 @@ ReactToItem:
 		move.w	obY(a1),d0
 		sub.w	d1,d0
 		sub.w	d3,d0
-		bcc.s	.outsidey	; branch if not touching
+		bcc.s	.outsidey				; branch if not touching
 		add.w	d1,d1
 		add.w	d0,d1
-		bcs.s	.withiny	; branch if touching
-		bra.w	.next
+		bcs.s	.withiny				; branch if touching
+		bra.w	React_CheckNext
 ; ===========================================================================
 
 .outsidey:
 		cmp.w	d5,d0
-		bhi.w	.next
+		bhi.w	React_CheckNext
 
 .withiny:
-.chktype:
-		move.b	obColType(a1),d1 ; load collision type
-		andi.b	#$C0,d1		; is obColType $40 or higher?
-		beq.w	React_Enemy	; if not, branch
-		cmpi.b	#$C0,d1		; is obColType $C0 or higher?
-		beq.w	React_Special	; if yes, branch
-		tst.b	d1		; is obColType $80-$BF?
-		bmi.w	React_ChkHurt	; if yes, branch
+
+; ---------------------------------------------------------------------------
+; Sonic is touching object, check what it should do now...
+
+		move.b	obColType(a1),d1			; load collision type
+		andi.b	#$C0,d1					; is obColType $40 or higher?
+		beq.w	React_Enemy				; if not, branch
+		cmpi.b	#$C0,d1					; is obColType $C0 or higher?
+		beq.w	React_Special				; if yes, branch
+		tst.b	d1					; is obColType $80-$BF?
+		bmi.w	React_ChkHurt				; if yes, branch
 
 ; obColType is $40-$7F (power-ups)
 
 		move.b	obColType(a1),d0
 		andi.b	#$3F,d0
-		cmpi.b	#6,d0		; is collision type $46 (monitor)?
-		beq.s	React_Monitor	; if yes, branch (ignore flashing time)
+		cmpi.b	#6,d0					; is collision type $46 (monitor)?
+		beq.s	React_Monitor				; if yes, branch (ignore flashing time)
 
 ; object was a ring (standard, lost, or giant)
 
-		cmpi.w	#90,flashtime(a0)	; has Sonic recently been hurt and has more than 90 frames of flashing time left?
-		bhs.w	.preventRingCollect	; if yes, prevent collecting ring
-		addq.b	#2,obRoutine(a1)	; advance the ring's routine counter (e.g. Ring_Collect)
+		cmpi.w	#90,flashtime(a0)			; has Sonic recently been hurt and has more than 90 frames of flashing time left?
+		bhs.w	.preventRingCollect			; if yes, prevent collecting ring
+		addq.b	#2,obRoutine(a1)			; advance the ring's routine counter (e.g. Ring_Collect)
 
-.preventRingCollect:
+	.preventRingCollect:
 		rts
 ; ===========================================================================
 
 React_Monitor:
-		tst.w	obVelY(a0)	; is Sonic moving upwards?
-		bpl.s	.movingdown	; if not, branch
+		tst.w	obVelY(a0)				; is Sonic moving upwards?
+		bpl.s	.movingdown				; if not, branch
 	if FixBugs
 		; Fix bumping monitors from below that are already on the ground
 		btst	#1,obStatus(a0)
@@ -151,36 +181,36 @@ React_Monitor:
 		cmp.w	obY(a1),d0
 		blo.s	.donothing
 
-.monitorbumped:
-		neg.w	obVelY(a0)	; reverse Sonic's vertical speed
+	.monitorbumped:
+		neg.w	obVelY(a0)				; reverse Sonic's vertical speed
 		move.w	#-$180,obVelY(a1)
 		tst.b	ob2ndRout(a1)
 		bne.s	.donothing
-		addq.b	#4,ob2ndRout(a1) ; advance the monitor's routine counter (to make it fall)
+		addq.b	#4,ob2ndRout(a1)			; advance the monitor's routine counter (to make it fall)
 		rts
-; ===========================================================================
+; ---------------------------------------------------------------------------
 
-.movingdown:
-		cmpi.b	#id_Roll,obAnim(a0) ; is Sonic rolling/jumping?
+	.movingdown:
+		cmpi.b	#id_Roll,obAnim(a0)			; is Sonic rolling/jumping?
 		bne.s	.donothing
-		neg.w	obVelY(a0)	; reverse Sonic's y-motion
-		addq.b	#2,obRoutine(a1) ; advance the monitor's routine counter
+		neg.w	obVelY(a0)				; reverse Sonic's y-motion
+		addq.b	#2,obRoutine(a1)			; advance the monitor's routine counter
 
-.donothing:
+	.donothing:
 		rts
 ; ===========================================================================
 
 React_Enemy:
-		tst.b	(v_invinc).w	; is Sonic invincible?
-		bne.s	.donthurtsonic	; if yes, branch
-		cmpi.b	#id_Roll,obAnim(a0) ; is Sonic rolling/jumping?
-		bne.w	React_ChkHurt	; if not, branch
+		tst.b	(v_invinc).w				; is Sonic invincible?
+		bne.s	.donthurtsonic				; if yes, branch
+		cmpi.b	#id_Roll,obAnim(a0)			; is Sonic rolling/jumping?
+		bne.w	React_ChkHurt				; if not, branch
 
-.donthurtsonic:
+	.donthurtsonic:
 		tst.b	obColProp(a1)
 		beq.s	.breakenemy
 
-		neg.w	obVelX(a0)	; repel Sonic
+		neg.w	obVelX(a0)				; repel Sonic
 		neg.w	obVelY(a0)
 		asr.w	obVelX(a0)
 		asr.w	obVelY(a0)
@@ -189,30 +219,31 @@ React_Enemy:
 		bne.s	.flagnotclear
 		bset	#7,obStatus(a1)
 
-.flagnotclear:
+	.flagnotclear:
 		rts
-; ===========================================================================
+; ---------------------------------------------------------------------------
 
-.breakenemy:
+	.breakenemy:
 		bset	#7,obStatus(a1)
 		moveq	#0,d0
 		move.w	(v_itembonus).w,d0
-		addq.w	#2,(v_itembonus).w ; add 2 to item bonus counter
+		addq.w	#2,(v_itembonus).w			; add 2 to item bonus counter
 		cmpi.w	#6,d0
 		blo.s	.bonusokay
-		moveq	#6,d0		; max bonus is lvl6
+		moveq	#6,d0					; max bonus is lvl6
 
-.bonusokay:
+	.bonusokay:
 		move.w	d0,objoff_3E(a1)
-		move.w	.points(pc,d0.w),d0
-		cmpi.w	#$20,(v_itembonus).w ; have 16 enemies been destroyed?
-		blo.s	.lessthan16	; if not, branch
-		move.w	#1000,d0	; fix bonus to 10000
+		move.w	React_PointsCombo(pc,d0.w),d0
+		cmpi.w	#$20,(v_itembonus).w			; have 16 enemies been destroyed?
+		blo.s	.lessthan16				; if not, branch
+		move.w	#1000,d0				; fix bonus to 10000
 		move.w	#$A,objoff_3E(a1)
 
-.lessthan16:
+	.lessthan16:
 		bsr.w	AddPoints
-		_move.b	#id_ExplosionItem,obID(a1) ; change object to explosion
+
+		_move.b	#id_ExplosionItem,obID(a1)		; change object to explosion
 		move.b	#0,obRoutine(a1)
 		tst.w	obVelY(a0)
 		bmi.s	.bouncedown
@@ -223,121 +254,139 @@ React_Enemy:
 		rts
 ; ===========================================================================
 
-.bouncedown:
+	.bouncedown:
 		addi.w	#$100,obVelY(a0)
 		rts
 
-.bounceup:
+	.bounceup:
 		subi.w	#$100,obVelY(a0)
 		rts
 
-.points:	dc.w 10, 20, 50, 100	; points awarded div 10
-
+; ===========================================================================
+; .points:
+React_PointsCombo: ; points awarded divided by 10
+		dc.w 10
+		dc.w 20
+		dc.w 50
+		dc.w 100	
 ; ===========================================================================
 
 React_Caterkiller:
 		bset	#7,obStatus(a1)
+; ---------------------------------------------------------------------------
 
 React_ChkHurt:
-		tst.b	(v_invinc).w		; is Sonic invincible?
-		beq.s	.notinvincible		; if not, branch
+		tst.b	(v_invinc).w				; is Sonic invincible?
+		beq.s	.notinvincible				; if not, branch
 
 .isflashing:
 	if FixBugs
-		bra.w	ReactToItem.next	; try next object in RAM
+		bra.w	React_CheckNext				; try next object in RAM
 	else
 		; If Sonic is hurt or invincible, this would exit ReactToItem entirely upon finding
 		; the first damaging object. As a result, later objects in RAM would never be checked,
 		; even if they could trigger a valid interaction. One obvious case of this bug is
 		; picking up lost rings while standing on Marble Zone lava being nearly impossible.
 		moveq	#-1,d0
-		rts				; exit ReactToItem
+		rts						; exit ReactToItem
 	endif
-
-; ===========================================================================
+; ---------------------------------------------------------------------------
 
 .notinvincible:
-		nop	
-		tst.w	flashtime(a0)		; is Sonic flashing?
-		bne.s	.isflashing		; if yes, branch
+		nop						; useless nop (probably so an rts could easily be inserted here)
+		tst.w	flashtime(a0)				; is Sonic flashing?
+		bne.s	.isflashing				; if yes, exit ReactToItem
+
 		movea.l	a1,a2
 		; continue straight to HurtSonic
 
 ; ---------------------------------------------------------------------------
 ; Hurting Sonic subroutine
+; 
+; input:
+;	a0 = address of OST of Sonic
+;	a2 = address of OST of object hurting Sonic
+; 
+; output:
+;	d0.l = -1
+;	a1 = address of OST of ring loss object (if Sonic had rings)
 ; ---------------------------------------------------------------------------
 
 HurtSonic:
-		tst.b	(v_shield).w	; does Sonic have a shield?
-		bne.s	.hasshield	; if yes, branch
-		tst.w	(v_rings).w	; does Sonic have any rings?
-		beq.w	.norings	; if not, branch
+		tst.b	(v_shield).w				; does Sonic have a shield?
+		bne.s	.hasshield				; if yes, branch
+		tst.w	(v_rings).w				; does Sonic have any rings?
+		beq.w	.norings				; if not, branch
 
 		jsr	(FindFreeObj).l
 		bne.s	.hasshield
-		_move.b	#id_RingLoss,obID(a1) ; load bouncing multi rings object
+		_move.b	#id_RingLoss,obID(a1)			; load bouncing multi rings object
 		move.w	obX(a0),obX(a1)
 		move.w	obY(a0),obY(a1)
-
-.hasshield:
-		move.b	#0,(v_shield).w	; remove shield
+	.hasshield:	
+		move.b	#0,(v_shield).w				; remove shield
 		move.b	#4,obRoutine(a0)
 		bsr.w	Sonic_ResetOnFloor
 		bset	#1,obStatus(a0)
-		move.w	#-$400,obVelY(a0) ; make Sonic bounce away from the object
+
+		move.w	#-$400,obVelY(a0)			; make Sonic bounce away from the object
 		move.w	#-$200,obVelX(a0)
-		btst	#6,obStatus(a0)	; is Sonic underwater?
-		beq.s	.isdry		; if not, branch
-
-		move.w	#-$200,obVelY(a0) ; slower bounce
+		btst	#6,obStatus(a0)				; is Sonic underwater?
+		beq.s	.isdry					; if not, branch
+		move.w	#-$200,obVelY(a0)			; slower bounce
 		move.w	#-$100,obVelX(a0)
-
-.isdry:
+	.isdry:
 		move.w	obX(a0),d0
 		cmp.w	obX(a2),d0
-		blo.s	.isleft		; if Sonic is left of the object, branch
-		neg.w	obVelX(a0)	; if Sonic is right of the object, reverse
-
-.isleft:
+		blo.s	.isleft					; if Sonic is left of the object, branch
+		neg.w	obVelX(a0)				; if Sonic is right of the object, reverse
+	.isleft:
 		move.w	#0,obInertia(a0)
 		move.b	#id_Hurt,obAnim(a0)
-		move.w	#120,flashtime(a0)	; set temp invincible time to 2 seconds
+		move.w	#120,flashtime(a0)			; set temp invincible time to 2 seconds
 	if FixBugs
 		move.w	#sfx_HitSpikes,d0
-		cmpi.b	#id_Spikes,obID(a2)	; was damage caused by spikes?
+		cmpi.b	#id_Spikes,obID(a2)			; was damage caused by spikes?
 		beq.s	.sound
-		cmpi.b	#id_Harpoon,obID(a2)	; was damage caused by LZ harpoon?
+		cmpi.b	#id_Harpoon,obID(a2)			; was damage caused by LZ harpoon?
 		beq.s	.sound
 		move.w	#sfx_Death,d0
 	else
 		; This is bugged: the harpoon will never play the spike sound!
 		move.w	#sfx_Death,d0
-		cmpi.b	#id_Spikes,obID(a2)	; was damage caused by spikes?
+		cmpi.b	#id_Spikes,obID(a2)			; was damage caused by spikes?
 		bne.s	.sound
-		cmpi.b	#id_Harpoon,obID(a2)	; was damage caused by LZ harpoon?
+		cmpi.b	#id_Harpoon,obID(a2)			; was damage caused by LZ harpoon?
 		bne.s	.sound
 		move.w	#sfx_HitSpikes,d0
 	endif
 
-.sound:
+	.sound:
 		jsr	(QueueSound2).l
 		moveq	#-1,d0
 		rts
 ; ===========================================================================
 
 .norings:
-		tst.w	(f_debugmode).w	; is debug mode cheat on?
-		bne.w	.hasshield	; if yes, branch
+		tst.w	(f_debugmode).w				; is debug mode cheat on?
+		bne.w	.hasshield				; if yes, branch
 		; continue straight to KillSonic
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to kill Sonic
+; 
+; input:
+;	a0 = address of OST of Sonic
+;	a2 = address of OST of object killing Sonic
+; 
+; output:
+;	d0.l = -1
 ; ---------------------------------------------------------------------------
 
 KillSonic:
-		tst.w	(v_debuguse).w	; is debug mode active?
-		bne.s	.dontdie	; if yes, branch
-		move.b	#0,(v_invinc).w	; remove invincibility
+		tst.w	(v_debuguse).w				; is debug mode active?
+		bne.s	.dontdie				; if yes, branch
+		move.b	#0,(v_invinc).w				; remove invincibility
 		move.b	#6,obRoutine(a0)
 		bsr.w	Sonic_ResetOnFloor
 		bset	#1,obStatus(a0)
@@ -358,26 +407,26 @@ KillSonic:
 
 	if FixBugs
 		; Stop timer as soon as death is triggered to prevent double deaths from time overs
-		clr.b	(f_timecount).w	; stop time counter
+		clr.b	(f_timecount).w				; stop time counter
 		
 		; Fix harpoon object's death sound
-		move.w	#sfx_HitSpikes,d0 ; play spikes death sound
-		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
+		move.w	#sfx_HitSpikes,d0			; play spikes death sound
+		cmpi.b	#id_Spikes,obID(a2)			; check if you were killed by spikes
 		beq.s	.sound
-		cmpi.b	#id_Harpoon,obID(a2)	; check if you were killed by a harpoon
+		cmpi.b	#id_Harpoon,obID(a2)			; check if you were killed by a harpoon
 		beq.s	.sound
-		move.w	#sfx_Death,d0	; play normal death sound
+		move.w	#sfx_Death,d0				; play normal death sound
 	else
-		move.w	#sfx_Death,d0	; play normal death sound
-		cmpi.b	#id_Spikes,obID(a2)	; check if you were killed by spikes
+		move.w	#sfx_Death,d0				; play normal death sound
+		cmpi.b	#id_Spikes,obID(a2)			; check if you were killed by spikes
 		bne.s	.sound
-		move.w	#sfx_HitSpikes,d0 ; play spikes death sound
+		move.w	#sfx_HitSpikes,d0			; play spikes death sound
 	endif
 
-.sound:
+	.sound:
 		jsr	(QueueSound2).l
 
-.dontdie:
+	.dontdie:
 		moveq	#-1,d0
 		rts
 ; End of function KillSonic
@@ -386,14 +435,14 @@ KillSonic:
 React_Special:
 		move.b	obColType(a1),d1
 		andi.b	#$3F,d1
-		cmpi.b	#$B,d1		; is collision type $CB ?
-		beq.s	.caterkiller	; if yes, branch
-		cmpi.b	#$C,d1		; is collision type $CC ?
-		beq.s	.yadrin		; if yes, branch
-		cmpi.b	#$17,d1		; is collision type $D7 ?
-		beq.s	.D7orE1		; if yes, branch
-		cmpi.b	#$21,d1		; is collision type $E1 ?
-		beq.s	.D7orE1		; if yes, branch
+		cmpi.b	#$B,d1					; is collision type $CB ?
+		beq.s	.caterkiller				; if yes, branch
+		cmpi.b	#$C,d1					; is collision type $CC ?
+		beq.s	.yadrin					; if yes, branch
+		cmpi.b	#$17,d1					; is collision type $D7 ?
+		beq.s	.D7orE1					; if yes, branch
+		cmpi.b	#$21,d1					; is collision type $E1 ?
+		beq.s	.D7orE1					; if yes, branch
 		rts
 ; ===========================================================================
 
@@ -411,23 +460,23 @@ React_Special:
 		beq.s	.noflip
 		subi.w	#$10,d0
 
-.noflip:
+	.noflip:
 		sub.w	d2,d0
 		bcc.s	.loc_1B13C
 		addi.w	#$18,d0
 		bcs.s	.loc_1B140
 		bra.s	.normalenemy
-; ===========================================================================
+; ---------------------------------------------------------------------------
 
-.loc_1B13C:
+	.loc_1B13C:
 		cmp.w	d4,d0
 		bhi.s	.normalenemy
 
-.loc_1B140:
+	.loc_1B140:
 		bra.w	React_ChkHurt
-; ===========================================================================
+; ---------------------------------------------------------------------------
 
-.normalenemy:
+	.normalenemy:
 		bra.w	React_Enemy
 ; ===========================================================================
 
