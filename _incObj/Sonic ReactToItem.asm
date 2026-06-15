@@ -239,18 +239,27 @@ React_Caterkiller:
 		bset	#7,obStatus(a1)
 
 React_ChkHurt:
-		tst.b	(v_invinc).w	; is Sonic invincible?
-		beq.s	.notinvincible	; if not, branch
+		tst.b	(v_invinc).w		; is Sonic invincible?
+		beq.s	.notinvincible		; if not, branch
 
 .isflashing:
+	if FixBugs
+		bra.w	ReactToItem.next	; try next object in RAM
+	else
+		; If Sonic is hurt or invincible, this would exit ReactToItem entirely upon finding
+		; the first damaging object. As a result, later objects in RAM would never be checked,
+		; even if they could trigger a valid interaction. One obvious case of this bug is
+		; picking up lost rings while standing on Marble Zone lava being nearly impossible.
 		moveq	#-1,d0
-		rts
+		rts				; exit ReactToItem
+	endif
+
 ; ===========================================================================
 
 .notinvincible:
 		nop	
 		tst.w	flashtime(a0)		; is Sonic flashing?
-		bne.s	.isflashing	; if yes, branch
+		bne.s	.isflashing		; if yes, branch
 		movea.l	a1,a2
 		; continue straight to HurtSonic
 
