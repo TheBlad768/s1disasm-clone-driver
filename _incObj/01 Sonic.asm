@@ -2,6 +2,11 @@
 ; ---------------------------------------------------------------------------
 ; Object 01 - Sonic the Hedgehog
 ; ---------------------------------------------------------------------------
+son_maxspeed:		equ	$600				; Sonic's max speed
+son_acceleration:	equ	$C				; Sonic's acceleration
+son_deceleration:	equ	$80				; Sonic's deceleration
+son_jumpspeed:		equ	$680				; Sonic's jump speed
+; ---------------------------------------------------------------------------
 
 ; Obj01:
 SonicPlayer:
@@ -35,9 +40,9 @@ Sonic_Main:	; Routine 0
 		move.b	#2,obPriority(a0)			; set sprite priority
 		move.b	#48/2,obActWid(a0)			; set render width
 		move.b	#4,obRender(a0)				; set to playfield-positioned mode
-		move.w	#$600,(v_sonspeedmax).w			; set Sonic's top speed
-		move.w	#$C,(v_sonspeedacc).w			; set Sonic's acceleration
-		move.w	#$80,(v_sonspeeddec).w			; set Sonic's deceleration
+		move.w	#son_maxspeed,(v_sonspeedmax).w		; set Sonic's top speed
+		move.w	#son_acceleration,(v_sonspeedacc).w	; set Sonic's acceleration
+		move.w	#son_deceleration,(v_sonspeeddec).w	; set Sonic's deceleration
 ; ---------------------------------------------------------------------------
 
 ; Obj01_Control:
@@ -180,9 +185,18 @@ Sonic_Display:
 		beq.s	.return					; if there is none, branch
 		subq.w	#1,shoetime(a0)				; subtract 1 from time
 		bne.s	.return					; if time remains, branch
-		move.w	#$600,(v_sonspeedmax).w			; restore Sonic's max speed
-		move.w	#$C,(v_sonspeedacc).w			; restore Sonic's acceleration
-		move.w	#$80,(v_sonspeeddec).w			; restore Sonic's deceleration
+		move.w	#son_maxspeed,(v_sonspeedmax).w		; restore Sonic's max speed
+		move.w	#son_acceleration,(v_sonspeedacc).w	; restore Sonic's acceleration
+		move.w	#son_deceleration,(v_sonspeeddec).w	; restore Sonic's deceleration
+	if FixBugs
+		; Fix speed shoes for underwater state.
+		btst	#6,obStatus(a0)				; is Sonic underwater?
+		beq.s	.notunderwater				; if not, branch
+		move.w	#son_maxspeed/2,(v_sonspeedmax).w	; change Sonic's top speed (half of regular)
+		move.w	#son_acceleration/2,(v_sonspeedacc).w	; change Sonic's acceleration (half or regular)
+		move.w	#son_deceleration/2,(v_sonspeeddec).w	; change Sonic's deceleration (half of regular)
+	.notunderwater:
+	endif
 		move.b	#0,(v_shoes).w				; cancel speed shoes
 		move.w	#bgm_Slowdown,d0			; resume music...
 		jmp	(QueueSound1).l				; ...at normal speed
@@ -239,9 +253,18 @@ Sonic_Water:
 		bsr.w	ResumeMusic				; replenish air (music won't resume here, we've only just entered water...)
 		move.b	#id_DrownCount,(v_sonicbubbles).w	; load drown countdown object
 		move.b	#$81,(v_sonicbubbles+obSubtype).w	; prepare subtype so it sets itself to Drown_Countdown
-		move.w	#$300,(v_sonspeedmax).w			; change Sonic's top speed
-		move.w	#6,(v_sonspeedacc).w			; change Sonic's acceleration
-		move.w	#$40,(v_sonspeeddec).w			; change Sonic's deceleration
+		move.w	#son_maxspeed/2,(v_sonspeedmax).w	; change Sonic's top speed (half of regular)
+		move.w	#son_acceleration/2,(v_sonspeedacc).w	; change Sonic's acceleration (half or regular)
+		move.w	#son_deceleration/2,(v_sonspeeddec).w	; change Sonic's deceleration (half of regular)
+	if FixBugs
+		; Fix speed shoes for underwater state.
+		tst.b	(v_shoes).w				; does Sonic have speed shoes?
+		beq.s	.noshoes1				; if not, branch
+		move.w	#son_maxspeed,(v_sonspeedmax).w		; initial Sonic's top speed
+		move.w	#son_acceleration,(v_sonspeedacc).w	; initial Sonic's acceleration
+		move.w	#son_deceleration,(v_sonspeeddec).w 	; initial Sonic's deceleration
+	.noshoes1:
+	endif
 		asr.w	obVelX(a0)				; half X-speed when entering water
 		asr.w	obVelY(a0)				; divide Y-speed by 4 when entering water
 		asr.w	obVelY(a0)				; (can only do one bit shift at a time on RAM)
@@ -257,9 +280,18 @@ Sonic_Water:
 		beq.s	.return					; was Sonic already above water? if yes, nothing to do
 
 		bsr.w	ResumeMusic				; replenish air and resume music if necessary
-		move.w	#$600,(v_sonspeedmax).w			; restore Sonic's speed
-		move.w	#$C,(v_sonspeedacc).w			; restore Sonic's acceleration
-		move.w	#$80,(v_sonspeeddec).w			; restore Sonic's deceleration
+		move.w	#son_maxspeed,(v_sonspeedmax).w		; restore Sonic's speed
+		move.w	#son_acceleration,(v_sonspeedacc).w	; restore Sonic's acceleration
+		move.w	#son_deceleration,(v_sonspeeddec).w	; restore Sonic's deceleration
+	if FixBugs
+		; Fix speed shoes for underwater state.
+		tst.b	(v_shoes).w				; does Sonic have speed shoes?
+		beq.s	.noshoes2				; if not, branch
+		move.w	#son_maxspeed*2,(v_sonspeedmax).w	; double Sonic's top speed
+		move.w	#son_acceleration*2,(v_sonspeedacc).w	; double Sonic's acceleration
+		move.w	#son_deceleration,(v_sonspeeddec).w 	; set Sonic's deceleration (same as regular)
+	.noshoes2:
+	endif
 		asl.w	obVelY(a0)				; double Y-speed while exiting water
 		beq.w	.return					; if Sonic's new Y-speed is 0, don't load splash object
 		move.b	#id_Splash,(v_splash).w			; load splash object
@@ -1138,10 +1170,10 @@ Sonic_Jump:
 		cmpi.w	#6,d1					; are there less than 6px between Sonic and the ceiling?
 		blt.w	.return					; if yes, prevent jumping
 
-		move.w	#$680,d2				; set initial jump force
+		move.w	#son_jumpspeed,d2			; set initial jump force
 		btst	#6,obStatus(a0)				; is Sonic underwater?
 		beq.s	.notunderwater				; if not, continue
-		move.w	#$380,d2				; set underwater jump force
+		move.w	#son_jumpspeed-$300,d2			; set underwater jump force
 ; loc_1341C:
 .notunderwater:
 		moveq	#0,d0					; clear d0
@@ -1817,10 +1849,10 @@ Sonic_Hurt:	; Routine 4
 	endif
 
 		jsr	(SpeedToPos).l				; update Sonic's current position based on his velocities
-		addi.w	#$30,obVelY(a0)				; apply gravity (this is 8 less than the normal gravity of $38)
+		addi.w	#gravity-8,obVelY(a0)			; apply gravity (this is 8 less than the normal gravity of $38)
 		btst	#6,obStatus(a0)				; is Sonic underwater?
 		beq.s	.notunderwater				; if not, branch
-		subi.w	#$20,obVelY(a0)				; reduce gravity to be only $10 while underwater
+		subi.w	#gravity-$18,obVelY(a0)			; reduce gravity to be only $10 while underwater
 ; loc_1380C:
 .notunderwater:
 		bsr.w	Sonic_HurtStop				; check if Sonic has landed again after taking damage and revert to normal state
@@ -1873,7 +1905,7 @@ Sonic_HurtStop:
 		move.w	d0,obInertia(a0)			; set ground speed to 0
 		move.b	#id_Walk,obAnim(a0)			; set to walking animation
 		subq.b	#2,obRoutine(a0)			; set routine back to Sonic_Control
-		move.w	#120,flashtime(a0)			; set flash time to 2 seconds of invulnerability frames
+		move.w	#2*60,flashtime(a0)			; set flash time to 2 seconds of invulnerability frames
 
 ; locret_13860:
 .continuehurt:

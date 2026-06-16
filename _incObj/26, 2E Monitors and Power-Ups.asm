@@ -287,9 +287,20 @@ Pow_ChkShoes:
 
 		move.b	#1,(v_shoes).w			; set speed shoes flag (used for reverting when time ran out)
 		move.w	#20*60,(v_player+shoetime).w	; set time limit for speed shoes to 20 seconds
-		move.w	#$C00,(v_sonspeedmax).w		; change Sonic's top speed
-		move.w	#$18,(v_sonspeedacc).w		; change Sonic's acceleration
-		move.w	#$80,(v_sonspeeddec).w		; change Sonic's deceleration
+
+		move.w	#son_maxspeed*2,(v_sonspeedmax).w	; double Sonic's top speed
+		move.w	#son_acceleration*2,(v_sonspeedacc).w	; double Sonic's acceleration
+		move.w	#son_deceleration,(v_sonspeeddec).w 	; set Sonic's deceleration (same as regular)
+	if FixBugs
+		; Fix speed shoes for underwater state.
+		btst	#6,(v_player+obStatus).w		; is Sonic underwater?
+		beq.s	.notunderwater				; if not, branch
+		move.w	#son_maxspeed,(v_sonspeedmax).w		; initial Sonic's top speed
+		move.w	#son_acceleration,(v_sonspeedacc).w	; initial Sonic's acceleration
+		move.w	#son_deceleration,(v_sonspeeddec).w 	; initial Sonic's deceleration
+	.notunderwater:
+	endif
+
 		move.w	#bgm_Speedup,d0			; set music speed-up command
 		jmp	(QueueSound1).l			; play it
 ; ===========================================================================
