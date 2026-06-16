@@ -26,7 +26,7 @@ Crab_Main:	; Routine 0
 		move.w	#ArtTile_Crabmeat,obGfx(a0)	; set art tile
 		move.b	#4,obRender(a0)			; set to playfield-positioned mode
 		move.b	#3,obPriority(a0)		; set sprite priority
-		move.b	#6,obColType(a0)		; set collision type (32x32 destroyable)
+		move.b	#col_badnik|col_32x32,obColType(a0) ; set collision type ($06)
 		move.b	#42/2,obActWid(a0)		; set sprite display width
 
 		; Make the Crabmeat fall until it has collided with the floor (while invisible)
@@ -205,7 +205,7 @@ Crab_BallMain:	; Routine 6
 		move.w	#ArtTile_Crabmeat,obGfx(a0)	; set art tile
 		move.b	#4,obRender(a0)			; set to playfield-positioned mode
 		move.b	#3,obPriority(a0)		; set sprite priority
-		move.b	#$87,obColType(a0)		; set hitbox size to 12x12 and make it damaging
+		move.b	#col_12x12|col_hurt,obColType(a0) ; set hitbox size to 12x12 and make it damaging
 		move.b	#16/2,obActWid(a0)		; set sprite display width
 		move.w	#-$400,obVelY(a0)		; launch balls upwards
 		move.b	#7,obAnim(a0)			; use ball animation
