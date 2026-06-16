@@ -1,5 +1,5 @@
-These are replacement files for data which cannot be patched with FixBugs. Their changes
-are noted below, apply them at your discretion:
+This folder contains replacement files for data which cannot be patched with the "FixBugs" assembly flag.
+Their changes are noted below; apply them at your discretion:
 
 _maps/
  - Buzz Bomber.asm

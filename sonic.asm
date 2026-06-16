@@ -19,7 +19,7 @@ Revision = 1
 
 FixBugs = 0
 ;	| If 1, enables various bugfixes across the game and sound driver
-;	|       (see also "Utility Project FIles/Fixed Files", and FixMusicAndSFXDataBugs)
+;	|       (see also the "_Fixed Binary Files" folder, and FixMusicAndSFXDataBugs)
 
 CheatsEnabled = 0
 ;	| If 1, all in-game cheats (Level Select, Debug Mode, Slow-Motion, Japanese Credits)
