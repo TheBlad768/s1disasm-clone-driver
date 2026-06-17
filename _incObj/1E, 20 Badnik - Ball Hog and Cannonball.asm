@@ -182,13 +182,3 @@ CBal_Animate:
 		blo.w	DeleteObject				; if yes, delete it
 		rts						; return
 	endif
-
-
-; ===========================================================================
-
-; The Ball Hog animation and mapping data is located after the explosion objects in ROM,
-; likely because it was the first badnik developed for the prototype, along with explosions.
-includes_ballhog: macro {GLOBALSYMBOLS}
-		include	"_anim/Ball Hog.asm"
-Map_Hog:	include	"_maps/Ball Hog.asm"
-	endm
