@@ -19,6 +19,16 @@ ReactToItem:
 		move.b	obHeight(a0),d5				; load Sonic's height
 		subq.b	#3,d5
 		sub.w	d5,d3
+
+		; Rather than checking for the ducking animation, it instead checks for the
+		; ducking frame. This works fine here, but led to humorous problems in the
+		; other games.
+		; - in Sonic 2, only the second ducking frame has a smaller hitbox, and only
+		; for Sonic since Tails' IDs do not match up with his
+		; - in Sonic CD, it still checks for the (now outdated) Sonic 1 frame ID,
+		; meaning it instead takes effect on a random angled walking frame
+		; - Sonic 3 & Knuckles just removed this code entirely
+
 		cmpi.b	#fr_Duck,obFrame(a0)			; is Sonic ducking?
 		bne.s	.notducking				; if not, branch
 		addi.w	#((sonic_height-3)-sonic_duck_height)*2,d3
@@ -31,6 +41,8 @@ ReactToItem:
 		move.w	#(v_lvlobjend-v_lvlobjspace)/$40-1,d6
 ; .loop:
 React_LoopObjects:
+		; Sonic 2 onwards removed this, allowing objects that do not set the 'object
+		; visible flag' to process their collision.
 		tst.b	obRender(a1)
 		bpl.s	React_CheckNext
 		move.b	obColType(a1),d0			; load collision type
