@@ -20,7 +20,7 @@ Bump_Main:	; Routine 0
 		move.b	#4,obRender(a0)			; set to playfield positioning mode
 		move.b	#32/2,obActWid(a0)		; set sprite display width
 		move.b	#1,obPriority(a0)		; set sprite priority (above Sonic)
-		move.b	#$D7,obColType(a0)		; set collision type (handled through ReactToItem => D7orE1)
+		move.b	#col_16x16_alt|col_special,obColType(a0) ; set collision type (handled through ReactToItem => D7orE1)
 ; ---------------------------------------------------------------------------
 
 Bump_Hit:	; Routine 2

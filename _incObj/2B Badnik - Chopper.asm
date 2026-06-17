@@ -22,7 +22,7 @@ Chop_Main:	; Routine 0
 		move.w	#ArtTile_Chopper,obGfx(a0)	; set art tile
 		move.b	#4,obRender(a0)			; set to playfield-positioned mode
 		move.b	#4,obPriority(a0)		; set sprite priority
-		move.b	#9,obColType(a0)		; set to ReactToItem entry 9 (badnik, 24x32)
+		move.b	#col_24x32|col_badnik,obColType(a0) ; set to ReactToItem entry 9 (badnik, 24x32)
 		move.b	#32/2,obActWid(a0)		; set sprite display width
 		move.w	#-$700,obVelY(a0)		; set vertical speed
 		move.w	obY(a0),chop_origY(a0)		; save original position

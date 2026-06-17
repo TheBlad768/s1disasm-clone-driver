@@ -124,7 +124,7 @@ See_Spikeball:	; Routine 6
 		move.w	#ArtTile_SLZ_Spikeball,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$8B,obColType(a0)
+		move.b	#col_16x16|col_hurt,obColType(a0)
 		move.b	#24/2,obActWid(a0)
 		move.w	obX(a0),see_origX(a0)
 		addi.w	#$28,obX(a0)

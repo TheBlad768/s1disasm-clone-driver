@@ -57,7 +57,7 @@ Mon_Main:	; Routine 0
 ; ===========================================================================
 
 .notbroken:
-		move.b	#$46,obColType(a0)		; set collision size to 16x16 and type to item
+		move.b	#col_32x32|col_item,obColType(a0) ; set collision size to 16x16 and type to item (=$46)
 		move.b	obSubtype(a0),obAnim(a0)	; use subtype as animation ID
 
 Mon_Solid:	; Routine 2
@@ -180,7 +180,7 @@ Mon_Display:	; Routine 8
 
 Mon_BreakOpen:	; Routine 4 (set from ReactToItem)
 		addq.b	#2,obRoutine(a0)		; advance to "Mon_Animate"
-		move.b	#0,obColType(a0)		; prevent further collision with monitor
+		move.b	#col_none,obColType(a0)		; prevent further collision with monitor
 
 		bsr.w	FindFreeObj			; find a free object slot
 		bne.s	Mon_Explode			; if object RAM is full, branch

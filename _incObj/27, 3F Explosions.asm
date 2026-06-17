@@ -31,7 +31,7 @@ ExItem_Main:	; Routine 2 - set directly for non-Badnik objects (e.g. monitors)
 		move.w	#ArtTile_Explosion,obGfx(a0)	; set art tile
 		move.b	#4,obRender(a0)			; set to playfield-positioned mode
 		move.b	#1,obPriority(a0)		; set sprite priority (above Sonic)
-		move.b	#0,obColType(a0)		; disable collision response
+		move.b	#col_none,obColType(a0)		; disable collision response
 		move.b	#24/2,obActWid(a0)		; set sprite display width
 		move.b	#8-1,obTimeFrame(a0)		; set frame interval to 8 frames
 		move.b	#0,obFrame(a0)			; start at frame 0
@@ -74,7 +74,7 @@ Expl_Main:	; Routine 0
 		move.w	#ArtTile_Explosion,obGfx(a0)	; set art tile
 		move.b	#4,obRender(a0)			; set to playfield-positioned mode
 		move.b	#1,obPriority(a0)		; set sprite priority (above SOnic)
-		move.b	#0,obColType(a0)		; disable collision response
+		move.b	#col_none,obColType(a0)		; disable collision response
 		move.b	#24/2,obActWid(a0)		; set sprite display width
 		move.b	#8-1,obTimeFrame(a0)		; set frame interval to 8 frames
 		move.b	#0,obFrame(a0)			; start at frame 0

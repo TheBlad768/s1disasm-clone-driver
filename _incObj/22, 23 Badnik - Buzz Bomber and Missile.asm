@@ -23,7 +23,7 @@ Buzz_Main:	; Routine 0
 		move.w	#ArtTile_Buzz_Bomber,obGfx(a0)		; set art tile
 		move.b	#4,obRender(a0)				; set to playfield-positioned mode
 		move.b	#3,obPriority(a0)			; set sprite priority
-		move.b	#8,obColType(a0)			; set ReactToItem entry to 8 (badnik, 48x24)
+		move.b	#col_48x24|col_badnik,obColType(a0)	; set ReactToItem entry to 8 (badnik, 48x24)
 		move.b	#48/2,obActWid(a0)			; set sprite display width
 ; ---------------------------------------------------------------------------
 
@@ -174,7 +174,7 @@ Msl_Main:	; Routine 0
 		tst.b	obSubtype(a0)				; was object created by a Newtron?
 		beq.s	Msl_Animate				; if not, branch
 		move.b	#8,obRoutine(a0)			; set to Msl_FromNewt
-		move.b	#$87,obColType(a0)			; set ReactToItem entry to $87 (damaging, 12x12)
+		move.b	#col_12x12|col_hurt,obColType(a0)	; set ReactToItem entry to $87 (damaging, 12x12)
 		move.b	#1,obAnim(a0)				; set animation directly to ".missile"
 		bra.s	Msl_FromNewt_Animate			; branch to animate and move missile
 ; ===========================================================================
@@ -225,7 +225,7 @@ Msl_FromBuzz:	; Routine 4
 		btst	#7,obStatus(a0)				; has bit 7 of status flags been set? (impossible condition)
 		bne.s	.explode				; if yes, dissolve missile
 
-		move.b	#$87,obColType(a0)			; set ReactToItem entry to $87 (damaging, 12x12)
+		move.b	#col_12x12|col_hurt,obColType(a0)	; set ReactToItem entry to $87 (damaging, 12x12)
 		move.b	#1,obAnim(a0)				; set to ".missile" animation
 		bsr.w	SpeedToPos				; update missile position
 

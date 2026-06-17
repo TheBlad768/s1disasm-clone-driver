@@ -60,7 +60,7 @@ SStom_Main:	; Routine 0
 		move.b	#4,obPriority(a1)
 		cmpi.b	#1,(a2)		; is subobject spikes?
 		bne.s	.notspikes	; if not, branch
-		move.b	#$91,obColType(a1) ; use harmful collision type
+		move.b	#col_32x48|col_hurt,obColType(a1) ; use harmful collision type
 
 .notspikes:
 		move.b	(a2)+,obFrame(a1)

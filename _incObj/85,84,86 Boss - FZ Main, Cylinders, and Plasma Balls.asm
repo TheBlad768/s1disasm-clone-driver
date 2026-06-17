@@ -433,7 +433,7 @@ BossFinal_Eggman_Ship:
 		bhs.s	loc_1A1D0
 		move.w	#$180,obVelX(a0)
 		move.w	#-$18,obVelY(a0)
-		move.b	#$F,obColType(a0)
+		move.b	#col_48x48|col_boss,obColType(a0)
 		addq.b	#2,objoff_34(a0)
 
 loc_1A1D0:
@@ -462,7 +462,7 @@ loc_1A1FC:
 ; ===========================================================================
 
 loc_1A210:
-		move.b	#$F,obColType(a0)
+		move.b	#col_48x48|col_boss,obColType(a0)
 
 loc_1A216:
 		cmpi.w	#boss_fz_end+$90,(v_player+obX).w
@@ -941,7 +941,7 @@ BossPlasma_Loop:
 		move.l	#Map_Plasma,obMap(a1)
 		move.b	#24/2,obHeight(a1)
 		move.b	#24/2,obWidth(a1)
-		move.b	#0,obColType(a1)
+		move.b	#col_none,obColType(a1)
 		move.b	#3,obPriority(a1)
 		move.w	#$3E,obSubtype(a1)
 		move.b	#4,obRender(a1)
@@ -1038,7 +1038,7 @@ loc_1A9E6:
 		bne.s	locret_1AA1C
 		addq.b	#2,ob2ndRout(a0)
 		move.b	#1,obAnim(a0)
-		move.b	#$9A,obColType(a0)
+		move.b	#col_24x24|col_hurt,obColType(a0)
 		move.w	#$B4,obSubtype(a0)
 		moveq	#0,d0
 		move.w	(v_player+obX).w,d0

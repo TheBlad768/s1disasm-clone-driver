@@ -29,7 +29,7 @@ Moto_Main:	; Routine 0
 		bne.s	.smoke				; if yes, branch
 		move.b	#28/2,obHeight(a0)		; set object height
 		move.b	#16/2,obWidth(a0)		; set object width
-		move.b	#$C,obColType(a0)		; set collision type for ReactToItem
+		move.b	#col_40x32|col_badnik,obColType(a0) ; set collision type for ReactToItem
 
 		; Make the Motobug fall until it has collided with the floor (while invisible)
 		bsr.w	ObjectFall			; increase gravity and update position

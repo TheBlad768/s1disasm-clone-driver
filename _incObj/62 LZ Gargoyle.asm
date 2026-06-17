@@ -58,7 +58,7 @@ Gar_FireBall:	; Routine 4
 		move.w	#ArtTile_LZ_Gargoyle,obGfx(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$98,obColType(a0)
+		move.b	#col_8x8|col_hurt,obColType(a0)
 		move.b	#16/2,obActWid(a0)
 		move.b	#2,obFrame(a0)
 		addq.w	#8,obY(a0)

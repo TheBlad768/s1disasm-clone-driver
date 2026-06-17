@@ -46,7 +46,7 @@ Elec_Shock:	; Routine 2
 		lea	(Ani_Elec).l,a1				; load animation script
 		jsr	(AnimateSprite).l			; animate zapper
 
-		move.b	#0,obColType(a0)			; make zapper harmless by default
+		move.b	#col_none,obColType(a0)			; make zapper harmless by default
 		cmpi.b	#4,obFrame(a0)				; is 4th frame displayed?
 		bne.s	.display				; if not, branch
 		move.b	#col_144x16|col_hurt,obColType(a0)	; if yes, make object hurt Sonic this frame

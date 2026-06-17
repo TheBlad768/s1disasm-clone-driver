@@ -93,7 +93,7 @@ Newt_Action_Drop:
 		; leftover for green Newtrons before those got their own routine.
 		cmpi.b	#1,obFrame(a0)				; has animation advanced to frame 1? (impossible here)
 		bne.s	.fall					; if not, branch
-		move.b	#$C,obColType(a0)			; set collision size 40x32
+		move.b	#col_40x32|col_badnik,obColType(a0)	; set collision size 40x32
 	.fall:
 	endif
 
@@ -114,7 +114,7 @@ Newt_Action_Drop:
 		addq.b	#1,obAnim(a0)				; use ".fly2" animation instead
 	.notGreen:
 	endif
-		move.b	#$D,obColType(a0)			; make destroyable (badnik, 40x16)
+		move.b	#col_40x16|col_badnik,obColType(a0)	; make destroyable (badnik, 40x16)
 		move.w	#$200,obVelX(a0)			; move Newtron horizontally to the right
 		btst	#0,obStatus(a0)				; is Newtron facing left?
 		bne.s	.return					; if not, branch
@@ -152,7 +152,7 @@ Newt_Action_MoveInAir:
 Newt_Action_GreenNewtron:
 		cmpi.b	#1,obFrame(a0)				; has animation advanced to frame 1 in script?
 		bne.s	.chkFire				; if not, don't make Newtron destroyable yet
-		move.b	#$C,obColType(a0)			; make destroyable (badnik, 40x32)
+		move.b	#col_40x32|col_badnik,obColType(a0)	; make destroyable (badnik, 40x32)
 
 	.chkFire:
 		cmpi.b	#2,obFrame(a0)				; has animation advance to frame 2 in script?

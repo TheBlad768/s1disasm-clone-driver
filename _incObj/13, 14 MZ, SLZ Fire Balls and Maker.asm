@@ -87,7 +87,7 @@ LBall_Main:	; Routine 0
 .notSLZ:
 		move.b	#4,obRender(a0)
 		move.b	#3,obPriority(a0)
-		move.b	#$8B,obColType(a0)
+		move.b	#col_16x16|col_hurt,obColType(a0)
 		move.w	obY(a0),objoff_30(a0)
 		tst.b	objoff_29(a0)
 		beq.s	.speed

@@ -44,13 +44,13 @@ Scen_Values:
 	rept 3	; SLZ lava thrower (three identical definitions back to back, only the first is used)
 		dc.l Map_Scen
 		dc.w ArtTile_SLZ_Fireball_Launcher|Tile_Pal3
-		dc.b 0,	16/2, 2, 0
+		dc.b 0,	16/2, 2, col_none
 	endr
 
 		; GHZ bridge stump
 		dc.l Map_Bri
 		dc.w ArtTile_GHZ_Bridge|Tile_Pal3
-		dc.b 1,	32/2, 1, 0
+		dc.b 1,	32/2, 1, col_none
 
 		even
 

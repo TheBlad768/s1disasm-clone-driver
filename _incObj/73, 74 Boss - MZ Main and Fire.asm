@@ -29,7 +29,7 @@ BossMarble_ObjData:
 BossMarble_Main:	; Routine 0
 		move.w	obX(a0),obBossX(a0)			; copy to boss position using scratch RAM (objoff_30 and 38 respectively)
 		move.w	obY(a0),obBossY(a0)
-		move.b	#$F,obColType(a0)			; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
+		move.b	#col_48x48|col_boss,obColType(a0)	; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
 		move.b	#8,obBossHits(a0) 			; set number of hits to 8
 		lea	BossMarble_ObjData(pc),a2		; load routine data address into a2 (this does one less memory access than the GHZ boss, its faster and it seems the developers wanted to stick with PC-relative going forward)
 		movea.l	a0,a1					; copy boss object address into a1 so that LoadBoss on pass 1 uses the main boss object.
@@ -135,7 +135,7 @@ BMZ_ShipUpdate:
 		move.w	d0,(a1)					; load color stored in d0
 		subq.b	#1,obBossFlash(a0)			; subtract 1 from flash timer
 		bne.s	.exit					; keep flashing if obBossFlash is not 0
-		move.b	#$F,obColType(a0)			; restore collision, the timer has hit 0
+		move.b	#col_48x48|col_boss,obColType(a0)	; restore collision, the timer has hit 0
 
 ; locret_18390
 .exit:
@@ -546,7 +546,7 @@ BossFire_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		tst.b	obSubtype(a0)
 		bne.s	loc_1870A
-		move.b	#$8B,obColType(a0)
+		move.b	#col_16x16|col_hurt,obColType(a0)
 		addq.b	#2,obRoutine(a0)
 		bra.w	BossFire_TempFire
 ; ===========================================================================
@@ -587,7 +587,7 @@ BossFire_Drop:
 		bset	#1,obStatus(a0)
 		subq.b	#1,objoff_29(a0)
 		bpl.s	locret_18780
-		move.b	#$8B,obColType(a0)
+		move.b	#col_16x16|col_hurt,obColType(a0)
 		clr.b	obSubtype(a0)
 		addi.w	#$18,obVelY(a0)
 		bclr	#1,obStatus(a0)

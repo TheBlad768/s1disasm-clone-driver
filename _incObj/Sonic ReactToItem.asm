@@ -28,7 +28,6 @@ ReactToItem:
 		; - in Sonic CD, it still checks for the (now outdated) Sonic 1 frame ID,
 		; meaning it instead takes effect on a random angled walking frame
 		; - Sonic 3 & Knuckles just removed this code entirely
-
 		cmpi.b	#fr_Duck,obFrame(a0)			; is Sonic ducking?
 		bne.s	.notducking				; if not, branch
 		addi.w	#((sonic_height-3)-sonic_duck_height)*2,d3
@@ -41,12 +40,12 @@ ReactToItem:
 		move.w	#(v_lvlobjend-v_lvlobjspace)/$40-1,d6
 ; .loop:
 React_LoopObjects:
-		; Sonic 2 onwards removed this, allowing objects that do not set the 'object
-		; visible flag' to process their collision.
-		tst.b	obRender(a1)
-		bpl.s	React_CheckNext
+		; Sonic 2 onwards removed this, allowing objects that do not set the
+		; 'object visible flag' to process their collision.
+		tst.b	obRender(a1)				; is object on screen? (sprite rendered)
+		bpl.s	React_CheckNext				; if not, don't check collision for it
 		move.b	obColType(a1),d0			; load collision type
-		bne.s	React_ColTypeSet			; if nonzero, branch
+		bne.s	React_ColTypeSet			; if non-zero (i.e. not col_none), branch
 ; .next:
 React_CheckNext:
 		lea	object_size(a1),a1			; next object RAM
@@ -60,7 +59,9 @@ React_CheckNext:
 React_Sizes:
 
 ; Flags to further split objects into individual property subgroups.
+col_none:	equ 0			; marker for no-collision objects
 col_badnik:	equ 0			; destroyable badniks
+col_boss:	equ 0			; Eggman bosses
 col_item:	equ $40			; monitors, rings, giant rings
 col_hurt:	equ $80			; damaging objects when touched
 col_special:	equ $C0			; objects with special collision properties (Yadrin, Caterkiller, SYZ bumpers)
@@ -87,8 +88,8 @@ col_40x32:	hitbox	 40, 32		; $0C - Newtron, Motobug, Yadrin
 col_40x16:	hitbox	 40, 16		; $0D - Newtron
 col_28x28:	hitbox	 28, 28		; $0E - Roller
 col_48x48:	hitbox	 48, 48		; $0F - Bosses
-col_80x32:	hitbox	 80, 32		; $10 - MZ stomper
-col_32x48:	hitbox	 32, 48		; $11 - MZ stomper
+col_80x32:	hitbox	 80, 32		; $10 - MZ vertical stomper
+col_32x48:	hitbox	 32, 48		; $11 - MZ sideways stomper
 col_16x32:	hitbox	 16, 32		; $12 - Giant ring
 col_64x224:	hitbox	 64,224		; $13 - MZ geyser
 col_128x64:	hitbox	128, 64		; $14 - MZ lava wall, MZ lava tag
@@ -226,7 +227,7 @@ React_Enemy:
 		neg.w	obVelY(a0)
 		asr.w	obVelX(a0)
 		asr.w	obVelY(a0)
-		move.b	#0,obColType(a1)
+		move.b	#col_none,obColType(a1)
 		subq.b	#1,obColProp(a1)
 		bne.s	.flagnotclear
 		bset	#7,obStatus(a1)
