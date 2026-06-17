@@ -802,6 +802,19 @@ Sonic_RollSlowdownDone:
 
 ; loc_131CC:
 Sonic_AngledRollSpeed:
+	if FixBugs
+		; Sonic 1 does not reset the camera to its default position when
+		; rolling. This oversight was corrected in Sonic 2.
+		cmpi.w	#$60,(v_lookshift).w			; is screen in its default position?
+		beq.s	.regularpos				; if yes, branch
+		bcc.s	.resetdown				; does camera need to go back down? if yes, branch
+		addq.w	#4,(v_lookshift).w			; move camera back up (becomes 2 with the next line)
+
+.resetdown:
+		subq.w	#2,(v_lookshift).w			; move camera back down
+
+.regularpos:
+	endif
 		move.b	obAngle(a0),d0				; get Sonic's current angle in relation to the floor
 		jsr	(CalcSine).l				; get sine and cosine values for the angle
 		muls.w	obInertia(a0),d0			; multiply angle sine by ground speed
@@ -1139,6 +1152,12 @@ Sonic_ChkRoll:
 		move.b	#sonic_roll_height,obHeight(a0)		; set Sonic's hitbox height to rolling size
 		move.b	#sonic_roll_width,obWidth(a0)		; set Sonic's hitbox width to rolling size
 		move.b	#id_Roll,obAnim(a0)			; use "rolling" animation
+	if FixBugs
+		; Sonic_Animate doesn't take effect until one frame later, causing
+		; him to briefly enter his standing animation when at a stop. We'll
+		; fix this by forcing him into his first rolling frame.
+		move.b	#fr_Roll1,obFrame(a0)			; force Sonic into his first rolling frame
+	endif
 		addq.w	#sonic_height-sonic_roll_height,obY(a0)	; adjust Y-position to align Sonic to the floor
 		move.w	#sfx_Roll,d0				; set rolling sound
 		jsr	(QueueSound2).l				; play it

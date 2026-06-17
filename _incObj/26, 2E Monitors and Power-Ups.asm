@@ -290,6 +290,12 @@ Pow_ChkShoes:
 
 		move.w	#son_maxspeed*2,(v_sonspeedmax).w	; double Sonic's top speed
 		move.w	#son_acceleration*2,(v_sonspeedacc).w	; double Sonic's acceleration
+
+		; In the prototype, Sonic's deceleration was $40 for his regular state and
+		; $80 when having speed shoes. While the former was doubled in the final
+		; game, the latter was not. It's hard to tell whether or not this was simply
+		; an oversight, or an intentional design choice.
+
 		move.w	#son_deceleration,(v_sonspeeddec).w 	; set Sonic's deceleration (same as regular)
 	if FixBugs
 		; Fix speed shoes for underwater state.
