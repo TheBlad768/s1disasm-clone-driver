@@ -284,7 +284,8 @@ React_PointsCombo: ; points awarded divided by 10
 ; ===========================================================================
 
 React_Caterkiller:
-		bset	#7,obStatus(a1)
+		bset	#7,obStatus(a1)				; set flag that spiked body segment has been touched
+		; Continue to React_ChkHurt to make spiked body segments hurt...
 ; ---------------------------------------------------------------------------
 
 React_ChkHurt:
