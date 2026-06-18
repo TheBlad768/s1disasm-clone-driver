@@ -27,8 +27,8 @@ SEgg_Main:	; Routine 0
 		lea	SEgg_ObjData(pc),a2
 		move.w	#boss_sbz2_x+$110,obX(a0)
 		move.w	#boss_sbz2_y+$94,obY(a0)
-		move.b	#$F,obColType(a0)
-		move.b	#16,obBossHits(a0) ; SBZ2 Eggman has 16 hits, despite being unhittable
+		move.b	#col_48x48|col_boss,obColType(a0)
+		move.b	#16,obBossHits(a0) ; SBZ2 Eggman is set to 16 hits, despite being unhittable
 		bclr	#0,obStatus(a0)
 		clr.b	ob2ndRout(a0)
 		move.b	(a2)+,obRoutine(a0)

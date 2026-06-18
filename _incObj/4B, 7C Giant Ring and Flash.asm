@@ -35,7 +35,7 @@ GRing_Main:	; Routine 0
 GRing_Okay:
 		addq.b	#2,obRoutine(a0)			; set to GRing_Animate
 		move.b	#2,obPriority(a0)			; set sprite priority
-		move.b	#$52,obColType(a0)			; set col type (ReactToItem will advance obRoutine on collection)
+		move.b	#col_16x32|col_item,obColType(a0)	; set col type (ReactToItem will advance obRoutine on collection)
 		move.w	#$C40,(v_gfxbigring).w			; trigger AniArt_GiantRing to load graphics ($C40 is the size of Art_BigRing)
 ; ---------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ GRing_Animate:	; Routine 2
 
 GRing_Collect:	; Routine 4
 		subq.b	#2,obRoutine(a0)			; go back to GRing_Animate
-		move.b	#0,obColType(a0)			; disable further collision with ring
+		move.b	#col_none,obColType(a0)			; disable further collision with ring
 
 		bsr.w	FindFreeObj				; find a free object RAM slot
 		bne.w	GRing_PlaySnd				; if RAM is full, branch

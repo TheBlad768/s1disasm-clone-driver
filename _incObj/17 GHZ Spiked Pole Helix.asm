@@ -94,12 +94,12 @@ Hel_Action:	; Routine 2, 4
 
 Hel_RotateSpikes:
 		move.b	(v_ani0_frame).w,d0
-		move.b	#0,obColType(a0) ; make object harmless
+		move.b	#col_none,obColType(a0) ; make object harmless
 		add.b	hel_frame(a0),d0
 		andi.b	#7,d0
 		move.b	d0,obFrame(a0)	; change current frame
 		bne.s	locret_7DA6
-		move.b	#$84,obColType(a0) ; make object harmful
+		move.b	#col_8x32|col_hurt,obColType(a0) ; make object harmful
 
 locret_7DA6:
 		rts

@@ -25,7 +25,7 @@ BossLabyrinth_Main:	; Routine 0
 		move.w	#boss_lz_y+$500,obY(a0)
 		move.w	obX(a0),obBossX(a0)
 		move.w	obY(a0),obBossY(a0)
-		move.b	#$F,obColType(a0)
+		move.b	#col_48x48|col_boss,obColType(a0)
 		move.b	#8,obBossHits(a0) ; set number of hits to 8
 		move.b	#4,obPriority(a0)
 		lea	BossLabyrinth_ObjData(pc),a2
@@ -117,7 +117,7 @@ loc_17F7E:
 		move.w	d0,(a1)
 		subq.b	#1,obBossFlash(a0)
 		bne.s	locret_17F8C
-		move.b	#$F,obColType(a0)
+		move.b	#col_48x48|col_boss,obColType(a0)
 
 locret_17F8C:
 		rts

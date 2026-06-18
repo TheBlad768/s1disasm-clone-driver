@@ -29,7 +29,7 @@ Moto_Main:	; Routine 0
 		bne.s	.smoke				; if yes, branch
 		move.b	#28/2,obHeight(a0)		; set object height
 		move.b	#16/2,obWidth(a0)		; set object width
-		move.b	#$C,obColType(a0)		; set collision type for ReactToItem
+		move.b	#col_40x32|col_badnik,obColType(a0) ; set collision type for ReactToItem
 
 		; Make the Motobug fall until it has collided with the floor (while invisible)
 		bsr.w	ObjectFall			; increase gravity and update position
@@ -37,7 +37,7 @@ Moto_Main:	; Routine 0
 		tst.w	d1				; has Motobug hit the floor?
 		bpl.s	.hide				; if not, branch
 		add.w	d1,obY(a0)			; match object's position with the floor
-		move.w	#0,obVelY(a0)			; clear falling spped
+		move.w	#0,obVelY(a0)			; clear falling speed
 		addq.b	#2,obRoutine(a0)		; advance to Moto_Action
 		bchg	#0,obStatus(a0)			; make Motobug face to the left on spawn
 	.hide:

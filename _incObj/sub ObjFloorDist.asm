@@ -8,6 +8,7 @@
 ; output:
 ;	d1 = distance to the floor
 ;	d3 = floor angle
+;	     (0 = flat surface, >0 = descending right // <0 = ascending right)
 ;	a1 = address within 256x256 mappings where object is standing
 ;	     (refers to a 16x16 tile number)
 ;	(a4) = floor angle

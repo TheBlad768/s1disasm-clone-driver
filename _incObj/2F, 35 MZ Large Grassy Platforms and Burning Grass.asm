@@ -331,7 +331,7 @@ GFire_Main:	; Routine 0
 		move.w	obX(a0),gfire_origX(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
-		move.b	#$8B,obColType(a0)
+		move.b	#col_16x16|col_hurt,obColType(a0)
 		move.b	#16/2,obActWid(a0)
 		move.w	#sfx_Burning,d0
 		jsr	(QueueSound2).l	 ; play burning sound

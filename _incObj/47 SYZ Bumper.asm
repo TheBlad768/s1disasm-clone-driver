@@ -20,7 +20,7 @@ Bump_Main:	; Routine 0
 		move.b	#4,obRender(a0)			; set to playfield positioning mode
 		move.b	#32/2,obActWid(a0)		; set sprite display width
 		move.b	#1,obPriority(a0)		; set sprite priority (above Sonic)
-		move.b	#$D7,obColType(a0)		; set collision type (handled through ReactToItem => D7orE1)
+		move.b	#col_16x16_alt|col_special,obColType(a0) ; set collision type (handled through ReactToItem => D7orE1)
 ; ---------------------------------------------------------------------------
 
 Bump_Hit:	; Routine 2
@@ -56,7 +56,7 @@ Bump_Hit:	; Routine 2
 		move.b	obRespawnNo(a0),d0		; get bumper's respawn table index
 		beq.s	.addscore			; if it doesn't have one, branch
 		cmpi.b	#10+$80,2(a2,d0.w)		; has bumper been hit 10 times? ($80 is bit 7, i.e. respawn block flag)
-		bhs.s	Bump_Display			; if yes, award no more pointspoints
+		bhs.s	Bump_Display			; if yes, award no more points
 		addq.b	#1,2(a2,d0.w)			; remember one more bumper hit in respawn data
 	.addscore:
 		moveq	#1,d0				; set to add 10 points

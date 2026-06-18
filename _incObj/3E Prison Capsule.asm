@@ -49,7 +49,7 @@ Pri_Main:	; Routine 0
 		cmpi.w	#8,d0		; is object type number 02?
 		bne.s	.not02		; if not, branch
 
-		move.b	#6,obColType(a0)
+		move.b	#col_32x32|col_boss,obColType(a0)
 		move.b	#8,obColProp(a0)
 
 .not02:

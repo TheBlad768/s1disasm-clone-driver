@@ -199,7 +199,7 @@ Geyser_Main:	; Routine 0
 		addi.w	#$60,obY(a1)
 		move.w	objoff_30(a0),objoff_30(a1)
 		addi.w	#$60,objoff_30(a1)
-		move.b	#$93,obColType(a1)
+		move.b	#col_64x224|col_hurt,obColType(a1)
 		move.b	#256/2,obHeight(a1)
 		bset	#4,obRender(a1)
 		addq.b	#4,obRoutine(a1)

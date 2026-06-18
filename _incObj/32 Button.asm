@@ -17,10 +17,10 @@ But_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_But,obMap(a0)
 
-		move.w	#ArtTile_Button+4|Tile_Pal3,obGfx(a0)	; MZ specific code
+		move.w	#ArtTile_Button_Main|Tile_Pal3,obGfx(a0); MZ specific code
 		cmpi.b	#id_MZ,(v_zone).w			; is level Marble Zone?
 		beq.s	.continueSetup				; if yes, branch
-		move.w	#ArtTile_Button+4,obGfx(a0)		; SYZ, LZ and SBZ specific code
+		move.w	#ArtTile_Button_Main,obGfx(a0)		; SYZ, LZ and SBZ specific code
 
 	; But_IsMZ:
 	.continueSetup:
@@ -32,7 +32,12 @@ But_Main:	; Routine 0
 
 But_Pressed:	; Routine 2
 		tst.b	obRender(a0)				; is button on screen?
+	if FixBugs
+		; Covers an out-of-range error due to the below fix.
+		bpl.w	.display				; if not, branch
+	else
 		bpl.s	.display				; if not, branch
+	endif
 
 		move.w	#32/2+sonic_solid_width,d1
 		move.w	#10/2,d2
@@ -58,6 +63,12 @@ But_Pressed:	; Routine 2
 	.checkMZ1Block:
 		tst.b	obSubtype(a0)				; is this the special MZ1 button? (bit 7 set)
 		bpl.s	.checkSonicOnTop			; if not, branch
+	if FixBugs
+		; A handful of buttons in the object layout definitions outside Marble Zone also
+		; have bit 7 set for unrelated purposes, making But_MZBlock a dangerous subroutine.
+		cmpi.b	#id_MZ,(v_zone).w			; are we in Marble Zone?
+		bne.s	.checkSonicOnTop			; if not, skip this subroutine
+	endif
 		bsr.w	But_MZBlock				; check if pushable block has landed on button
 		bne.s	.pressed				; if it has, branch
 
@@ -119,13 +130,6 @@ But_Pressed:	; Routine 2
 ; ---------------------------------------------------------------------------
 
 But_MZBlock:
-	if FixBugs
-		; A handful of buttons in the object layout definitions outside Marble Zone also
-		; have bit 7 set for unrelated purposes, which makes this subroutine dangerous.
-		cmpi.b	#id_MZ,(v_zone).w			; are we in Marble Zone?
-		bne.s	.return					; if not, skip this subroutine
-	endif
-
 		move.w	d3,-(sp)
 		move.w	obX(a0),d2
 		move.w	obY(a0),d3
