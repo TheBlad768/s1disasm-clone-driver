@@ -12,6 +12,8 @@ ExplosionItem:
 ExItem_Index:	dc.w ExItem_Animal-ExItem_Index		; 0
 		dc.w ExItem_Main-ExItem_Index		; 2
 		dc.w ExItem_Animate-ExItem_Index	; 4
+
+exitem_pointsframe:	equ objoff_3E	; carries over frame ID from combo collision response to actual points object
 ; ===========================================================================
 
 ExItem_Animal:	; Routine 0
@@ -22,7 +24,7 @@ ExItem_Animal:	; Routine 0
 		_move.b	#id_Animals,obID(a1)		; load animal object
 		move.w	obX(a0),obX(a1)			; copy X-position
 		move.w	obY(a0),obY(a1)			; copy Y-position
-		move.w	objoff_3E(a0),objoff_3E(a1)	; ???
+		move.w	exitem_pointsframe(a0),animal_pointsframe(a1) ; carry over points frame ID set in React_BadnikHit
 ; ---------------------------------------------------------------------------
 
 ExItem_Main:	; Routine 2 - set directly for non-Badnik objects (e.g. monitors)

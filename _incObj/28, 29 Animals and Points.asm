@@ -30,6 +30,8 @@ Anml_Index:	dc.w Anml_Main-Anml_Index	; 0
 		dc.w Anml_End_0E-Anml_Index	; 24
 		dc.w Anml_End_13-Anml_Index	; 26
 		dc.w Anml_End_14-Anml_Index	; 28
+
+animal_pointsframe:	equ objoff_3E	; carries over frame ID from combo collision response to actual points object
 ; ===========================================================================
 
 Anml_VarIndex:	; two index IDs for Anml_Variables
@@ -162,14 +164,14 @@ loc_90C0:
 		tst.b	(v_bossstatus).w
 		bne.s	loc_911C
 
-		bsr.w	FindFreeObj
-		bne.s	Anml_Display
+		bsr.w	FindFreeObj			; find a free object slot
+		bne.s	Anml_Display			; if object RAM is full, branch
 		_move.b	#id_Points,obID(a1)		; load points object
-		move.w	obX(a0),obX(a1)
-		move.w	obY(a0),obY(a1)
-		move.w	objoff_3E(a0),d0
-		lsr.w	#1,d0
-		move.b	d0,obFrame(a1)
+		move.w	obX(a0),obX(a1)			; copy X-position
+		move.w	obY(a0),obY(a1)			; copy Y-position
+		move.w	animal_pointsframe(a0),d0	; get carried-over frame ID from gray explosion object
+		lsr.w	#1,d0				; value was provided doubled, halve it
+		move.b	d0,obFrame(a1)			; set result as points frame ID (100, 200, 500, 1000...)
 
 Anml_Display:
 		bra.w	DisplaySprite
