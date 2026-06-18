@@ -17,10 +17,10 @@ But_Main:	; Routine 0
 		addq.b	#2,obRoutine(a0)
 		move.l	#Map_But,obMap(a0)
 
-		move.w	#ArtTile_Button+4|Tile_Pal3,obGfx(a0)	; MZ specific code
+		move.w	#ArtTile_Button_Main|Tile_Pal3,obGfx(a0); MZ specific code
 		cmpi.b	#id_MZ,(v_zone).w			; is level Marble Zone?
 		beq.s	.continueSetup				; if yes, branch
-		move.w	#ArtTile_Button+4,obGfx(a0)		; SYZ, LZ and SBZ specific code
+		move.w	#ArtTile_Button_Main,obGfx(a0)		; SYZ, LZ and SBZ specific code
 
 	; But_IsMZ:
 	.continueSetup:

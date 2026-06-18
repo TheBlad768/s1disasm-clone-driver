@@ -180,7 +180,7 @@ PLC_MZ:		plcheader
 PLC_MZ_end:
 
 PLC_MZ2:	plcheader
-		plcm	Nem_MzSwitch,	ArtTile_Button+4		; switch
+		plcm	Nem_MzSwitch,	ArtTile_Button_Main		; switch
 		plcm	Nem_Spikes,	ArtTile_Spikes			; spikes
 		plcm	Nem_HSpring,	ArtTile_Spring_Horizontal	; horizontal spring
 		plcm	Nem_VSpring,	ArtTile_Spring_Vertical		; vertical spring
