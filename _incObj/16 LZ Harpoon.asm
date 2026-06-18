@@ -33,9 +33,15 @@ Harp_Move:	; Routine 2
 		move.b	.types(pc,d0.w),obColType(a0) ; get collision type
 		bra.w	RememberState
 
-.types:
-		dc.b $9B, $9C, $9D, $9E, $9F, $A0
+; ===========================================================================
+.types:		dc.b col_16x8|col_hurt ; =$9B
+		dc.b col_48x8|col_hurt ; =$9C
+		dc.b col_80x8|col_hurt ; =$9D
+		dc.b col_8x16|col_hurt ; =$9E
+		dc.b col_8x48|col_hurt ; =$9F
+		dc.b col_8x80|col_hurt ; =$A0
 		even
+; ===========================================================================
 
 Harp_Wait:	; Routine 4
 		subq.w	#1,harp_time(a0) ; decrement timer

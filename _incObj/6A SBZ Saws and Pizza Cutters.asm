@@ -27,7 +27,7 @@ Saw_Main:	; Routine 0
 		move.w	obY(a0),saw_origY(a0)
 		cmpi.b	#3,obSubtype(a0) ; is object a ground saw?
 		bhs.s	Saw_Action	; if yes, branch
-		move.b	#$A2,obColType(a0)
+		move.b	#col_48x48_alt|col_hurt,obColType(a0)
 
 Saw_Action:	; Routine 2
 		moveq	#0,d0
@@ -136,7 +136,7 @@ Saw_Action:	; Routine 2
 		blo.s	.nosaw03y
 		move.b	#1,saw_here(a0)
 		move.w	#$600,obVelX(a0) ; move object to the right
-		move.b	#$A2,obColType(a0)
+		move.b	#col_48x48_alt|col_hurt,obColType(a0)
 		move.b	#2,obFrame(a0)
 		move.w	#sfx_Saw,d0
 		jsr	(QueueSound2).l		; play saw sound
@@ -176,7 +176,7 @@ Saw_Action:	; Routine 2
 		blo.s	.nosaw04y
 		move.b	#1,saw_here(a0)
 		move.w	#-$600,obVelX(a0) ; move object to the left
-		move.b	#$A2,obColType(a0)
+		move.b	#col_48x48_alt|col_hurt,obColType(a0)
 		move.b	#2,obFrame(a0)
 		move.w	#sfx_Saw,d0
 		jsr	(QueueSound2).l		; play saw sound

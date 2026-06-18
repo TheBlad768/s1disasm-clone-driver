@@ -57,7 +57,7 @@ Mon_Main:	; Routine 0
 ; ===========================================================================
 
 .notbroken:
-		move.b	#$46,obColType(a0)		; set collision size to 16x16 and type to item
+		move.b	#col_32x32|col_item,obColType(a0) ; set collision size to 16x16 and type to item (=$46)
 		move.b	obSubtype(a0),obAnim(a0)	; use subtype as animation ID
 
 Mon_Solid:	; Routine 2
@@ -180,7 +180,7 @@ Mon_Display:	; Routine 8
 
 Mon_BreakOpen:	; Routine 4 (set from ReactToItem)
 		addq.b	#2,obRoutine(a0)		; advance to "Mon_Animate"
-		move.b	#0,obColType(a0)		; prevent further collision with monitor
+		move.b	#col_none,obColType(a0)		; prevent further collision with monitor
 
 		bsr.w	FindFreeObj			; find a free object slot
 		bne.s	Mon_Explode			; if object RAM is full, branch
@@ -287,9 +287,26 @@ Pow_ChkShoes:
 
 		move.b	#1,(v_shoes).w			; set speed shoes flag (used for reverting when time ran out)
 		move.w	#20*60,(v_player+shoetime).w	; set time limit for speed shoes to 20 seconds
-		move.w	#$C00,(v_sonspeedmax).w		; change Sonic's top speed
-		move.w	#$18,(v_sonspeedacc).w		; change Sonic's acceleration
-		move.w	#$80,(v_sonspeeddec).w		; change Sonic's deceleration
+
+		move.w	#son_maxspeed*2,(v_sonspeedmax).w	; double Sonic's top speed
+		move.w	#son_acceleration*2,(v_sonspeedacc).w	; double Sonic's acceleration
+
+		; In the prototype, Sonic's deceleration was $40 for his regular state and
+		; $80 when having speed shoes. While the former was doubled in the final
+		; game, the latter was not. It's hard to tell whether or not this was simply
+		; an oversight, or an intentional design choice.
+
+		move.w	#son_deceleration,(v_sonspeeddec).w 	; set Sonic's deceleration (same as regular)
+	if FixBugs
+		; Fix speed shoes for underwater state.
+		btst	#6,(v_player+obStatus).w		; is Sonic underwater?
+		beq.s	.notunderwater				; if not, branch
+		move.w	#son_maxspeed,(v_sonspeedmax).w		; initial Sonic's top speed
+		move.w	#son_acceleration,(v_sonspeedacc).w	; initial Sonic's acceleration
+		move.w	#son_deceleration,(v_sonspeeddec).w 	; initial Sonic's deceleration
+	.notunderwater:
+	endif
+
 		move.w	#bgm_Speedup,d0			; set music speed-up command
 		jmp	(QueueSound1).l			; play it
 ; ===========================================================================

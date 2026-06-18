@@ -34,7 +34,7 @@ BossSpringYard_Main:	; Routine 0
 		move.w	#boss_syz_y+$E,obY(a0)
 		move.w	obX(a0),obBossX(a0)			; copy to boss position using scratch RAM (objoff_30 and 38 respectively)
 		move.w	obY(a0),obBossY(a0)
-		move.b	#$F,obColType(a0)			; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
+		move.b	#col_48x48|col_boss,obColType(a0)	; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
 		move.b	#8,obBossHits(a0) 			; set number of hits to 8
 		lea	BossSpringYard_ObjData(pc),a2		; load routine data address
 		movea.l	a0,a1					; copy boss object address into a1 so that LoadBoss on pass 1 uses the main boss object.		
@@ -144,7 +144,7 @@ BSYZ_StatusUpdate:
 		move.w	d0,(a1)					; load color stored in d0
 		subq.b	#1,obBossFlash(a0)			; subtract 1 from flash timer
 		bne.s	.exit					; keep flashing if obBossFlash is not 0
-		move.b	#$F,obColType(a0)			; restore collision, the timer has hit 0
+		move.b	#col_48x48|col_boss,obColType(a0)	; restore collision, the timer has hit 0
 ; locret_19256:
 .exit:
 		rts
@@ -695,7 +695,7 @@ loc_19658:
 		beq.s	loc_19688
 		tst.b	BossSpringYard_ChildCmd(a1)
 		bne.s	loc_19688
-		move.b	#$84,obColType(a0)
+		move.b	#col_8x32|col_hurt,obColType(a0)
 
 loc_19688:
 		bra.w	loc_195DA

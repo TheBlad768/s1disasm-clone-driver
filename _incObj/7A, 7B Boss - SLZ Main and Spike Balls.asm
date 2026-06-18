@@ -36,7 +36,7 @@ BossStarLight_Main:
 		move.w	#boss_slz_y+$18,obY(a0)
 		move.w	obX(a0),obBossX(a0) 			; copy to boss position using scratch RAM (objoff_30 and 38 respectively)
 		move.w	obY(a0),obBossY(a0)
-		move.b	#$F,obColType(a0) 			; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
+		move.b	#col_48x48|col_boss,obColType(a0) 	; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
 		move.b	#8,obBossHits(a0) 			; set number of hits to 8
 		lea	BossStarLight_ObjData(pc),a2 		; load routine data address 
 		movea.l	a0,a1 					; copy boss object address into a1 so that LoadBoss on pass 1 uses the main boss object
@@ -175,7 +175,7 @@ BSLZ_StatusUpdate:
 		move.w	d0,(a1)					; load color stored in d0
 		subq.b	#1,obBossFlash(a0) 			; subtract 1 from flash timer
 		bne.s	.exit 					; keep flashing if obBossFlash is not 0
-		move.b	#$F,obColType(a0) 			; restore collision, the timer has hit 0
+		move.b	#col_48x48|col_boss,obColType(a0) 	; restore collision, the timer has hit 0
 
 ; locret_18A44:
 .exit:
@@ -528,7 +528,7 @@ BossSpikeball_Main:	; Routine 0
 		move.b	#1,obFrame(a0)
 		ori.b	#4,obRender(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$8B,obColType(a0)
+		move.b	#col_16x16|col_hurt,obColType(a0)
 		move.b	#24/2,obActWid(a0)
 		movea.l	objoff_3C(a0),a1
 		move.w	obX(a1),obBossX(a0)
@@ -855,7 +855,7 @@ BossSpikeball_Loop:
 		move.w	obY(a0),obY(a1)
 		move.w	(a2)+,obVelX(a1)
 		move.w	(a2)+,obVelY(a1)
-		move.b	#$98,obColType(a1)
+		move.b	#col_8x8|col_hurt,obColType(a1)
 		ori.b	#4,obRender(a1)
 		bset	#7,obRender(a1)
 		move.b	#24/2,obActWid(a1)

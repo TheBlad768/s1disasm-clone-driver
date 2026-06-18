@@ -48,11 +48,11 @@ Flame_Action:	; Routine 2
 loc_E57A:
 		lea	(Ani_Flame).l,a1
 		bsr.w	AnimateSprite
-		move.b	#0,obColType(a0)
+		move.b	#col_none,obColType(a0)
 		move.b	objoff_36(a0),d0
 		cmp.b	obFrame(a0),d0
 		bne.s	Flame_ChkDel
-		move.b	#$A3,obColType(a0)
+		move.b	#col_24x48|col_hurt,obColType(a0)
 
 Flame_ChkDel:
 		out_of_range.w	DeleteObject

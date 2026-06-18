@@ -112,7 +112,7 @@ Ring_SpawnRing:
 		move.w	#ArtTile_Ring|Tile_Pal2,obGfx(a1)	; set art tile and palette line
 		move.b	#4,obRender(a1)				; set to playfield-positioned mode
 		move.b	#2,obPriority(a1)			; set sprite priority
-		move.b	#$47,obColType(a1)			; set to power-up collision type and hitbox 12x12
+		move.b	#col_12x12|col_item,obColType(a1)	; set to power-up collision type and hitbox 12x12 (=$47)
 		move.b	#16/2,obActWid(a1)			; set sprite display width
 		move.b	obRespawnNo(a0),obRespawnNo(a1)		; remember respawn index of ring group
 		move.b	d1,ring_respawnbit(a1)			; remember "ring collected" index bit in respawn data 
@@ -148,7 +148,7 @@ Ring_Animate:	; Routine 2
 
 Ring_Collect:	; Routine 4 (set from ReactToItem)
 		addq.b	#2,obRoutine(a0)			; advance to Ring_Sparkle
-		move.b	#0,obColType(a0)			; prevent ring from being collected again
+		move.b	#col_none,obColType(a0)			; prevent ring from being collected again
 		move.b	#1,obPriority(a0)			; make ring sparkles appear in front of Sonic's sprites
 		bsr.w	CollectRing				; add 1 ring 
 
@@ -262,7 +262,7 @@ RLoss_Count:	; Routine 0
 		move.w	#ArtTile_Ring|Tile_Pal2,obGfx(a1)	; set art tile and palette line
 		move.b	#4,obRender(a1)				; set to playfield-positioned mode
 		move.b	#3,obPriority(a1)			; set sprite priority (1 lower than normal rings)
-		move.b	#$47,obColType(a1)			; set to power-up collision type and hitbox 12x12
+		move.b	#col_12x12|col_item,obColType(a1)	; set to power-up collision type and hitbox 12x12 (=$47)
 		move.b	#16/2,obActWid(a1)			; set sprite display width
 	if FixBugs=0
 		; This resets the timer for all spilled rings,
@@ -321,7 +321,7 @@ RLoss_Bounce:	; Routine 2
 
 		move.b	(v_vblank_byte).w,d0			; get VBlank counter byte
 		add.b	d7,d0					; add object RAM index as crude spreading-out of collision check over multiple frames
-		andi.b	#3,d0					; only check for floor collision every 4th fram
+		andi.b	#3,d0					; only check for floor collision every 4th frame
 		bne.s	.chkdel					; if on any other frame, branch
 
 		jsr	(ObjFloorDist).l			; calculate distance between this ring and the floor
@@ -359,7 +359,7 @@ RLoss_Bounce:	; Routine 2
 
 RLoss_Collect:	; Routine 4
 		addq.b	#2,obRoutine(a0)			; advance to RLoss_Sparkle
-		move.b	#0,obColType(a0)			; prevent ring from being collected again
+		move.b	#col_none,obColType(a0)			; prevent ring from being collected again
 		move.b	#1,obPriority(a0)			; make ring sparkles appear in front of Sonic's sprites
 		bsr.w	CollectRing				; add 1 ring 
 ; ---------------------------------------------------------------------------

@@ -1,5 +1,5 @@
-These are replacement files for data which cannot be patched with FixBugs. Their changes
-are noted below, apply them at your discretion:
+This folder contains replacement files for data which cannot be patched with the "FixBugs" assembly flag.
+Their changes are noted below; apply them at your discretion:
 
 _maps/
  - Buzz Bomber.asm
@@ -9,8 +9,19 @@ _maps/
 	Realigned Sonic's ducking sprite to be correctly centered
 
 artnem/
- - Sega Logo (REVXX).bin
-	Removed a stray pixel
+ - Sega Logo (REVXX).nem
+	Removed stray pixels
+
+ - Title Screen Foreground.nem
+	Made the bottom line of the 3rd E in "THE HEDGEHOG" match the thickness of the first 2
+
+ - Monitors.nem
+ 	Changed Eggman's jacket from blue to red with yellow stripes (from Sonic 2)
+	Updated Sonic's icon to match the HUD's life icon.
+	Added shoe stripe to speed-up monitor
+
+ - Signpost.nem
+	Added yellow stripes to Eggman's jacket (from 2013)
 
 artunc/
  - Sonic.unc
@@ -46,3 +57,12 @@ objpos/
 
  - sbz3.bin
 	Small platform in hidden path now appears correctly
+
+palette/
+ - Title Screen.bin
+	Updated the water to match in-game Green Hill Zone's water
+
+ - Cycle - Title Screen Water.bin
+	Updated the water to match in-game Green Hill Zone's water,
+	a bit redundant, as you can just delete this file and PalCycle_Title
+	and call PalCycle_GHZ on the title screen instead.

@@ -69,28 +69,3 @@ SmashObject:
 		move.w	#sfx_WallSmash,d0
 		jmp	(QueueSound2).l ; play smashing sound
 ; End of function SmashObject
-
-; ===========================================================================
-; Smashed block fragment speeds used by GHZ smashable walls
-; (x-move speed, y-move speed)
-
-Smash_FragSpd1:	; breaking wall from the left
-		dc.w  $400, -$500	
-		dc.w  $600, -$100
-		dc.w  $600,  $100
-		dc.w  $400,  $500
-		dc.w  $600, -$600
-		dc.w  $800, -$200
-		dc.w  $800,  $200
-		dc.w  $600,  $600
-
-Smash_FragSpd2:	; breaking wall from the right
-		dc.w -$600, -$600
-		dc.w -$800, -$200
-		dc.w -$800,  $200
-		dc.w -$600,  $600
-		dc.w -$400, -$500
-		dc.w -$600, -$100
-		dc.w -$600,  $100
-		dc.w -$400,  $500
-; ===========================================================================

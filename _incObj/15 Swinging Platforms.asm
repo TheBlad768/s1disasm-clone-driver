@@ -38,7 +38,7 @@ Swing_Main:	; Routine 0
 		move.w	#ArtTile_SLZ_Swing|Tile_Pal3,obGfx(a0)
 		move.b	#64/2,obActWid(a0)
 		move.b	#32/2,obHeight(a0)
-		move.b	#$99,obColType(a0)
+		move.b	#col_64x16|col_hurt,obColType(a0)
 
 .notSLZ:
 		cmpi.b	#id_SBZ,(v_zone).w ; check if level is SBZ
@@ -48,7 +48,7 @@ Swing_Main:	; Routine 0
 		move.w	#ArtTile_SBZ_Swing,obGfx(a0)
 		move.b	#48/2,obActWid(a0)
 		move.b	#48/2,obHeight(a0)
-		move.b	#$86,obColType(a0)
+		move.b	#col_32x32|col_hurt,obColType(a0)
 		move.b	#$C,obRoutine(a0) ; goto Swing_Action next
 
 .length:
@@ -119,7 +119,7 @@ Swing_Main:	; Routine 0
 		move.w	#ArtTile_GHZ_Giant_Ball|Tile_Pal3,obGfx(a0)
 		move.b	#1,obFrame(a0)
 		move.b	#2,obPriority(a0)
-		move.b	#$81,obColType(a0) ; make object hurt when touched
+		move.b	#col_40x40|col_hurt,obColType(a0) ; make object hurt when touched
 
 .not1X:
 		cmpi.b	#id_SBZ,(v_zone).w ; is zone SBZ?

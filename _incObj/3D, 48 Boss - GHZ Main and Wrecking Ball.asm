@@ -57,7 +57,7 @@ BGHZ_LoadBoss:
 BGHZ_Done:
 		move.w	obX(a0),obBossX(a0) 			; copy to boss position using scratch RAM (objoff_30 and 38 respectively)
 		move.w	obY(a0),obBossY(a0)
-		move.b	#$F,obColType(a0) 			; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
+		move.b	#col_48x48|col_boss,obColType(a0) 	; set collision type: TTSS SSSS. T bits are for type, S is size of collision using table in sub ReactToItem.asm
 		move.b	#8,obBossHits(a0) 			; set number of hits to 8
 
 BGHZ_ShipMain:	; Routine 2
@@ -127,7 +127,7 @@ BGHZ_ShipUpdate:
 		move.w	d0,(a1)					; load color stored in d0
 		subq.b	#1,obBossFlash(a0) 			; subtract 1 from flash timer
 		bne.s	.exit 					; keep flashing if obBossFlash is not 0
-		move.b	#$F,obColType(a0) 			; restore collision, the timer has hit 0
+		move.b	#col_48x48|col_boss,obColType(a0) 	; restore collision, the timer has hit 0
 
 ;locret_1784A:
 .exit:
@@ -470,7 +470,7 @@ GBall_MakeBall:
 		move.w	#ArtTile_GHZ_Giant_Ball|Tile_Pal3,obGfx(a1) ; use different graphics
 		move.b	#1,obFrame(a1)
 		move.b	#5,obPriority(a1)
-		move.b	#$81,obColType(a1) ; make object hurt Sonic
+		move.b	#col_40x40|col_hurt,obColType(a1) ; make object hurt Sonic
 		rts
 ; ===========================================================================
 
@@ -576,7 +576,7 @@ GBall_Vanish:
 		movea.l	objoff_34(a0),a1
 		tst.b	obStatus(a1)
 		bpl.s	GBall_Display4
-		move.b	#0,obColType(a0)
+		move.b	#col_none,obColType(a0)
 		bsr.w	BossDefeated
 		subq.b	#1,objoff_3C(a0)
 		bpl.s	GBall_Display4

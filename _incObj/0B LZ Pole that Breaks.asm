@@ -23,7 +23,7 @@ Pole_Main:	; Routine 0
 		move.b	#4,obRender(a0)
 		move.b	#16/2,obActWid(a0)
 		move.b	#4,obPriority(a0)
-		move.b	#$E1,obColType(a0)
+		move.b	#col_8x64|col_special,obColType(a0)
 		moveq	#0,d0
 		move.b	obSubtype(a0),d0 ; get object type
 		mulu.w	#60,d0		; multiply by 60 (1 second)

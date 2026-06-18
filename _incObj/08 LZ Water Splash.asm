@@ -1,3 +1,4 @@
+; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Object 08 - water splash (LZ)
 ; ---------------------------------------------------------------------------
@@ -14,20 +15,23 @@ Spla_Index:	dc.w Spla_Main-Spla_Index
 ; ===========================================================================
 
 Spla_Main:	; Routine 0
-		addq.b	#2,obRoutine(a0)
-		move.l	#Map_Splash,obMap(a0)
-		ori.b	#4,obRender(a0)
-		move.b	#1,obPriority(a0)
-		move.b	#32/2,obActWid(a0)
-		move.w	#ArtTile_LZ_Splash|Tile_Pal3,obGfx(a0)
-		move.w	(v_player+obX).w,obX(a0) ; copy x-position from Sonic
+		addq.b	#2,obRoutine(a0)			; advance to Spla_Display
+		move.l	#Map_Splash,obMap(a0)			; set mappings
+		ori.b	#4,obRender(a0)				; set to playfield-positioned mode
+		move.b	#1,obPriority(a0)			; set sprite priority (above Sonic)
+		move.b	#32/2,obActWid(a0)			; set display width
+		move.w	#ArtTile_LZ_Splash|Tile_Pal3,obGfx(a0)	; set art tile and palette line
+
+		move.w	(v_player+obX).w,obX(a0)		; copy X-position from Sonic
+; ---------------------------------------------------------------------------
 
 Spla_Display:	; Routine 2
-		move.w	(v_waterpos1).w,obY(a0) ; copy y-position from water height
-		lea	(Ani_Splash).l,a1
-		jsr	(AnimateSprite).l
-		jmp	(DisplaySprite).l
+		move.w	(v_waterpos1).w,obY(a0)			; copy Y-position from water height
+
+		lea	(Ani_Splash).l,a1			; load splash animation script
+		jsr	(AnimateSprite).l			; advance animation (will increase obRoutine on finish to delete)
+		jmp	(DisplaySprite).l			; display water surface
 ; ===========================================================================
 
 Spla_Delete:	; Routine 4
-		jmp	(DeleteObject).l	; delete when animation is complete
+		jmp	(DeleteObject).l			; delete when animation is complete

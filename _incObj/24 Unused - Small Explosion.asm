@@ -25,7 +25,7 @@ UnkExpl_Main:	; Routine 0
 		move.w	#ArtTile_UnusedExplosion,obGfx(a0)
 		move.b	#4,obRender(a0)
 		move.b	#1,obPriority(a0)
-		move.b	#0,obColType(a0)
+		move.b	#col_none,obColType(a0)
 		move.b	#24/2,obActWid(a0)
 		move.b	#9,obTimeFrame(a0)
 		move.b	#0,obFrame(a0)

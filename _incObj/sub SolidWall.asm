@@ -1,6 +1,7 @@
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Solid	object subroutine
+; Solid	object subroutine used by Object 44.
+; This is essentially a very stripped-down version of SolidObject.
 ;
 ; input:
 ;	d1 = width
@@ -40,7 +41,7 @@ EdgeWall_SolidWall:
 ; ===========================================================================
 
 .no_collision:
-		btst	#5,obStatus(a0)	; is Sonic pushing?
+		btst	#5,obStatus(a0)				; is Sonic pushing?
 		beq.s	.exit					; if not, branch
 	if FixBugs=0
 		; This causes the infamous "walk-jump bug"

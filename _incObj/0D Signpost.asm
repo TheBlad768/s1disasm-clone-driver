@@ -168,7 +168,13 @@ GotThroughAct:
 		jsr	(NewPLC).l				; queue title cards patterns for PLC
 		move.b	#1,(f_endactbonus).w			; update bonus HUD for pre-tally display
 
-		; Time Bonus
+	; Time Bonus
+	if FixBugs
+		; Time doesn't update while Debug Mode is enabled, which always results
+		; in an annoying, unskippable 50,000 points time bonus with it enabled.
+		tst.w	(f_debugmode).w				; is debug mode enabled?
+		bne.s	.ringBonus				; if yes, skip time bonus
+	endif
 		moveq	#0,d0					; clear d0 (minutes are a byte)
 		move.b	(v_timemin).w,d0			; get minutes part of time counter
 		mulu.w	#60,d0					; convert minutes to seconds
@@ -184,7 +190,8 @@ GotThroughAct:
 		add.w	d0,d0					; double for word-based indexing
 		move.w	TimeBonuses(pc,d0.w),(v_timebonus).w	; retrieve time bonus value
 
-		; Ring Bonus
+	; Ring Bonus
+	.ringBonus:
 		move.w	(v_rings).w,d0				; load number of rings
 		mulu.w	#10,d0					; multiply by 10
 		move.w	d0,(v_ringbonus).w			; set ring bonus
